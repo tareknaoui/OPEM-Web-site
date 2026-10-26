@@ -1,0 +1,41 @@
+.header {
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+.lead {
+  margin: 0;
+}
+
+.aside {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+@media (min-width: 64em) {
+  .split .titles {
+    grid-column: 1 / span 7;
+  }
+
+  .split .aside {
+    grid-column: 9 / -1;
+  }
+
+  .stacked .titles,
+  .stacked .aside {
+    grid-column: 1 / span 8;
+  }
+}
+
+/* Légende (gris moyen sur blanc, bleu 30 % sur bleu nuit). */
+.provisional {
+  margin: var(--space-6) 0 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-style: italic;
+}
+
+:global(.on-dark) .provisional {
+  color: var(--opem-blue-30);
+}

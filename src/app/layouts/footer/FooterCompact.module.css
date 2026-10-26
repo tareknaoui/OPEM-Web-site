@@ -1,0 +1,138 @@
+/* Maquette « compact » : bande bleu nuit, texte blanc (12,3:1), secondaire bleu 30 %.
+   Pas d'ambre (choix du client). */
+
+.footer {
+  margin-top: auto;
+  background: var(--color-nav-bg);
+  color: var(--color-on-nav);
+  font-size: 0.9375rem;
+}
+
+.footer:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.footer :focus-visible {
+  outline-color: var(--color-on-nav);
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-block: 2.5rem 1.5rem;
+}
+
+.logoLink {
+  border-radius: var(--radius);
+}
+
+.logo {
+  width: auto;
+  height: 3rem;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-menu);
+  font-weight: 500;
+}
+
+.links:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.link {
+  color: var(--color-on-nav);
+  text-decoration: none;
+  text-underline-offset: 0.3em;
+}
+
+.link:hover,
+.link[aria-current='page'] {
+  text-decoration: underline;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-8);
+  padding-block: 1.25rem 2rem;
+  border-top: 1px solid rgb(178 202 222 / 0.3);
+  color: var(--opem-blue-30);
+  font-style: normal;
+}
+
+.contactItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.contact .link {
+  color: var(--opem-blue-30);
+}
+
+.contact .link:hover {
+  color: var(--color-on-nav);
+}
+
+.bottom {
+  border-top: 1px solid rgb(178 202 222 / 0.3);
+  color: var(--opem-blue-30);
+  font-size: 0.8125rem;
+}
+
+.bottomInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+  padding-block: 1.25rem;
+}
+
+.copyright {
+  margin: 0;
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bottom .link {
+  color: var(--opem-blue-30);
+}
+
+.bottom .link:hover {
+  color: var(--color-on-nav);
+}
+
+.backToTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-inline-start: auto;
+}
+
+.cta {
+  flex-shrink: 0;
+}
+
+@media (max-width: 47.99em) {
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

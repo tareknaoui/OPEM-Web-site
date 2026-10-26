@@ -1,0 +1,43 @@
+/* Vidéo d'accueil à côté du texte. Mobile : bandeau 16/10 sous le texte ; sur ordinateur,
+   le bandeau qui l'utilise lui donne sa place dans sa grille (classe passée en prop). */
+
+.media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--opem-night);
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 55% 50%;
+}
+
+.pause {
+  position: absolute;
+  inset-inline-end: var(--space-4);
+  bottom: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+  cursor: pointer;
+}
+
+.pause:hover {
+  background: var(--color-on-nav);
+  color: var(--opem-night);
+}
+
+.pause:focus-visible {
+  outline-color: var(--color-on-nav);
+}

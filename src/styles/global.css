@@ -1,0 +1,470 @@
+/* Polices auto-hébergées (pas d'appel à Google Fonts : plus rapide et compatible CSP).
+   Seuls les graisses et alphabets utilisés sont chargés. */
+@import '@fontsource/poppins/latin-500.css';
+@import '@fontsource/poppins/latin-600.css';
+@import '@fontsource/cairo/arabic-500.css';
+@import '@fontsource/cairo/arabic-600.css';
+
+/* ==========================================================================
+   Charte graphique OPEM V2 — Guide des couleurs du 14 octobre 2026.
+   Les douze couleurs ci-dessous sont les SEULES autorisées.
+   Règles clés : le vert vit sur fond clair, l'ambre sur fond foncé (jamais
+   côte à côte) ; pas de texte vert ni ambre sur blanc ; bleu OPEM et bleu nuit
+   jamais collés (un blanc ou un filet ambre entre les deux) ; ambre ≈ 1/10 de
+   la page au plus ; jamais de texte blanc sur ambre ou vert.
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* Palette */
+  --opem-blue: #004d91; /* Bleu OPEM : titres, liens, boutons (blanc dessus 8,5:1) */
+  --opem-night: #11365b; /* Bleu nuit : fonds foncés, bandeaux (blanc dessus 12,3:1) */
+  --opem-green: #4da434; /* Vert OPEM : puces, filets, pictogrammes sur blanc */
+  --opem-green-dark: #367624; /* Vert foncé : titres 3 / étiquettes sur blanc */
+  --opem-amber: #f2b230; /* Ambre : sur fond foncé seulement (anthracite dessus 7,9:1) */
+  --opem-anthracite: #1f2933; /* Texte courant sur fond clair */
+  --opem-gray: #595959; /* Gris moyen : légendes, mentions secondaires */
+  --opem-gray-light: #c0cacf; /* Gris clair : filets décoratifs uniquement */
+  --opem-blue-10: #e6edf4; /* Bleu très clair : fond d'encadré ou de section */
+  --opem-blue-30: #b2cade; /* Bleu 30 % : texte secondaire sur fond foncé */
+  --opem-blue-50: #80a6c8; /* Bleu 50 % : graphiques */
+  --opem-white: #ffffff;
+
+  /* Rôles */
+  --color-bg: var(--opem-white);
+  --color-text: var(--opem-anthracite);
+  --color-muted: var(--opem-gray);
+  --color-border: var(--opem-gray-light);
+  --color-primary: var(--opem-blue);
+  --color-on-primary: var(--opem-white);
+  --color-surface: var(--opem-blue-10);
+  --color-label: var(--opem-green-dark);
+  --color-accent: var(--opem-green);
+  --color-nav-bg: var(--opem-night);
+  --color-on-nav: var(--opem-white);
+  --color-on-nav-muted: var(--opem-blue-30);
+  --color-dark-accent: var(--opem-amber);
+
+  --font-heading: 'Poppins', system-ui, sans-serif;
+  --font-menu: 'Poppins', system-ui, sans-serif;
+  --font-arabic: 'Cairo', 'Poppins', system-ui, sans-serif;
+
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --radius: 0.25rem;
+
+  /* Grille : 12 colonnes, 1 920 px au plus (marges comprises) ; marges latérales de 5 % de
+     l'écran (16 à 80 px) : jusqu'aux écrans de bureau courants, le contenu va d'une marge
+     à l'autre (pas de grand vide à gauche du bandeau) ; au-delà, il se centre. */
+  --max-width: 120rem;
+  --gutter: clamp(1rem, 5vw, 5rem);
+  --grid-gap: clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  /* Espace entre sections : ~96 à 144 px sur ordinateur. */
+  --section-space: clamp(4.5rem, 2rem + 7vw, 9rem);
+
+  --header-height: 5rem;
+  --header-height-compact: 4rem;
+  --nav-row-height: 3rem; /* bande du menu de la maquette « logo centré » */
+
+  /* Sens de lecture : 1 en français, -1 en arabe (flèches, glissements). */
+  --dir: 1;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.6;
+}
+
+/* Arabe : Cairo, un peu plus grand (charte), et tout en miroir. */
+:root[dir='rtl'] {
+  --dir: -1;
+  font-size: 106.25%;
+}
+
+:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Défilement doux pour les liens internes (« Haut de page », « Aller au contenu »),
+   sauf si l'utilisateur a demandé à réduire les animations. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Menu mobile ouvert (<dialog>) : la page derrière ne défile plus. */
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: var(--color-primary);
+  text-underline-offset: 0.2em;
+}
+
+pre {
+  overflow-x: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Mise en page
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Grille de 12 colonnes (une seule colonne sur téléphone). */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.grid-12 > * {
+  grid-column: 1 / -1;
+}
+
+.section {
+  padding-block: var(--section-space);
+}
+
+/* Pages simples (hors accueil). */
+.page {
+  padding-block: var(--space-8) var(--section-space);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ==========================================================================
+   Typographie (Guide des couleurs, partie 4)
+   ========================================================================== */
+
+/* Titre 3 / étiquette : vert foncé en capitales espacées sur blanc ;
+   bleu OPEM sur bleu très clair ; ambre sur bleu nuit. */
+.eyebrow {
+  margin: 0 0 var(--space-4);
+  color: var(--color-label);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.9375rem;
+  letter-spacing: 0; /* l'espacement casse la liaison des lettres arabes */
+}
+
+/* Sur bleu nuit : bleu 30 % (pas d'ambre dans les textes, choix du client). */
+.on-dark .eyebrow {
+  color: var(--opem-blue-30);
+}
+
+.on-surface .eyebrow {
+  color: var(--color-primary);
+}
+
+/* Titres 1 et 2 : bleu OPEM ; très grands, peu de texte. */
+.h1,
+.h2 {
+  margin: 0;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.h1 {
+  font-size: clamp(2.375rem, 1.4rem + 3.4vw, 4.5rem);
+}
+
+.h2 {
+  font-size: clamp(1.875rem, 1.3rem + 2vw, 3.25rem);
+}
+
+.h1:lang(ar),
+.h2:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+/* Titre 1 sur blanc : court filet vert OPEM dessous ; sur fond foncé : filet blanc. */
+.rule::after {
+  content: '';
+  display: block;
+  width: 4rem;
+  height: 4px;
+  margin-top: var(--space-6);
+  background: var(--opem-green);
+}
+
+.on-dark .rule::after {
+  background: var(--color-on-nav);
+}
+
+.on-dark .h1,
+.on-dark .h2 {
+  color: var(--color-on-nav);
+}
+
+.lead {
+  margin: var(--space-6) 0 0;
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.on-dark .lead {
+  color: var(--color-on-nav-muted);
+}
+
+/* Texte réservé aux lecteurs d'écran. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Boutons (liens d'action)
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  text-underline-offset: 0.3em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.btn:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.btn:hover {
+  text-decoration: underline;
+}
+
+/* Sur fond clair : fond bleu OPEM, texte blanc. */
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.btn-secondary {
+  border-color: var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+}
+
+/* Sur fond foncé : bouton blanc à texte bleu OPEM (pas de bouton ambre, choix du client). */
+.btn-light {
+  background: var(--color-on-primary);
+  color: var(--color-primary);
+}
+
+/* Flèche qui suit le sens de lecture et avance au survol. */
+.arrow {
+  flex-shrink: 0;
+  transform: scaleX(var(--dir));
+  transition: translate 200ms ease;
+}
+
+:hover > .arrow,
+:focus-visible > .arrow {
+  translate: calc(4px * var(--dir)) 0;
+}
+
+/* ==========================================================================
+   Apparitions au défilement (déclenchées une fois par hooks/useScrollReveal) :
+   - data-reveal          : fondu et montée ;
+   - data-reveal="title"  : idem, le titre passe du flou au net ;
+   - data-reveal="image"  : le cadre se découvre de bas en haut, la photo se pose ;
+   - data-reveal-stagger  : les enfants montent l'un après l'autre (rejoué quand ils
+     changent, par exemple après un filtre).
+   Seulement opacité, transformations, flou et découpe : effets légers, calculés par la
+   carte graphique. Désactivé si l'utilisateur demande moins d'animations.
+   ========================================================================== */
+
+:root {
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    translate: 0 2rem;
+    transition:
+      opacity 900ms var(--ease-reveal),
+      translate 1100ms var(--ease-reveal),
+      filter 900ms var(--ease-reveal),
+      clip-path 1200ms var(--ease-reveal);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal][data-visible] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  [data-reveal='title'] {
+    filter: blur(10px);
+  }
+
+  [data-reveal='title'][data-visible] {
+    filter: blur(0);
+  }
+
+  [data-reveal='image'] {
+    opacity: 1;
+    translate: none;
+    clip-path: inset(100% 0 0 0);
+  }
+
+  [data-reveal='image'][data-visible] {
+    clip-path: inset(0);
+  }
+
+  [data-reveal='image'][data-visible] :is(img, video) {
+    animation: reveal-settle 1600ms var(--ease-reveal) backwards;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal-stagger]:not([data-visible]) > * {
+    opacity: 0;
+  }
+
+  [data-reveal-stagger][data-visible] > * {
+    animation: reveal-rise 1000ms var(--ease-reveal) backwards;
+    animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 90ms);
+  }
+
+  [data-reveal-stagger][data-visible] > * :is(img, video) {
+    animation: reveal-settle 1600ms var(--ease-reveal) backwards;
+    animation-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * 90ms);
+  }
+
+  [data-reveal-stagger] > :nth-child(2) {
+    --i: 1;
+  }
+
+  [data-reveal-stagger] > :nth-child(3) {
+    --i: 2;
+  }
+
+  [data-reveal-stagger] > :nth-child(4) {
+    --i: 3;
+  }
+
+  [data-reveal-stagger] > :nth-child(5) {
+    --i: 4;
+  }
+
+  [data-reveal-stagger] > :nth-child(n + 6) {
+    --i: 5;
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    translate: 0 2.5rem;
+  }
+}
+
+@keyframes reveal-settle {
+  from {
+    scale: 1.15;
+  }
+}
+
+/* La vidéo ou la photo du bandeau s'approche doucement quand on le quitte (animation liée
+   au défilement, sans JavaScript ; navigateurs récents seulement). « transform » et non
+   « scale » : l'effet s'ajoute aux animations d'ouverture des bandeaux qui animent
+   « scale » (celles-ci déclarent scroll-zoom dans leur propre liste d'animations). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-scroll-zoom] {
+      animation: scroll-zoom linear both;
+      animation-timeline: view();
+      animation-range: cover 50% cover 100%;
+    }
+  }
+}
+
+@keyframes scroll-zoom {
+  to {
+    transform: scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

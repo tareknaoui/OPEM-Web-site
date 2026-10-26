@@ -1,0 +1,24 @@
+node_modules
+dist
+coverage
+*.log
+*.tsbuildinfo
+
+# Variables d'environnement : ne jamais committer les vraies valeurs
+.env
+.env.*
+!.env.example
+
+# Éditeurs / OS
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+Thumbs.db
+
+# Fichiers personnels et de travail hors projet : ne jamais publier
+/Downloads/
+# Photos d'origine fournies (déjà recadrées dans public/images) et captures d'écran
+/*.jpg
+/*.png

@@ -1,0 +1,317 @@
+/* Section « Nos domaines » : fond bleu 10 % sur toute la largeur, onglets, puis un panneau
+   blanc (bordure gris clair, coins 6 px, aucune ombre) : photo 4:3 | texte.
+   Ordinateur (≥ 64em) : onglets. En dessous : liste déroulante « Choisir un domaine ».
+   Mobile (< 48em) : photo au-dessus, texte dessous. En arabe, tout passe en miroir. */
+
+.section {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.title {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.875rem, 1.3rem + 2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+/* ---------- Onglets (ordinateur) ---------- */
+
+/* Une seule ligne : si la place manque, un libellé passe sur deux lignes (jamais un onglet
+   sous les autres). */
+.tabs {
+  display: none;
+  align-items: flex-end;
+  gap: 0 clamp(1rem, 1.9vw, 2rem);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 1px solid var(--opem-gray-light);
+}
+
+.tab {
+  flex: 0 1 auto;
+  margin-bottom: -1px;
+  padding: 0.875rem 0 0.75rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--color-muted);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: start;
+  cursor: pointer;
+}
+
+.tab:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+}
+
+.tab:hover {
+  color: var(--color-text);
+}
+
+.tab[aria-selected='true'] {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ---------- Liste déroulante (tablette et mobile) ---------- */
+
+.picker {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+.pickerLabel {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.pickerLabel:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.selectWrap {
+  position: relative;
+  display: block;
+}
+
+.select {
+  width: 100%;
+  min-height: 3rem;
+  padding-block: 0.625rem;
+  padding-inline: 1rem 2.75rem;
+  border: 1px solid var(--opem-gray-light);
+  border-radius: 6px;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  appearance: none;
+  cursor: pointer;
+}
+
+.select:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.selectIcon {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 1rem;
+  margin-block: auto;
+  color: var(--color-primary);
+  pointer-events: none;
+}
+
+/* ---------- Panneau ---------- */
+
+.panel {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: var(--space-6);
+  padding: clamp(1rem, 2.5vw, 2rem);
+  border: 1px solid var(--opem-gray-light);
+  border-radius: 6px;
+  background: var(--opem-white);
+}
+
+.panel:focus-visible {
+  outline-offset: 3px;
+}
+
+/* Les cinq photos au même endroit : seule l'active est visible (fondu entre deux). */
+.frames {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--opem-blue-10);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.image[data-active] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .image {
+    transition: opacity 450ms ease;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.domainTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.domainTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.text {
+  max-width: 34rem;
+  margin: var(--space-3) 0 0;
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.points {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  color: var(--opem-green-dark);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-8);
+  margin-top: var(--space-8);
+}
+
+/* Lien souligné « Découvrir ce domaine ». */
+.discover {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+}
+
+.discover:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.discover:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Précédent / suivant ---------- */
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.pagerButton {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 50%;
+  background: var(--opem-white);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.pagerButton:hover {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* Flèches qui suivent le sens de lecture (inversées en arabe). */
+.previousIcon {
+  transform: scaleX(calc(-1 * var(--dir)));
+}
+
+.nextIcon {
+  transform: scaleX(var(--dir));
+}
+
+.counter {
+  min-width: 4.5rem;
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.counter:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* ---------- Points de rupture ---------- */
+
+@media (min-width: 48em) {
+  .panel {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+  }
+}
+
+@media (min-width: 64em) {
+  .tabs {
+    display: flex;
+  }
+
+  .picker {
+    display: none;
+  }
+}

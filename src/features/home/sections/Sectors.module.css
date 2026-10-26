@@ -1,0 +1,98 @@
+/* Fond bleu très clair : titres bleu OPEM, étiquette bleu OPEM, puces vert foncé (charte). */
+.section {
+  background: var(--opem-blue-10);
+}
+
+.section :global(.eyebrow) {
+  color: var(--color-primary);
+}
+
+.text :global(.lead) {
+  max-width: 30rem;
+}
+
+.pillsArea {
+  min-width: 0;
+}
+
+.scroller {
+  margin-inline: calc(-1 * var(--gutter));
+  padding: var(--space-2) var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter); /* les pastilles s'alignent sur la marge, pas sur le bord */
+  scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.scroller:focus-visible {
+  outline-offset: -2px;
+}
+
+.pills {
+  display: flex;
+  gap: var(--space-3);
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  white-space: nowrap;
+  scroll-snap-align: start;
+}
+
+.pill:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* Puce vert OPEM : la pastille est blanche, donc le vert OPEM est permis. */
+.pill::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--opem-green);
+}
+
+/* Tablette et ordinateur : les pastilles passent à la ligne, plus de défilement. */
+@media (min-width: 48em) {
+  .scroller {
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+
+  .pills {
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+@media (min-width: 64em) {
+  .text {
+    grid-column: 8 / -1;
+    grid-row: 1;
+  }
+
+  .pillsArea {
+    grid-column: 1 / span 6;
+    grid-row: 1;
+    align-self: center;
+  }
+}

@@ -1,0 +1,447 @@
+/* « Éclairages et actualités », rail défilant. Fond bleu très clair sur toute la largeur,
+   cartes blanches (coins 6 px, sans ombre). Le rail court jusqu'au bord de l'écran pour
+   laisser deviner la carte suivante. Largeurs : 82 % sur téléphone, ~2 cartes sur
+   tablette, 3,4 sur ordinateur (la une compte double). En arabe, le rail défile à l'envers.
+   Étiquettes : vert foncé (éclairages), bleu OPEM (actualités), sur blanc. */
+
+.section {
+  /* Largeurs mesurées sur la section (cqw : sans la barre de défilement de la page). */
+  container-type: inline-size;
+  --content: calc(min(100cqw, var(--max-width)) - 2 * var(--gutter));
+  --bleed: calc((100cqw - min(100cqw, var(--max-width))) / 2 + var(--gutter));
+  --rail-gap: clamp(1rem, 0.6rem + 1vw, 1.5rem);
+  --card: calc(var(--content) * 0.82);
+
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+/* ---------- En-tête ---------- */
+
+.header {
+  display: grid;
+  gap: var(--space-4) var(--space-8);
+  align-items: end;
+}
+
+.title {
+  max-width: 22ch;
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.875rem, 1.2rem + 2.2vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.lead {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* ---------- Filtres et flèches ---------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: clamp(1.75rem, 3vw, 2.5rem) 0 var(--space-6);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filter {
+  min-height: 2.5rem;
+  padding: 0 1.125rem;
+  border: 1px solid var(--opem-white);
+  border-radius: 999px;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.filter:hover {
+  border-color: var(--opem-night);
+}
+
+.filter[aria-pressed='true'] {
+  border-color: var(--opem-night);
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+/* Sur téléphone, on fait défiler au doigt : pas de flèches. */
+.arrows {
+  display: none;
+  gap: var(--space-3);
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1px solid var(--opem-night);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--opem-night);
+  cursor: pointer;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.arrow:disabled {
+  border-color: var(--opem-gray-light);
+  color: var(--opem-gray);
+  cursor: default;
+}
+
+/* Flèches qui suivent le sens de lecture (inversées en arabe). */
+.previousIcon {
+  transform: scaleX(calc(-1 * var(--dir)));
+}
+
+.nextIcon {
+  transform: scaleX(var(--dir));
+}
+
+/* ---------- Rail ---------- */
+
+/* Le rail court jusqu'au bord de l'écran, côté fin de lecture. */
+.rail {
+  display: flex;
+  gap: var(--rail-gap);
+  margin: 0;
+  margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--bleed));
+  padding: 0.375rem 0;
+  padding-inline: var(--gutter) var(--bleed);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex: 0 0 var(--card);
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--opem-white);
+  scroll-snap-align: start;
+}
+
+.media {
+  overflow: hidden;
+  background: var(--opem-blue-10);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+}
+
+.label {
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.label:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+
+.card[data-kind='actualite'] .label {
+  color: var(--color-primary);
+}
+
+.cardTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.cardTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+/* Le lien du titre couvre toute la carte. */
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.card:has(.link:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.excerpt {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.more {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 50%;
+  color: var(--color-primary);
+}
+
+/* Survol : la photo s'approche, le titre se souligne, la flèche se remplit. */
+.card:hover .link {
+  color: var(--color-primary);
+  text-decoration-color: currentcolor;
+}
+
+.card:hover .more {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* À la une : titre plus grand. */
+.featured .cardTitle {
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.featured .excerpt {
+  color: var(--color-text);
+  font-size: 1rem;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+/* ---------- Barre d'avancement ---------- */
+
+.progress {
+  position: relative;
+  height: 2px;
+  margin-top: var(--space-6);
+  overflow: hidden;
+  background: rgb(17 54 91 / 0.15);
+}
+
+.thumb {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(var(--start) * 100%);
+  width: calc(var(--size) * 100%);
+  background: var(--opem-night);
+}
+
+/* ---------- Pied ---------- */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-8);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.footer > p {
+  margin: 0;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-8);
+  margin-inline-start: auto;
+}
+
+.allLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+}
+
+.allLink:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.allLink:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Points de rupture ---------- */
+
+@media (min-width: 48em) {
+  .section {
+    --card: calc((var(--content) - var(--rail-gap)) / 2.2);
+  }
+
+  .header {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .arrows {
+    display: flex;
+  }
+}
+
+/* Ordinateur : la une (deux cartes) + une carte + l'amorce de la suivante. La une passe
+   en deux colonnes : photo | texte. */
+@media (min-width: 64em) {
+  .section {
+    --card: calc((var(--content) - 3 * var(--rail-gap)) / 3.4);
+  }
+
+  .featured {
+    display: grid;
+    flex-basis: calc(2 * var(--card) + var(--rail-gap));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  /* La photo prend toute la hauteur de la carte, fixée par le texte. */
+  .featured .media {
+    position: relative;
+  }
+
+  .featured .image {
+    position: absolute;
+    inset: 0;
+  }
+
+  .featured .body {
+    padding: clamp(1.75rem, 1rem + 1.5vw, 2.5rem);
+  }
+}
+
+/* ---------- Mouvement ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .image {
+    transition: scale 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .card:hover .image {
+    scale: 1.05;
+  }
+
+  .link,
+  .more,
+  .filter,
+  .arrow {
+    transition:
+      color 150ms,
+      background-color 150ms,
+      border-color 150ms,
+      text-decoration-color 150ms;
+  }
+}
+
+/* Apparition des cartes (au défilement et après un filtre) : data-reveal-stagger,
+   styles/global.css. */

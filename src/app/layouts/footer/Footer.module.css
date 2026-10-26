@@ -1,0 +1,349 @@
+/* Pied de page OPEM : texte blanc (12,3:1 sur bleu nuit), texte secondaire
+   bleu 30 % (7,3:1). Pas d'ambre (choix du client) : titres, icônes et
+   bouton en blanc. Propriétés « logiques » : tout passe en miroir en arabe. */
+
+.footer {
+  --footer-text: var(--color-on-nav);
+  --footer-muted: var(--opem-blue-30);
+  --footer-line: rgb(178 202 222 / 0.3); /* bleu 30 %, filet décoratif */
+
+  margin-top: auto;
+  background: var(--color-nav-bg);
+  color: var(--footer-text);
+  font-size: 0.9375rem;
+}
+
+.footer:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.footer :focus-visible {
+  outline-color: var(--color-on-nav);
+}
+
+/* ---------- Bandeau d'appel ---------- */
+
+.cta {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.ctaInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-block: 2.5rem;
+}
+
+.ctaTitle {
+  margin: 0 0 0.375rem;
+  font-family: var(--font-menu);
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.ctaTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.ctaText {
+  max-width: 46rem;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.ctaPhone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-on-primary);
+  font-family: var(--font-menu);
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 0.3em;
+  white-space: nowrap;
+}
+
+.ctaPhone:hover {
+  text-decoration: underline;
+}
+
+/* Sur le bandeau bleu, le bouton s'inverse (blanc, texte bleu OPEM) pour rester visible. */
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.875rem 1.75rem;
+  border-radius: var(--radius);
+  background: var(--color-on-primary);
+  color: var(--color-primary);
+  font-family: var(--font-menu);
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 0.3em;
+  white-space: nowrap;
+}
+
+.ctaButton:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.ctaButton:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Corps ---------- */
+
+.main {
+  display: grid;
+  grid-template-areas:
+    'brand'
+    'columns'
+    'contact';
+  gap: 2.5rem;
+  padding-block: 3.5rem;
+}
+
+.brand {
+  grid-area: brand;
+}
+
+/* Mobile : « Expertises » (libellés longs) sur toute la largeur,
+   les colonnes suivantes deux par deux pour raccourcir la page. */
+.columns {
+  grid-area: columns;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 1.5rem;
+}
+
+.columns > :first-child {
+  grid-column: 1 / -1;
+}
+
+.contact {
+  grid-area: contact;
+}
+
+.logoLink {
+  display: inline-block;
+  border-radius: var(--radius);
+}
+
+.logo {
+  width: auto;
+  height: 3.5rem;
+}
+
+.fullName {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--color-on-nav);
+  font-family: var(--font-menu);
+  font-weight: 600;
+}
+
+.pitch {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--footer-muted);
+  line-height: 1.7;
+}
+
+.heading {
+  margin: 0 0 var(--space-4);
+  color: var(--color-on-nav);
+  font-family: var(--font-menu);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* L'espacement entre lettres casse la liaison des lettres arabes. */
+.heading:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.list {
+  display: grid;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  color: var(--footer-text);
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: color 150ms;
+}
+
+.link:hover,
+.link[aria-current='page'] {
+  color: var(--color-on-nav);
+  text-decoration: underline;
+}
+
+/* Lien placé dans un bloc de texte : toujours souligné pour se distinguer
+   autrement que par la couleur (WCAG 1.4.1). */
+.inlineLink {
+  text-decoration: underline;
+}
+
+/* ---------- Coordonnées ---------- */
+
+.address {
+  display: grid;
+  gap: var(--space-4);
+  font-style: normal;
+}
+
+.contactLine {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.contactIcon {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+  color: var(--color-on-nav);
+}
+
+/* ---------- Barre du bas ---------- */
+
+.bottom {
+  border-top: 1px solid var(--footer-line);
+  color: var(--footer-muted);
+  font-size: 0.8125rem;
+}
+
+.bottomInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+  padding-block: 1.25rem;
+}
+
+.copyright {
+  margin: 0;
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bottom .link {
+  color: var(--footer-muted);
+}
+
+.bottom .link:hover {
+  color: var(--color-on-nav);
+}
+
+.backToTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-inline-start: auto;
+}
+
+/* Texte réservé aux lecteurs d'écran. */
+.srOnly {
+  /* (doublon de .sr-only global, gardé pour l'isolation du module) */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Mises en page ---------- */
+
+@media (min-width: 48em) {
+  .main {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'brand contact'
+      'columns columns';
+    gap: 3rem;
+  }
+
+  .columns {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .columns > :first-child {
+    grid-column: auto;
+  }
+}
+
+@media (min-width: 75em) {
+  .main {
+    grid-template-columns: 1.15fr 3fr 1.15fr;
+    grid-template-areas: 'brand columns contact';
+    gap: 3.5rem;
+    padding-block: 4.5rem;
+  }
+}
+
+/* ==========================================================================
+   Maquette « clair » : même structure sur fond bleu très clair (charte :
+   texte anthracite, titres et liens bleu OPEM, pictogrammes vert foncé,
+   légendes gris moyen). Le bandeau d'appel bleu OPEM est conservé.
+   ========================================================================== */
+
+.clair {
+  --footer-text: var(--opem-anthracite);
+  --footer-muted: var(--opem-gray); /* 5,9:1 sur bleu très clair */
+  --footer-line: var(--opem-gray-light);
+
+  background: var(--opem-blue-10);
+}
+
+.clair .main :focus-visible,
+.clair .bottom :focus-visible {
+  outline-color: var(--color-primary);
+}
+
+.clair .fullName,
+.clair .heading {
+  color: var(--color-primary);
+}
+
+.clair .link:hover,
+.clair .link[aria-current='page'],
+.clair .bottom .link:hover {
+  color: var(--color-primary);
+}
+
+.clair .inlineLink {
+  color: var(--color-primary);
+}
+
+.clair .contactIcon {
+  color: var(--opem-green-dark);
+}

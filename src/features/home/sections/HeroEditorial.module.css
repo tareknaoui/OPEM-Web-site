@@ -1,0 +1,526 @@
+/* Bandeau « Éditorial » — sobriété de cabinet : fond blanc, très grand titre serré,
+   filets fins, une seule image forte. Ordinateur : texte (7/12) | fenêtre vidéo (5/12),
+   puis les trois métiers sur toute la largeur.
+   Deux tons : clair (fond blanc) et `.dark` (couleurs inversées : fond bleu nuit, légende
+   sur bandeau blanc). Sur bleu nuit, ni bleu OPEM ni vert : blanc et bleu 30 %. */
+
+.hero {
+  --hero-bg: var(--color-bg);
+  --hero-text: var(--color-text);
+  --hero-intro: var(--color-text);
+  --hero-muted: var(--color-muted);
+  --hero-accent: var(--color-primary);
+  --hero-rule: var(--opem-gray-light);
+  --hero-kicker-rule: var(--opem-green);
+  --hero-focus: var(--color-primary);
+  --hero-band: var(--opem-night);
+  --hero-on-band: var(--opem-white);
+  --hero-band-ring: rgb(255 255 255 / 0.35);
+  --hero-disc: var(--opem-white);
+  --hero-on-disc: var(--opem-night);
+  --hero-disc-ring: transparent;
+
+  padding-top: clamp(2rem, 1rem + 3vw, 4rem);
+  background: var(--hero-bg);
+}
+
+.dark {
+  --hero-bg: var(--opem-night);
+  --hero-text: var(--opem-white);
+  --hero-intro: var(--opem-blue-30);
+  --hero-muted: var(--opem-blue-30);
+  --hero-accent: var(--opem-blue-30);
+  --hero-rule: rgb(255 255 255 / 0.2);
+  --hero-kicker-rule: var(--opem-white);
+  --hero-focus: var(--opem-white);
+  --hero-band: var(--opem-white);
+  --hero-on-band: var(--opem-night);
+  --hero-band-ring: rgb(17 54 91 / 0.35);
+  --hero-disc: var(--opem-night);
+  --hero-on-disc: var(--opem-white);
+  --hero-disc-ring: rgb(255 255 255 / 0.3);
+
+  padding-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.hero :focus-visible {
+  outline-color: var(--hero-focus);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* ---------- Texte ---------- */
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+  color: var(--hero-muted);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kicker::before {
+  content: '';
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--hero-kicker-rule);
+}
+
+.kicker:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+
+.headline {
+  margin: 0;
+  color: var(--hero-text);
+  font-family: var(--font-heading);
+  font-size: clamp(2.6rem, 1.2rem + 4.6vw, 5.75rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.headline:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+}
+
+.line > span {
+  display: inline-block;
+}
+
+.accent {
+  color: var(--hero-accent);
+}
+
+.intro {
+  max-width: 34rem;
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+  color: var(--hero-intro);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-8);
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+
+/* Lien texte souligné d'un filet qui s'épaissit au survol. */
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-block: 0.375rem;
+  border-bottom: 1px solid var(--hero-text);
+  color: var(--hero-text);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color 150ms,
+    color 150ms;
+}
+
+.textLink:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.textLink:hover {
+  border-bottom-width: 2px;
+  border-color: var(--hero-accent);
+  color: var(--hero-accent);
+}
+
+/* ---------- Fenêtre vidéo + légende sur bandeau (bleu nuit, ou blanc en ton foncé) ---------- */
+
+.window {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 0.375rem 0.375rem 0 0;
+  background: var(--opem-night);
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 66% 50%;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 1.25rem;
+  border-radius: 0 0 0.375rem 0.375rem;
+  background: var(--hero-band);
+  color: var(--hero-on-band);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.pause {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--hero-band-ring);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--hero-on-band);
+  cursor: pointer;
+}
+
+.pause:hover {
+  border-color: var(--hero-on-band);
+  background: var(--hero-on-band);
+  color: var(--hero-band);
+}
+
+.pause:focus-visible {
+  outline-color: var(--hero-on-band);
+}
+
+/* Badge circulaire : disque blanc, texte bleu nuit qui tourne lentement (inversé en ton foncé). */
+.badge {
+  position: absolute;
+  top: -2.75rem;
+  inset-inline-start: -2.75rem;
+  display: none;
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid var(--hero-disc-ring);
+  border-radius: 50%;
+  background: var(--hero-disc);
+  box-shadow: 0 16px 40px rgb(17 54 91 / 0.16);
+}
+
+.badgeText {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--hero-on-disc);
+  font-family: var(--font-heading);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Texte sur cercle : sens gauche → droite imposé, sinon il sort du tracé en arabe
+   (chaque mot arabe reste correctement écrit). */
+.badgeText text {
+  direction: ltr;
+}
+
+.badgeCore {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--hero-on-disc);
+  color: var(--hero-disc);
+}
+
+.badgeArrow {
+  rotate: 180deg;
+}
+
+/* ---------- Les trois métiers ---------- */
+
+.pillarsWrap {
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+.pillars {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--hero-rule);
+  list-style: none;
+}
+
+.pillar {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.375rem;
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--hero-rule);
+  color: var(--hero-text);
+  text-decoration: none;
+}
+
+/* Filet bleu qui se déploie au survol, au-dessus du filet gris. */
+.pillar::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  inset-inline: 0;
+  height: 2px;
+  background: var(--hero-accent);
+  scale: 0 1;
+  transform-origin: left;
+  transition: scale 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.pillar:dir(rtl)::before {
+  transform-origin: right;
+}
+
+.pillar:hover::before,
+.pillar:focus-visible::before {
+  scale: 1 1;
+}
+
+.pillarNumber {
+  color: var(--hero-accent);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.pillarTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.pillarTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.pillarArrow {
+  flex-shrink: 0;
+  color: var(--hero-accent);
+  opacity: 0.35;
+  transition: opacity 200ms;
+}
+
+.pillar:hover .pillarArrow,
+.pillar:focus-visible .pillarArrow {
+  opacity: 1;
+}
+
+.pillar:hover .pillarTitle {
+  color: var(--hero-accent);
+}
+
+.pillarText {
+  color: var(--hero-muted);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Mouvement ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .kicker {
+    animation: fade-up 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .line > span {
+    animation: rise 1000ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .accent > span {
+    animation-delay: 220ms;
+  }
+
+  .intro,
+  .actions {
+    animation: fade-up 800ms 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  /* La fenêtre se dévoile de bas en haut, l'image se pose doucement. */
+  .media {
+    animation: curtain 1300ms 200ms cubic-bezier(0.7, 0, 0.2, 1) both;
+  }
+
+  .video {
+    animation: settle 2400ms 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  /* En quittant le bandeau, la vidéo s'approche (liée au défilement). */
+  @supports (animation-timeline: view()) {
+    .video {
+      animation:
+        settle 2400ms 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
+        scroll-zoom linear both;
+      animation-timeline: auto, view();
+      animation-range:
+        normal,
+        cover 50% cover 100%;
+    }
+  }
+
+  .caption {
+    animation: fade-up 700ms 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .badge {
+    animation: pop 700ms 1300ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+
+  .badgeText {
+    animation: spin 22s linear infinite;
+  }
+
+  .pillars > li {
+    animation: fade-up 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .pillars > li:nth-child(1) {
+    animation-delay: 700ms;
+  }
+
+  .pillars > li:nth-child(2) {
+    animation-delay: 820ms;
+  }
+
+  .pillars > li:nth-child(3) {
+    animation-delay: 940ms;
+  }
+
+  .pillarTitle .pillarArrow {
+    transition:
+      opacity 200ms,
+      translate 200ms;
+  }
+}
+
+@keyframes rise {
+  from {
+    translate: 0 105%;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+@keyframes curtain {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes settle {
+  from {
+    scale: 1.18;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* ---------- Écrans moyens : trois métiers côte à côte ---------- */
+
+@media (min-width: 48em) {
+  .pillars {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 1px solid var(--hero-rule);
+  }
+
+  .pillar {
+    height: 100%;
+    padding: var(--space-6) clamp(1rem, 2.5vw, 2rem) clamp(1.75rem, 3vw, 2.5rem);
+    border-bottom: 0;
+  }
+
+  .pillars > li:first-child .pillar {
+    padding-inline-start: 0;
+  }
+
+  .pillars > li + li .pillar {
+    border-inline-start: 1px solid var(--hero-rule);
+  }
+}
+
+/* ---------- Ordinateur : titre | fenêtre ---------- */
+
+@media (min-width: 64em) {
+  .grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .media {
+    aspect-ratio: 4 / 5;
+    max-height: calc(100svh - var(--header-height) - 12rem);
+    min-height: 24rem;
+  }
+
+  .badge {
+    display: block;
+  }
+}
+
+@keyframes scroll-zoom {
+  to {
+    transform: scale(1.12);
+  }
+}

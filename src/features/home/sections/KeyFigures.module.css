@@ -1,0 +1,55 @@
+/* Bande bleu nuit. Chiffres en ambre (demandé dans le cahier des charges ;
+   la charte l'autorise pour les grands chiffres sur bleu nuit, contraste 6,6:1).
+   Pour les passer en blanc : remplacer --figure-color par var(--color-on-nav). */
+
+.band {
+  --figure-color: var(--opem-amber);
+
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8) var(--grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 64em) {
+  .figures {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.figure {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid rgb(178 202 222 / 0.35); /* bleu 30 %, filet décoratif */
+}
+
+.value {
+  color: var(--figure-color);
+  font-family: var(--font-heading);
+  font-size: clamp(2.75rem, 1.5rem + 4.4vw, 5.5rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  white-space: nowrap;
+  /* Chiffres toujours lus de gauche à droite, même en arabe (« +2 000 », pas « 2 000+ »). */
+  direction: ltr;
+  unicode-bidi: isolate;
+  justify-self: start;
+}
+
+.label {
+  max-width: 14rem;
+  color: var(--color-on-nav);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}

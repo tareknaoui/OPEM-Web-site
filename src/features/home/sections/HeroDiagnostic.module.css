@@ -1,0 +1,191 @@
+/* Bandeau « Autodiagnostic » : fond bleu nuit, titre puis la première question et quatre
+   grandes réponses. Ordinateur : marge | texte (6/12) | vidéo (6/12 + marge, jusqu'au
+   bord de l'écran). Mobile : texte puis image.
+   Sur bleu nuit, ni bleu OPEM ni vert au contact du fond : blanc et bleu 30 %.
+   Aucune animation (demande du client) : seuls les états de survol changent. */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+}
+
+.text {
+  padding: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--gutter) clamp(2.5rem, 2rem + 3vw, 4rem);
+}
+
+.text :focus-visible {
+  outline-color: var(--color-on-nav);
+}
+
+/* ---------- Titre ---------- */
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kicker::before {
+  content: '';
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--color-on-nav);
+}
+
+.kicker:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+}
+
+.headline {
+  max-width: 15ch;
+  margin: 0;
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 1.3rem + 3vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.headline:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+/* ---------- Question et réponses ---------- */
+
+.diagnostic {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.question {
+  margin: 0 0 var(--space-4);
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.question:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.choices {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Grand bouton-réponse blanc : pictogramme | libellé | flèche. */
+.choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 4.5rem;
+  height: 100%;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0.5rem;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  text-decoration: none;
+}
+
+.choiceIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--opem-blue-10);
+  color: var(--color-primary);
+}
+
+.choiceLabel {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.choiceLabel:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* La flèche avance au survol, sans transition. */
+.choice .choiceArrow {
+  color: var(--color-primary);
+  transition: none;
+}
+
+.choice:hover {
+  background: var(--opem-blue-10);
+  color: var(--color-primary);
+}
+
+.choice:hover .choiceIcon {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.choice:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ---------- Points de rupture ---------- */
+
+@media (min-width: 36em) {
+  .choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Nombre impair de réponses : la dernière prend toute la ligne. */
+  .choices > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64em) {
+  .hero {
+    --content: calc(var(--max-width) - 2 * var(--gutter));
+    grid-template-columns:
+      minmax(var(--gutter), 1fr)
+      minmax(0, calc(var(--content) / 2))
+      minmax(0, calc(var(--content) / 2))
+      minmax(var(--gutter), 1fr);
+    min-height: min(calc(100svh - var(--header-height)), 46rem);
+  }
+
+  .text {
+    grid-column: 2;
+    align-self: center;
+    padding-inline: 0 clamp(2rem, 4vw, 4rem);
+  }
+
+  /* Vidéo (composant partagé HeroSideVideo) : moitié droite, jusqu'au bord. */
+  .hero .media {
+    grid-column: 3 / 5;
+    min-height: 100%;
+    aspect-ratio: auto;
+  }
+}

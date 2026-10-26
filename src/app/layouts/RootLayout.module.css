@@ -1,0 +1,47 @@
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  /* La barre est fixe : on réserve sa hauteur pleine une fois pour toutes,
+     pour que le contenu ne bouge pas quand elle se réduit au défilement. */
+  padding-top: var(--header-height);
+}
+
+/* Maquette « logo centré » : sur ordinateur, la bande du menu s'ajoute sous la barre. */
+@media (min-width: 80em) {
+  .shell[data-navbar='centree'] {
+    padding-top: calc(var(--header-height) + var(--nav-row-height));
+  }
+}
+
+.skipLink {
+  position: fixed;
+  top: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 600;
+  translate: 0 -200%;
+}
+
+.skipLink:focus {
+  translate: 0 0;
+  outline: 2px solid var(--color-on-nav); /* visible sur la barre bleu nuit */
+}
+
+.main {
+  flex: 1;
+  scroll-margin-top: var(--header-height);
+  transition: opacity 150ms;
+}
+
+.main:focus {
+  outline: none;
+}
+
+.main[aria-busy='true'] {
+  opacity: 0.6;
+}

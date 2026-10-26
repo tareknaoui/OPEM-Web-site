@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <!-- Illustration provisoire (couleurs OPEM) : à remplacer par une vraie photo, même nom de fichier. -->
+  <rect width="1600" height="1000" fill="#E6EDF4"/>
+  <circle cx="1260" cy="230" r="90" fill="#B2CADE"/>
+  <polygon points="380,360 800,170 1220,360" fill="#004D91"/>
+  <rect x="400" y="360" width="800" height="50" fill="#80A6C8"/>
+  <g fill="#004D91">
+    <rect x="450" y="430" width="70" height="360"/>
+    <rect x="590" y="430" width="70" height="360"/>
+    <rect x="730" y="430" width="70" height="360"/>
+    <rect x="870" y="430" width="70" height="360"/>
+    <rect x="1010" y="430" width="70" height="360"/>
+  </g>
+  <rect x="400" y="790" width="800" height="30" fill="#80A6C8"/>
+  <rect x="360" y="820" width="880" height="30" fill="#B2CADE"/>
+  <rect x="0" y="880" width="1600" height="120" fill="#80A6C8"/>
+</svg>

@@ -1,0 +1,762 @@
+/* Bandeau « Cycle OPEM » — fond blanc, tracés fins, une seule couleur forte par élément.
+   Ordinateur : titre à gauche, introduction à droite, schéma centré dessous, onglets.
+   Mobile : tout s'empile, les cartes passent sous le schéma. */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  background: var(--color-bg);
+}
+
+/* ---------- Titre et introduction ---------- */
+
+.top {
+  display: grid;
+  gap: var(--space-6) 3rem;
+  align-items: end;
+}
+
+.headline {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: clamp(2.75rem, 1.5rem + 4.6vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.headline:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+/* Chaque ligne est un masque : le texte y monte à l'ouverture de la page. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line > span {
+  display: inline-block;
+}
+
+.accent {
+  color: var(--color-primary);
+}
+
+.intro {
+  padding-inline-start: var(--space-6);
+  border-inline-start: 2px solid var(--opem-green);
+}
+
+.introText {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+@media (min-width: 64em) {
+  .top {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  }
+}
+
+/* ---------- Scène : anneaux, organigramme, cartes ---------- */
+
+.stageWrap {
+  position: relative;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+}
+
+.orbit {
+  position: relative;
+  width: min(20rem, 82vw);
+  aspect-ratio: 1;
+}
+
+.rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+}
+
+.ringOuter {
+  stroke: var(--opem-gray-light);
+  stroke-width: 1;
+}
+
+.ringInner {
+  stroke: var(--opem-blue-30);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Point qui fait le tour de l'anneau extérieur. */
+.satellite {
+  position: absolute;
+  inset: 0;
+}
+
+.satellite::before,
+.satellite::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  border-radius: 50%;
+}
+
+.satellite::before {
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: -0.375rem;
+  background: var(--opem-night);
+  box-shadow: 0 0 0 0.375rem var(--color-bg);
+}
+
+.satellite::after {
+  bottom: -0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: -0.25rem;
+  background: var(--opem-green);
+  box-shadow: 0 0 0 0.375rem var(--color-bg);
+}
+
+.emblem {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 58%;
+  height: 58%;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--opem-blue-10);
+}
+
+.chart {
+  width: 72%;
+  overflow: visible;
+}
+
+.links path {
+  fill: none;
+  stroke: var(--opem-blue-50);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.box {
+  fill: var(--opem-white);
+  stroke: var(--opem-night);
+  stroke-width: 2;
+  transition: fill 600ms ease;
+}
+
+/* L'organisation se « remplit » au fil des étapes. */
+.stage[data-phase] .box1,
+.stage:is([data-phase='1'], [data-phase='2']) .box2,
+.stage[data-phase='2'] .box3 {
+  fill: var(--opem-blue-30);
+}
+
+.badge {
+  opacity: 0;
+  scale: 0.4;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 400ms ease,
+    scale 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.badge circle {
+  fill: var(--opem-white);
+  stroke: var(--opem-green);
+  stroke-width: 2;
+}
+
+.badge path {
+  fill: none;
+  stroke: var(--opem-green-dark);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stage[data-phase='2'] .badge {
+  opacity: 1;
+  scale: 1;
+}
+
+/* ---------- Cartes de l'étape en cours ---------- */
+
+.cards {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.card {
+  border: 1px solid var(--opem-blue-10);
+  border-radius: 0.75rem;
+  background: var(--opem-white);
+  box-shadow:
+    0 1px 2px rgb(17 54 91 / 0.06),
+    0 18px 40px rgb(17 54 91 / 0.1);
+}
+
+.cardTitle {
+  display: block;
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cardTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* Disque « Étape 01/03 » (bleu nuit, texte blanc). */
+.focus {
+  display: none;
+}
+
+.focusLabel {
+  color: var(--opem-blue-30);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.focusLabel:lang(ar) {
+  letter-spacing: 0;
+}
+
+.focusNumber {
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.focusTotal {
+  color: var(--opem-blue-30);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.checklist {
+  width: min(100%, 22rem);
+  padding: var(--space-4) 1.25rem;
+}
+
+.checks {
+  display: grid;
+  gap: 0.5rem;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.checks li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.checks li[data-done] {
+  color: var(--color-text);
+}
+
+.checkMark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1.5px solid var(--opem-gray-light);
+  border-radius: 50%;
+}
+
+li[data-done] > .checkMark {
+  border-color: var(--opem-green);
+  background: var(--opem-blue-10);
+  color: var(--opem-green-dark);
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: min(100%, 22rem);
+  padding: 0.875rem var(--space-4);
+}
+
+.noteIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: var(--opem-blue-10);
+  color: var(--color-primary);
+}
+
+.noteText {
+  display: grid;
+  flex: 1;
+  gap: 0.125rem;
+}
+
+.noteMeta {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: var(--opem-blue-10);
+  color: var(--opem-green-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.caption {
+  margin: 0;
+  padding: 0.5rem 1.125rem;
+  border-radius: 999px;
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.caption:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.sketch {
+  display: none;
+}
+
+/* ---------- Tracés décoratifs des bords (ordinateur) ---------- */
+
+.decor {
+  display: none;
+}
+
+/* ---------- Onglets des étapes ---------- */
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding-block: var(--space-4) clamp(2rem, 4vw, 3rem);
+}
+
+.tabs {
+  display: flex;
+  flex: 1;
+  max-width: 40rem;
+  border-bottom: 1px solid var(--opem-gray-light);
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+  padding: 0.75rem 0.5rem;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  font: inherit;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: start;
+  cursor: pointer;
+}
+
+.tab:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.tab:hover,
+.tab[aria-selected='true'] {
+  color: var(--color-text);
+}
+
+.tabNumber {
+  color: var(--opem-blue-50);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.tab[aria-selected='true'] .tabNumber {
+  color: var(--color-primary);
+}
+
+.track {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+}
+
+.progress {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  background: var(--color-primary);
+}
+
+.pause {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--opem-gray-light);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.pause:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ---------- Mouvement (seulement si l'utilisateur ne l'a pas réduit) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .line > span {
+    animation: rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .accent > span {
+    animation-delay: 120ms;
+  }
+
+  .intro {
+    animation: fade-up 800ms 250ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .ringInner {
+    animation: spin 90s linear infinite;
+  }
+
+  .satellite {
+    animation: spin 24s linear infinite;
+  }
+
+  .cards > * {
+    animation: card-in 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .cards > :nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .cards > :nth-child(3) {
+    animation-delay: 240ms;
+  }
+
+  .cards > :nth-child(4) {
+    animation-delay: 360ms;
+  }
+
+  .sketch {
+    animation: float 6s ease-in-out infinite alternate;
+  }
+
+  .sketchB {
+    animation-delay: -2s;
+  }
+
+  .sketchC {
+    animation-delay: -4s;
+  }
+
+  .path path {
+    stroke-dashoffset: 0;
+    animation: dash 30s linear infinite;
+  }
+
+  /* Défilement automatique : la fin de cette animation fait passer à l'étape suivante. */
+  .progress {
+    animation: progress 6.5s linear both;
+  }
+
+  /* Pause : bouton, survol de la scène ou navigation au clavier dans les onglets. */
+  .hero[data-paused] .progress,
+  .hero:has(.stage:hover) .progress,
+  .controls:has(:focus-visible) .progress {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes rise {
+  from {
+    translate: 0 105%;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    translate: 0 0.75rem;
+    scale: 0.97;
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@keyframes float {
+  to {
+    translate: 0 -0.5rem;
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -220;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 0;
+  }
+}
+
+/* ---------- Ordinateur : scène composée autour des anneaux ---------- */
+
+@media (min-width: 64em) {
+  .stage {
+    display: block;
+    height: 29rem;
+    padding: 0;
+  }
+
+  .orbit {
+    position: absolute;
+    inset: 0;
+    width: 23rem;
+    height: 23rem;
+    margin: auto;
+  }
+
+  /* Au-dessus des anneaux : le point qui tourne passe sous les cartes. */
+  .cards {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+  }
+
+  .card,
+  .caption {
+    position: absolute;
+  }
+
+  .focus {
+    top: 0.5rem;
+    inset-inline-start: calc(50% - 15.5rem);
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.25rem;
+    width: 9rem;
+    height: 9rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--opem-night);
+    box-shadow:
+      0 0 0 0.5rem var(--color-bg),
+      0 18px 40px rgb(17 54 91 / 0.18);
+    text-align: center;
+  }
+
+  .checklist {
+    top: 3.5rem;
+    inset-inline-start: calc(50% + 8.5rem);
+    width: 16rem;
+  }
+
+  .note {
+    bottom: 4.5rem;
+    inset-inline-end: calc(50% + 6.5rem);
+    width: max-content;
+    max-width: 26rem;
+  }
+
+  .caption {
+    bottom: 0.25rem;
+    inset-inline: 0;
+    width: max-content;
+    margin-inline: auto;
+  }
+
+  .sketch {
+    position: absolute;
+    display: block;
+    height: 0.625rem;
+    border-radius: 999px;
+    background: var(--opem-blue-10);
+    box-shadow: 0 1rem 0 -0.0625rem var(--opem-blue-10);
+  }
+
+  .sketchA {
+    top: 1.25rem;
+    inset-inline-start: calc(50% + 4rem);
+    width: 4.5rem;
+  }
+
+  .sketchB {
+    bottom: 7rem;
+    inset-inline-start: calc(50% + 12.5rem);
+    width: 3.5rem;
+  }
+
+  .sketchC {
+    top: 13rem;
+    inset-inline-start: calc(50% - 20rem);
+    width: 3rem;
+  }
+
+  .decor {
+    position: absolute;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+  }
+
+  .path {
+    position: absolute;
+    top: 3rem;
+    inset-inline-start: 0;
+    width: 15rem;
+    overflow: visible;
+    scale: var(--dir) 1;
+    fill: none;
+    stroke: var(--opem-blue-50);
+    stroke-width: 1.5;
+  }
+
+  .path path {
+    stroke-dasharray: 6 7;
+  }
+
+  .path circle {
+    fill: var(--opem-white);
+  }
+
+  .curves {
+    position: absolute;
+    bottom: -4.25rem;
+    /* S'arrêtent juste avant les onglets (40rem + bouton pause, centrés). */
+    width: calc(50% - 22.5rem);
+    overflow: visible;
+    fill: none;
+    stroke: var(--opem-gray-light);
+    stroke-width: 1.25;
+  }
+
+  .curves circle {
+    fill: var(--opem-night);
+    stroke: none;
+  }
+
+  /* Les deux faisceaux convergent vers les onglets ; en arabe, l'ensemble suit le miroir. */
+  .curvesStart {
+    inset-inline-start: 0;
+    scale: var(--dir) 1;
+  }
+
+  .curvesEnd {
+    inset-inline-end: 0;
+    scale: calc(-1 * var(--dir)) 1;
+  }
+
+  .tab {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Mouvement réduit : pas de défilement, la barre de l'étape choisie reste pleine. */
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    width: 100%;
+  }
+}

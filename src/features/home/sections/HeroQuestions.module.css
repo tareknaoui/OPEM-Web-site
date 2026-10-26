@@ -1,0 +1,116 @@
+/* Bandeau « Trois questions » : fond bleu nuit, trois grandes questions-liens en blanc
+   séparées par des filets fins, une ligne, le bouton « Être rappelé ».
+   Sur bleu nuit, ni bleu OPEM ni vert au contact du fond : blanc et bleu 30 %.
+   Ordinateur : marge | texte (6/12) | vidéo (6/12 + marge, jusqu'au bord de l'écran). */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+}
+
+.text {
+  padding: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--gutter) clamp(2.5rem, 2rem + 3vw, 4rem);
+}
+
+.text :focus-visible {
+  outline-color: var(--color-on-nav);
+}
+
+/* ---------- Les trois questions ---------- */
+
+.questions {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+  font-family: var(--font-heading);
+  font-size: clamp(1.625rem, 1rem + 2.2vw, 2.625rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.questions:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: clamp(1rem, 0.6rem + 1.2vw, 1.5rem);
+  border-bottom: 1px solid rgb(255 255 255 / 0.2);
+  color: var(--color-on-nav);
+  text-decoration: none;
+}
+
+.questionLabel {
+  text-wrap: balance;
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+  transition:
+    color 150ms,
+    text-decoration-color 150ms;
+}
+
+.question .questionArrow {
+  color: var(--color-on-nav);
+  opacity: 0.4;
+}
+
+.question:hover .questionLabel {
+  color: var(--opem-blue-30);
+  text-decoration-color: currentcolor;
+}
+
+.question:hover .questionArrow,
+.question:focus-visible .questionArrow {
+  opacity: 1;
+}
+
+/* ---------- Ligne et bouton ---------- */
+
+.line {
+  max-width: 32rem;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  color: var(--opem-blue-30);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.cta {
+  margin-top: var(--space-6);
+}
+
+/* ---------- Ordinateur ---------- */
+
+@media (min-width: 64em) {
+  .hero {
+    --content: calc(var(--max-width) - 2 * var(--gutter));
+    grid-template-columns:
+      minmax(var(--gutter), 1fr)
+      minmax(0, calc(var(--content) / 2))
+      minmax(0, calc(var(--content) / 2))
+      minmax(var(--gutter), 1fr);
+    min-height: min(calc(100svh - var(--header-height)), 46rem);
+  }
+
+  .text {
+    grid-column: 2;
+    align-self: center;
+    padding-inline: 0 clamp(2rem, 4vw, 4rem);
+  }
+
+  /* Vidéo (composant partagé HeroSideVideo) : moitié droite, jusqu'au bord. */
+  .hero .media {
+    grid-column: 3 / 5;
+    min-height: 100%;
+    aspect-ratio: auto;
+  }
+}

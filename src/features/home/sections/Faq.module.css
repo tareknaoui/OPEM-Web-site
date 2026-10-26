@@ -1,0 +1,229 @@
+/* Questions fréquentes (dernière section). Fond blanc (la section précédente est bleu très
+   clair). Ordinateur (≥ 64em) : titre et encadré d'aide (5/12, restent visibles au
+   défilement) | questions (7/12). Questions séparées par un filet gris clair ; icône « + »
+   qui devient « − » à l'ouverture. En arabe, tout passe en miroir. */
+
+.section {
+  padding-block: var(--section-space);
+  background: var(--color-bg);
+}
+
+.layout {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+/* ---------- Titre et aide ---------- */
+
+.title {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.875rem, 1.2rem + 2.2vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.lead {
+  max-width: 30rem;
+  margin: var(--space-4) 0 0;
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.help {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  max-width: 30rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border-radius: 6px;
+  background: var(--opem-blue-10);
+}
+
+.helpTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.helpTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.helpText {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+  line-height: 1.55;
+}
+
+/* ---------- Questions ---------- */
+
+.list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-border);
+  list-style: none;
+}
+
+.item {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.heading {
+  margin: 0;
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  width: 100%;
+  padding: clamp(1.25rem, 2vw, 1.625rem) 0;
+  border: 0;
+  background: none;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 0.95rem + 0.45vw, 1.3125rem);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: start;
+  cursor: pointer;
+}
+
+.question:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.question:hover {
+  color: var(--color-primary);
+}
+
+/* « + » dessiné en CSS : la barre verticale se couche à l'ouverture (« − »). */
+.icon {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--opem-night);
+  border-radius: 50%;
+}
+
+.icon::before,
+.icon::after {
+  content: '';
+  position: absolute;
+  width: 0.875rem;
+  height: 2px;
+  border-radius: 1px;
+  background: currentcolor;
+}
+
+.icon::after {
+  rotate: 90deg;
+}
+
+.item[data-open] .icon {
+  border-color: var(--opem-night);
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.item[data-open] .icon::after {
+  rotate: 0deg;
+}
+
+/* Réponse : hauteur animée de 0 à son contenu (grille 0fr → 1fr). */
+.answer {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.item[data-open] .answer {
+  grid-template-rows: 1fr;
+}
+
+.answerInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.answerText {
+  max-width: 42rem;
+  margin: 0;
+  padding-bottom: clamp(1.25rem, 2vw, 1.75rem);
+  padding-inline-end: 3.5rem;
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.main > p {
+  margin-top: var(--space-6);
+}
+
+/* ---------- Ordinateur ---------- */
+
+@media (min-width: 64em) {
+  .layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(3rem, 6vw, 7rem);
+    align-items: start;
+  }
+
+  .aside {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+  }
+}
+
+/* ---------- Mouvement ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .answer {
+    transition: grid-template-rows 450ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .answerText {
+    opacity: 0;
+    translate: 0 -0.5rem;
+    transition:
+      opacity 300ms,
+      translate 450ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .item[data-open] .answerText {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: 100ms;
+  }
+
+  .question,
+  .icon {
+    transition:
+      color 150ms,
+      background-color 200ms,
+      border-color 200ms;
+  }
+
+  .icon::after {
+    transition: rotate 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}

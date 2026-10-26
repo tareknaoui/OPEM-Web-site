@@ -1,0 +1,420 @@
+/* « Nos domaines », carrousel animé. Fond bleu OPEM franc sur toute la largeur.
+   Sur bleu OPEM : textes blancs ou bleu 30 % (jamais de vert ni de bleu nuit au contact).
+   Grande carte blanche : photo (zoom lent) | texte. Dessous, les onglets à barre de
+   progression. Ordinateur (≥ 48em) : photo et texte côte à côte ; mobile : photo au-dessus,
+   onglets réduits à leur numéro. En arabe, tout passe en miroir. */
+
+.section {
+  padding-block: var(--section-space);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.section :focus-visible {
+  outline-color: var(--opem-white);
+}
+
+/* ---------- En-tête ---------- */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-8);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.title {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.875rem, 1.3rem + 2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.roundButton {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1.5px solid rgb(255 255 255 / 0.6);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--opem-white);
+  cursor: pointer;
+}
+
+.roundButton:hover {
+  border-color: var(--opem-white);
+  background: var(--opem-white);
+  color: var(--color-primary);
+}
+
+/* Flèches qui suivent le sens de lecture (inversées en arabe). */
+.previousIcon {
+  transform: scaleX(calc(-1 * var(--dir)));
+}
+
+.nextIcon {
+  transform: scaleX(var(--dir));
+}
+
+/* ---------- Carte ---------- */
+
+.card {
+  display: grid;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--opem-white);
+  color: var(--color-text);
+}
+
+.card:focus-visible {
+  outline-offset: 4px;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--opem-blue-10);
+}
+
+/* Les cinq photos superposées ; seule l'active est visible (au-dessus des autres). */
+.frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.frame[data-active] {
+  z-index: 1;
+  visibility: visible;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1.5rem, 3.5vw, 3rem);
+}
+
+.bigNumber {
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(2.75rem, 2rem + 2.5vw, 4.25rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.domainTitle {
+  margin: var(--space-4) 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.domainTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.text {
+  max-width: 34rem;
+  margin: var(--space-3) 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.points {
+  display: grid;
+  gap: var(--space-3);
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  line-height: 1.45;
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  color: var(--opem-green-dark);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-8);
+  margin-top: var(--space-6);
+}
+
+.discover {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+}
+
+.discover:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.discover:hover {
+  text-decoration-thickness: 2px;
+}
+
+.card :focus-visible {
+  outline-color: var(--color-primary);
+}
+
+/* ---------- Onglets à barre de progression ---------- */
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1.25rem);
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.tab {
+  display: grid;
+  align-content: start;
+  gap: 0.375rem;
+  padding: 0 0 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  text-align: start;
+  cursor: pointer;
+}
+
+.tab:hover,
+.tab[aria-selected='true'] {
+  color: var(--opem-white);
+}
+
+.tab:focus-visible {
+  outline-offset: 4px;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  height: 3px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.25);
+}
+
+/* Domaines déjà vus : barre pleine. */
+.tab[data-done] .bar {
+  background: rgb(255 255 255 / 0.6);
+}
+
+.fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  background: var(--opem-white);
+}
+
+.tabNumber {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.tabLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.tabLabel:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+}
+
+/* Mobile : onglets réduits au numéro (le nom reste lu par les lecteurs d'écran). */
+@media (max-width: 47.99em) {
+  .tabLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Ordinateur : photo | texte ---------- */
+
+@media (min-width: 48em) {
+  .card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 30rem;
+  }
+
+  .media {
+    aspect-ratio: auto;
+  }
+}
+
+/* ---------- Mouvement ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Barre de l'onglet actif : se remplit en 7 s, puis domaine suivant (animationend). */
+  .fill {
+    animation: fill 7s linear both;
+  }
+
+  /* Pause : bouton, navigation au clavier, section hors de l'écran. */
+  .section[data-paused] .fill,
+  .section[data-offscreen] .fill,
+  .section:has(:focus-visible) .fill {
+    animation-play-state: paused;
+  }
+
+  /* Entrées rejouées à chaque domaine : la photo active se dévoile par-dessus la
+     précédente, qui reste visible dessous le temps du rideau ; le texte est recréé par
+     sa clé. */
+  .frame {
+    transition: visibility 0s 900ms;
+  }
+
+  .frame[data-active] {
+    transition: none;
+    animation: reveal 900ms cubic-bezier(0.65, 0, 0.25, 1) both;
+  }
+
+  .frame[data-active] .image {
+    animation:
+      settle 1200ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
+      zoom 9s 1200ms linear both;
+  }
+
+  .body > * {
+    animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .body > :nth-child(2) {
+    animation-delay: 80ms;
+  }
+
+  .body > :nth-child(3) {
+    animation-delay: 160ms;
+  }
+
+  .body > :nth-child(4) {
+    animation-delay: 240ms;
+  }
+
+  .body > :nth-child(5) {
+    animation-delay: 320ms;
+  }
+
+  .section[data-paused] .frame[data-active] .image {
+    animation-play-state: running, paused;
+  }
+
+  .roundButton,
+  .tab {
+    transition:
+      background-color 150ms,
+      border-color 150ms,
+      color 150ms;
+  }
+}
+
+@keyframes fill {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes settle {
+  from {
+    scale: 1.15;
+  }
+}
+
+@keyframes zoom {
+  from {
+    scale: 1;
+  }
+
+  to {
+    scale: 1.08;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+/* En arabe, le rideau de la photo s'ouvre de l'autre côté. */
+@keyframes reveal-rtl {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .frame[data-active]:dir(rtl) {
+    animation-name: reveal-rtl;
+  }
+}
