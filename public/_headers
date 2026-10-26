@@ -1,5 +1,6 @@
 # En-têtes HTTP de sécurité pour l'hébergement (Netlify, Cloudflare Pages).
-# Pour un autre hébergeur (Vercel, Nginx, Apache…), reprendre les mêmes valeurs.
+# Vercel ignore ce fichier : mêmes valeurs dans vercel.json (à garder synchronisés).
+# Pour un autre hébergeur (Nginx, Apache…), reprendre les mêmes valeurs.
 /*
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=63072000; includeSubDomains
@@ -13,4 +14,7 @@
 
 # Vidéos et images d'accueil : nom fixe, donc cache d'une semaine seulement.
 /videos/*
+  Cache-Control: public, max-age=604800
+
+/images/*
   Cache-Control: public, max-age=604800

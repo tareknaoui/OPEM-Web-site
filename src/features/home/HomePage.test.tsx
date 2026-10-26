@@ -21,20 +21,21 @@ function renderHome() {
 }
 
 describe('HomePage', () => {
-  it('affiche le grand titre et les deux boutons du bandeau d’accueil', () => {
+  // Bandeau retenu par défaut : « Repères » (voir layouts/variants).
+  it('affiche le grand titre, le bouton devis, les liens et les repères du bandeau', () => {
     renderHome();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      /Structurer, former, certifier/,
+      'Faire progresser votre organisation.',
     );
-    expect(screen.getByRole('link', { name: 'Demander un devis' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Demander un devis/ })).toHaveAttribute(
       'href',
       '/contact',
     );
-    expect(screen.getByRole('link', { name: 'Voir les formations' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Nos expertises/ })).toHaveAttribute(
       'href',
-      '/formation',
+      '/expertises',
     );
-    expect(screen.getByText('Partout en Algérie')).toBeInTheDocument();
+    expect(screen.getByText('15 ans')).toBeInTheDocument();
   });
 
   it('présente les sections dans l’ordre du cahier des charges', () => {
@@ -51,7 +52,7 @@ describe('HomePage', () => {
   it('passe entièrement en arabe', () => {
     renderHome();
     fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/نرتقي بمؤسستكم/);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/نرتقي بأداء مؤسستكم/);
     expect(screen.getByRole('heading', { name: 'ما يحتفظ به من نرافقهم.' })).toBeInTheDocument();
   });
 });

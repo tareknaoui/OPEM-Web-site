@@ -1,10 +1,11 @@
 import { useSyncExternalStore } from 'react';
 
 /* ==========================================================================
-   Maquettes à comparer (barre de navigation et pied de page).
-   Outil de présentation : la version 1 reste la version par défaut du site.
-   Une fois le choix fait, garder la variante retenue et supprimer les autres
-   (ce dossier, le sélecteur et les variantes non retenues).
+   Maquettes à comparer (barre, bandeau d'accueil, sections, pied de page).
+   Outil de présentation. Versions retenues par OPEM (DEFAULTS ci-dessous) :
+   barre « Éditoriale bleu nuit », bandeau « Repères », domaines « Carrousel animé »,
+   éclairages « À la une », pied « Bleu nuit ». Pour finir : garder ces variantes et
+   supprimer les autres (ce dossier, le sélecteur et les variantes non retenues).
 
    Le sélecteur s'affiche :
    - toujours en développement (npm run dev) ;
@@ -13,7 +14,7 @@ import { useSyncExternalStore } from 'react';
    ========================================================================== */
 
 export const navbarVariants = [
-  { id: 'nuit', label: 'Bleu nuit', description: 'Version actuelle' },
+  { id: 'nuit', label: 'Bleu nuit', description: 'Première version' },
   { id: 'blanche', label: 'Blanche', description: 'Fond blanc, logo couleur' },
   {
     id: 'editoriale',
@@ -23,7 +24,7 @@ export const navbarVariants = [
   {
     id: 'editorialenuit',
     label: 'Éditoriale bleu nuit',
-    description: 'La même sur bleu nuit, logo blanc',
+    description: 'Retenue · la même sur bleu nuit, logo blanc',
   },
   { id: 'flottante', label: 'Capsule flottante', description: 'Barre arrondie détachée des bords' },
   { id: 'centree', label: 'Logo centré', description: 'Logo au centre, menu sur bande bleu nuit' },
@@ -36,13 +37,13 @@ export const navbarVariants = [
 ] as const;
 
 export const footerVariants = [
-  { id: 'nuit', label: 'Bleu nuit', description: 'Version actuelle' },
+  { id: 'nuit', label: 'Bleu nuit', description: 'Retenue' },
   { id: 'clair', label: 'Clair', description: 'Fond bleu très clair, logo couleur' },
   { id: 'compact', label: 'Compact', description: 'Une seule bande, l’essentiel' },
 ] as const;
 
 export const heroVariants = [
-  { id: 'reseau', label: 'Réseau 3D', description: 'Version actuelle' },
+  { id: 'reseau', label: 'Réseau 3D', description: 'Première version' },
   { id: 'cycle', label: 'Cycle OPEM', description: 'Grand titre, démarche animée en 3 étapes' },
   { id: 'video', label: 'Vidéo ruche', description: 'Vidéo plein cadre, texte sur bleu nuit' },
   {
@@ -78,7 +79,7 @@ export const heroVariants = [
   {
     id: 'reperes',
     label: 'Repères',
-    description: 'Sur bleu nuit, boutons puis trois faits courts (à confirmer), vidéo à droite',
+    description: 'Retenue · sur bleu nuit, boutons puis trois faits courts, vidéo à droite',
   },
 ] as const;
 
@@ -92,7 +93,7 @@ export const domainsVariants = [
   {
     id: 'anime',
     label: 'Carrousel animé',
-    description: 'Fond bleu OPEM, défile seul (avec pause), onglets à barre de progression',
+    description: 'Retenue · fond bleu OPEM, défile seul (avec pause), barre de progression',
   },
   {
     id: 'sommaire',
@@ -105,7 +106,7 @@ export const insightsVariants = [
   {
     id: 'une',
     label: 'À la une',
-    description: 'Fond blanc, une grande publication, deux compactes et trois cartes',
+    description: 'Retenue · fond blanc, une grande publication, deux compactes, trois cartes',
   },
   {
     id: 'rail',
@@ -127,11 +128,12 @@ export type LayoutVariants = {
   insights: InsightsVariant;
 };
 
+// Versions retenues par OPEM (affichées par défaut, et seules affichées sans le comparateur).
 const DEFAULTS: LayoutVariants = {
-  navbar: 'nuit',
+  navbar: 'editorialenuit',
   footer: 'nuit',
-  hero: 'reseau',
-  domains: 'onglets',
+  hero: 'reperes',
+  domains: 'anime',
   insights: 'une',
 };
 const STORAGE_KEY = 'opem-maquettes';

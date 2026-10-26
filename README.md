@@ -97,7 +97,9 @@ Pour que les mises en page suivent, utiliser les propriétés CSS « logiques »
 ## Comparer les maquettes (barre, bandeau d'accueil, pied de page)
 
 Huit barres de navigation, dix bandeaux d'accueil et trois pieds de page sont disponibles.
-La version 1 reste celle du site par défaut.
+**Versions retenues par OPEM**, affichées par défaut (sans `?maquettes`) : barre « Éditoriale
+bleu nuit », bandeau « Repères », domaines « Carrousel animé », éclairages « À la une », pied de
+page « Bleu nuit » (`DEFAULTS` dans `layouts/variants/layoutVariants.ts`).
 
 Bandeaux d'accueil : 1. Réseau 3D (actuel) ; 2. Cycle OPEM — grand titre, puis la démarche
 (Diagnostiquer, Structurer et former, Certifier) racontée par un schéma animé dont les étapes
