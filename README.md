@@ -103,9 +103,11 @@ page « Bleu nuit » (`DEFAULTS` dans `layouts/variants/layoutVariants.ts`).
 
 Bandeaux d'accueil : 1. Réseau 3D (actuel) ; 2. Cycle OPEM — grand titre, puis la démarche
 (Diagnostiquer, Structurer et former, Certifier) racontée par un schéma animé dont les étapes
-défilent seules, avec bouton pause (`?maquettes&hero=cycle`). Textes dans `content.ts` (`heroCycle`) ; 3. Vidéo ruche — texte sur panneau bleu nuit, vidéo `public/videos/hero-ruche.mp4` à côté (jamais
+défilent seules, avec bouton pause (`?maquettes&hero=cycle`). Textes dans `content.ts` (`heroCycle`) ; 3. Vidéo ruche — texte sur panneau bleu nuit, vidéo `public/videos/hero-opem.mp4` à côté (jamais
 de texte sur l'image), bouton pause (`?maquettes&hero=video`). Sur mobile ou en mouvement réduit,
-seule l'image fixe `hero-ruche.jpg` est chargée. Pour changer de vidéo : remplacer ces deux fichiers
+seule l'image fixe `hero-opem.jpg` est chargée. Vidéo actuelle (`hero-opem.mp4`, 12 s, 1,7 Mo) : montage
+de 4 plans libres de droits Pexels (conseil 7691633, chantier 8964792, formation 9034887, industrie
+18101973), en attendant un tournage au cabinet. Pour changer de vidéo : remplacer ces deux fichiers
 (même nom), idéalement une vidéo de moins de 3 Mo, sans son ; 4. Vidéo immersive — même vidéo dans un grand cadre arrondi, sous un voile bleu nuit uniforme
 (texte lisible, contraste AA), titre centré, carte « De quoi avez-vous besoin ? » et pastille des
 repères (`?maquettes&hero=immersive`, idéal avec la barre `nav=flottante`). Le voile est une

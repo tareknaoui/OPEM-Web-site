@@ -30,7 +30,7 @@ describe('Bandeau « Vidéo »', () => {
       'Faire progresser votre organisation.',
     );
     const video = container.querySelector('video')!;
-    expect(video).toHaveAttribute('src', '/videos/hero-ruche.mp4');
+    expect(video).toHaveAttribute('src', '/videos/hero-opem.mp4');
     expect(video.muted).toBe(true);
     expect(screen.getByRole('button', { name: 'Mettre la vidéo en pause' })).toBeInTheDocument();
   });
@@ -39,7 +39,7 @@ describe('Bandeau « Vidéo »', () => {
     mockMatchMedia(false);
     const { container } = renderHero();
     expect(container.querySelector('video')).toBeNull();
-    expect(container.querySelector('img[src="/videos/hero-ruche.jpg"]')).toBeInTheDocument();
+    expect(container.querySelector('img[src="/videos/hero-opem.jpg"]')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /vidéo/ })).not.toBeInTheDocument();
   });
 });

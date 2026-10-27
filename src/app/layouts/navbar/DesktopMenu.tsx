@@ -61,7 +61,7 @@ export function DesktopMenu({ items, panel }: { items: MenuItem[]; panel?: Panel
 type PanelStyle = 'full' | 'rich';
 
 /** Photo de l'encart rendez-vous (l'image fixe de la vidéo d'accueil). */
-const FEATURE_IMAGE_SRC = '/videos/hero-ruche.jpg';
+const FEATURE_IMAGE_SRC = '/videos/hero-opem.jpg';
 
 type SubmenuItemProps = {
   item: MenuItem;
