@@ -4,7 +4,8 @@ export const HERO_VIDEO_SRC = '/videos/hero-opem.mp4';
 export const HERO_POSTER_SRC = '/videos/hero-opem.jpg';
 
 /**
- * La vidéo n'est chargée que sur écran moyen ou grand, et si l'utilisateur n'a pas
- * demandé à réduire les animations. Sinon : image fixe (aucun téléchargement vidéo).
+ * La vidéo (1,7 Mo) est lue sur tous les écrans, mobile compris, comme sur les sites des
+ * grands cabinets, sauf si l'utilisateur a demandé à réduire les animations : image fixe
+ * alors (aucun téléchargement vidéo).
  */
-export const HERO_VIDEO_QUERY = '(min-width: 48em) and (prefers-reduced-motion: no-preference)';
+export const HERO_VIDEO_QUERY = '(prefers-reduced-motion: no-preference)';

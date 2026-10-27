@@ -1,6 +1,7 @@
 /* Bandeau « Repères » : fond bleu nuit, titre, texte, boutons, puis trois faits courts
    séparés par un trait gris clair. Sur bleu nuit, ni bleu OPEM ni vert au contact du fond.
-   Ordinateur : marge | texte (6/12) | vidéo (6/12 + marge, jusqu'au bord de l'écran). */
+   Mobile : texte, vidéo (pleine largeur, visible dès le premier écran), puis les faits.
+   Ordinateur : marge | texte et faits (6/12) | vidéo (6/12 + marge, jusqu'au bord). */
 
 .hero {
   display: grid;
@@ -10,7 +11,11 @@
 }
 
 .text {
-  padding: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--gutter) clamp(2.5rem, 2rem + 3vw, 4rem);
+  padding: clamp(2rem, 1rem + 4vw, 5rem) var(--gutter) clamp(2rem, 1.5rem + 2vw, 2.5rem);
+}
+
+.factsBlock {
+  padding: var(--space-6) var(--gutter) clamp(2.5rem, 2rem + 3vw, 4rem);
 }
 
 .text :focus-visible {
@@ -38,6 +43,29 @@
   width: 2.5rem;
   height: 2px;
   background: var(--color-on-nav);
+}
+
+/* Mobile : surtitre sur une seule ligne (sans le trait, espacement réduit). */
+@media (max-width: 35.99em) {
+  .kicker {
+    margin-bottom: var(--space-4);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+  }
+
+  .kicker::before {
+    display: none;
+  }
+
+  .intro {
+    margin-top: var(--space-4);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .actions {
+    margin-top: var(--space-6);
+  }
 }
 
 .kicker:lang(ar) {
@@ -115,7 +143,7 @@
 
 .facts {
   display: grid;
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -182,18 +210,29 @@
       minmax(0, calc(var(--content) / 2))
       minmax(0, calc(var(--content) / 2))
       minmax(var(--gutter), 1fr);
+    /* Texte et faits centrés ensemble dans la hauteur. */
+    grid-template-rows: 1fr auto auto 1fr;
     min-height: min(calc(100svh - var(--header-height)), 46rem);
   }
 
   .text {
     grid-column: 2;
-    align-self: center;
+    grid-row: 2;
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) 0;
+    padding-inline: 0 clamp(2rem, 4vw, 4rem);
+  }
+
+  .factsBlock {
+    grid-column: 2;
+    grid-row: 3;
+    padding-block: clamp(2rem, 4vw, 3rem) clamp(2.5rem, 2rem + 3vw, 4rem);
     padding-inline: 0 clamp(2rem, 4vw, 4rem);
   }
 
   /* Vidéo (composant partagé HeroSideVideo) : moitié droite, jusqu'au bord. */
   .hero .media {
     grid-column: 3 / 5;
+    grid-row: 1 / -1;
     min-height: 100%;
     aspect-ratio: auto;
   }

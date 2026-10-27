@@ -106,29 +106,68 @@
 
 .main {
   display: grid;
+  /* Mobile : coordonnées avant le plan du site (replié en accordéon). */
   grid-template-areas:
     'brand'
-    'columns'
-    'contact';
+    'contact'
+    'columns';
   gap: 2.5rem;
-  padding-block: 3.5rem;
+  padding-block: 3rem;
 }
 
 .brand {
   grid-area: brand;
 }
 
-/* Mobile : « Expertises » (libellés longs) sur toute la largeur,
-   les colonnes suivantes deux par deux pour raccourcir la page. */
+/* Mobile : une rubrique par ligne, séparées par un filet ; chacune s'ouvre d'un toucher. */
 .columns {
   grid-area: columns;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem 1.5rem;
+  border-bottom: 1px solid var(--footer-line);
 }
 
-.columns > :first-child {
-  grid-column: 1 / -1;
+.column {
+  border-top: 1px solid var(--footer-line);
+}
+
+.columns .heading {
+  margin: 0;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: start;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition: rotate 200ms;
+}
+
+.toggle[aria-expanded='true'] .chevron {
+  rotate: 180deg;
+}
+
+.columns .list {
+  padding-bottom: var(--space-6);
+}
+
+/* Rubrique repliée (« display: grid » l'emporterait sur l'attribut hidden). */
+.list[hidden] {
+  display: none;
 }
 
 .contact {
@@ -294,10 +333,20 @@
 
   .columns {
     grid-template-columns: repeat(3, 1fr);
+    gap: 2rem 1.5rem;
+    border-bottom: 0;
   }
 
-  .columns > :first-child {
-    grid-column: auto;
+  .column {
+    border-top: 0;
+  }
+
+  .columns .heading {
+    margin: 0 0 var(--space-4);
+  }
+
+  .columns .list {
+    padding-bottom: 0;
   }
 }
 

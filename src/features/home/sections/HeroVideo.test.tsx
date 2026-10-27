@@ -35,7 +35,7 @@ describe('Bandeau « Vidéo »', () => {
     expect(screen.getByRole('button', { name: 'Mettre la vidéo en pause' })).toBeInTheDocument();
   });
 
-  it('montre seulement l’image fixe sur mobile ou en mouvement réduit', () => {
+  it('montre seulement l’image fixe en mouvement réduit', () => {
     mockMatchMedia(false);
     const { container } = renderHero();
     expect(container.querySelector('video')).toBeNull();

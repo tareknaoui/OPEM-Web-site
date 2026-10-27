@@ -16,7 +16,7 @@ type HeroSideVideoProps = {
 
 /**
  * Vidéo d'accueil à côté du texte (jamais de texte dessus), muette, en boucle, avec un
- * bouton pause (WCAG 2.2.2). Sur mobile ou en mouvement réduit : image fixe seulement.
+ * bouton pause (WCAG 2.2.2). En mouvement réduit : image fixe seulement.
  * Partagée par les bandeaux « Autodiagnostic », « Trois questions » et « Public / entreprise ».
  */
 export function HeroSideVideo({ video, className, alt = '' }: HeroSideVideoProps) {

@@ -16,7 +16,8 @@ type HeroFactsProps = {
  * Bandeau « Repères » : sur bleu nuit, titre, texte, bouton devis et deux liens (expertises,
  * formations), puis une ligne de trois
  * faits courts séparés par un trait gris clair, avec la mention « à confirmer » tant que
- * les chiffres sont provisoires. Vidéo d'accueil sur la moitié droite.
+ * les chiffres sont provisoires. Vidéo d'accueil sur la moitié droite ; sur mobile, elle
+ * passe entre les boutons et les faits, pour être visible dès le premier écran.
  */
 export function HeroFacts({ hero, video, facts }: HeroFactsProps) {
   return (
@@ -43,7 +44,11 @@ export function HeroFacts({ hero, video, facts }: HeroFactsProps) {
             ))}
           </span>
         </div>
+      </div>
 
+      <HeroSideVideo video={video} className={styles.media} />
+
+      <div className={styles.factsBlock}>
         <ul className={styles.facts} aria-label={facts.label}>
           {facts.items.map((fact) => (
             <li key={fact.label} className={styles.fact}>
@@ -54,8 +59,6 @@ export function HeroFacts({ hero, video, facts }: HeroFactsProps) {
         </ul>
         <ProvisionalNote show={facts.provisional}>{facts.note}</ProvisionalNote>
       </div>
-
-      <HeroSideVideo video={video} className={styles.media} />
     </section>
   );
 }

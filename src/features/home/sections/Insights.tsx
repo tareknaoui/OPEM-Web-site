@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowRightIcon } from '@/components/icons';
 import { useLanguage } from '@/i18n/useLanguage';
@@ -20,11 +20,13 @@ const FILTERS: Filter[] = ['all', 'eclairage', 'actualite'];
  * Section « Éclairages et actualités », à la manière des pages « Insights » des grands
  * cabinets : filtres, puis une publication à la une (grande image), deux cartes compactes
  * à côté, et des cartes à image dessous. Chaque carte est entièrement cliquable (le lien
- * du titre la couvre). Photos sans texte dessus.
+ * du titre la couvre). Photos sans texte dessus. Sur mobile, les cartes forment une rangée
+ * qu'on fait glisser (voir le CSS) ; un changement de filtre la ramène au début.
  */
 export function Insights({ insights }: InsightsProps) {
   const { lang } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
+  const listRef = useRef<HTMLUListElement>(null);
   const items = insights.items.filter((item) => filter === 'all' || item.kind === filter);
 
   return (
@@ -51,14 +53,17 @@ export function Insights({ insights }: InsightsProps) {
               type="button"
               className={styles.filter}
               aria-pressed={filter === value}
-              onClick={() => setFilter(value)}
+              onClick={() => {
+                setFilter(value);
+                if (listRef.current) listRef.current.scrollLeft = 0;
+              }}
             >
               {insights.filters[value]}
             </button>
           ))}
         </div>
 
-        <ul className={styles.grid} data-reveal-stagger>
+        <ul ref={listRef} className={styles.grid} data-reveal-stagger data-lenis-prevent-horizontal>
           {items.map((item, i) => {
             const variant = i === 0 ? styles.featured : i < 3 ? styles.compact : styles.standard;
             return (

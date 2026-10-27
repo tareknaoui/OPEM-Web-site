@@ -104,7 +104,7 @@ page « Bleu nuit » (`DEFAULTS` dans `layouts/variants/layoutVariants.ts`).
 Bandeaux d'accueil : 1. Réseau 3D (actuel) ; 2. Cycle OPEM — grand titre, puis la démarche
 (Diagnostiquer, Structurer et former, Certifier) racontée par un schéma animé dont les étapes
 défilent seules, avec bouton pause (`?maquettes&hero=cycle`). Textes dans `content.ts` (`heroCycle`) ; 3. Vidéo ruche — texte sur panneau bleu nuit, vidéo `public/videos/hero-opem.mp4` à côté (jamais
-de texte sur l'image), bouton pause (`?maquettes&hero=video`). Sur mobile ou en mouvement réduit,
+de texte sur l'image), bouton pause (`?maquettes&hero=video`). En mouvement réduit,
 seule l'image fixe `hero-opem.jpg` est chargée. Vidéo actuelle (`hero-opem.mp4`, 12 s, 1,7 Mo) : montage
 de 4 plans libres de droits Pexels (conseil 7691633, chantier 8964792, formation 8716582 — chiffres de l'écran floutés, industrie
 18101973), en attendant un tournage au cabinet. Pour changer de vidéo : remplacer ces deux fichiers
@@ -185,7 +185,8 @@ quatre témoignages de `content.ts` (`testimonials`) sont des **exemples** (noms
 « [à confirmer] ») : à remplacer par de vrais témoignages, publiés avec l'accord écrit de leurs auteurs.
 
 **Questions fréquentes** (dernière section, `sections/Faq.tsx`) : titre et encadré « Vous ne trouvez
-pas votre réponse ? » à gauche (restent visibles au défilement), questions en accordéon à droite.
+pas votre réponse ? » à gauche (restent visibles au défilement), questions en accordéon à droite ;
+sur téléphone, l'encadré passe après les questions.
 Les six réponses de `content.ts` (`faq`) sont **provisoires** : aucun délai, tarif ni agrément
 inventé (« [à confirmer] ») ; à valider par OPEM.
 
@@ -200,8 +201,13 @@ formations. Leurs fichiers (`sections/Needs`, `Audiences`, `Approach`, `KeyFigur
 (`public/images/vous-etes-*.svg`) sont à remplacer par de vraies photos, même nom de fichier.
 
 **Pied de page** : une colonne par rubrique ayant des sous-pages, puis « Découvrir », générées à partir
-du menu principal (donc modifiables dans WordPress). Les coordonnées (téléphone, e-mail,
+du menu principal (donc modifiables dans WordPress). Sur téléphone, les coordonnées passent avant
+le plan du site, dont chaque rubrique se replie en accordéon. Les coordonnées (téléphone, e-mail,
 adresse) se modifient à un seul endroit : `src/config/company.ts`.
+
+**Version mobile** (inspirée des sites de McKinsey, Bain et Accenture) : la vidéo d'accueil est lue
+aussi sur téléphone, juste sous les boutons (les chiffres repères passent après) ; les éclairages
+forment une rangée de cartes qu'on fait glisser ; espacement entre sections un peu réduit.
 
 **Barre bleu nuit** (`--color-nav-bg` dans `global.css`) : dérogation au fond blanc de la charte.
 Sur ce fond, liens et focus sont en blanc (le bleu OPEM n'y serait pas lisible).

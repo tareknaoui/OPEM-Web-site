@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '@/i18n/LanguageProvider';
 import { LanguageSwitcher } from '../navbar/LanguageSwitcher';
 import { Footer } from './Footer';
@@ -54,6 +54,32 @@ describe('Footer', () => {
       '/formation/catalogue-et-sessions',
     );
     expect(within(nav).queryByRole('link', { name: 'Contact' })).not.toBeInTheDocument();
+  });
+
+  describe('sur mobile', () => {
+    afterEach(() => vi.restoreAllMocks());
+
+    it('replie chaque rubrique en accordéon, une seule ouverte à la fois', () => {
+      vi.spyOn(window, 'matchMedia').mockReturnValue({
+        matches: true,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      } as unknown as MediaQueryList);
+      renderFooter();
+      const nav = screen.getByRole('navigation', { name: 'Liens du pied de page' });
+      const expertises = within(nav).getByRole('button', { name: 'Nos expertises' });
+      const formation = within(nav).getByRole('button', { name: 'Formation qualifiante' });
+      expect(expertises).toHaveAttribute('aria-expanded', 'false');
+      expect(within(nav).queryByRole('link', { name: 'Catalogue et sessions' })).toBeNull();
+
+      fireEvent.click(formation);
+      expect(formation).toHaveAttribute('aria-expanded', 'true');
+      expect(within(nav).getByRole('link', { name: 'Catalogue et sessions' })).toBeVisible();
+
+      fireEvent.click(expertises);
+      expect(expertises).toHaveAttribute('aria-expanded', 'true');
+      expect(formation).toHaveAttribute('aria-expanded', 'false');
+    });
   });
 
   it('propose un retour en haut de page sans JavaScript', () => {

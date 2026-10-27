@@ -1,6 +1,8 @@
+import { useId, useState } from 'react';
 import { Link, NavLink } from 'react-router';
-import { ArrowUpIcon, MailIcon, MapPinIcon, PhoneIcon } from '@/components/icons';
+import { ArrowUpIcon, ChevronDownIcon, MailIcon, MapPinIcon, PhoneIcon } from '@/components/icons';
 import { company } from '@/config/company';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { CALLBACK_HREF, type MenuItem } from '../navbar/menu';
@@ -64,10 +66,16 @@ export function Footer({ variant = 'nuit' }: { variant?: FooterVariant }) {
   return <FooterColumns light={variant === 'clair'} />;
 }
 
+/** Sur mobile, chaque rubrique du plan du site se replie (titre-bouton, motif accordéon). */
+const FOOTER_ACCORDION_QUERY = '(max-width: 47.99em)';
+
 function FooterColumns({ light }: { light: boolean }) {
   const { lang, t } = useLanguage();
   const items = useMenu(lang);
   const columns = buildColumns(items, t.footer.discover, t.footer.contactLink);
+  const accordion = useMediaQuery(FOOTER_ACCORDION_QUERY);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const baseId = useId();
 
   return (
     <footer className={cx(styles.footer, light && styles.clair)}>
@@ -115,18 +123,37 @@ function FooterColumns({ light }: { light: boolean }) {
 
         {/* Plan du site */}
         <nav aria-label={t.footer.nav} className={styles.columns}>
-          {columns.map((column) => (
-            <div key={column.id}>
-              <h2 className={styles.heading}>{column.title}</h2>
-              <ul className={styles.list}>
-                {column.links.map((link) => (
-                  <li key={link.id}>
-                    <FooterAnchor link={link} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {columns.map((column) => {
+            const expanded = !accordion || openId === column.id;
+            const listId = `${baseId}-${column.id}`;
+            return (
+              <div key={column.id} className={styles.column}>
+                <h2 className={styles.heading}>
+                  {accordion ? (
+                    <button
+                      type="button"
+                      className={styles.toggle}
+                      aria-expanded={expanded}
+                      aria-controls={listId}
+                      onClick={() => setOpenId(expanded ? null : column.id)}
+                    >
+                      {column.title}
+                      <ChevronDownIcon size={18} className={styles.chevron} />
+                    </button>
+                  ) : (
+                    column.title
+                  )}
+                </h2>
+                <ul id={listId} className={styles.list} hidden={!expanded}>
+                  {column.links.map((link) => (
+                    <li key={link.id}>
+                      <FooterAnchor link={link} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </nav>
 
         {/* Coordonnées */}

@@ -1,7 +1,8 @@
 /* Section « Éclairages et actualités » : fond blanc, cartes sans ombre ni cadre (esprit
    « Insights » des grands cabinets) : la photo, une étiquette en capitales, un titre fort,
    la date. Ordinateur (≥ 64em, grille de 12) : à la une (7 col., 2 rangées) | deux cartes
-   compactes (5 col.) ; puis cartes à image (4 col.). Étiquettes : vert foncé pour les
+   compactes (5 col.) ; puis cartes à image (4 col.). Mobile : rangée de cartes qu'on fait
+   glisser, la suivante dépassant au bord (comme Accenture ou McKinsey). Étiquettes : vert foncé pour les
    éclairages, bleu OPEM pour les actualités (sur blanc : conforme à la charte). */
 
 .section {
@@ -249,6 +250,57 @@
 }
 
 /* ---------- Points de rupture ---------- */
+
+/* Mobile : toutes les cartes sur une rangée qui glisse (aimantée carte par carte), jusqu'aux
+   bords de l'écran ; même format pour toutes (la une garde son résumé). */
+@media (max-width: 47.99em) {
+  .grid {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-inline: calc(-1 * var(--gutter));
+    padding: var(--space-2) var(--gutter);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+
+  .card:has(.link:focus-visible) {
+    outline-offset: 4px;
+  }
+
+  .featured .cardTitle {
+    font-size: 1.375rem;
+  }
+
+  .featured .image,
+  .compact .image {
+    aspect-ratio: 3 / 2;
+  }
+
+  .compact {
+    grid-template-columns: none;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .compact .media,
+  .compact .body {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
 
 @media (min-width: 48em) {
   .header {

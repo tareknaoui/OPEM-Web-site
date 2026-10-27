@@ -1,6 +1,6 @@
 /* Questions fréquentes (dernière section). Fond blanc (la section précédente est bleu très
    clair). Ordinateur (≥ 64em) : titre et encadré d'aide (5/12, restent visibles au
-   défilement) | questions (7/12). Questions séparées par un filet gris clair ; icône « + »
+   défilement) | questions (7/12). Mobile : titre, questions, puis l'encadré d'aide. Questions séparées par un filet gris clair ; icône « + »
    qui devient « − » à l'ouverture. En arabe, tout passe en miroir. */
 
 .section {
@@ -177,6 +177,27 @@
 
 .main > p {
   margin-top: var(--space-6);
+}
+
+/* ---------- Mobile et tablette : l'encadré d'aide passe après les questions ---------- */
+
+@media (max-width: 63.99em) {
+  .layout {
+    gap: 0;
+  }
+
+  /* Les enfants de la colonne de gauche deviennent ceux de la grille : on peut les ordonner. */
+  .aside {
+    display: contents;
+  }
+
+  .main {
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .help {
+    order: 1;
+  }
 }
 
 /* ---------- Ordinateur ---------- */
