@@ -106,7 +106,7 @@ Bandeaux d'accueil : 1. Réseau 3D (actuel) ; 2. Cycle OPEM — grand titre, pui
 défilent seules, avec bouton pause (`?maquettes&hero=cycle`). Textes dans `content.ts` (`heroCycle`) ; 3. Vidéo ruche — texte sur panneau bleu nuit, vidéo `public/videos/hero-opem.mp4` à côté (jamais
 de texte sur l'image), bouton pause (`?maquettes&hero=video`). Sur mobile ou en mouvement réduit,
 seule l'image fixe `hero-opem.jpg` est chargée. Vidéo actuelle (`hero-opem.mp4`, 12 s, 1,7 Mo) : montage
-de 4 plans libres de droits Pexels (conseil 7691633, chantier 8964792, formation 9034887, industrie
+de 4 plans libres de droits Pexels (conseil 7691633, chantier 8964792, formation 8716582 — chiffres de l'écran floutés, industrie
 18101973), en attendant un tournage au cabinet. Pour changer de vidéo : remplacer ces deux fichiers
 (même nom), idéalement une vidéo de moins de 3 Mo, sans son ; 4. Vidéo immersive — même vidéo dans un grand cadre arrondi, sous un voile bleu nuit uniforme
 (texte lisible, contraste AA), titre centré, carte « De quoi avez-vous besoin ? » et pastille des

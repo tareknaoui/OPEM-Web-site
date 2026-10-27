@@ -107,7 +107,7 @@ export function DomainsAuto({ domains }: DomainsAutoProps) {
             tabIndex={0}
             className={styles.card}
           >
-            {/* Photos superposées : la nouvelle se dévoile par-dessus la précédente
+            {/* Photos superposées : la nouvelle apparaît en fondu par-dessus la précédente
                 (jamais de blanc). Sans texte dessus (charte). */}
             <div className={styles.media}>
               {domains.items.map((item, i) => (

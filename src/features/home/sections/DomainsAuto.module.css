@@ -320,16 +320,17 @@
     animation-play-state: paused;
   }
 
-  /* Entrées rejouées à chaque domaine : la photo active se dévoile par-dessus la
-     précédente, qui reste visible dessous le temps du rideau ; le texte est recréé par
-     sa clé. */
+  /* Entrées rejouées à chaque domaine : la nouvelle photo apparaît en fondu par-dessus
+     la précédente (qui reste dessous le temps du fondu), dès le changement, en même
+     temps que le texte (recréé par sa clé). Fondu qui démarre vite : on ne voit jamais
+     l'ancienne photo à côté du nouveau texte. */
   .frame {
-    transition: visibility 0s 900ms;
+    transition: visibility 0s 550ms;
   }
 
   .frame[data-active] {
     transition: none;
-    animation: reveal 900ms cubic-bezier(0.65, 0, 0.25, 1) both;
+    animation: fade-in 550ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
   .frame[data-active] .image {
@@ -377,15 +378,15 @@
   }
 }
 
-@keyframes reveal {
+@keyframes fade-in {
   from {
-    clip-path: inset(0 100% 0 0);
+    opacity: 0;
   }
 }
 
 @keyframes settle {
   from {
-    scale: 1.15;
+    scale: 1.06;
   }
 }
 
@@ -403,18 +404,5 @@
   from {
     opacity: 0;
     translate: 0 1rem;
-  }
-}
-
-/* En arabe, le rideau de la photo s'ouvre de l'autre côté. */
-@keyframes reveal-rtl {
-  from {
-    clip-path: inset(0 0 0 100%);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .frame[data-active]:dir(rtl) {
-    animation-name: reveal-rtl;
   }
 }
