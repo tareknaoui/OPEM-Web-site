@@ -496,7 +496,7 @@ const fr: HomeContent = {
         text: 'Nous vous accompagnons, du diagnostic à la mise en œuvre.',
         points: ['Diagnostic', 'Mise en œuvre accompagnée', 'Transfert de compétences'],
         href: '/expertises/accompagnement-des-organisations',
-        image: '/images/domaines/accompagnement.jpg',
+        image: '/images/domaines/accompagnement.jpg?v=2',
       },
       {
         id: 'formations',
@@ -508,7 +508,7 @@ const fr: HomeContent = {
           'Une fiche détaillée par formation',
         ],
         href: '/formation',
-        image: '/images/domaines/formations.jpg',
+        image: '/images/domaines/formations.jpg?v=2',
       },
       {
         id: 'coaching',
@@ -592,7 +592,7 @@ const fr: HomeContent = {
           'Une formation qualifiante en présentiel à Alger. Dates et inscriptions [à confirmer].',
         date: '2026-10-20',
         href: '/actualites/sessions-et-interventions',
-        image: '/images/domaines/formations.jpg',
+        image: '/images/domaines/formations.jpg?v=2',
       },
       {
         id: 'intervention',
@@ -1102,7 +1102,7 @@ const ar: HomeContent = {
         text: 'نرافقكم من التشخيص إلى التنفيذ.',
         points: ['التشخيص', 'تنفيذ مرافَق', 'نقل الكفاءات'],
         href: '/expertises/accompagnement-des-organisations',
-        image: '/images/domaines/accompagnement.jpg',
+        image: '/images/domaines/accompagnement.jpg?v=2',
       },
       {
         id: 'formations',
@@ -1114,7 +1114,7 @@ const ar: HomeContent = {
           'بطاقة مفصّلة لكل تكوين',
         ],
         href: '/formation',
-        image: '/images/domaines/formations.jpg',
+        image: '/images/domaines/formations.jpg?v=2',
       },
       {
         id: 'coaching',
@@ -1195,7 +1195,7 @@ const ar: HomeContent = {
         excerpt: 'تكوين تأهيلي حضوري بالجزائر العاصمة. المواعيد والتسجيل [في انتظار التأكيد].',
         date: '2026-10-20',
         href: '/actualites/sessions-et-interventions',
-        image: '/images/domaines/formations.jpg',
+        image: '/images/domaines/formations.jpg?v=2',
       },
       {
         id: 'intervention',

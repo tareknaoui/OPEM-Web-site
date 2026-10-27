@@ -6,7 +6,8 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['dist', 'coverage']),
+  // Downloads : dossier de travail local, hors du dépôt (voir .gitignore).
+  globalIgnores(['dist', 'coverage', 'Downloads']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

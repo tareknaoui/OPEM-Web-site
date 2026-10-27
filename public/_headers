@@ -12,9 +12,10 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Vidéos et images d'accueil : nom fixe, donc cache d'une semaine seulement.
+# Vidéos et images : nom fixe, donc revérifiées à chaque visite (réponse 304 sans
+# retéléchargement si rien n'a changé) : un fichier remplacé s'affiche tout de suite.
 /videos/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=0, must-revalidate
 
 /images/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=0, must-revalidate

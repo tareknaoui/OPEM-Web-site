@@ -42,7 +42,7 @@ describe('Bandeau « Immersif »', () => {
       removeEventListener: () => {},
     } as unknown as MediaQueryList);
     const { container } = renderHero();
-    expect(container.querySelector('video')).toHaveAttribute('src', '/videos/hero-opem.mp4');
+    expect(container.querySelector('video')).toHaveAttribute('src', '/videos/hero-opem.mp4?v=3');
     expect(screen.getByRole('button', { name: 'Mettre la vidéo en pause' })).toBeInTheDocument();
   });
 });

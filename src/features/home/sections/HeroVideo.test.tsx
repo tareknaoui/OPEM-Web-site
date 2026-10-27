@@ -30,7 +30,7 @@ describe('Bandeau « Vidéo »', () => {
       'Faire progresser votre organisation.',
     );
     const video = container.querySelector('video')!;
-    expect(video).toHaveAttribute('src', '/videos/hero-opem.mp4');
+    expect(video).toHaveAttribute('src', '/videos/hero-opem.mp4?v=3');
     expect(video.muted).toBe(true);
     expect(screen.getByRole('button', { name: 'Mettre la vidéo en pause' })).toBeInTheDocument();
   });

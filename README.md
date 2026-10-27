@@ -1,244 +1,413 @@
-# Website v3
+# OPEM — site web (v3)
 
-React 19 · TypeScript · Vite 8 · React Router 8 · Vitest — site OPEM (FR / AR)
+Site vitrine d'**OPEM — Optimum Performance Management**, cabinet algérien de conseil, de formation et
+de certification. Bilingue français / arabe (mise en page en miroir pour l'arabe).
 
-## Démarrer
+|                |                                                                                                          |
+| -------------- | -------------------------------------------------------------------------------------------------------- |
+| **Production** | https://sas-fawn-delta.vercel.app/ (Vercel, déployé à chaque push sur `main`)                            |
+| **Dépôt**      | https://github.com/tareknaoui/OPEM-Web-site                                                              |
+| **Pile**       | React 19 · TypeScript 6 · Vite 8 · React Router 8 · CSS Modules · Vitest · Lenis                         |
+| **Node**       | ≥ 20.19 (imposé par `engines` + `engine-strict`)                                                         |
+| **État**       | Page d'accueil terminée et validée. Autres pages à construire (voir [Reste à faire](#14-reste-à-faire)). |
+
+## Sommaire
+
+1. [Démarrage rapide](#1-démarrage-rapide)
+2. [Commandes](#2-commandes)
+3. [Architecture](#3-architecture)
+4. [Page d'accueil, section par section](#4-page-daccueil-section-par-section)
+5. [En-tête, pied de page et maquettes](#5-en-tête-pied-de-page-et-maquettes)
+6. [Charte graphique et règles de contenu](#6-charte-graphique-et-règles-de-contenu)
+7. [Langues (FR / AR)](#7-langues-fr--ar)
+8. [Animations et défilement](#8-animations-et-défilement)
+9. [Médias (vidéo, photos)](#9-médias-vidéo-photos)
+10. [Menu WordPress](#10-menu-wordpress)
+11. [Déploiement et cache](#11-déploiement-et-cache)
+12. [Sécurité](#12-sécurité)
+13. [Qualité, tests et conventions](#13-qualité-tests-et-conventions)
+14. [Reste à faire](#14-reste-à-faire)
+15. [Recettes](#15-recettes)
+16. [Historique](#16-historique)
+
+---
+
+## 1. Démarrage rapide
 
 ```bash
 npm install
-cp .env.example .env.local   # Windows : copy .env.example .env.local
-npm run dev                  # http://localhost:5173
+cp .env.example .env.local      # Windows : copy .env.example .env.local
+npm run dev                     # http://localhost:5173
 ```
 
-## Commandes
+Pour voir le site **exactement comme en production** (build minifié, CSP stricte) :
 
-| Commande          | Rôle                                                       |
-| ----------------- | ---------------------------------------------------------- |
-| `npm run dev`     | Serveur de développement avec rechargement à chaud         |
-| `npm run build`   | Vérifie les types puis génère le site dans `dist/`         |
-| `npm run preview` | Sert `dist/` en local, avec la CSP de production           |
-| `npm run lint`    | Analyse le code (qualité + règles de sécurité)             |
-| `npm run format`  | Formate tout le code avec Prettier                         |
-| `npm test`        | Lance les tests une fois (`npm run test:watch` en continu) |
-| `npm run audit`   | Cherche des failles connues dans les dépendances           |
+```bash
+npm run build && npm run preview    # http://localhost:4173
+```
 
-## Structure
+Variables d'environnement (`.env.local`, jamais commité) :
+
+| Variable          | Rôle                                                                           |
+| ----------------- | ------------------------------------------------------------------------------ |
+| `VITE_APP_NAME`   | Nom affiché dans les titres de page (`OPEM`)                                   |
+| `VITE_API_URL`    | Préfixe des appels HTTP internes (`/api`)                                      |
+| `VITE_WP_API_URL` | API REST WordPress pour le menu (`https://site/wp-json`). Vide = menu intégré. |
+
+> Toute variable `VITE_*` est **lisible dans le navigateur** : n'y mettez jamais de secret.
+
+## 2. Commandes
+
+| Commande            | Rôle                                                                  |
+| ------------------- | --------------------------------------------------------------------- |
+| `npm run dev`       | Serveur de développement, rechargement à chaud, panneau « Maquettes » |
+| `npm run build`     | Vérifie les types (`tsc -b`) puis génère le site dans `dist/`         |
+| `npm run preview`   | Sert `dist/` en local avec les en-têtes de sécurité de production     |
+| `npm test`          | Lance les tests une fois (`npm run test:watch` : en continu)          |
+| `npm run typecheck` | Vérifie les types sans générer                                        |
+| `npm run lint`      | Analyse le code (qualité, hooks React, règles de sécurité)            |
+| `npm run format`    | Formate tout avec Prettier                                            |
+| `npm run audit`     | Cherche des failles connues dans les dépendances de production        |
+
+**Avant chaque push** : `npm run lint && npm run typecheck && npm test && npm run build`.
+
+## 3. Architecture
 
 ```
 src/
-├── app/            Assemblage de l'application
-│   ├── App.tsx         providers globaux + routeur
-│   ├── router.tsx      liste des routes (pages chargées à la demande)
-│   ├── RouteError.tsx  page d'erreur
-│   └── layouts/        mises en page communes (en-tête, pied de page)
-├── features/       Un dossier par fonctionnalité / page
-│   └── home/           HomePage.tsx, son hook, ses tests…
-├── components/ui/  Composants génériques réutilisables (Button…)
-├── lib/            Utilitaires sans React (env, client HTTP)
-├── styles/         CSS global et variables de design
-└── test/           Configuration des tests
+├── main.tsx                 point d'entrée (langue appliquée avant l'affichage, CSS global, <App />)
+├── app/
+│   ├── App.tsx              providers globaux (langue) + routeur
+│   ├── router.tsx           routes, chaque page chargée à la demande (lazy)
+│   ├── RouteError.tsx       page d'erreur
+│   └── layouts/
+│       ├── RootLayout.tsx   squelette commun : barre, <main>, pied, défilement fluide, apparitions
+│       ├── navbar/          barre de navigation, menus ordinateur / mobile / plein écran, menu.ts
+│       ├── footer/          pied de page (colonnes générées depuis le menu) + variante compacte
+│       └── variants/        comparateur de maquettes (outil temporaire, voir § 5)
+├── features/                une fonctionnalité / page par dossier
+│   ├── home/
+│   │   ├── HomePage.tsx     assemble les sections dans l'ordre
+│   │   ├── content.ts       TOUS les textes de l'accueil, FR et AR, typés
+│   │   ├── icons.tsx        pictogrammes propres à l'accueil
+│   │   └── sections/        un composant + son .module.css (+ test) par section
+│   ├── about/  contact/  not-found/   pages provisoires
+├── components/              composants partagés (icons.tsx, ui/Button, ui/CountUp)
+├── config/company.ts        coordonnées OPEM (adresse, téléphone, e-mail, carte) : source unique
+├── hooks/                   hooks réutilisables (défilement, apparitions, media queries…)
+├── i18n/                    langue courante, textes d'interface (strings.ts), bascule FR/AR
+├── lib/                     utilitaires sans React : env, client HTTP, client WordPress, cx, mergeRefs
+├── styles/global.css        variables de la charte (couleurs, espacements), base, apparitions
+└── test/setup.ts            configuration Vitest (jsdom, matchMedia, <dialog>)
+
+public/                      fichiers servis tels quels (logo, images, vidéo, _headers)
+wordpress/opem-menu-api.php  plugin qui expose le menu WordPress en JSON
+vercel.json                  réécriture SPA, en-têtes de sécurité et de cache (production)
 ```
 
-**Règles simples pour rester modulaire**
+### Règles d'organisation
 
-- Tout ce qui concerne une page ou une fonctionnalité vit dans `features/<nom>/` : composants, hooks, styles, tests.
-- Un composant utilisé par plusieurs features monte dans `components/`.
-- Une feature n'importe pas une autre feature. Si deux features partagent du code, il monte dans `components/` ou `lib/`.
-- Imports absolus avec l'alias `@/` : `import { Button } from '@/components/ui/Button'`.
-- Styles : un fichier `Composant.module.css` à côté du composant (classes isolées automatiquement).
+- Tout ce qui concerne une page vit dans `features/<page>/` : composants, styles, tests, textes.
+- Une feature n'importe jamais une autre feature. Code partagé → `components/`, `hooks/` ou `lib/`.
+- Imports absolus avec l'alias `@/` (`import { cx } from '@/lib/cx'`).
+- Styles : un `Composant.module.css` à côté du composant. Les noms de classes **et de keyframes**
+  sont locaux au module (une animation partagée doit être redéclarée dans chaque module).
+- Les textes ne sont jamais écrits en dur dans les composants : `content.ts` (accueil) ou
+  `i18n/strings.ts` (interface commune), toujours en FR **et** AR.
 
-**Ajouter une page**
+### Flux de données
 
-1. Créer `src/features/contact/ContactPage.tsx` avec un `export default`.
-2. Ajouter la route dans `src/app/router.tsx` :
+```
+content.ts ──(useLanguage().lang)──> HomePage ──props──> sections/*
+menu WordPress ─(lib/wordpress.ts, revalidé)─┐
+menu.ts (repli si WordPress absent) ─────────┴─> useMenu ──> Navbar, Footer
+config/company.ts ──> Footer, bandeau d'appel, pages contact
+layoutVariants.ts ──(URL ?nav=…&hero=…)──> RootLayout / HomePage (maquette affichée)
+```
+
+## 4. Page d'accueil, section par section
+
+Ordre d'affichage (`HomePage.tsx`). Clé = entrée correspondante dans `content.ts`.
+
+| #   | Section                  | Composant                     | Clé `content.ts`                 | Comportement                                                                                                                                                   | Sur téléphone                                                       |
+| --- | ------------------------ | ----------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 1   | Accroche « Repères »     | `HeroFacts` + `HeroSideVideo` | `hero`, `heroVideo`, `heroFacts` | Bleu nuit, titre, devis + 2 liens, 3 chiffres repères, vidéo à droite avec bouton pause                                                                        | Vidéo sous les boutons (visible dès le 1er écran), chiffres ensuite |
+| 2   | Nos domaines             | `DomainsAuto`                 | `domains`                        | Carte photo + texte, défile seule toutes les 7 s (barre de progression), pause : bouton, clavier, section hors écran. Photos superposées en fondu, préchargées | Onglets réduits à leur numéro                                       |
+| 3   | Éclairages et actualités | `Insights`                    | `insights`                       | Filtres Tout / Éclairages / Actualités, une publication à la une, 2 compactes, cartes à image                                                                  | Rangée de cartes qu'on fait glisser (scroll-snap)                   |
+| 4   | Témoignages              | `Testimonials`                | `testimonials`                   | Citation sur carte blanche, liste à côté, flèches et compteur, pas de défilement auto                                                                          | Pastilles défilantes                                                |
+| 5   | Questions fréquentes     | `Faq`                         | `faq`                            | Accordéon WAI-ARIA (plusieurs ouvertes), encadré d'aide collant à gauche                                                                                       | Encadré d'aide après les questions                                  |
+
+**Contenu provisoire.** Chaque bloc marqué `provisional: true` affiche une mention « à confirmer »
+sous la section (composant `ProvisionalNote`). Sont provisoires : les 3 chiffres repères, les 6
+publications, les 4 témoignages, les 6 réponses de la FAQ. Passer `provisional` à `false` une fois
+les vrais contenus validés par OPEM.
+
+**Sections retirées** à la demande du client, fichiers conservés (une ligne dans `HomePage.tsx`
+suffit pour les remettre) : `Needs` (« Quel est votre besoin ? »), `Audiences` (« Vous êtes… »),
+`Approach` (« Trois temps »), `KeyFigures`, `Sectors`, `Trainings` (agenda).
+
+## 5. En-tête, pied de page et maquettes
+
+### Barre de navigation (`layouts/navbar/`)
+
+- Fixe, bleu nuit (`--color-nav-bg`), 80 px qui se réduit à 64 px après 8 px de défilement
+  (`useScrolled`). La zone réservée sous la barre (`.shell::before` dans `RootLayout.module.css`)
+  prend la couleur de la barre : aucune bande blanche pendant la réduction.
+- Ordinateur (≥ 1280 px) : libellés courts, sous-menus / méga-menu. En dessous : bouton burger.
+- Pas d'entrée « Accueil » sur ordinateur (le logo y mène).
+
+### Pied de page (`layouts/footer/Footer.tsx`)
+
+- Bandeau d'appel bleu OPEM (téléphone + « Être rappelé »), puis corps bleu nuit.
+- Colonnes générées depuis le menu (une par rubrique ayant des sous-pages, puis « Découvrir »).
+- Téléphone : coordonnées d'abord, rubriques repliées en accordéon (une ouverte à la fois).
+
+### Comparateur de maquettes (`layouts/variants/`) — outil temporaire
+
+Plusieurs versions de chaque bloc ont été présentées au client. Les **versions retenues** sont
+celles de `DEFAULTS` dans `layoutVariants.ts` et s'affichent sans paramètre.
+
+| Bloc         | Paramètre    | Retenue          | Autres valeurs                                                                                              |
+| ------------ | ------------ | ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| Barre        | `nav`        | `editorialenuit` | `nuit`, `blanche`, `editoriale`, `flottante`, `centree`, `pleinecran`, `prestige`                           |
+| Accroche     | `hero`       | `reperes`        | `reseau`, `cycle`, `video`, `immersive`, `editorial`, `editorialnuit`, `diagnostic`, `questions`, `publics` |
+| Nos domaines | `domaines`   | `anime`          | `onglets`, `carrousel`, `sommaire`                                                                          |
+| Éclairages   | `eclairages` | `une`            | `rail`                                                                                                      |
+| Pied de page | `footer`     | `nuit`           | `clair`, `compact`                                                                                          |
+
+- En développement, un panneau « Maquettes » s'affiche en bas à gauche.
+- En production : ajouter `?maquettes` à l'adresse, ex. `/?maquettes&hero=cycle&domaines=sommaire`.
+
+**À terme**, supprimer `layouts/variants/`, le panneau, et les composants non retenus
+(voir [Recettes](#retirer-le-comparateur-de-maquettes)).
+
+## 6. Charte graphique et règles de contenu
+
+Ces règles viennent de la charte V2 d'OPEM et de demandes explicites du client. **Non négociables.**
+
+**Couleurs** — uniquement les 12 couleurs déclarées dans `styles/global.css` (`--opem-*`).
+
+- Pas de dégradé, pas de mode sombre.
+- Le **bleu OPEM** ne touche jamais le **bleu nuit** (`#11365B`). Sur bleu nuit : blanc et bleu 30 %.
+- Pas de texte vert ou ambre sur fond blanc. Pas d'ambre sur les boutons, les liens ni dans la
+  barre / le pied de page (choix du client).
+- Barre en bleu nuit : dérogation au « fond blanc » de la charte, demandée par le client.
+
+**Photos et médias**
+
+- **Jamais de texte posé sur une photo ou une vidéo.** Texte à côté, ou sur un bandeau uni.
+- Photos libres de droits uniquement ; écrans ou documents lisibles floutés.
+
+**Textes**
+
+- **Ne jamais inventer** de chiffres, de clients, de noms, de délais ou d'agréments : écrire
+  `[à confirmer]` et laisser `provisional: true`.
+- Ne jamais écrire « DAS ».
+- Typographie française : espace insécable (` `) avant `?`, `!`, `:`, `;`.
+
+## 7. Langues (FR / AR)
+
+- La bascule FR / عربي (`i18n/`) change `<html lang dir>` ; toute la page passe en miroir.
+- CSS : toujours les propriétés **logiques** (`margin-inline-start`, `padding-inline`,
+  `inset-inline-start`…), jamais `left` / `right`. Les flèches se retournent via `--dir`.
+- Polices : Poppins (latin) et Cairo (arabe), auto-hébergées via `@fontsource`, importées dans
+  `styles/global.css` (aucun appel à Google Fonts : CSP stricte).
+- En arabe, pas d'espacement entre lettres (casse la liaison) : voir les règles `:lang(ar)`.
+- Les traductions arabes sont **à faire valider** par OPEM.
+
+## 8. Animations et défilement
+
+Tout est désactivé si l'utilisateur a demandé moins d'animations (`prefers-reduced-motion`).
+
+| Mécanisme                        | Où                                        | Utilisation                                                                                                                    |
+| -------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Défilement fluide (Lenis 1.3.26) | `hooks/useSmoothScroll.ts`                | Molette uniquement. `data-lenis-prevent` / `data-lenis-prevent-horizontal` pour exclure une zone                               |
+| Apparitions                      | `hooks/useScrollReveal.ts` + `global.css` | Ajouter `data-reveal`, `data-reveal="title"` (flou → net), `data-reveal="image"` ou `data-reveal-stagger` (enfants en cascade) |
+| Zoom au défilement               | `data-scroll-zoom`                        | Vidéo de l'accroche, navigateurs avec `animation-timeline: view()`                                                             |
+| Préchargement                    | `hooks/usePreloadImages.ts`               | Décode les photos d'un carrousel avant qu'on y arrive                                                                          |
+| Hors écran                       | `hooks/useOffscreen.ts`                   | Pose `data-offscreen` : met en pause les carrousels automatiques                                                               |
+
+Un seul `IntersectionObserver` gère toutes les apparitions ; un `MutationObserver` prend en compte
+les éléments ajoutés plus tard (filtres, changement de langue).
+
+## 9. Médias (vidéo, photos)
+
+### Vidéo d'accueil — `public/videos/hero-opem.mp4` (+ `hero-opem.jpg`, première image)
+
+Montage de 12 s, 1,7 Mo, sans son, 1280 × 720, H.264 `+faststart`, en attendant un tournage au
+cabinet. 4 plans Pexels de 3,5 s, fondus de 0,6 s :
+
+| Plan            | Vidéo Pexels | Départ | Remarque                            |
+| --------------- | ------------ | ------ | ----------------------------------- |
+| Conseil         | 7691633      | 27 s   |                                     |
+| Chantier (BTPH) | 8964792      | 3 s    |                                     |
+| Formation       | 8716582      | 1 s    | Chiffres de l'écran projeté floutés |
+| Industrie       | 18101973     | 1 s    |                                     |
+
+Lue sur tous les écrans (image fixe en mouvement réduit). Adresse dans
+`features/home/sections/heroMedia.ts`.
+
+### Photos — `public/images/`
+
+- `domaines/` : une photo 4:3 par domaine. `accompagnement.jpg` est un montage en Y de 3 photos
+  Pexels (8961027, 2760241, 3183197) ; `formations.jpg` : Pexels 18999540.
+- `actualites/` : illustrations des publications d'exemple.
+- Toutes provisoires (Pexels / Unsplash, licences gratuites). À vérifier avant mise en ligne
+  définitive : un logo de marque (NLMK) est visible sur `certification.jpg`.
+
+### Remplacer un média sous le même nom
+
+Les navigateurs gardent parfois l'ancienne version. Après un remplacement, **augmenter le numéro
+`?v=`** dans l'adresse (`heroMedia.ts` pour la vidéo, `content.ts` pour les photos). Voir § 11.
+
+## 10. Menu WordPress
+
+Le menu se gère dans **WordPress > Apparence > Menus**. Le plugin `wordpress/opem-menu-api.php`
+l'expose en JSON ; `lib/wordpress.ts` le lit et **revalide** toute la réponse (forme, longueurs,
+protocoles des liens).
+
+1. Copier `wordpress/opem-menu-api.php` dans `wp-content/mu-plugins/`.
+2. Assigner un menu à « Menu principal (FR) » et un autre à « Menu principal (AR) ».
+3. Renseigner `VITE_WP_API_URL=https://site/wp-json` puis relancer.
+4. Si WordPress est sur un autre domaine : l'ajouter à `connect-src` dans la CSP (§ 11).
+
+Sans WordPress (ou s'il ne répond pas), le menu intégré `layouts/navbar/menu.ts` s'affiche.
+
+- **Libellé court** dans la barre : Options de l'écran > « Attribut de titre ».
+- **Méga-menu** : dès qu'une entrée a une « Description » (Options de l'écran > « Description »).
+- Arborescence validée par OPEM : 8 rubriques (Accueil, Le cabinet, Nos expertises, Formation
+  qualifiante, Missions et réalisations, Éclairages, Actualités, Contact), avec un 3ᵉ niveau
+  affiché en retrait.
+
+## 11. Déploiement et cache
+
+- **Vercel** : chaque push sur `main` déclenche un build (`npm run build`, sortie `dist/`).
+- **`vercel.json` est la configuration de production** : réécriture de toutes les routes vers
+  `index.html` (SPA), en-têtes de sécurité, cache. Vercel **ignore** `public/_headers` (gardé
+  pour Netlify / Cloudflare Pages).
+- La CSP existe à **trois endroits à garder synchronisés** : `vercel.json`, `public/_headers`,
+  `vite.config.ts` (pour `npm run preview`).
+
+| Fichiers                 | Cache                        | Pourquoi                                                       |
+| ------------------------ | ---------------------------- | -------------------------------------------------------------- |
+| `/assets/*` (JS, CSS)    | 1 an, `immutable`            | Nom contenant un hash : change à chaque build                  |
+| `/images/*`, `/videos/*` | `max-age=0, must-revalidate` | Nom fixe : revérifié à chaque visite (réponse 304 si inchangé) |
+| `index.html`             | défaut Vercel (revalidé)     |                                                                |
+
+Les noms de fichiers du build diffèrent entre votre machine et Vercel (le hash des classes CSS
+dépend du chemin du projet) : c'est normal, le rendu est identique.
+
+## 12. Sécurité
+
+- **Aucun secret côté client** ; `.env*` ignorés par Git sauf `.env.example`.
+- **CSP stricte** : `script-src 'self'`, pas de script ni de style externe, polices auto-hébergées.
+  Tout nouveau service externe doit être autorisé explicitement dans la CSP.
+- **XSS** : React échappe le texte ; ESLint interdit `dangerouslySetInnerHTML`, `eval`, `javascript:`.
+- **Client HTTP** (`lib/http.ts`) : délai maximal, cookies limités au même domaine, URL absolues refusées.
+- Autres en-têtes : HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`.
+- Dépendances en **versions exactes** (`.npmrc` : `save-exact`), `npm run audit` régulièrement.
+- Pas de source maps en production ; détail des erreurs affiché seulement en développement.
+- **Ne jamais committer** : `.env.local`, le dossier `Downloads/` (documents personnels, signatures),
+  les photos d'origine à la racine (`/*.jpg`, `/*.png`). Tous exclus par `.gitignore`.
+
+## 13. Qualité, tests et conventions
+
+- **Tests** (Vitest + Testing Library, jsdom) : à côté du composant (`*.test.tsx`). Ils vérifient
+  le comportement visible et l'accessibilité (rôles, `aria-*`), pas le détail du CSS.
+  `matchMedia` vaut `false` par défaut dans les tests (= ordinateur, animations autorisées) :
+  le simuler avec `vi.spyOn(window, 'matchMedia')` pour tester le mobile.
+- **Accessibilité** visée : WCAG 2.2 AA. Motifs WAI-ARIA (onglets, accordéons), boutons pause
+  sur tout ce qui bouge seul (2.2.2), contrastes AA, focus visible, lien d'évitement.
+- **Format** : Prettier (guillemets simples, 100 colonnes), `.editorconfig` (UTF-8, LF, 2 espaces).
+  `.gitattributes` force les fins de ligne LF.
+- **Commentaires et commits en français**, comme le reste du code.
+- **Commits** : un message qui dit _ce qui change pour le site_, pas le détail technique.
+
+## 14. Reste à faire
+
+**Contenus (à fournir ou valider par OPEM)**
+
+- [ ] Chiffres repères, publications, témoignages (avec accord écrit), réponses de la FAQ.
+- [ ] Traductions arabes.
+- [ ] Vraies photos (même nom de fichier, 4:3 pour les domaines) et, idéalement, une vidéo
+      tournée au cabinet ; licence de `certification.jpg` (logo NLMK).
+
+**Développement**
+
+- [ ] Pages du menu : seules `/`, `/about` et `/contact` existent (et les deux dernières sont
+      des ébauches). Toutes les autres routes de `menu.ts` (`/expertises/…`, `/formation/…`,
+      `/missions/…`, `/eclairages/…`, `/actualites/…`, `/le-cabinet`, mentions légales…)
+      affichent la page 404.
+- [ ] Formulaire « Être rappelé » / demande de devis (`/contact`).
+- [ ] Brancher publications et actualités sur WordPress (aujourd'hui dans `content.ts`).
+- [ ] Retirer le comparateur de maquettes et les variantes non retenues.
+- [ ] Passer le dépôt GitHub en privé si le contenu doit rester confidentiel.
+
+## 15. Recettes
+
+### Modifier un texte de l'accueil
+
+`src/features/home/content.ts` : chaque section a son bloc `fr` et `ar`, typé (TypeScript signale
+toute clé oubliée dans une des deux langues).
+
+### Changer les coordonnées
+
+`src/config/company.ts` uniquement (adresse FR/AR, téléphone, e-mail, lien de carte).
+
+### Ajouter une page
+
+1. Créer `src/features/<nom>/<Nom>Page.tsx` avec un `export default`.
+2. Déclarer la route dans `src/app/router.tsx` :
    ```ts
-   { path: 'contact', lazy: async () => ({ Component: (await import('@/features/contact/ContactPage')).default }) },
+   { path: 'expertises', lazy: async () => ({ Component: (await import('@/features/expertises/ExpertisesPage')).default }) },
    ```
-3. Ajouter le lien dans le menu WordPress (voir ci-dessous), ou dans le menu intégré `src/app/layouts/navbar/menu.ts`.
+3. Le lien existe déjà dans le menu (`menu.ts` ou WordPress) : vérifier que le chemin correspond.
 
-## Barre de navigation et menu WordPress
+### Ajouter une section à l'accueil
 
-Le menu se gère dans **WordPress > Apparence > Menus**, comme avec `wp_nav_menu`.
-React ne peut pas appeler cette fonction PHP : le plugin `wordpress/opem-menu-api.php`
-expose donc le même menu en JSON, et la barre React l'affiche.
+1. `sections/MaSection.tsx` + `MaSection.module.css` (+ `MaSection.test.tsx`).
+2. Ses textes FR et AR dans `content.ts` (type + deux langues).
+3. L'insérer dans `HomePage.tsx` ; ajouter `data-reveal` sur les éléments à faire apparaître.
+4. Mettre à jour l'ordre des titres testé dans `HomePage.test.tsx`.
 
-1. Copier `wordpress/opem-menu-api.php` dans `wp-content/mu-plugins/` du site WordPress.
-2. Dans Apparence > Menus, assigner un menu à « Menu principal (FR) » et un autre à « Menu principal (AR) ».
-3. Renseigner `VITE_WP_API_URL=https://votre-site/wp-json` dans `.env.local`, puis relancer.
-4. Si WordPress est sur un autre domaine, l'ajouter à `connect-src` dans la CSP (`public/_headers` et `vite.config.ts`).
+### Remplacer la vidéo d'accueil
 
-Sans `VITE_WP_API_URL`, ou si WordPress ne répond pas, le menu intégré (`menu.ts`) s'affiche.
-Arborescence validée par OPEM : 8 rubriques (Accueil, Le cabinet, Nos expertises, Formation
-qualifiante, Missions et réalisations, Éclairages, Actualités, Contact), leurs sous-pages, et un
-troisième niveau affiché en retrait (ex. « Diagnostic d'entreprise » sous « Accompagnement des
-organisations »).
+1. Remplacer `public/videos/hero-opem.mp4` (≤ 3 Mo, sans son, 1280 × 720, H.264, `+faststart`)
+   et `hero-opem.jpg` (sa première image).
+2. Augmenter `?v=` dans `HERO_VIDEO_SRC` (`heroMedia.ts`) et dans les tests qui le vérifient.
 
-Sur ordinateur, la barre n'affiche pas « Accueil » (le logo y mène) et utilise des libellés
-courts (« Expertises », « Formation », « Réalisations ») : dans WordPress, Options de l'écran >
-cocher « Attribut de titre », puis y saisir le libellé court. Les noms complets restent dans les
-sous-menus, le menu mobile et le pied de page. En dessous de 1280 px, le menu passe en burger.
+Avec ffmpeg, pour une vidéo web légère :
 
-**Méga-menu** : un sous-menu devient un panneau large dès qu'une de ses entrées a une
-description. Dans WordPress : Apparence > Menus > Options de l'écran > cocher « Description »,
-puis remplir ce champ pour chaque lien.
+```bash
+ffmpeg -i source.mp4 -an -vf "scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720" \
+  -c:v libx264 -preset slow -crf 26 -pix_fmt yuv420p -movflags +faststart hero-opem.mp4
+ffmpeg -i hero-opem.mp4 -frames:v 1 -q:v 3 hero-opem.jpg
+```
 
-**Charte** : les douze couleurs de la charte V2 sont dans `src/styles/global.css` (aucune autre).
-Pas de dégradé, pas de mode sombre, pas de texte vert ou ambre sur fond blanc,
-bleu OPEM jamais collé au bleu nuit. Choix du client : boutons bleu OPEM, pas d'ambre
-dans la barre ni dans le pied de page (seuls les grands chiffres clés sont en ambre).
+### Retirer le comparateur de maquettes
 
-**Langues** : le bouton FR / عربي change `<html lang dir>` ; en arabe, toute la page passe en miroir.
-Pour que les mises en page suivent, utiliser les propriétés CSS « logiques »
-(`margin-inline-start`, `padding-inline-end`, `inset-inline-start`…) plutôt que `left`/`right`.
+1. Dans `RootLayout.tsx` et `HomePage.tsx`, remplacer la lecture de la variante par les
+   composants retenus (`editorialenuit`, `HeroFacts`, `DomainsAuto`, `Insights`, pied `nuit`).
+2. Supprimer `src/app/layouts/variants/`, les composants non retenus et leurs tests.
+3. `npm run build` et `npm test` doivent passer ; vérifier `?maquettes` (sans effet désormais).
 
-**Logo** : `public/logo-opem.svg` est le logo officiel en version blanche à aile verte
-(version prévue par la charte sur bleu nuit), vectorisé depuis `OPEM_logo_blanc.pdf`.
+## 16. Historique
 
-## Comparer les maquettes (barre, bandeau d'accueil, pied de page)
+| Date       | Commit    | Changements                                                                                                    |
+| ---------- | --------- | -------------------------------------------------------------------------------------------------------------- |
+| 2026-10-26 | `7dbc197` | Site initial : barre, accueil, pied de page, FR/AR, menu WordPress, comparateur de maquettes                   |
+| 2026-10-26 | `0b06f7c` | Versions retenues par OPEM par défaut ; configuration Vercel (`vercel.json`)                                   |
+| 2026-10-27 | `39ff135` | Vidéo d'accueil (montage Pexels) ; photos Accompagnement (montage en Y) et Formations                          |
+| 2026-10-27 | `b567ab0` | Plan formation en vidéo ; fondu des photos de « Nos domaines » ; plus de bande blanche sous la barre           |
+| 2026-10-27 | `806ac9f` | Version mobile : vidéo dès le 1ᵉʳ écran, éclairages à faire glisser, pied de page en accordéon, FAQ réordonnée |
 
-Huit barres de navigation, dix bandeaux d'accueil et trois pieds de page sont disponibles.
-**Versions retenues par OPEM**, affichées par défaut (sans `?maquettes`) : barre « Éditoriale
-bleu nuit », bandeau « Repères », domaines « Carrousel animé », éclairages « À la une », pied de
-page « Bleu nuit » (`DEFAULTS` dans `layouts/variants/layoutVariants.ts`).
+Choix structurants pris en cours de route :
 
-Bandeaux d'accueil : 1. Réseau 3D (actuel) ; 2. Cycle OPEM — grand titre, puis la démarche
-(Diagnostiquer, Structurer et former, Certifier) racontée par un schéma animé dont les étapes
-défilent seules, avec bouton pause (`?maquettes&hero=cycle`). Textes dans `content.ts` (`heroCycle`) ; 3. Vidéo ruche — texte sur panneau bleu nuit, vidéo `public/videos/hero-opem.mp4` à côté (jamais
-de texte sur l'image), bouton pause (`?maquettes&hero=video`). En mouvement réduit,
-seule l'image fixe `hero-opem.jpg` est chargée. Vidéo actuelle (`hero-opem.mp4`, 12 s, 1,7 Mo) : montage
-de 4 plans libres de droits Pexels (conseil 7691633, chantier 8964792, formation 8716582 — chiffres de l'écran floutés, industrie
-18101973), en attendant un tournage au cabinet. Pour changer de vidéo : remplacer ces deux fichiers
-(même nom), idéalement une vidéo de moins de 3 Mo, sans son ; 4. Vidéo immersive — même vidéo dans un grand cadre arrondi, sous un voile bleu nuit uniforme
-(texte lisible, contraste AA), titre centré, carte « De quoi avez-vous besoin ? » et pastille des
-repères (`?maquettes&hero=immersive`, idéal avec la barre `nav=flottante`). Le voile est une
-entorse à la règle « pas de texte sur les photos » : à faire valider par OPEM ; 5. Éditorial cabinet — très grand titre, vidéo dans une fenêtre qui se dévoile, légende sur
-bandeau bleu nuit (conforme à la charte), badge circulaire « Beyond Quality », puis les trois
-métiers en liens (`?maquettes&hero=editorial`). Textes dans `content.ts` (`heroEditorial`) ; 6. Éditorial bleu nuit — le même en couleurs inversées : fond bleu nuit, textes blancs, légende
-sur bandeau blanc, bouton blanc (`?maquettes&hero=editorialnuit`, idéal avec `nav=editorialenuit`) ; 7. Autodiagnostic — sur bleu nuit, titre, la question « Quelle est votre priorité cette année ? » et
-cinq grandes réponses ; la vidéo occupe la moitié droite, comme le bandeau 3 ; aucune autre animation
-(`?maquettes&hero=diagnostic`). Les quatre premières mènent à `/autodiagnostic?priorite=…` (page à
-créer), « Nos formations » au catalogue. Textes dans `content.ts` (`heroDiagnostic`) ; 8. Trois questions — à la place du titre, sur bleu nuit, trois questions empilées en blanc (« Un audit de
-certification approche ? », « Des équipes à former ? », « Une décision importante à préparer ? »),
-chacune un lien vers son domaine, puis « OPEM vous accompagne, du diagnostic au résultat. » et le
-bouton blanc « Être rappelé » ; vidéo sur la moitié droite (`?maquettes&hero=questions`). Textes dans
-`content.ts` (`heroQuestions`) ; 9. Public / entreprise — sur bleu nuit, titre puis deux grands blocs côte à côte (fond bleu 10 %,
-bordure gris clair) : « Vous êtes un organisme public » et « Vous êtes une entreprise », chacun avec
-un pictogramme, ses trois sujets en étiquettes, une phrase et un lien ; vidéo à droite (`?maquettes&hero=publics`). Textes dans
-`content.ts` (`heroAudiences`). La vidéo des bandeaux 7 à 10 est le composant `HeroSideVideo` ; 10. Repères — sur bleu nuit, titre, texte, bouton devis et liens « Nos expertises » / « Nos formations », puis une ligne de trois faits séparés par un
-trait gris clair ; vidéo à droite (`?maquettes&hero=reperes`). Les valeurs (15 ans, +120 organisations, +2 000 personnes formées) sont
-des **exemples** : la mention « Chiffres provisoires, à confirmer par OPEM » s'affiche tant que
-`provisional` vaut true dans `content.ts` (`heroFacts`).
-
-| N°  | Barre de navigation                                 | Pied de page                          |
-| --- | --------------------------------------------------- | ------------------------------------- |
-| 1   | Bleu nuit (actuelle)                                | Bleu nuit (actuel)                    |
-| 2   | Blanche, logo couleur                               | Clair (bleu très clair), logo couleur |
-| 3   | Éditoriale : blanche, sous-menus pleine largeur     | Compact : une seule bande             |
-| 4   | Éditoriale bleu nuit : la même, logo blanc          |                                       |
-| 5   | Capsule flottante : barre arrondie détachée         |                                       |
-| 6   | Logo centré, menu sur une bande bleu nuit dessous   |                                       |
-| 7   | Plein écran : bouton « Menu », grand menu éditorial |                                       |
-| 8   | Prestige : la n° 4 avec un méga-menu riche          |                                       |
-
-Méga-menu « prestige » (barre 8) : introduction de la rubrique (champ « Description » de
-l'entrée principale dans WordPress), liens numérotés, et un encart « Prendre rendez-vous »
-(photo de la ruche, texte sur bandeau bleu nuit), absent de la rubrique Contact.
-
-- En développement (`npm run dev`), un panneau « Maquettes » apparaît en bas à gauche.
-- En production, ajouter `?maquettes` à l'adresse, ou un lien direct :
-  `/?maquettes&nav=blanche&footer=clair` (valeurs : `nuit`, `blanche`, `flottante`, `centree`, `pleinecran`, `editoriale`, `editorialenuit`, `prestige` / `nuit`, `clair`, `compact` ; `hero=reseau`, `hero=cycle`, `hero=video`, `hero=immersive`, `hero=editorial`, `hero=editorialnuit`, `hero=diagnostic`, `hero=questions`, `hero=publics` ou `hero=reperes`).
-
-Une fois le choix fait : garder la variante retenue comme version par défaut et supprimer
-`src/app/layouts/variants/` ainsi que les variantes non retenues.
-
-## Page d'accueil
-
-Tous les textes (français et arabe) sont dans `src/features/home/content.ts`,
-une section par composant dans `src/features/home/sections/`.
-
-**Nos domaines** (juste sous l'accroche, `sections/Domains.tsx`) : onglets des cinq domaines (liste
-déroulante sur mobile), un panneau par domaine, précédent / suivant, sans défilement automatique.
-Textes dans `content.ts` (`domains`) ; ordre des domaines et mentions « [à confirmer] » à valider.
-Deux maquettes à comparer (panneau « Maquettes » > Section « Nos domaines », ou `?maquettes&domaines=carrousel`) :
-
-1. Onglets ; 2. Carrousel à panneaux — bandes bleu nuit numérotées, le domaine actif s'ouvre en grand
-   panneau blanc (accordéon vertical sur mobile), compteur « 02 / 05 » et barre d'avancement ; 3. Carrousel animé (`domaines=anime`) — fond bleu OPEM, grande carte blanche, défile seul toutes
-   les 7 s (barre de progression dans chaque onglet), avec bouton pause, pause au clavier et quand la section n'est pas à l'écran,
-   et sans défilement si l'utilisateur a demandé moins d'animations ; 4. Sommaire éditorial (`domaines=sommaire`) —
-   bleu nuit, sommaire numéroté dont la ligne active s'ouvre, grande photo à droite qui se dévoile puis zoome,
-   défile seul toutes les 8 s avec les mêmes règles de pause.
-   Photos provisoires (images des vidéos) dans `public/images/domaines/` : à remplacer par de vraies
-   photos 4:3, même nom de fichier, sans texte dessus.
-
-**Éclairages et actualités** (sous « Nos domaines », `sections/Insights.tsx`) : cartes à la manière
-des pages « Insights » des grands cabinets — filtres Tout / Éclairages / Actualités, une publication à
-la une, deux cartes compactes, puis des cartes à image. Deuxième maquette (`?maquettes&eclairages=rail`,
-`sections/InsightsRail.tsx`) : rail défilant sur bleu très clair, cartes blanches (la une compte
-double), flèches, barre d'avancement, rail qui court jusqu'au bord de l'écran. Les six publications de `content.ts`
-(`insights`) sont des **exemples** (mention affichée tant que `provisional` vaut true) : à remplacer
-par les vrais articles, puis à brancher sur WordPress.
-
-**Témoignages** (dernière section de l'accueil, `sections/Testimonials.tsx`) : grande citation sur
-carte blanche, liste des témoignages à côté (pastilles sur téléphone), flèches et compteur, sans
-défilement automatique. Pas de photo de personne : un pictogramme indique le type d'organisme. Les
-quatre témoignages de `content.ts` (`testimonials`) sont des **exemples** (noms et organismes
-« [à confirmer] ») : à remplacer par de vrais témoignages, publiés avec l'accord écrit de leurs auteurs.
-
-**Questions fréquentes** (dernière section, `sections/Faq.tsx`) : titre et encadré « Vous ne trouvez
-pas votre réponse ? » à gauche (restent visibles au défilement), questions en accordéon à droite ;
-sur téléphone, l'encadré passe après les questions.
-Les six réponses de `content.ts` (`faq`) sont **provisoires** : aucun délai, tarif ni agrément
-inventé (« [à confirmer] ») ; à valider par OPEM.
-
-**Sections retirées de l'accueil** à la demande du client : « Quel est votre besoin ? »,
-« Vous êtes… », approche (« Trois temps… »), chiffres clés, secteurs et agenda des prochaines
-formations. Leurs fichiers (`sections/Needs`, `Audiences`, `Approach`, `KeyFigures`, `Sectors`,
-`Trainings`) et leurs textes restent en place : une ligne dans
-`HomePage.tsx` suffit pour remettre une section.
-
-**À valider par OPEM avant la mise en ligne** : tant que `provisional: true`, une mention
-« à confirmer » s'affiche sous la section concernée. Les illustrations de « Vous êtes… »
-(`public/images/vous-etes-*.svg`) sont à remplacer par de vraies photos, même nom de fichier.
-
-**Pied de page** : une colonne par rubrique ayant des sous-pages, puis « Découvrir », générées à partir
-du menu principal (donc modifiables dans WordPress). Sur téléphone, les coordonnées passent avant
-le plan du site, dont chaque rubrique se replie en accordéon. Les coordonnées (téléphone, e-mail,
-adresse) se modifient à un seul endroit : `src/config/company.ts`.
-
-**Version mobile** (inspirée des sites de McKinsey, Bain et Accenture) : la vidéo d'accueil est lue
-aussi sur téléphone, juste sous les boutons (les chiffres repères passent après) ; les éclairages
-forment une rangée de cartes qu'on fait glisser ; espacement entre sections un peu réduit.
-
-**Barre bleu nuit** (`--color-nav-bg` dans `global.css`) : dérogation au fond blanc de la charte.
-Sur ce fond, liens et focus sont en blanc (le bleu OPEM n'y serait pas lisible).
-
-## Sécurité
-
-- **Pas de secret côté client.** Toute variable `VITE_*` est lisible dans le navigateur. Les clés privées restent sur un serveur.
-- **`.env*` ignorés par Git**, sauf `.env.example`.
-- **XSS** : React échappe le texte par défaut. ESLint interdit `dangerouslySetInnerHTML`, `eval` et les URL `javascript:`.
-- **En-têtes HTTP** : CSP stricte, anti-clickjacking, HSTS… définis dans `public/_headers` (Netlify, Cloudflare Pages) et dans `vite.config.ts` pour `npm run preview`. Les garder synchronisés. Si vous ajoutez un service externe (Google Fonts, API sur un autre domaine…), il faut l'autoriser dans la CSP.
-- **Client HTTP** (`src/lib/http.ts`) : délai maximal, cookies limités au même domaine, URL absolues refusées.
-- **Erreurs** : le détail technique n'est affiché qu'en développement.
-- **Dépendances** : versions exactes (`.npmrc`), lancer `npm run audit` régulièrement.
-- **Pas de source maps** en production.
-
-## Performance
-
-- Chaque page est un fichier JS séparé chargé à la visite (code splitting).
-- Le build minifie et ajoute un hash aux fichiers : ils peuvent être mis en cache un an (`/assets/*` dans `public/_headers`).
-
-## Défilement et apparitions
-
-- **Défilement fluide** à la molette : [Lenis](https://github.com/darkroomengineering/lenis)
-  (`hooks/useSmoothScroll.ts`, ~5 Ko). Le défilement reste celui du navigateur (clavier, barre,
-  liens d'ancre, éléments sticky) ; au doigt, rien ne change. Les `<dialog>` (menus) et les zones
-  `data-lenis-prevent` / `data-lenis-prevent-horizontal` (rail de cartes) sont laissés au navigateur.
-- **Apparitions au défilement** : un seul observateur (`hooks/useScrollReveal.ts`) pose
-  `data-visible` sur les éléments marqués ; effets en CSS dans `styles/global.css` :
-  `data-reveal` (fondu et montée), `data-reveal="title"` (le titre passe du flou au net),
-  `data-reveal="image"` (le cadre se découvre, la photo se pose), `data-reveal-stagger` (les
-  enfants montent l'un après l'autre). Pour animer un nouvel élément, il suffit d'ajouter l'attribut.
-- **Vidéo du bandeau** : elle s'approche doucement quand on quitte le bandeau (animation liée au
-  défilement, `data-scroll-zoom`, navigateurs récents seulement).
-- Tout est désactivé si l'utilisateur a demandé moins d'animations (réglage du système).
+- **Retrait de six sections** de l'accueil (besoins, publics, approche, chiffres, secteurs, agenda)
+  pour une page plus courte : fichiers conservés.
+- **Pas de pause au survol** des carrousels automatiques (la souris qui passait les faisait
+  s'arrêter et repartir) ; pause au clavier, au bouton et hors écran à la place.
+- **Images superposées en fondu** dans les carrousels plutôt que remplacées : plus de flash blanc
+  ni d'ancienne photo visible un instant.
+- **Version mobile** calquée sur les usages de McKinsey, Bain et Accenture : un visuel dès le
+  premier écran, des cartes qu'on fait glisser, un pied de page court.
