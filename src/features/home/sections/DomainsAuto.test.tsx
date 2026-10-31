@@ -33,7 +33,7 @@ describe('« Nos domaines », carrousel animé', () => {
     const tabs = screen.getAllByRole('tab');
     fireEvent.keyDown(tabs[0]!, { key: 'End' });
     expect(panelTitle()).toBe('Certification, accréditation, labellisation');
-    expect(tabs[4]).toHaveFocus();
+    expect(tabs[5]).toHaveFocus();
 
     fireEvent.click(screen.getByRole('button', { name: 'Domaine suivant' }));
     expect(panelTitle()).toBe('Études stratégiques');

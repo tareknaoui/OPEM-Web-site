@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  commitmentsVariants,
   domainsVariants,
   footerVariants,
   heroVariants,
@@ -16,6 +17,11 @@ type Option = { readonly id: string; readonly label: string; readonly descriptio
 const GROUPS: { part: keyof LayoutVariants; legend: string; options: readonly Option[] }[] = [
   { part: 'navbar', legend: 'Barre de navigation', options: navbarVariants },
   { part: 'hero', legend: 'Bandeau d’accueil', options: heroVariants },
+  {
+    part: 'commitments',
+    legend: 'Section « Ce qui nous distingue »',
+    options: commitmentsVariants,
+  },
   { part: 'domains', legend: 'Section « Nos domaines »', options: domainsVariants },
   { part: 'insights', legend: 'Section « Éclairages et actualités »', options: insightsVariants },
   { part: 'footer', legend: 'Pied de page', options: footerVariants },
@@ -31,6 +37,7 @@ export function VariantSwitcher() {
 
   return (
     <aside
+      data-dev-tool
       className={styles.switcher}
       aria-label="Comparer les maquettes"
       lang="fr"
@@ -47,7 +54,8 @@ export function VariantSwitcher() {
         Maquettes
         <span className={styles.summary}>
           Barre {indexOf(navbarVariants, variants.navbar)} · Accueil{' '}
-          {indexOf(heroVariants, variants.hero)} · Domaines{' '}
+          {indexOf(heroVariants, variants.hero)} · Engagements{' '}
+          {indexOf(commitmentsVariants, variants.commitments)} · Domaines{' '}
           {indexOf(domainsVariants, variants.domains)} · Éclairages{' '}
           {indexOf(insightsVariants, variants.insights)} · Pied{' '}
           {indexOf(footerVariants, variants.footer)}

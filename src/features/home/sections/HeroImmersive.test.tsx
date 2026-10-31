@@ -21,7 +21,7 @@ describe('Bandeau « Immersif »', () => {
   it('oriente vers les rubriques clés depuis la carte « besoin »', () => {
     renderHero();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Faire progresser votre organisation.',
+      'Ce qui fait exceller votre organisation.',
     );
     const choices = within(screen.getByRole('list', { name: 'De quoi avez-vous besoin ?' }));
     expect(choices.getByRole('link', { name: 'Formation qualifiante' })).toHaveAttribute(
@@ -42,7 +42,7 @@ describe('Bandeau « Immersif »', () => {
       removeEventListener: () => {},
     } as unknown as MediaQueryList);
     const { container } = renderHero();
-    expect(container.querySelector('video')).toHaveAttribute('src', '/videos/hero-opem.mp4?v=3');
+    expect(container.querySelector('video')).toHaveAttribute('src', '/videos/hero-opem.mp4?v=5');
     expect(screen.getByRole('button', { name: 'Mettre la vidéo en pause' })).toBeInTheDocument();
   });
 });

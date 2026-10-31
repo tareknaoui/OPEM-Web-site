@@ -15,7 +15,7 @@ const openTrigger = () => screen.getByRole('button', { expanded: true });
 describe('« Nos domaines », sommaire éditorial', () => {
   it('ouvre un seul domaine et passe seul au suivant à la fin du filet', () => {
     const { container } = renderSection();
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(5);
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(6);
     expect(openTrigger()).toHaveTextContent('Études stratégiques');
     expect(screen.getByRole('link', { name: 'Être rappelé' })).toHaveAttribute('href', '/contact');
 
@@ -24,7 +24,7 @@ describe('« Nos domaines », sommaire éditorial', () => {
     const eventName = 'AnimationEvent' in window ? 'animationend' : 'webkitAnimationEnd';
     fireEvent(fill, new Event(eventName, { bubbles: true }));
     expect(openTrigger()).toHaveTextContent('Accompagnement des organisations');
-    expect(screen.getByText('2 sur 5')).toBeInTheDocument();
+    expect(screen.getByText('2 sur 6')).toBeInTheDocument();
   });
 
   it('se met en pause et se pilote au clavier', () => {

@@ -2,9 +2,13 @@
 import { useLayoutVariants } from '@/app/layouts/variants/layoutVariants';
 import { useLanguage } from '@/i18n/useLanguage';
 import { homeContent } from './content';
+import { AiBand } from './sections/AiBand';
+import { Commitments } from './sections/Commitments';
+import { CommitmentsEssential } from './sections/CommitmentsEssential';
 import { Domains } from './sections/Domains';
 import { DomainsAuto } from './sections/DomainsAuto';
 import { DomainsEditorial } from './sections/DomainsEditorial';
+import { DomainsMosaic } from './sections/DomainsMosaic';
 import { DomainsCarousel } from './sections/DomainsCarousel';
 import { Faq } from './sections/Faq';
 import { Hero } from './sections/Hero';
@@ -19,18 +23,19 @@ import { HeroVideo } from './sections/HeroVideo';
 import { Insights } from './sections/Insights';
 import { InsightsRail } from './sections/InsightsRail';
 import { Testimonials } from './sections/Testimonials';
+import { UpcomingSessions } from './sections/UpcomingSessions';
 
 /**
- * Page d'accueil OPEM. Ordre des sections : bandeau d'accueil, « Nos domaines »,
- * éclairages et actualités, témoignages, questions fréquentes.
+ * Page d'accueil OPEM. Ordre des sections : bandeau d'accueil, « Ce qui nous distingue »,
+ * « Nos domaines », bandeau IA, prochaines sessions, éclairages et actualités, témoignages, questions fréquentes.
  * Retirées de l'accueil à la demande du client (fichiers conservés dans ./sections pour
  * pouvoir les remettre) : besoins (mosaïque), « Vous êtes… », approche, chiffres clés,
- * secteurs, prochaines formations.
+ * secteurs, agenda en liste (Trainings, remplacé par UpcomingSessions).
  * Textes : ./content.ts
  */
 export default function HomePage() {
   const { lang } = useLanguage();
-  const { hero, domains, insights } = useLayoutVariants();
+  const { hero, commitments, domains, insights } = useLayoutVariants();
   const content = homeContent[lang];
 
   return (
@@ -45,7 +50,12 @@ export default function HomePage() {
       ) : hero === 'questions' ? (
         <HeroQuestions questions={content.heroQuestions} video={content.heroVideo} />
       ) : hero === 'diagnostic' ? (
-        <HeroDiagnostic diagnostic={content.heroDiagnostic} video={content.heroVideo} />
+        <HeroDiagnostic
+          hero={content.hero}
+          video={content.heroVideo}
+          diagnostic={content.heroDiagnostic}
+          figures={content.figures}
+        />
       ) : hero === 'editorial' || hero === 'editorialnuit' ? (
         <HeroEditorial
           hero={content.hero}
@@ -65,7 +75,14 @@ export default function HomePage() {
       ) : (
         <Hero hero={content.hero} markers={content.markers} />
       )}
-      {domains === 'sommaire' ? (
+      {commitments === 'cartes' ? (
+        <Commitments commitments={content.commitments} />
+      ) : (
+        <CommitmentsEssential commitments={content.commitments} />
+      )}
+      {domains === 'rangee' || domains === 'mosaique' || domains === 'coin' ? (
+        <DomainsMosaic domains={content.domains} layout={domains} />
+      ) : domains === 'sommaire' ? (
         <DomainsEditorial domains={content.domains} />
       ) : domains === 'anime' ? (
         <DomainsAuto domains={content.domains} />
@@ -74,6 +91,8 @@ export default function HomePage() {
       ) : (
         <Domains domains={content.domains} />
       )}
+      <AiBand ai={content.ai} />
+      <UpcomingSessions trainings={content.trainings} />
       {insights === 'rail' ? (
         <InsightsRail insights={content.insights} />
       ) : (

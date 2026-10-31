@@ -34,26 +34,24 @@ describe('Footer', () => {
     expect(screen.getByText(/16, rue La Bruyère, Bouzaréah, Alger/)).toBeInTheDocument();
   });
 
-  it('construit les colonnes à partir du menu, sans doublon « Contact »', () => {
+  it('garde deux colonnes au milieu : « Nos expertises » et « Le site »', () => {
     renderFooter();
     const nav = screen.getByRole('navigation', { name: 'Liens du pied de page' });
     const headings = within(nav)
       .getAllByRole('heading')
       .map((h) => h.textContent);
-    expect(headings).toEqual([
-      'Nos expertises',
-      'Formation qualifiante',
-      'Missions et réalisations',
-      'Éclairages',
-      'Actualités',
-      'Contact',
-      'Découvrir',
-    ]);
-    expect(within(nav).getByRole('link', { name: 'Catalogue et sessions' })).toHaveAttribute(
+    expect(headings).toEqual(['Nos expertises', 'Le site']);
+    expect(within(nav).getByRole('link', { name: 'Coaching professionnel' })).toHaveAttribute(
       'href',
-      '/formation/catalogue-et-sessions',
+      '/expertises/coaching-professionnel',
     );
-    expect(within(nav).queryByRole('link', { name: 'Contact' })).not.toBeInTheDocument();
+    expect(within(nav).getByRole('link', { name: 'Formation qualifiante' })).toHaveAttribute(
+      'href',
+      '/formation',
+    );
+    // Ni l'accueil (le logo y mène), ni les sous-pages des autres rubriques.
+    expect(within(nav).queryByRole('link', { name: 'Accueil' })).toBeNull();
+    expect(within(nav).queryByRole('link', { name: 'Catalogue et sessions' })).toBeNull();
   });
 
   describe('sur mobile', () => {
@@ -68,17 +66,17 @@ describe('Footer', () => {
       renderFooter();
       const nav = screen.getByRole('navigation', { name: 'Liens du pied de page' });
       const expertises = within(nav).getByRole('button', { name: 'Nos expertises' });
-      const formation = within(nav).getByRole('button', { name: 'Formation qualifiante' });
+      const site = within(nav).getByRole('button', { name: 'Le site' });
       expect(expertises).toHaveAttribute('aria-expanded', 'false');
-      expect(within(nav).queryByRole('link', { name: 'Catalogue et sessions' })).toBeNull();
+      expect(within(nav).queryByRole('link', { name: 'Formation qualifiante' })).toBeNull();
 
-      fireEvent.click(formation);
-      expect(formation).toHaveAttribute('aria-expanded', 'true');
-      expect(within(nav).getByRole('link', { name: 'Catalogue et sessions' })).toBeVisible();
+      fireEvent.click(site);
+      expect(site).toHaveAttribute('aria-expanded', 'true');
+      expect(within(nav).getByRole('link', { name: 'Formation qualifiante' })).toBeVisible();
 
       fireEvent.click(expertises);
       expect(expertises).toHaveAttribute('aria-expanded', 'true');
-      expect(formation).toHaveAttribute('aria-expanded', 'false');
+      expect(site).toHaveAttribute('aria-expanded', 'false');
     });
   });
 

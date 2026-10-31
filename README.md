@@ -129,22 +129,77 @@ layoutVariants.ts ──(URL ?nav=…&hero=…)──> RootLayout / HomePage (ma
 
 Ordre d'affichage (`HomePage.tsx`). Clé = entrée correspondante dans `content.ts`.
 
-| #   | Section                  | Composant                     | Clé `content.ts`                 | Comportement                                                                                                                                                   | Sur téléphone                                                       |
-| --- | ------------------------ | ----------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 1   | Accroche « Repères »     | `HeroFacts` + `HeroSideVideo` | `hero`, `heroVideo`, `heroFacts` | Bleu nuit, titre, devis + 2 liens, 3 chiffres repères, vidéo à droite avec bouton pause                                                                        | Vidéo sous les boutons (visible dès le 1er écran), chiffres ensuite |
-| 2   | Nos domaines             | `DomainsAuto`                 | `domains`                        | Carte photo + texte, défile seule toutes les 7 s (barre de progression), pause : bouton, clavier, section hors écran. Photos superposées en fondu, préchargées | Onglets réduits à leur numéro                                       |
-| 3   | Éclairages et actualités | `Insights`                    | `insights`                       | Filtres Tout / Éclairages / Actualités, une publication à la une, 2 compactes, cartes à image                                                                  | Rangée de cartes qu'on fait glisser (scroll-snap)                   |
-| 4   | Témoignages              | `Testimonials`                | `testimonials`                   | Citation sur carte blanche, liste à côté, flèches et compteur, pas de défilement auto                                                                          | Pastilles défilantes                                                |
-| 5   | Questions fréquentes     | `Faq`                         | `faq`                            | Accordéon WAI-ARIA (plusieurs ouvertes), encadré d'aide collant à gauche                                                                                       | Encadré d'aide après les questions                                  |
+| #   | Section                        | Composant                                        | Clé `content.ts`                              | Comportement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sur téléphone                                                                                |
+| --- | ------------------------------ | ------------------------------------------------ | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| 1   | Accroche « Autodiagnostic 7S » | `HeroDiagnostic` + `DiagnosticCard`              | `hero`, `heroVideo` (titre), `heroDiagnostic` | Éditorial : bleu nuit à gauche, le métier d'abord (titre, texte, 4 chiffres clés animés) ; vidéo de l'équipe à droite jusqu'au bord ; en bas, bandeau blanc « Par où commencer ? » de l'autodiagnostic 7S. Voir ci-dessous                                                                                                                                                                                                                                                                                                         | Panneau sous le texte                                                                        |
+| 2   | Ce qui nous distingue          | `CommitmentsEssential` (version « L'essentiel ») | `commitments` (`heading`, `items[].short`)    | Bande bleu très clair, très grand titre centré sur deux lignes (bleu nuit puis bleu OPEM), 3 engagements : grand pictogramme (vert au survol), quelques mots, une phrase. Version détaillée en cartes (`Commitments`, `?engagements=cartes`) gardée dans le comparateur                                                                                                                                                                                                                                                            | Une ligne par engagement, pictogramme à gauche                                               |
+| 3   | Nos domaines                   | `DomainsMosaic` (`layout="rangee"`)              | `domains`                                     | Les 6 domaines visibles d'un coup, sans attente, sur bleu OPEM : sur ordinateur, deux lignes de 3 cartes égales (illustration du domaine dans un passe-partout blanc, titre, 3 lignes, « Découvrir ») ; avec 5 domaines, une seule ligne de 5. La grille s'adapte au nombre de domaines. Cartes entièrement cliquables, illustration qui zoome et carte qui se soulève au survol. Illustrations : `public/images/domaines/illustrations/` (WebP 1376 et 800 px, fond ramené au bleu nuit), champ `illustration` de `domains.items` | Une carte par domaine (illustration, titre, 2 lignes), bouton « Être rappelé » sous la liste |
+| 4   | Bandeau IA                     | `AiBand`                                         | `ai`                                          | Sous les domaines, même bleu OPEM : panneau arrondi à fond blanc translucide. « Intelligence artificielle appliquée » (étoile qui scintille), grand titre, texte, bouton « Découvrir l'approche » ; à droite les 3 temps (Diagnostic, Formation, Intégration) dans un cadre, parcourus l'un après l'autre par un filet lumineux                                                                                                                                                                                                    | Texte puis cadre des 3 temps                                                                 |
+| 5   | Prochaines sessions            | `UpcomingSessions`                               | `trainings`                                   | Fond bleu très clair (transition entre le bleu des domaines et le blanc des éclairages). Une carte-calendrier par session : grande date, compte à rebours calculé (« Dans 19 jours », « Demain »), thème, titre, format, « S'inscrire » (`/contact?formation=<id>`). Sessions passées masquées d'elles-mêmes ; message d'attente si aucune. 4 colonnes (ordinateur), 2 (tablette)                                                                                                                                                  | Rangée de cartes qu'on fait glisser                                                          |
+| 6   | Éclairages et actualités       | `Insights`                                       | `insights`                                    | Filtres Tout / Éclairages / Actualités, une publication à la une, 2 compactes, cartes à image                                                                                                                                                                                                                                                                                                                                                                                                                                      | Rangée de cartes qu'on fait glisser (scroll-snap)                                            |
+| 7   | Témoignages                    | `Testimonials`                                   | `testimonials`                                | Citation sur carte blanche, liste à côté, flèches et compteur, pas de défilement auto                                                                                                                                                                                                                                                                                                                                                                                                                                              | Pastilles défilantes                                                                         |
+| 8   | Questions fréquentes           | `Faq`                                            | `faq`                                         | Accordéon WAI-ARIA (plusieurs ouvertes), encadré d'aide collant à gauche                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Encadré d'aide après les questions                                                           |
+
+**Autodiagnostic 7S.** Fondé sur le modèle des 7S de McKinsey : une question par levier
+(stratégie, structure, systèmes, valeurs partagées, style, personnel, compétences). Questions,
+réponses, leviers, domaines associés, profils et libellés : `heroDiagnostic` dans `content.ts`
+(mêmes identifiants en FR et AR). Sans IA : tout est calculé dans le navigateur
+(`sections/diagnosticScore.ts`), rien n'est envoyé.
+
+1. **Accroche** (`sections/HeroDiagnostic.tsx`), éditoriale comme celles des grands cabinets,
+   pour qu'on ne prenne pas le site pour un simple outil de test : le métier d'abord à gauche
+   (titre, texte, puis les 4 chiffres clés de `figures` qui comptent l'un après l'autre,
+   repères ambre), la vidéo de l'équipe à droite (aucun
+   texte dessus, bouton pause). En bas, sur toute la largeur, le bandeau blanc « Par où
+   commencer ? » (`sections/DiagnosticCard.tsx`) : petit radar des 7S en signature
+   (`sections/SevenSRadar.tsx`, version sans noms), une phrase, le bouton « Faire le test ».
+2. **Plein écran** (`sections/DiagnosticExperience.tsx`, `<dialog>` natif sur bleu nuit) :
+   d'abord 3 questions sur l'organisation (`heroDiagnostic.context` : secteur, effectif,
+   fonction ; radar en attente), puis une question par levier : très grand numéro ambre
+   (« 03/07 »), puis, après un filet, la famille du levier (« Le cadre » ou « L'humain ») et
+   son nom, réponses au clic ou au clavier (A à D, 1 à 4), 3 + 7 segments d'avancement. À côté,
+   le radar se déforme à chaque réponse (`hooks/useTweened.ts`), le levier en cours en ambre.
+3. **Profil** : secteur et effectif rappelés, nom du profil et une phrase, pourcentage qui
+   défile (compteur CSS animé par `@property`), niveau de maturité sur une échelle de 4, barres
+   « cadre » et « humain », « Notre lecture » (`heroDiagnostic.analysis`, quelques phrases
+   composées selon les réponses), leviers à renforcer (ondes sur le radar), domaines par où
+   commencer ; le radar pousse depuis le centre face à « l'organisation alignée ».
+
+Calcul :
+
+- chaque réponse vaut 0 à 3 points selon son rang (réponses rangées de la moins à la plus
+  avancée) ; maturité globale = part du total ;
+- profil, dans cet ordre : **alignée** (plus des 2/3, aucun levier faible), **en fondation**
+  (1/3 au plus), **navire sans cap** (stratégie à 0 ou 1, tout le reste à 2 ou 3), **belle
+  mécanique** (stratégie, structure et systèmes nettement devant les 4 leviers humains), **talent
+  sans charpente** (l'inverse), sinon **en mouvement** ;
+- niveau : un par quart du total (initial, en structuration, maîtrisé, avancé) ;
+- cadre = stratégie, structure, systèmes ; humain = les 4 autres ; l'un « devance » l'autre à
+  15 points d'écart ou plus ;
+- notre lecture : la phrase du niveau, celle de l'équilibre cadre / humain, le point d'appui
+  (premier levier noté 2 ou 3 au plus haut) et une phrase selon l'effectif ;
+- leviers à renforcer : 0 ou 1 point, du plus faible au moins faible ;
+- par où commencer : les domaines OPEM de ces leviers (2 au plus, sans doublon) ; s'il n'y en a
+  aucun, celui du levier le moins avancé. Stratégie → Études stratégiques ; structure et
+  personnel → Accompagnement des organisations ; systèmes → Certification ; valeurs partagées →
+  Communication d'entreprise ; style → Coaching professionnel ; compétences → Formations ;
+- le bouton « Être rappelé avec ce résultat » mène à
+  `/contact?source=autodiagnostic&secteur=…&effectif=…&fonction=…&strategie=…&…&profil=…&maturite=52` : le futur formulaire
+  pourra lire ces paramètres pour pré-remplir la demande.
+
+Questions, règles des profils, noms et portraits des profils, textes de « Notre lecture »,
+correspondances leviers → domaines : propositions à faire valider par OPEM.
 
 **Contenu provisoire.** Chaque bloc marqué `provisional: true` affiche une mention « à confirmer »
-sous la section (composant `ProvisionalNote`). Sont provisoires : les 3 chiffres repères, les 6
+sous la section (composant `ProvisionalNote`). Sont provisoires : les 3 engagements de « Ce qui
+nous distingue », les 4 sessions de l'agenda (dates et intitulés), les 6
 publications, les 4 témoignages, les 6 réponses de la FAQ. Passer `provisional` à `false` une fois
 les vrais contenus validés par OPEM.
 
 **Sections retirées** à la demande du client, fichiers conservés (une ligne dans `HomePage.tsx`
 suffit pour les remettre) : `Needs` (« Quel est votre besoin ? »), `Audiences` (« Vous êtes… »),
-`Approach` (« Trois temps »), `KeyFigures`, `Sectors`, `Trainings` (agenda).
+`Approach` (« Trois temps »), `KeyFigures`, `Sectors`, `Trainings` (agenda en liste, remplacé
+par `UpcomingSessions`).
 
 ## 5. En-tête, pied de page et maquettes
 
@@ -167,13 +222,14 @@ suffit pour les remettre) : `Needs` (« Quel est votre besoin ? »), `Audiences`
 Plusieurs versions de chaque bloc ont été présentées au client. Les **versions retenues** sont
 celles de `DEFAULTS` dans `layoutVariants.ts` et s'affichent sans paramètre.
 
-| Bloc         | Paramètre    | Retenue          | Autres valeurs                                                                                              |
-| ------------ | ------------ | ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| Barre        | `nav`        | `editorialenuit` | `nuit`, `blanche`, `editoriale`, `flottante`, `centree`, `pleinecran`, `prestige`                           |
-| Accroche     | `hero`       | `reperes`        | `reseau`, `cycle`, `video`, `immersive`, `editorial`, `editorialnuit`, `diagnostic`, `questions`, `publics` |
-| Nos domaines | `domaines`   | `anime`          | `onglets`, `carrousel`, `sommaire`                                                                          |
-| Éclairages   | `eclairages` | `une`            | `rail`                                                                                                      |
-| Pied de page | `footer`     | `nuit`           | `clair`, `compact`                                                                                          |
+| Bloc         | Paramètre     | Retenue          | Autres valeurs                                                                                           |
+| ------------ | ------------- | ---------------- | -------------------------------------------------------------------------------------------------------- |
+| Barre        | `nav`         | `editorialenuit` | `nuit`, `blanche`, `editoriale`, `flottante`, `centree`, `pleinecran`, `prestige`                        |
+| Accroche     | `hero`        | `diagnostic`     | `reseau`, `cycle`, `video`, `immersive`, `editorial`, `editorialnuit`, `questions`, `publics`, `reperes` |
+| Engagements  | `engagements` | `essentiel`      | `cartes`                                                                                                 |
+| Nos domaines | `domaines`    | `rangee`         | `mosaique`, `anime`, `onglets`, `carrousel`, `sommaire`                                                  |
+| Éclairages   | `eclairages`  | `une`            | `rail`                                                                                                   |
+| Pied de page | `footer`      | `nuit`           | `clair`, `compact`                                                                                       |
 
 - En développement, un panneau « Maquettes » s'affiche en bas à gauche.
 - En production : ajouter `?maquettes` à l'adresse, ex. `/?maquettes&hero=cycle&domaines=sommaire`.
@@ -234,23 +290,29 @@ les éléments ajoutés plus tard (filtres, changement de langue).
 
 ### Vidéo d'accueil — `public/videos/hero-opem.mp4` (+ `hero-opem.jpg`, première image)
 
-Montage de 12 s, 1,7 Mo, sans son, 1280 × 720, H.264 `+faststart`, en attendant un tournage au
-cabinet. 4 plans Pexels de 3,5 s, fondus de 0,6 s :
+Affichée par l'accroche retenue (moitié droite) et par les autres maquettes du comparateur.
 
-| Plan            | Vidéo Pexels | Départ | Remarque                            |
-| --------------- | ------------ | ------ | ----------------------------------- |
-| Conseil         | 7691633      | 27 s   |                                     |
-| Chantier (BTPH) | 8964792      | 3 s    |                                     |
-| Formation       | 8716582      | 1 s    | Chiffres de l'écran projeté floutés |
-| Industrie       | 18101973     | 1 s    |                                     |
+Montage de 14,6 s, 1,4 Mo, sans son, 1280 × 720, H.264 `+faststart`, en attendant un tournage
+au cabinet. Uniquement des scènes de cabinet (aucun chantier ni usine, pour qu'on ne prenne pas
+OPEM pour une entreprise de construction), sans texte lisible à l'écran. 5 plans Pexels de 3,4 s, fondus de 0,6 s :
+
+| Plan                      | Vidéo Pexels | Départ |
+| ------------------------- | ------------ | ------ |
+| Équipe de conseil         | 7691633      | 27 s   |
+| Consultante au paperboard | 8141487      | 1,5 s  |
+| Équipe au travail         | 6563890      | 3 s    |
+| Formatrice en salle       | 8716590      | 2 s    |
+| Intervenante en séminaire | 7648344      | 2 s    |
 
 Lue sur tous les écrans (image fixe en mouvement réduit). Adresse dans
 `features/home/sections/heroMedia.ts`.
 
 ### Photos — `public/images/`
 
-- `domaines/` : une photo 4:3 par domaine. `accompagnement.jpg` est un montage en Y de 3 photos
-  Pexels (8961027, 2760241, 3183197) ; `formations.jpg` : Pexels 18999540.
+- `domaines/` : une photo 4:3 (1280 × 960) par domaine. `accompagnement.jpg` est un montage en Y
+  de 3 photos Pexels (8961027, 2760241, 3183197) ; `formations.jpg` : Pexels 18999540 ;
+  `communication.jpg` : Pexels 6950231 (dirigeant face aux micros, recadré). Les photos sont
+  recadrées vers le haut à l'affichage (`object-position`), pour garder les visages entiers.
 - `actualites/` : illustrations des publications d'exemple.
 - Toutes provisoires (Pexels / Unsplash, licences gratuites). À vérifier avant mise en ligne
   définitive : un logo de marque (NLMK) est visible sur `certification.jpg`.
@@ -328,17 +390,28 @@ dépend du chemin du projet) : c'est normal, le rendu est identique.
 **Contenus (à fournir ou valider par OPEM)**
 
 - [ ] Chiffres repères, publications, témoignages (avec accord écrit), réponses de la FAQ.
+- [ ] Engagements de « Ce qui nous distingue » (confidentialité, livrables remis, référent
+      unique) : à confirmer par OPEM, en particulier l'engagement de confidentialité signé.
+- [ ] Page « Le cabinet » (`features/cabinet/content.ts`, textes repris du site de 2019) : titre
+      officiel de Mme Bourahla (« Gérante » retenu), citation sur l'excellence, phrases sous les
+      6 valeurs (proposées), agrément n° 539 et dispositif qualité de la formation (catalogue
+      2021) toujours valables.
 - [ ] Traductions arabes.
 - [ ] Vraies photos (même nom de fichier, 4:3 pour les domaines) et, idéalement, une vidéo
       tournée au cabinet ; licence de `certification.jpg` (logo NLMK).
 
 **Développement**
 
-- [ ] Pages du menu : seules `/`, `/about` et `/contact` existent (et les deux dernières sont
-      des ébauches). Toutes les autres routes de `menu.ts` (`/expertises/…`, `/formation/…`,
-      `/missions/…`, `/eclairages/…`, `/actualites/…`, `/le-cabinet`, mentions légales…)
+- [ ] Pages du menu : seules `/`, `/le-cabinet`, `/about` et `/contact` existent (les deux
+      dernières sont des ébauches). Toutes les autres routes de `menu.ts` (`/expertises/…`,
+      `/formation/…`, `/missions/…`, `/eclairages/…`, `/actualites/…`, mentions légales…)
       affichent la page 404.
-- [ ] Formulaire « Être rappelé » / demande de devis (`/contact`).
+- [ ] Page « Intelligence artificielle appliquée » (`/expertises/intelligence-artificielle`,
+      bouton du bandeau IA) : à créer, et à ajouter au menu « Nos expertises ».
+- [ ] Formulaire « Être rappelé » / demande de devis (`/contact`), pré-rempli avec les réponses
+      de l'autodiagnostic (paramètres de l'adresse, voir partie 4).
+- [ ] Faire valider par OPEM l'autodiagnostic 7S : questions (organisation et leviers), règles
+      et textes des 6 profils, textes de « Notre lecture », domaines associés à chaque levier.
 - [ ] Brancher publications et actualités sur WordPress (aujourd'hui dans `content.ts`).
 - [ ] Retirer le comparateur de maquettes et les variantes non retenues.
 - [ ] Passer le dépôt GitHub en privé si le contenu doit rester confidentiel.
@@ -349,6 +422,21 @@ dépend du chemin du projet) : c'est normal, le rendu est identique.
 
 `src/features/home/content.ts` : chaque section a son bloc `fr` et `ar`, typé (TypeScript signale
 toute clé oubliée dans une des deux langues).
+
+### Modifier depuis la page (éditeur en direct)
+
+Avec `npm run dev`, bouton « Modifier la page » en bas à droite (absent du site en ligne) :
+
+- **clic** sur un bloc : panneau pour régler la taille du texte, les espaces au-dessus et en
+  dessous, la position (glisser le bloc, ou flèches du clavier, Maj = 10 px) et l'alignement.
+  Aperçu immédiat ; « Enregistrer » écrit dans la règle de base du `.module.css`. Si une règle
+  propre à un écran (media query, `:lang(ar)`) l'emporte, l'outil le signale ;
+- **double-clic** sur un texte : on l'écrit dans la page ; Entrée l'enregistre dans le fichier de
+  contenu (confirmation si la même phrase existe ailleurs), Échap annule.
+
+Côté serveur : `vite.liveEdit.ts` (adresses `/__live-text` et `/__live-style`, développement
+seulement, appel accepté uniquement depuis la page du serveur de dev). Côté page :
+`src/app/layouts/liveEdit/`. Relire le résultat avec `git diff` avant de committer.
 
 ### Changer les coordonnées
 
@@ -387,7 +475,7 @@ ffmpeg -i hero-opem.mp4 -frames:v 1 -q:v 3 hero-opem.jpg
 ### Retirer le comparateur de maquettes
 
 1. Dans `RootLayout.tsx` et `HomePage.tsx`, remplacer la lecture de la variante par les
-   composants retenus (`editorialenuit`, `HeroFacts`, `DomainsAuto`, `Insights`, pied `nuit`).
+   composants retenus (`editorialenuit`, `HeroDiagnostic`, `CommitmentsEssential`, `DomainsMosaic`, `Insights`, pied `nuit`).
 2. Supprimer `src/app/layouts/variants/`, les composants non retenus et leurs tests.
 3. `npm run build` et `npm test` doivent passer ; vérifier `?maquettes` (sans effet désormais).
 

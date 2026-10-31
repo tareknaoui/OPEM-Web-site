@@ -5,6 +5,8 @@ type CountUpProps = {
   value: number;
   format: (value: number) => string;
   durationMs?: number;
+  /** Attente avant de compter (chiffres qui partent l'un après l'autre). */
+  delayMs?: number;
   className?: string;
 };
 
@@ -16,7 +18,13 @@ const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
  * - Le texte animé est masqué aux lecteurs d'écran, qui lisent directement la valeur finale.
  * - Aucune animation si l'utilisateur demande moins de mouvement.
  */
-export function CountUp({ value, format, durationMs = 1600, className }: CountUpProps) {
+export function CountUp({
+  value,
+  format,
+  durationMs = 1600,
+  delayMs = 0,
+  className,
+}: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -30,9 +38,9 @@ export function CountUp({ value, format, durationMs = 1600, className }: CountUp
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
-        const start = performance.now();
+        const start = performance.now() + delayMs;
         const tick = (now: number) => {
-          const progress = Math.min((now - start) / durationMs, 1);
+          const progress = Math.min(Math.max((now - start) / durationMs, 0), 1);
           element.textContent = format(Math.round(value * easeOutCubic(progress)));
           if (progress < 1) frame = requestAnimationFrame(tick);
         };
@@ -47,7 +55,7 @@ export function CountUp({ value, format, durationMs = 1600, className }: CountUp
       cancelAnimationFrame(frame);
       element.textContent = format(value);
     };
-  }, [value, format, durationMs]);
+  }, [value, format, durationMs, delayMs]);
 
   return (
     <span className={className}>

@@ -1,0 +1,103 @@
+/* Bandeau blanc de l'autodiagnostic, en bas de l'accroche : bleu OPEM permis (titre, radar,
+   bouton), étiquette vert foncé. Sobre : une ligne, comme une entrée parmi d'autres.
+   Mobile : radar et texte, puis le bouton. Tablette et plus : radar | texte | bouton. */
+
+.band {
+  --card-font: var(--font-heading);
+
+  padding-block: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  background: var(--opem-white);
+  color: var(--opem-anthracite);
+}
+
+.band:lang(ar) {
+  --card-font: var(--font-arabic);
+}
+
+.band :focus-visible {
+  outline-color: var(--color-primary);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-4) clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  align-items: center;
+}
+
+/* Radar en signature : il respire d'une forme à l'autre. */
+.mark {
+  width: clamp(3.5rem, 3rem + 1.5vw, 4.75rem);
+}
+
+.label {
+  margin: 0 0 0.25rem;
+  color: var(--color-label);
+  font-family: var(--card-font);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.label:lang(ar) {
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+
+/* Titre et phrase sur la même ligne quand la place le permet. */
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.125rem var(--space-4);
+}
+
+.title {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--card-font);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.title:lang(ar) {
+  letter-spacing: 0;
+}
+
+.text {
+  margin: 0;
+  color: var(--opem-gray);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: var(--space-3) var(--space-6);
+}
+
+.duration {
+  order: 1;
+  margin: 0;
+  color: var(--opem-gray);
+  font-size: 0.8125rem;
+}
+
+@media (min-width: 48em) {
+  .inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .actions {
+    grid-column: auto;
+  }
+
+  .duration {
+    order: 0;
+  }
+}

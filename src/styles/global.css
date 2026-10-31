@@ -48,6 +48,8 @@
   --font-heading: 'Poppins', system-ui, sans-serif;
   --font-menu: 'Poppins', system-ui, sans-serif;
   --font-arabic: 'Cairo', 'Poppins', system-ui, sans-serif;
+  /* Taille de tous les surtitres (accroche, sections, bandeau IA, page « Le cabinet »). */
+  --eyebrow-size: 17px;
 
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -190,15 +192,15 @@ pre {
   margin: 0 0 var(--space-4);
   color: var(--color-label);
   font-family: var(--font-heading);
-  font-size: 0.8125rem;
+  font-size: var(--eyebrow-size);
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .eyebrow:lang(ar) {
   font-family: var(--font-arabic);
-  font-size: 0.9375rem;
+  font-size: var(--eyebrow-size);
   letter-spacing: 0; /* l'espacement casse la liaison des lettres arabes */
 }
 

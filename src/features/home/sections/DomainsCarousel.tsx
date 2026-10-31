@@ -12,7 +12,7 @@ type DomainsCarouselProps = {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
- * « Nos domaines », version carrousel à panneaux : sur ordinateur, les cinq domaines sont
+ * « Nos domaines », version carrousel à panneaux : sur ordinateur, tous les domaines sont
  * côte à côte en bandes bleu nuit numérotées ; le domaine actif s'ouvre en grand panneau
  * blanc (photo | texte). Sur mobile : accordéon vertical. Pas de défilement automatique.
  * Chaque bande est le titre (h3) du domaine et contient le bouton qui l'ouvre (motif

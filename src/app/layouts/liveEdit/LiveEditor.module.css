@@ -1,0 +1,247 @@
+/* Outil de développement (absent du site en ligne) : bouton et panneau en bas à droite ;
+   cadre pointillé au survol, cadre plein sur le bloc choisi, pointillés clairs sur les
+   autres éléments du même style, cadre vert pendant la saisie d'un texte. */
+
+.editor {
+  position: fixed;
+  inset-inline-end: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
+  display: grid;
+  justify-items: end;
+  gap: 0.5rem;
+  max-width: min(21rem, calc(100vw - 2rem));
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+}
+
+.toggle {
+  padding: 0.625rem 1.125rem;
+  border: 2px solid var(--opem-white);
+  border-radius: 999px;
+  background: var(--opem-night);
+  color: var(--opem-white);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 0.5rem 1.5rem rgb(17 54 91 / 0.35);
+  cursor: pointer;
+}
+
+.toggle[aria-pressed='true'] {
+  border-color: var(--opem-night);
+  background: var(--opem-white);
+  color: var(--opem-night);
+}
+
+.hint,
+.message {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  background: var(--opem-night);
+  color: var(--opem-white);
+  line-height: 1.4;
+}
+
+.message[data-tone='error'] {
+  background: var(--opem-anthracite);
+}
+
+/* ---------- Panneau ---------- */
+
+.panel {
+  display: grid;
+  gap: 0.625rem;
+  width: 21rem;
+  max-width: 100%;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  background: var(--opem-white);
+  box-shadow:
+    0 0 0 1px rgb(17 54 91 / 0.12),
+    0 1rem 2.5rem rgb(17 54 91 / 0.3);
+}
+
+.panel .hint {
+  padding: 0;
+  background: none;
+  color: var(--opem-gray);
+  font-size: 0.75rem;
+}
+
+.panelHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--opem-gray-light);
+}
+
+.name {
+  margin: 0;
+  font-weight: 700;
+}
+
+.file {
+  margin: 0.125rem 0 0;
+  color: var(--opem-gray);
+  font-size: 0.75rem;
+}
+
+.close {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--opem-gray-light);
+  border-radius: 0.375rem;
+}
+
+.stepper button {
+  width: 1.75rem;
+  height: 1.875rem;
+  padding: 0;
+  border: 0;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.stepper input {
+  width: 3.75rem;
+  height: 1.875rem;
+  padding: 0 0.25rem;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: end;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.stepper input::-webkit-inner-spin-button,
+.stepper input::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.unit {
+  padding-inline-end: 0.375rem;
+  color: var(--opem-gray);
+  font-size: 0.75rem;
+}
+
+.stepper :disabled,
+.stepper input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.segmented {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--opem-gray-light);
+  border-radius: 0.375rem;
+}
+
+.segmented button {
+  padding: 0.375rem 0.625rem;
+  border: 0;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  font: inherit;
+  cursor: pointer;
+}
+
+.segmented button[aria-pressed='true'] {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--opem-gray-light);
+}
+
+.primary,
+.secondary {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.375rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary {
+  border: 0;
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.secondary {
+  border: 1px solid var(--opem-gray-light);
+  background: var(--opem-white);
+  color: var(--opem-night);
+}
+
+.primary:disabled,
+.secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Repères dans la page ---------- */
+
+:global(:root[data-live-edit]) :global([data-live-target]) {
+  outline: 2px dashed var(--opem-green);
+  outline-offset: 3px;
+  cursor: pointer;
+}
+
+:global(:root[data-live-edit]) :global([data-live-selected]) {
+  outline: 2px solid var(--opem-green);
+  outline-offset: 3px;
+  cursor: grab;
+}
+
+:global(:root[data-live-edit]) :global([contenteditable]) {
+  outline: 2px solid var(--opem-green);
+  outline-offset: 3px;
+  cursor: text;
+}
+
+:global(:root[data-live-dragging]) {
+  cursor: grabbing;
+  user-select: none;
+}

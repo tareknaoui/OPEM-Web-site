@@ -1,5 +1,5 @@
 import { Icon, MapPinIcon, type IconProps } from '@/components/icons';
-import type { AudienceIcon, MarkerIcon, NeedIcon } from './content';
+import type { AudienceIcon, CommitmentIcon, MarkerIcon, NeedIcon } from './content';
 
 // Pictogrammes de l'accueil (trait simple, couleur héritée : vert OPEM sur fond blanc).
 
@@ -43,6 +43,37 @@ const needIcons: Record<NeedIcon, (props: IconProps) => React.JSX.Element> = {
     </Icon>
   ),
 };
+
+const commitmentIcons: Record<CommitmentIcon, (props: IconProps) => React.JSX.Element> = {
+  // Personne et flèche montante : les équipes du client progressent et prennent le relais.
+  relay: (props) => (
+    <Icon {...props}>
+      <circle cx="9" cy="7" r="3.5" />
+      <path d="M3 21v-1.5A5.5 5.5 0 0 1 8.5 14H11" />
+      <path d="m14 21 7-7M16 14h5v5" />
+    </Icon>
+  ),
+  // Cadenas : confidentialité.
+  lock: (props) => (
+    <Icon {...props}>
+      <rect x="4" y="10" width="16" height="11" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14.5v2.5" />
+    </Icon>
+  ),
+  // Repère planté sur un relief : des spécialistes qui connaissent le terrain.
+  field: (props) => (
+    <Icon {...props}>
+      <path d="M12 12s4.5-3.8 4.5-7.25a4.5 4.5 0 0 0-9 0C7.5 8.2 12 12 12 12Z" />
+      <circle cx="12" cy="4.75" r="1.5" />
+      <path d="m2 21 5.5-6 3.5 3.5 3-3 8 5.5" />
+    </Icon>
+  ),
+};
+
+export function CommitmentPictogram({ name, ...props }: IconProps & { name: CommitmentIcon }) {
+  const Pictogram = commitmentIcons[name];
+  return <Pictogram strokeWidth={1.6} {...props} />;
+}
 
 const markerIcons: Record<MarkerIcon, (props: IconProps) => React.JSX.Element> = {
   domains: (props) => (

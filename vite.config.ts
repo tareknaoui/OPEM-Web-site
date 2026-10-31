@@ -2,6 +2,7 @@
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import { liveEdit } from './vite.liveEdit.ts';
 
 // En-têtes de sécurité communs (dev + preview).
 const securityHeaders = {
@@ -28,7 +29,8 @@ const contentSecurityPolicy = [
 ].join('; ');
 
 export default defineConfig({
-  plugins: [react()],
+  // liveEdit : modifier textes, tailles et emplacements depuis la page (développement seulement).
+  plugins: [react(), liveEdit()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

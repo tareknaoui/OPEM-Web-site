@@ -14,12 +14,12 @@ const triggers = () => screen.getAllByRole('button', { expanded: false, hidden: 
 const openTrigger = () => screen.getByRole('button', { expanded: true });
 
 describe('« Nos domaines », carrousel à panneaux', () => {
-  it('montre les cinq domaines et en ouvre un seul', () => {
+  it('montre les six domaines et en ouvre un seul', () => {
     renderSection();
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(5);
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(6);
     expect(openTrigger()).toHaveTextContent('Études stratégiques');
-    expect(triggers()).toHaveLength(4);
-    expect(screen.getByText('1 sur 5')).toBeInTheDocument();
+    expect(triggers()).toHaveLength(5);
+    expect(screen.getByText('1 sur 6')).toBeInTheDocument();
   });
 
   it('change de domaine au clic, aux flèches du clavier et avec suivant / précédent', () => {
@@ -28,15 +28,17 @@ describe('« Nos domaines », carrousel à panneaux', () => {
     expect(openTrigger()).toHaveTextContent('Coaching professionnel');
 
     fireEvent.keyDown(openTrigger(), { key: 'ArrowRight' });
-    expect(openTrigger()).toHaveTextContent('Certification');
+    expect(openTrigger()).toHaveTextContent('Communication d’entreprise');
     expect(openTrigger()).toHaveFocus();
 
+    fireEvent.click(screen.getByRole('button', { name: 'Domaine suivant' }));
+    expect(openTrigger()).toHaveTextContent('Certification');
     // Après le dernier domaine, on revient au premier.
     fireEvent.click(screen.getByRole('button', { name: 'Domaine suivant' }));
     expect(openTrigger()).toHaveTextContent('Études stratégiques');
 
     fireEvent.click(screen.getByRole('button', { name: 'Domaine précédent' }));
     expect(openTrigger()).toHaveTextContent('Certification');
-    expect(screen.getByText('5 sur 5')).toBeInTheDocument();
+    expect(screen.getByText('6 sur 6')).toBeInTheDocument();
   });
 });

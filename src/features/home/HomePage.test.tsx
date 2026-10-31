@@ -21,28 +21,24 @@ function renderHome() {
 }
 
 describe('HomePage', () => {
-  // Bandeau retenu par défaut : « Repères » (voir layouts/variants).
-  it('affiche le grand titre, le bouton devis, les liens et les repères du bandeau', () => {
+  // Bandeau retenu par défaut : « Autodiagnostic » (voir layouts/variants).
+  it('affiche le grand titre et l’invitation au diagnostic 7S', () => {
     renderHome();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Faire progresser votre organisation.',
+      'Ce qui fait exceller votre organisation.',
     );
-    expect(screen.getByRole('link', { name: /Demander un devis/ })).toHaveAttribute(
-      'href',
-      '/contact',
-    );
-    expect(screen.getByRole('link', { name: /Nos expertises/ })).toHaveAttribute(
-      'href',
-      '/expertises',
-    );
-    expect(screen.getByText('15 ans')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Faire le test/ })).toBeInTheDocument();
   });
 
   it('présente les sections dans l’ordre du cahier des charges', () => {
     renderHome();
     const titles = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     expect(titles).toEqual([
+      'Sept leviers font votre performance. Un seul suffit à la freiner.',
+      'Notre réussite : des équipes qui gagnent en autonomie.',
       'Nos domaines',
+      'L’IA entre dans l’entreprise par la porte de l’organisation.',
+      'Les prochaines sessions',
       'Des idées pour décider, des nouvelles du cabinet.',
       'Ce que retiennent ceux que nous accompagnons.',
       'Tout ce qu’il faut savoir avant de commencer.',
@@ -52,7 +48,7 @@ describe('HomePage', () => {
   it('passe entièrement en arabe', () => {
     renderHome();
     fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/نرتقي بأداء مؤسستكم/);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/ما يجعل مؤسستكم تتميّز/);
     expect(screen.getByRole('heading', { name: 'ما يحتفظ به من نرافقهم.' })).toBeInTheDocument();
   });
 });

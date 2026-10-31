@@ -1,0 +1,135 @@
+/* « Ce qui nous distingue », version « L'essentiel » : bande bleu très clair, peu de texte.
+   Pictogrammes vert foncé dans un cercle blanc (vert OPEM et blanc au survol), titres bleu OPEM,
+   filets gris clair entre les engagements. */
+
+.section {
+  padding-block: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  background: var(--opem-blue-10);
+}
+
+.header {
+  text-align: center;
+}
+
+/* Titre sur deux lignes : l'accroche en bleu nuit, la promesse en bleu OPEM, en très grand. */
+.heading {
+  max-width: none;
+  font-size: clamp(2.25rem, 1.3rem + 3.2vw, 4.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.heading:lang(ar) {
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.headingLead {
+  display: block;
+  color: var(--opem-night);
+}
+
+.headingAccent {
+  display: block;
+  color: var(--color-primary);
+}
+
+/* ---------- Engagements ---------- */
+
+.list {
+  display: grid;
+  margin: clamp(2rem, 1.5rem + 2vw, 3.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Mobile : pictogramme à gauche, texte à droite, un filet entre deux engagements. */
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  padding-block: var(--space-6);
+}
+
+.item + .item {
+  border-top: 1px solid var(--opem-gray-light);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: var(--opem-white);
+  box-shadow: 0 0 0 0.5rem rgb(255 255 255 / 0.5);
+  color: var(--opem-green-dark);
+  transition:
+    background-color 300ms,
+    color 300ms;
+}
+
+.item:hover .icon {
+  background: var(--opem-green);
+  color: var(--opem-white);
+}
+
+.title {
+  margin: 0;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+.text {
+  margin: var(--space-2) 0 0;
+  line-height: 1.55;
+}
+
+.note {
+  display: flex;
+  justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: none;
+  }
+}
+
+/* ---------- Tablette et ordinateur : trois colonnes centrées ---------- */
+
+@media (min-width: 48em) {
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .item {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-content: start;
+    gap: var(--space-6);
+    padding: var(--space-2) clamp(1rem, 3vw, 3rem);
+    text-align: center;
+  }
+
+  .item + .item {
+    border-top: 0;
+    border-inline-start: 1px solid var(--opem-gray-light);
+  }
+
+  .text {
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+}

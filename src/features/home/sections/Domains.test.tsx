@@ -14,12 +14,12 @@ const panelTitle = () =>
   within(screen.getByRole('tabpanel')).getByRole('heading', { level: 3 }).textContent;
 
 describe('Section « Nos domaines »', () => {
-  it('affiche les cinq onglets et un seul domaine à la fois', () => {
+  it('affiche les six onglets et un seul domaine à la fois', () => {
     renderSection();
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Nos domaines');
-    expect(screen.getAllByRole('tab')).toHaveLength(5);
+    expect(screen.getAllByRole('tab')).toHaveLength(6);
     expect(panelTitle()).toBe('Études stratégiques');
-    expect(screen.getByText('1 sur 5')).toBeInTheDocument();
+    expect(screen.getByText('1 sur 6')).toBeInTheDocument();
 
     const panel = within(screen.getByRole('tabpanel'));
     expect(panel.getAllByRole('listitem')).toHaveLength(3);
@@ -43,14 +43,16 @@ describe('Section « Nos domaines »', () => {
     expect(tabs[3]).toHaveFocus();
 
     fireEvent.click(screen.getByRole('button', { name: 'Domaine suivant' }));
+    expect(panelTitle()).toBe('Communication d’entreprise');
+    fireEvent.click(screen.getByRole('button', { name: 'Domaine suivant' }));
     fireEvent.click(screen.getByRole('button', { name: 'Domaine suivant' }));
     // Après le dernier domaine, on revient au premier.
     expect(panelTitle()).toBe('Études stratégiques');
-    expect(screen.getByText('1 sur 5')).toBeInTheDocument();
+    expect(screen.getByText('1 sur 6')).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText('Choisir un domaine'), { target: { value: '1' } });
     expect(panelTitle()).toBe('Accompagnement des organisations');
-    expect(screen.getByText('2 sur 5')).toBeInTheDocument();
+    expect(screen.getByText('2 sur 6')).toBeInTheDocument();
   });
 
   it('n’écrit jamais « DAS »', () => {

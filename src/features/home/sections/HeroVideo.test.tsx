@@ -27,10 +27,10 @@ describe('Bandeau « Vidéo »', () => {
     mockMatchMedia(true);
     const { container } = renderHero();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Faire progresser votre organisation.',
+      'Ce qui fait exceller votre organisation.',
     );
     const video = container.querySelector('video')!;
-    expect(video).toHaveAttribute('src', '/videos/hero-opem.mp4?v=3');
+    expect(video).toHaveAttribute('src', '/videos/hero-opem.mp4?v=5');
     expect(video.muted).toBe(true);
     expect(screen.getByRole('button', { name: 'Mettre la vidéo en pause' })).toBeInTheDocument();
   });

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Outlet, useNavigation } from 'react-router';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
@@ -7,6 +8,9 @@ import { Navbar } from './navbar/Navbar';
 import styles from './RootLayout.module.css';
 import { useLayoutVariants, variantsEnabled } from './variants/layoutVariants';
 import { VariantSwitcher } from './variants/VariantSwitcher';
+
+// Éditeur en direct (textes, tailles, emplacements) : développement seulement, absent du build.
+const LiveEditor = import.meta.env.DEV ? lazy(() => import('./liveEdit/LiveEditor')) : null;
 
 export function RootLayout() {
   const { t } = useLanguage();
@@ -34,6 +38,11 @@ export function RootLayout() {
       <Footer variant={variants.footer} />
 
       {variantsEnabled && <VariantSwitcher />}
+      {LiveEditor && (
+        <Suspense fallback={null}>
+          <LiveEditor />
+        </Suspense>
+      )}
     </div>
   );
 }

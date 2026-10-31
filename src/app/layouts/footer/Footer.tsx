@@ -18,26 +18,34 @@ type FooterColumn = { id: string; title: string; links: FooterLink[] };
 const linkOf = (item: MenuItem): FooterLink[] =>
   item.href ? [{ id: item.id, label: item.label, href: item.href }] : [];
 
-/**
- * Colonnes construites à partir du menu principal (donc modifiables dans WordPress) :
- * une colonne par rubrique ayant des sous-pages, puis « Découvrir » pour le reste.
- * Les emplacements vides (sans lien, ex. secteurs à confirmer) sont ignorés.
- */
-function buildColumns(items: MenuItem[], discoverTitle: string, contactLabel: string) {
-  const columns: FooterColumn[] = [];
-  const discover: FooterLink[] = [];
+/** Rubrique du menu dont les sous-pages forment la colonne « Nos expertises ». */
+const EXPERTISES_HREF = '/expertises';
 
-  for (const item of items) {
-    const links = item.children.flatMap(linkOf);
-    if (links.length > 0) columns.push({ id: item.id, title: item.label, links });
-    else discover.push(...linkOf(item));
-  }
+/**
+ * Deux colonnes seulement, construites à partir du menu principal (donc modifiables dans
+ * WordPress) : « Nos expertises » (les sous-pages de la rubrique Expertises) et « Le site »
+ * (les autres rubriques, sans l'accueil : le logo y mène déjà). Les emplacements vides
+ * (sans lien) sont ignorés.
+ */
+function buildColumns(
+  items: MenuItem[],
+  titles: { expertises: string; site: string },
+  contactLabel: string,
+) {
+  const expertises = items.find((item) => item.href === EXPERTISES_HREF);
+  const site = items.filter((item) => item !== expertises && item.href !== '/').flatMap(linkOf);
   // Lien « Contact » ajouté seulement si le menu n'a pas déjà sa rubrique Contact.
   if (!items.some((item) => item.href === CALLBACK_HREF)) {
-    discover.push({ id: 'contact', label: contactLabel, href: CALLBACK_HREF });
+    site.push({ id: 'contact', label: contactLabel, href: CALLBACK_HREF });
   }
 
-  return [...columns, { id: 'discover', title: discoverTitle, links: discover }];
+  const columns: FooterColumn[] = [];
+  const expertiseLinks = expertises?.children.flatMap(linkOf) ?? [];
+  if (expertiseLinks.length > 0) {
+    columns.push({ id: 'expertises', title: titles.expertises, links: expertiseLinks });
+  }
+  columns.push({ id: 'site', title: titles.site, links: site });
+  return columns;
 }
 
 function FooterAnchor({ link }: { link: FooterLink }) {
@@ -56,7 +64,8 @@ function FooterAnchor({ link }: { link: FooterLink }) {
 }
 
 /**
- * Pied de page. Trois maquettes à comparer (voir ../variants) :
+ * Pied de page : à gauche le logo et la présentation, au milieu « Nos expertises » et « Le
+ * site », à droite « Nous contacter ». Trois maquettes à comparer (voir ../variants) :
  * - « nuit » (version 1, par défaut) : bandeau d'appel bleu OPEM + corps bleu nuit ;
  * - « clair » : même structure sur fond bleu très clair, logo couleur ;
  * - « compact » : une seule bande bleu nuit (voir FooterCompact).
@@ -72,7 +81,7 @@ const FOOTER_ACCORDION_QUERY = '(max-width: 47.99em)';
 function FooterColumns({ light }: { light: boolean }) {
   const { lang, t } = useLanguage();
   const items = useMenu(lang);
-  const columns = buildColumns(items, t.footer.discover, t.footer.contactLink);
+  const columns = buildColumns(items, t.footer, t.footer.contactLink);
   const accordion = useMediaQuery(FOOTER_ACCORDION_QUERY);
   const [openId, setOpenId] = useState<string | null>(null);
   const baseId = useId();

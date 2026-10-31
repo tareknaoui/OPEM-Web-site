@@ -1,0 +1,381 @@
+/* Page « Le cabinet » : en-tête, valeurs, équipe et garanties (manifeste, démarche et métiers
+   dans ./sections). Fonds alternés : bleu nuit, blanc, bleu très clair, bleu nuit, blanc,
+   bleu très clair, blanc (le bleu OPEM du pied de page ne touche jamais le bleu nuit).
+   Sur bleu nuit : blanc et bleu 30 %, l'ambre en repères et en grands chiffres ;
+   sur blanc : titres bleu OPEM, étiquettes vert foncé, puces vert OPEM. Pas de dégradé. */
+
+/* ==========================================================================
+   En-tête
+   ========================================================================== */
+
+.hero {
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+}
+
+.heroInner {
+  padding-block: clamp(3rem, 2rem + 5vw, 7rem) clamp(3.5rem, 2.5rem + 5vw, 7.5rem);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 clamp(1.5rem, 1rem + 1vw, 2.25rem);
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kicker::before {
+  content: '';
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-amber);
+}
+
+.headline {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 1.25rem + 4.4vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* Seconde partie du titre sur sa propre ligne, plus claire. */
+.accent {
+  display: block;
+  color: var(--opem-blue-30);
+}
+
+.intro {
+  max-width: 38rem;
+  margin: clamp(1.5rem, 1rem + 1vw, 2.25rem) 0 0;
+  color: var(--opem-blue-30);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.65;
+}
+
+.kicker:lang(ar),
+.headline:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.kicker:lang(ar) {
+  font-size: var(--eyebrow-size);
+}
+
+.headline:lang(ar) {
+  line-height: 1.3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .heroInner > * {
+    animation: rise 900ms var(--ease-reveal) both;
+  }
+
+  .headline {
+    animation-delay: 100ms;
+  }
+
+  .intro {
+    animation-delay: 250ms;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+/* ==========================================================================
+   En-têtes de section (valeurs, garanties)
+   ========================================================================== */
+
+.head {
+  max-width: 48rem;
+  margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+/* ==========================================================================
+   Valeurs, sur blanc : deux colonnes de lignes (numéro | titre et phrase) ; à l'arrivée,
+   le filet de chaque ligne se trace, gris puis un court trait bleu OPEM à son début.
+   ========================================================================== */
+
+.valueList {
+  display: grid;
+  column-gap: var(--grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.valueItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(3rem, 2.5rem + 2vw, 4.5rem) 1fr;
+  gap: var(--space-4);
+  padding-block: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  border-top: 1px solid var(--opem-gray-light);
+}
+
+.valueItem::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  inset-inline-start: 0;
+  width: 3rem;
+  height: 3px;
+  background: var(--color-primary);
+  transform-origin: left;
+}
+
+.valueItem:lang(ar)::before {
+  transform-origin: right;
+}
+
+.valueNumber {
+  color: var(--opem-blue-50);
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.valueTitle {
+  margin: 0;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.valueTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.valueText {
+  max-width: 30rem;
+  margin: var(--space-2) 0 0;
+  color: var(--opem-gray);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal-stagger] > .valueItem::before {
+    scale: 0 1;
+    transition: scale 1000ms var(--ease-reveal);
+    transition-delay: calc(200ms + var(--i, 0) * 120ms);
+  }
+
+  [data-visible] > .valueItem::before {
+    scale: 1 1;
+  }
+}
+
+@media (min-width: 48em) {
+  .valueList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Équipe, sur bleu très clair : texte à gauche, la direction à droite.
+   ========================================================================== */
+
+.team {
+  background: var(--opem-blue-10);
+}
+
+.teamText {
+  max-width: 36rem;
+}
+
+/* La direction : nom en grand, sous un filet bleu OPEM. */
+.director {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  margin: var(--space-6) 0 0;
+  padding-top: var(--space-6);
+  border-top: 3px solid var(--color-primary);
+}
+
+.directorLabel {
+  color: var(--color-label);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.directorName {
+  margin-top: var(--space-2);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.directorRole {
+  color: var(--opem-gray);
+  font-size: 1.0625rem;
+}
+
+.directorLabel:lang(ar),
+.directorName:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.directorLabel:lang(ar) {
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 64em) {
+  .teamHead {
+    grid-column: 1 / span 7;
+  }
+
+  .director {
+    grid-column: 9 / -1;
+    align-self: end;
+    margin-top: 0;
+  }
+}
+
+/* ==========================================================================
+   Garanties, sur blanc : l'agrément en grand chiffre ambre sur une carte bleu nuit | le
+   dispositif qualité de chaque session sur bleu très clair.
+   ========================================================================== */
+
+.pledgeGrid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+.approval,
+.quality {
+  padding: clamp(1.75rem, 1rem + 2.5vw, 3.25rem);
+  border-radius: 0.5rem;
+}
+
+.approval {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  overflow: hidden;
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+}
+
+.quality {
+  background: var(--opem-blue-10);
+}
+
+.approvalLabel,
+.qualityTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.approvalLabel {
+  color: var(--opem-blue-30);
+}
+
+.qualityTitle {
+  color: var(--color-primary);
+}
+
+/* Le numéro d'agrément : grand chiffre ambre, comme le permet la charte sur bleu nuit. */
+.approvalNumber {
+  color: var(--opem-amber);
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.approvalText {
+  max-width: 24rem;
+  margin: var(--space-4) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgb(178 202 222 / 0.25);
+  color: var(--opem-blue-30);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.qualityList {
+  display: grid;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qualityList > li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-top: 1px solid rgb(0 77 145 / 0.15);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  color: var(--opem-green-dark);
+}
+
+.approvalLabel:lang(ar),
+.qualityTitle:lang(ar),
+.approvalNumber:lang(ar),
+.qualityList > li:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.approvalLabel:lang(ar),
+.qualityTitle:lang(ar) {
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 64em) {
+  .pledgeGrid {
+    grid-template-columns: 5fr 7fr;
+  }
+}

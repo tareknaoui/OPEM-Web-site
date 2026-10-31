@@ -3,14 +3,15 @@ import { useSyncExternalStore } from 'react';
 /* ==========================================================================
    Maquettes à comparer (barre, bandeau d'accueil, sections, pied de page).
    Outil de présentation. Versions retenues par OPEM (DEFAULTS ci-dessous) :
-   barre « Éditoriale bleu nuit », bandeau « Repères », domaines « Carrousel animé »,
-   éclairages « À la une », pied « Bleu nuit ». Pour finir : garder ces variantes et
+   barre « Éditoriale bleu nuit », bandeau « Autodiagnostic », engagements « L'essentiel »,
+   domaines « Rangée », éclairages « À la une », pied « Bleu nuit ». Pour finir : garder ces variantes et
    supprimer les autres (ce dossier, le sélecteur et les variantes non retenues).
 
    Le sélecteur s'affiche :
    - toujours en développement (npm run dev) ;
    - en production seulement avec ?maquettes dans l'adresse.
-   Lien direct vers une combinaison : /?maquettes&nav=blanche&footer=clair&domaines=carrousel&eclairages=rail
+   Lien direct vers une combinaison :
+   /?maquettes&nav=blanche&footer=clair&engagements=cartes&domaines=carrousel&eclairages=rail
    ========================================================================== */
 
 export const navbarVariants = [
@@ -64,7 +65,8 @@ export const heroVariants = [
   {
     id: 'diagnostic',
     label: 'Autodiagnostic',
-    description: 'Sur bleu nuit, 1re question du diagnostic et 4 réponses, vidéo à droite',
+    description:
+      'Retenue · bleu nuit à gauche, autodiagnostic 7S à droite (à la place de la vidéo)',
   },
   {
     id: 'questions',
@@ -79,11 +81,26 @@ export const heroVariants = [
   {
     id: 'reperes',
     label: 'Repères',
-    description: 'Retenue · sur bleu nuit, boutons puis trois faits courts, vidéo à droite',
+    description: 'Sur bleu nuit, boutons puis trois faits courts, vidéo à droite',
   },
 ] as const;
 
 export const domainsVariants = [
+  {
+    id: 'rangee',
+    label: 'Rangée',
+    description: 'Retenue · cartes égales : 5 sur une ligne, 6 sur deux lignes de 3',
+  },
+  {
+    id: 'coin',
+    label: 'Rangée, vignette en coin',
+    description: 'Mêmes cartes, l’essentiel de l’illustration en vignette dans le coin',
+  },
+  {
+    id: 'mosaique',
+    label: 'Mosaïque',
+    description: 'Tous les domaines d’un coup : 2 grandes cartes puis les autres',
+  },
   { id: 'onglets', label: 'Onglets', description: 'Onglets, panneau blanc, précédent / suivant' },
   {
     id: 'carrousel',
@@ -93,12 +110,25 @@ export const domainsVariants = [
   {
     id: 'anime',
     label: 'Carrousel animé',
-    description: 'Retenue · fond bleu OPEM, défile seul (avec pause), barre de progression',
+    description: 'Fond bleu OPEM, défile seul (avec pause), barre de progression',
   },
   {
     id: 'sommaire',
     label: 'Sommaire éditorial',
     description: 'Bleu nuit, sommaire numéroté | grande photo, défile seul (avec pause)',
+  },
+] as const;
+
+export const commitmentsVariants = [
+  {
+    id: 'essentiel',
+    label: 'L’essentiel',
+    description: 'Retenue · 3 pictogrammes, quelques mots et une phrase chacun',
+  },
+  {
+    id: 'cartes',
+    label: 'Cartes détaillées',
+    description: '3 cartes : texte, preuves cochées, « Ailleurs, souvent »',
   },
 ] as const;
 
@@ -119,11 +149,13 @@ export type NavbarVariant = (typeof navbarVariants)[number]['id'];
 export type FooterVariant = (typeof footerVariants)[number]['id'];
 export type HeroVariant = (typeof heroVariants)[number]['id'];
 export type DomainsVariant = (typeof domainsVariants)[number]['id'];
+export type CommitmentsVariant = (typeof commitmentsVariants)[number]['id'];
 export type InsightsVariant = (typeof insightsVariants)[number]['id'];
 export type LayoutVariants = {
   navbar: NavbarVariant;
   footer: FooterVariant;
   hero: HeroVariant;
+  commitments: CommitmentsVariant;
   domains: DomainsVariant;
   insights: InsightsVariant;
 };
@@ -132,8 +164,9 @@ export type LayoutVariants = {
 const DEFAULTS: LayoutVariants = {
   navbar: 'editorialenuit',
   footer: 'nuit',
-  hero: 'reperes',
-  domains: 'anime',
+  hero: 'diagnostic',
+  commitments: 'essentiel',
+  domains: 'rangee',
   insights: 'une',
 };
 const STORAGE_KEY = 'opem-maquettes';
@@ -142,6 +175,8 @@ const FLAG_KEY = 'opem-maquettes-actif';
 const isNavbar = (v: unknown): v is NavbarVariant => navbarVariants.some((o) => o.id === v);
 const isFooter = (v: unknown): v is FooterVariant => footerVariants.some((o) => o.id === v);
 const isHero = (v: unknown): v is HeroVariant => heroVariants.some((o) => o.id === v);
+const isCommitments = (v: unknown): v is CommitmentsVariant =>
+  commitmentsVariants.some((o) => o.id === v);
 const isDomains = (v: unknown): v is DomainsVariant => domainsVariants.some((o) => o.id === v);
 const isInsights = (v: unknown): v is InsightsVariant => insightsVariants.some((o) => o.id === v);
 
@@ -173,12 +208,14 @@ function load(): LayoutVariants {
   const nav = params.get('nav') ?? stored.navbar;
   const footer = params.get('footer') ?? stored.footer;
   const hero = params.get('hero') ?? stored.hero;
+  const commitments = params.get('engagements') ?? stored.commitments;
   const domains = params.get('domaines') ?? stored.domains;
   const insights = params.get('eclairages') ?? stored.insights;
   return {
     navbar: isNavbar(nav) ? nav : DEFAULTS.navbar,
     footer: isFooter(footer) ? footer : DEFAULTS.footer,
     hero: isHero(hero) ? hero : DEFAULTS.hero,
+    commitments: isCommitments(commitments) ? commitments : DEFAULTS.commitments,
     domains: isDomains(domains) ? domains : DEFAULTS.domains,
     insights: isInsights(insights) ? insights : DEFAULTS.insights,
   };

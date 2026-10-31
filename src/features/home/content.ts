@@ -9,6 +9,7 @@ import type { Lang } from '@/i18n/language';
    - CHIFFRES CLÉS : valeurs provisoires (question 12 à la Gérante) ;
    - SECTEURS : liste provisoire ;
    - PROCHAINES FORMATIONS : dates et intitulés provisoires ;
+   - AUTODIAGNOSTIC 7S : questions, réponses, niveaux et domaines associés ;
    - traductions arabes (relecture par une personne arabophone).
    Tant que `provisional` vaut true, une mention « à confirmer » s'affiche
    sous la section concernée, pour ne jamais présenter un chiffre inventé comme réel.
@@ -18,6 +19,15 @@ export type NeedIcon =
   'strategy' | 'organization' | 'certification' | 'training' | 'coaching' | 'safety';
 export type MarkerIcon = 'domains' | 'sectors' | 'map';
 export type AudienceIcon = 'public' | 'company';
+export type CommitmentIcon = 'relay' | 'lock' | 'field';
+/** Les sept leviers du modèle des 7S (McKinsey), mesurés par l'autodiagnostic de l'accroche. */
+export type DiagnosticAxis =
+  'strategie' | 'structure' | 'systemes' | 'valeurs' | 'style' | 'personnel' | 'competences';
+/** Profils de l'autodiagnostic 7S (règles dans diagnosticScore.ts). */
+export type DiagnosticProfile =
+  'alignee' | 'fondation' | 'cap' | 'mecanique' | 'talents' | 'mouvement';
+/** Questions sur l'organisation, posées avant les 7 leviers. */
+export type DiagnosticContextId = 'secteur' | 'effectif' | 'fonction';
 
 type Link = { label: string; href: string };
 
@@ -72,16 +82,81 @@ export type HomeContent = {
     pillars: { title: string; text: string; href: string }[];
   };
   /**
-   * Bandeau « Autodiagnostic » : une question dès l'accroche et quelques grandes réponses.
-   * Les réponses mènent à la suite du diagnostic (page /autodiagnostic), la dernière au catalogue.
+   * Bandeau « Autodiagnostic 7S » : titre, texte et boutons à gauche ; à droite, à la place de la
+   * vidéo, une carte d'invitation (radar des 7S qui respire). « Commencer » ouvre le diagnostic
+   * en plein écran : une question par levier du modèle des 7S de McKinsey, le radar se dessine
+   * en direct, puis le profil de l'organisation. Calculé dans le navigateur (diagnosticScore.ts),
+   * sans IA ni envoi. Réponses rangées de la moins à la plus avancée (0 à 3 points).
    */
   heroDiagnostic: {
-    kicker: string;
-    headline: string;
-    question: string;
-    choices: { id: string; icon: NeedIcon; label: string; href: string }[];
-    /** Texte alternatif de la photo (à remplacer avec la vraie photo). */
-    imageAlt: string;
+    label: string;
+    duration: string;
+    /** Carte de l'accroche : le diagnostic présenté comme une aide pour s'orienter. */
+    intro: { title: string; text: string; start: string };
+    /** Description du radar pour les lecteurs d'écran. */
+    modelLabel: string;
+    /** « Levier {current} sur {total} » */
+    progress: string;
+    back: string;
+    /** Touches affichées devant les réponses (et acceptées au clavier, avec 1 à 4). */
+    keys: [string, string, string, string];
+    close: string;
+    /**
+     * Avant les 7 leviers : quelques questions sur l'organisation. Elles nuancent l'analyse
+     * (effectif) et sont transmises avec la demande de rappel.
+     */
+    context: {
+      label: string;
+      /** « Question {current} sur {total} » (lecteurs d'écran). */
+      progress: string;
+      questions: {
+        id: DiagnosticContextId;
+        /** Mot géant de l'écran. */
+        label: string;
+        text: string;
+        choices: { id: string; label: string }[];
+      }[];
+    };
+    /** Une question par levier, dans l'ordre du modèle ; `id` est le levier. */
+    questions: { id: DiagnosticAxis; text: string; choices: { id: string; label: string }[] }[];
+    /** Nom court (radar), nom complet (listes) et domaine OPEM qui y répond. */
+    axes: Record<DiagnosticAxis, { label: string; title: string; domain: Link }>;
+    result: {
+      label: string;
+      profileLabel: string;
+      /** Sous le pourcentage global. */
+      scoreLabel: string;
+      /** Points d'un levier, pour les lecteurs d'écran : « {score} sur 3 ». */
+      axisScore: string;
+      /** Légende du radar : forme pleine, forme en pointillés. */
+      yours: string;
+      ideal: string;
+      weakTitle: string;
+      noWeak: string;
+      startTitle: string;
+      /** Lien de rappel : les réponses y sont ajoutées en paramètres (pour le futur formulaire). */
+      callback: Link;
+      restart: string;
+    };
+    /** Nom et portrait de chaque profil. */
+    profiles: Record<DiagnosticProfile, { name: string; text: string }>;
+    /**
+     * Lecture du résultat, composée selon les réponses : niveau de maturité (par quart du
+     * total), équilibre cadre / humain ({hard}, {soft} : pourcentages), point d'appui ({axis})
+     * et une phrase selon l'effectif (clé : identifiant de la réponse).
+     */
+    analysis: {
+      title: string;
+      /** « Niveau {level} sur 4 » */
+      levelLabel: string;
+      levels: { name: string; text: string }[];
+      hard: { label: string; hint: string };
+      soft: { label: string; hint: string };
+      balance: { hard: string; soft: string; even: string };
+      strength: string;
+      noStrength: string;
+      sizes: Record<string, string>;
+    };
   };
   /** Bandeau « Trois questions » : le titre remplacé par trois questions, chacune un lien. */
   heroQuestions: {
@@ -118,7 +193,35 @@ export type HomeContent = {
     items: { value: string; label: string }[];
   };
   /**
-   * Section « Nos domaines », juste sous l'accroche : un onglet par domaine, un panneau qui
+   * Section « Ce qui nous distingue », juste sous l'accroche : trois engagements, chacun avec
+   * des preuves concrètes et, en bas de carte, ce qu'on trouve souvent ailleurs.
+   * Engagements proposés : mention « à confirmer » tant que provisional vaut true.
+   */
+  commitments: {
+    eyebrow: string;
+    title: string;
+    /** Titre de la version « L'essentiel », sur deux lignes (la seconde en bleu OPEM). */
+    heading: [string, string];
+    lead: string;
+    /** Étiquette au-dessus des preuves concrètes. */
+    proofLabel: string;
+    /** Étiquette de la comparaison, en bas de carte. */
+    elsewhereLabel: string;
+    provisional: boolean;
+    note: string;
+    items: {
+      id: string;
+      icon: CommitmentIcon;
+      title: string;
+      text: string;
+      proofs: string[];
+      elsewhere: string;
+      /** Version « L'essentiel » : quelques mots et une phrase. */
+      short: { title: string; text: string };
+    }[];
+  };
+  /**
+   * Section « Nos domaines », sous « Ce qui nous distingue » : un onglet par domaine, un panneau qui
    * en affiche un en entier. Ordre des domaines à confirmer par OPEM. Ne jamais écrire « DAS ».
    */
   domains: {
@@ -142,6 +245,13 @@ export type HomeContent = {
       href: string;
       /** Photo 4:3, sans texte dessus (provisoire : à remplacer par une vraie photo). */
       image: string;
+      /**
+       * Illustration 16:9 (métaphore du domaine, fond bleu nuit, une pièce ambre), utilisée par
+       * la rangée retenue. Une version de 800 px de large existe à côté (« -800.webp »).
+       */
+      illustration: string;
+      /** Vignette carrée tirée de l'illustration (l'objet ambre), pour la version « en coin ». */
+      emblem: string;
     }[];
   };
   /**
@@ -149,6 +259,24 @@ export type HomeContent = {
    * pages « Insights » des grands cabinets. Contenus d'exemple tant que `provisional` vaut
    * true : à remplacer par les vraies publications d'OPEM (plus tard, depuis WordPress).
    */
+  /**
+   * Bandeau « Intelligence artificielle appliquée », sous les domaines : titre, texte, bouton,
+   * et trois temps (diagnostic, formation, intégration) dans un cadre à filets.
+   */
+  ai: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    cta: Link;
+    /**
+     * Illustration (une porte ouverte sur l'organisation, l'étoile ambre qui entre), fond bleu
+     * nuit ; une version de 700 px de large existe à côté (« -700.webp »).
+     */
+    illustration: string;
+    /** Nom de la liste des trois temps (lecteurs d'écran). */
+    stepsLabel: string;
+    steps: { label: string; text: string }[];
+  };
   insights: {
     eyebrow: string;
     title: string;
@@ -203,6 +331,7 @@ export type HomeContent = {
     lead: string;
     steps: { title: string; text: string }[];
   };
+  /** Chiffres clés : sous le titre de l'accroche (et dans la bande KeyFigures, hors accueil). */
   figures: {
     eyebrow: string;
     title: string;
@@ -227,8 +356,20 @@ export type HomeContent = {
     provisional: boolean;
     note: string;
     empty: string;
-    /** date au format AAAA-MM-JJ ; les sessions passées sont masquées automatiquement. */
-    items: { id: string; date: string; title: string; format: string; href: string }[];
+    /** Version « Prochaines sessions » : nom de la liste (lecteurs d'écran). */
+    listLabel: string;
+    /**
+     * date au format AAAA-MM-JJ ; les sessions passées sont masquées automatiquement.
+     * topic : thème affiché en étiquette sur la carte.
+     */
+    items: {
+      id: string;
+      date: string;
+      topic: string;
+      title: string;
+      format: string;
+      href: string;
+    }[];
   };
   /**
    * Témoignages (dernière section). Exemples tant que `provisional` vaut true : à remplacer
@@ -279,15 +420,14 @@ const fr: HomeContent = {
   hero: {
     eyebrow: 'Cabinet de conseil et de formation',
     title: 'Structurer, former, certifier : faire progresser votre organisation.',
-    subtitle:
-      'OPEM accompagne les entreprises et les organismes publics algériens, du diagnostic stratégique à la certification.',
+    subtitle: 'OPEM accompagne les organisations, du diagnostic stratégique à la certification.',
     primary: { label: 'Demander un devis', href: '/contact' },
     secondary: { label: 'Voir les formations', href: '/formation' },
   },
   heroCycle: {
     headline: ['Faire progresser', 'votre organisation.'],
     intro:
-      'Structurer, former, certifier : OPEM accompagne les entreprises et les organismes publics algériens, du diagnostic à la certification.',
+      'Des décisions éclairées. Des processus structurés. Des exigences maîtrisées. Des compétences développées. Un leadership affirmé. Une communication qui fait la différence.',
     label: 'Notre démarche en trois étapes',
     step: 'Étape',
     pause: 'Mettre l’animation en pause',
@@ -342,9 +482,9 @@ const fr: HomeContent = {
     ],
   },
   heroVideo: {
-    headline: ['Faire progresser', 'votre organisation.'],
+    headline: ['Ce qui fait exceller', 'votre organisation.'],
     intro:
-      'Structurer, former, certifier : OPEM accompagne les entreprises et les organismes publics algériens, du diagnostic à la certification.',
+      'Des décisions éclairées. Des processus structurés. Des exigences maîtrisées. Des compétences développées. Un leadership affirmé. Une communication qui fait la différence.',
     pause: 'Mettre la vidéo en pause',
     play: 'Relancer la vidéo',
   },
@@ -360,7 +500,7 @@ const fr: HomeContent = {
     kicker: 'Cabinet de conseil et de formation · Alger',
     headline: ['Bâtir des organisations', 'qui performent.'],
     intro:
-      'Diagnostic, structuration, formation et certification : OPEM accompagne les entreprises et les organismes publics algériens avec méthode, à chaque étape de leur progression.',
+      'Diagnostic, structuration, formation et certification : OPEM accompagne les organisations avec méthode, à chaque étape de leur progression.',
     caption: 'Chaque organisation a sa méthode. Nous vous aidons à construire la vôtre.',
     badge: 'Beyond Quality · Conseil · Formation · Certification · ',
     pillarsLabel: 'Nos trois métiers',
@@ -382,39 +522,270 @@ const fr: HomeContent = {
       },
     ],
   },
+  // Espaces insécables avant « ? » : le point d'interrogation ne passe jamais seul à la ligne.
   heroDiagnostic: {
-    kicker: 'Cabinet de conseil et de formation',
-    headline: 'Nous rendons votre organisation plus performante.',
-    // Espace insécable avant « ? » : le point d'interrogation ne passe jamais seul à la ligne.
-    question: 'Quelle est votre priorité cette année ?',
-    choices: [
+    label: 'Autodiagnostic 3 minutes chrono',
+    duration: '.',
+    intro: {
+      title: 'Sept leviers font votre performance. Un seul suffit à la freiner.',
+      text: '.',
+      start: 'Faire le test',
+    },
+    modelLabel:
+      'Le modèle des 7S : stratégie, structure, systèmes, valeurs partagées, style, personnel et compétences.',
+    progress: 'Levier {current} sur {total}',
+    back: 'Question précédente',
+    keys: ['A', 'B', 'C', 'D'],
+    close: 'Quitter',
+    context: {
+      label: 'Votre organisation',
+      progress: 'Question {current} sur {total} sur votre organisation',
+      questions: [
+        {
+          id: 'secteur',
+          label: 'Secteur',
+          text: 'Dans quel secteur évolue votre organisation ?',
+          choices: [
+            { id: 'btph', label: 'BTPH' },
+            { id: 'industrie', label: 'Industrie' },
+            { id: 'energie', label: 'Énergie et mines' },
+            { id: 'agroalimentaire', label: 'Agroalimentaire' },
+            { id: 'sante', label: 'Santé' },
+            { id: 'transport', label: 'Transport et logistique' },
+            { id: 'services', label: 'Services' },
+            { id: 'administration', label: 'Administration publique' },
+            { id: 'enseignement', label: 'Enseignement et formation' },
+            { id: 'autre', label: 'Autre secteur' },
+          ],
+        },
+        {
+          id: 'effectif',
+          label: 'Effectif',
+          text: 'Combien de personnes compte votre organisation ?',
+          choices: [
+            { id: 'moins-50', label: 'Moins de 50 personnes' },
+            { id: '50-249', label: 'De 50 à 249 personnes' },
+            { id: '250-999', label: 'De 250 à 999 personnes' },
+            { id: '1000-plus', label: '1 000 personnes et plus' },
+          ],
+        },
+        {
+          id: 'fonction',
+          label: 'Fonction',
+          text: 'Quelle est votre fonction ?',
+          choices: [
+            { id: 'direction', label: 'Direction générale' },
+            { id: 'rh', label: 'Ressources humaines' },
+            { id: 'qualite', label: 'Qualité, HSE ou organisation' },
+            { id: 'encadrement', label: 'Autre fonction d’encadrement' },
+          ],
+        },
+      ],
+    },
+    questions: [
       {
-        id: 'former',
-        icon: 'coaching',
-        label: 'Former mes équipes',
-        href: '/autodiagnostic?priorite=former',
+        id: 'strategie',
+        text: 'Votre stratégie est-elle claire et partagée par tous ?',
+        choices: [
+          { id: 'implicite', label: 'Elle reste implicite' },
+          { id: 'direction', label: 'Claire pour la direction seulement' },
+          { id: 'ecrite', label: 'Écrite et diffusée' },
+          { id: 'pilotee', label: 'Partagée et suivie avec des indicateurs' },
+        ],
       },
       {
-        id: 'certifier',
-        icon: 'certification',
-        label: 'Obtenir une certification',
-        href: '/autodiagnostic?priorite=certifier',
+        id: 'structure',
+        text: 'Chacun sait-il qui décide et qui fait quoi ?',
+        choices: [
+          { id: 'flou', label: 'Les rôles restent flous' },
+          { id: 'organigramme', label: 'Un organigramme existe, peu appliqué' },
+          { id: 'definis', label: 'Rôles et responsabilités définis' },
+          { id: 'revus', label: 'Définis, et revus quand l’organisation évolue' },
+        ],
       },
       {
-        id: 'marche-public',
-        icon: 'strategy',
-        label: 'Répondre à un marché public',
-        href: '/autodiagnostic?priorite=marche-public',
+        id: 'systemes',
+        text: 'Vos processus et procédures sont-ils écrits et appliqués ?',
+        choices: [
+          { id: 'non', label: 'Chacun fait à sa façon' },
+          { id: 'en-partie', label: 'En partie' },
+          { id: 'essentiel', label: 'Oui, pour l’essentiel' },
+          { id: 'ameliores', label: 'Oui, mesurés et améliorés en continu' },
+        ],
       },
       {
-        id: 'organiser',
-        icon: 'organization',
-        label: 'Mieux organiser mon service',
-        href: '/autodiagnostic?priorite=organiser',
+        id: 'valeurs',
+        text: 'Vos équipes partagent-elles les mêmes valeurs et la même vision ?',
+        choices: [
+          { id: 'rarement', label: 'Rarement' },
+          { id: 'certaines', label: 'Certaines équipes seulement' },
+          { id: 'ensemble', label: 'Oui, dans l’ensemble' },
+          { id: 'decisions', label: 'Oui, elles guident nos décisions' },
+        ],
       },
-      { id: 'formations', icon: 'training', label: 'Nos formations', href: '/formation' },
+      {
+        id: 'style',
+        text: 'Comment vos managers dirigent-ils leurs équipes ?',
+        choices: [
+          { id: 'controle', label: 'Surtout par le contrôle' },
+          { id: 'chacun', label: 'Chacun à sa manière' },
+          { id: 'ecoute', label: 'Avec écoute et délégation' },
+          { id: 'autonomie', label: 'En développant l’autonomie de chacun' },
+        ],
+      },
+      {
+        id: 'personnel',
+        text: 'Avez-vous les bonnes personnes aux bons postes ?',
+        choices: [
+          { id: 'souvent-non', label: 'Souvent, non' },
+          { id: 'parfois', label: 'Parfois' },
+          { id: 'plupart', label: 'Le plus souvent' },
+          { id: 'talents', label: 'Oui, avec une gestion des talents suivie' },
+        ],
+      },
+      {
+        id: 'competences',
+        text: 'Comment développez-vous les compétences de vos équipes ?',
+        choices: [
+          { id: 'au-cas-par-cas', label: 'Au cas par cas' },
+          { id: 'demandes', label: 'Selon les demandes de chacun' },
+          { id: 'plan-annuel', label: 'Avec un plan de formation annuel' },
+          { id: 'evalue', label: 'Avec un plan relié aux compétences, et évalué' },
+        ],
+      },
     ],
-    imageAlt: 'Salle de réunion d’un cabinet de conseil',
+    axes: {
+      strategie: {
+        label: 'Stratégie',
+        title: 'Stratégie',
+        domain: { label: 'Études stratégiques', href: '/expertises/etudes-strategiques' },
+      },
+      structure: {
+        label: 'Structure',
+        title: 'Structure et rôles',
+        domain: {
+          label: 'Accompagnement des organisations',
+          href: '/expertises/accompagnement-des-organisations',
+        },
+      },
+      systemes: {
+        label: 'Systèmes',
+        title: 'Systèmes et processus',
+        domain: {
+          label: 'Certification, accréditation, labellisation',
+          href: '/expertises/certification-et-accreditation',
+        },
+      },
+      valeurs: {
+        label: 'Valeurs partagées',
+        title: 'Valeurs partagées',
+        domain: {
+          label: 'Communication d’entreprise',
+          href: '/expertises/communication-d-entreprise',
+        },
+      },
+      style: {
+        label: 'Style',
+        title: 'Style de management',
+        domain: { label: 'Coaching professionnel', href: '/expertises/coaching-professionnel' },
+      },
+      personnel: {
+        label: 'Personnel',
+        title: 'Personnel',
+        domain: {
+          label: 'Accompagnement des organisations',
+          href: '/expertises/accompagnement-des-organisations',
+        },
+      },
+      competences: {
+        label: 'Compétences',
+        title: 'Compétences',
+        domain: { label: 'Formations qualifiantes', href: '/formation' },
+      },
+    },
+    result: {
+      label: 'Votre empreinte 7S',
+      profileLabel: 'Votre profil',
+      scoreLabel: 'Maturité',
+      axisScore: '{score} sur 3',
+      yours: 'Votre organisation',
+      ideal: 'Organisation alignée',
+      weakTitle: 'À renforcer',
+      noWeak: 'Aucun levier faible dans vos réponses.',
+      startTitle: 'Commencer par',
+      callback: { label: 'Être rappelé avec ce résultat', href: '/contact' },
+      restart: 'Refaire le diagnostic',
+    },
+    // Noms et portraits proposés, à faire valider par OPEM.
+    profiles: {
+      alignee: {
+        name: 'L’organisation alignée',
+        text: 'Vos 7 leviers tirent dans le même sens.',
+      },
+      fondation: {
+        name: 'L’organisation en fondation',
+        text: 'Tout est à construire : le meilleur moment pour bien faire.',
+      },
+      cap: {
+        name: 'Le navire sans cap',
+        text: 'Tout tourne bien. Reste à savoir vers où.',
+      },
+      mecanique: {
+        name: 'La belle mécanique',
+        text: 'Le cadre est solide. Il manque l’élan humain.',
+      },
+      talents: {
+        name: 'Le talent sans charpente',
+        text: 'L’énergie est là. Il manque le cadre.',
+      },
+      mouvement: {
+        name: 'L’organisation en mouvement',
+        text: 'Les bases sont là. Quelques réglages, et tout s’accélère.',
+      },
+    },
+    // Lecture proposée, à faire valider par OPEM.
+    analysis: {
+      title: 'Notre lecture',
+      levelLabel: 'Niveau {level} sur 4',
+      levels: [
+        {
+          name: 'Initial',
+          text: 'L’organisation tient surtout grâce à l’énergie de quelques personnes. Quelques bases simples auront un effet rapide.',
+        },
+        {
+          name: 'En structuration',
+          text: 'Des bases existent, mais elles restent partielles ou peu appliquées : c’est le moment de les consolider.',
+        },
+        {
+          name: 'Maîtrisé',
+          text: 'Vos fondamentaux sont en place. L’enjeu est maintenant de les faire vivre au quotidien et de les relier entre eux.',
+        },
+        {
+          name: 'Avancé',
+          text: 'Votre organisation est structurée et cohérente. La priorité : entretenir cette avance et préparer la suite.',
+        },
+      ],
+      hard: { label: 'Le cadre', hint: 'Stratégie, structure, systèmes' },
+      soft: { label: 'L’humain', hint: 'Valeurs, style, personnel, compétences' },
+      balance: {
+        hard: 'Le cadre ({hard}) devance l’humain ({soft}) : les règles existent, mais les équipes ne se les sont pas encore appropriées.',
+        soft: 'L’humain ({soft}) devance le cadre ({hard}) : l’engagement est là, mais il repose sur les personnes plus que sur l’organisation.',
+        even: 'Le cadre ({hard}) et l’humain ({soft}) sont au même niveau : ils progresseront ensemble, sans que l’un freine l’autre.',
+      },
+      strength: 'Votre point d’appui : {axis}. C’est sur lui que reposera la suite.',
+      noStrength:
+        'Aucun levier n’est encore solide : mieux vaut avancer pas à pas, un chantier à la fois.',
+      sizes: {
+        'moins-50':
+          'À moins de 50 personnes, tout repose souvent sur la direction : clarifier les rôles et écrire l’essentiel libère du temps pour se développer.',
+        '50-249':
+          'Entre 50 et 249 personnes, l’informel ne suffit plus : rôles, processus et managers intermédiaires deviennent décisifs.',
+        '250-999':
+          'Entre 250 et 999 personnes, l’enjeu est la cohérence entre services : une même stratégie, déclinée et suivie partout.',
+        '1000-plus':
+          'Au-delà de 1 000 personnes, tout se joue dans l’alignement : communication interne, pilotage par indicateurs et développement des managers.',
+      },
+    },
   },
   heroQuestions: {
     // Espaces insécables avant « ? » : le point d'interrogation ne passe jamais seul à la ligne.
@@ -470,6 +841,66 @@ const fr: HomeContent = {
       { value: '+2 000', label: 'personnes formées' },
     ],
   },
+  commitments: {
+    eyebrow: 'Ce qui nous distingue',
+    title: 'Un cabinet qui rend vos équipes autonomes.',
+    heading: ['Notre réussite :', 'des équipes qui gagnent en autonomie.'],
+    lead: 'Trois engagements guident chacune de nos missions, du premier échange au dernier livrable.',
+    proofLabel: 'Concrètement',
+    elsewhereLabel: 'Ailleurs, souvent :',
+    provisional: true,
+    note: 'Engagements proposés, à confirmer par OPEM.',
+    items: [
+      {
+        id: 'chez-vous',
+        icon: 'relay',
+        title: 'Vos équipes prennent le relais.',
+        text: 'Méthodes, outils et documents vous sont remis, et vos équipes sont formées pour les faire vivre. Mission après mission, votre organisation gagne en autonomie.',
+        proofs: [
+          'Des livrables remis dans des formats modifiables',
+          'Vos équipes formées à les utiliser',
+          'Aucun outil propriétaire qui vous lie au cabinet',
+        ],
+        elsewhere: 'des livrables que seul le consultant sait faire vivre.',
+        short: {
+          title: 'Vos équipes prennent le relais',
+          text: 'Formées et outillées, elles font vivre la démarche.',
+        },
+      },
+      {
+        id: 'confidentialite',
+        icon: 'lock',
+        title: 'Vos données restent confidentielles.',
+        text: 'Ce que vous nous confiez sert votre mission, et elle seule. Documents, chiffres et échanges sont protégés, et rien n’est cité sans votre accord écrit.',
+        proofs: [
+          'Un engagement de confidentialité signé avant tout échange de documents',
+          'Un accès limité aux consultants de la mission',
+          'Aucune référence citée sans votre accord',
+        ],
+        elsewhere: 'des informations sensibles qui circulent sans cadre.',
+        short: {
+          title: 'Vos données protégées',
+          text: 'Rien n’est partagé sans votre accord écrit.',
+        },
+      },
+      {
+        id: 'terrain',
+        icon: 'field',
+        title: 'Des spécialistes qui connaissent le terrain.',
+        text: 'Nos consultants et formateurs sont des praticiens : ils connaissent les secteurs qu’ils accompagnent, leurs métiers et leurs contraintes réelles.',
+        proofs: [
+          'Des experts issus de vos secteurs d’activité',
+          'Des solutions adaptées à vos contraintes réelles',
+          'Un réseau de plus de 165 experts mobilisables',
+        ],
+        elsewhere: 'des recommandations théoriques, loin de la réalité du terrain.',
+        short: {
+          title: 'Des spécialistes du terrain',
+          text: 'Ils connaissent vos métiers et vos contraintes.',
+        },
+      },
+    ],
+  },
   domains: {
     title: 'Nos domaines',
     selectLabel: 'Choisir un domaine',
@@ -485,10 +916,16 @@ const fr: HomeContent = {
       {
         id: 'etudes-strategiques',
         title: 'Études stratégiques',
-        text: 'Nous réalisons des études pour éclairer vos décisions.',
-        points: ['Un groupe d’experts', 'Des méthodes reconnues', 'Types d’études [à confirmer]'],
+        text: 'Nos études mettent en perspective les évolutions des écosystèmes, les dynamiques des organisations et les opportunités de développement, au service de vos décisions stratégiques.',
+        points: [
+          'Écosystèmes, secteurs et filières',
+          'Études économiques et technologiques',
+          'Opportunités et faisabilité des projets',
+        ],
         href: '/expertises/etudes-strategiques',
         image: '/images/domaines/etudes-strategiques.jpg',
+        illustration: '/images/domaines/illustrations/etudes-strategiques.webp',
+        emblem: '/images/domaines/emblemes/etudes-strategiques.webp',
       },
       {
         id: 'accompagnement',
@@ -497,6 +934,8 @@ const fr: HomeContent = {
         points: ['Diagnostic', 'Mise en œuvre accompagnée', 'Transfert de compétences'],
         href: '/expertises/accompagnement-des-organisations',
         image: '/images/domaines/accompagnement.jpg?v=2',
+        illustration: '/images/domaines/illustrations/accompagnement.webp',
+        emblem: '/images/domaines/emblemes/accompagnement.webp',
       },
       {
         id: 'formations',
@@ -509,6 +948,8 @@ const fr: HomeContent = {
         ],
         href: '/formation',
         image: '/images/domaines/formations.jpg?v=2',
+        illustration: '/images/domaines/illustrations/formations.webp',
+        emblem: '/images/domaines/emblemes/formations.webp',
       },
       {
         id: 'coaching',
@@ -517,6 +958,18 @@ const fr: HomeContent = {
         points: ['Formats [à confirmer]', 'Confidentialité', 'Premier échange discret'],
         href: '/expertises/coaching-professionnel',
         image: '/images/domaines/coaching.jpg',
+        illustration: '/images/domaines/illustrations/coaching.webp',
+        emblem: '/images/domaines/emblemes/coaching.webp',
+      },
+      {
+        id: 'communication',
+        title: 'Communication d’entreprise',
+        text: 'Nous construisons votre image et vos messages, en interne comme auprès de vos partenaires.',
+        points: ['Image et identité', 'Communication interne', 'Relations institutionnelles'],
+        href: '/expertises/communication-d-entreprise',
+        image: '/images/domaines/communication.jpg',
+        illustration: '/images/domaines/illustrations/communication.webp',
+        emblem: '/images/domaines/emblemes/communication.webp',
       },
       {
         id: 'certification',
@@ -529,7 +982,22 @@ const fr: HomeContent = {
         ],
         href: '/expertises/certification-et-accreditation',
         image: '/images/domaines/certification.jpg',
+        illustration: '/images/domaines/illustrations/certification.webp',
+        emblem: '/images/domaines/emblemes/certification.webp',
       },
+    ],
+  },
+  ai: {
+    eyebrow: 'Intelligence artificielle appliquée',
+    title: 'L’IA entre dans l’entreprise par la porte de l’organisation.',
+    text: 'Avant de parler d’outils, nous regardons comment votre entreprise fonctionne réellement. L’IA n’intervient que là où elle crée de la valeur, avec des données protégées dès le départ.',
+    cta: { label: 'Découvrir l’approche', href: '/expertises/intelligence-artificielle' },
+    illustration: '/images/ia/porte.webp',
+    stepsLabel: 'Notre démarche en trois temps',
+    steps: [
+      { label: 'Diagnostic', text: 'Repérer où l’IA crée réellement de la valeur' },
+      { label: 'Formation', text: 'Exploiter l’IA au quotidien, côté métier' },
+      { label: 'Intégration', text: 'Déployer, avec des données sous contrôle' },
     ],
   },
   insights: {
@@ -617,7 +1085,7 @@ const fr: HomeContent = {
     ],
   },
   markers: [
-    { icon: 'domains', label: '5 domaines d’expertise' },
+    { icon: 'domains', label: '6 domaines d’expertise' },
     { icon: 'sectors', label: 'Public et privé' },
     { icon: 'map', label: 'Partout en Algérie' },
   ],
@@ -722,13 +1190,13 @@ const fr: HomeContent = {
   figures: {
     eyebrow: 'En chiffres',
     title: 'OPEM en quelques chiffres',
-    provisional: true,
-    note: 'Chiffres provisoires, en attente de validation par OPEM.',
+    provisional: false,
+    note: 'Chiffres communiqués par OPEM.',
     items: [
-      { value: 5, label: 'domaines d’expertise' },
-      { value: 15, label: 'années d’expérience' },
-      { value: 120, prefix: '+', label: 'organisations accompagnées' },
-      { value: 2000, prefix: '+', label: 'personnes formées' },
+      { value: 7, prefix: '+', label: 'ans d’expérience cumulée' },
+      { value: 62, prefix: '+', label: 'organisations accompagnées' },
+      { value: 1500, prefix: '+', label: 'cadres et agents formés' },
+      { value: 165, prefix: '+', label: 'experts mobilisables' },
     ],
   },
   sectors: {
@@ -752,15 +1220,17 @@ const fr: HomeContent = {
   },
   trainings: {
     eyebrow: 'Agenda',
-    title: 'Prochaines formations',
+    title: 'Les prochaines sessions',
+    listLabel: 'Sessions à venir',
     all: { label: 'Tout le calendrier', href: '/formation' },
     register: 'S’inscrire',
     provisional: true,
-    note: 'Calendrier indicatif, à confirmer par OPEM.',
+    note: '.',
     empty: 'Les prochaines sessions seront annoncées très bientôt.',
     items: [
       {
         id: 'iso-9001',
+        topic: 'Qualité',
         date: '2026-11-16',
         title: 'Management de la qualité selon l’ISO 9001',
         format: 'Présentiel · Alger · 3 jours',
@@ -768,6 +1238,7 @@ const fr: HomeContent = {
       },
       {
         id: 'iso-45001',
+        topic: 'HSE',
         date: '2026-11-24',
         title: 'Santé et sécurité au travail (ISO 45001)',
         format: 'Présentiel · Alger · 2 jours',
@@ -775,6 +1246,7 @@ const fr: HomeContent = {
       },
       {
         id: 'leadership',
+        topic: 'Management',
         date: '2026-12-07',
         title: 'Management d’équipe et leadership',
         format: 'Présentiel · Alger · 2 jours',
@@ -782,6 +1254,7 @@ const fr: HomeContent = {
       },
       {
         id: 'projets-btph',
+        topic: 'BTPH',
         date: '2026-12-14',
         title: 'Gestion de projets BTPH',
         format: 'Présentiel · Alger · 4 jours',
@@ -802,24 +1275,14 @@ const fr: HomeContent = {
     link: { label: 'Voir nos missions et réalisations', href: '/missions' },
     items: [
       {
-        id: 'formation',
-        domain: 'Formations',
-        icon: 'company',
+        id: 'etudes',
+        domain: 'Études stratégiques',
+        icon: 'public',
         quote:
-          'Les formations partaient de nos propres situations de travail. Dès le lendemain, nos équipes appliquaient ce qu’elles avaient appris.',
+          'Le diagnostic a mis des mots sur ce que nous ressentions. Nous avons pu décider à partir de faits, et non d’impressions.',
         name: '[Nom à confirmer]',
-        role: 'Directeur des ressources humaines [à confirmer]',
-        organisation: 'Entreprise industrielle [à confirmer]',
-      },
-      {
-        id: 'certification',
-        domain: 'Certification',
-        icon: 'company',
-        quote:
-          'OPEM nous a préparés à l’audit pas à pas. Le jour venu, chacun savait ce qu’il avait à montrer, et pourquoi.',
-        name: '[Nom à confirmer]',
-        role: 'Responsable qualité [à confirmer]',
-        organisation: 'Entreprise de services [à confirmer]',
+        role: 'Directeur général [à confirmer]',
+        organisation: 'Organisme public [à confirmer]',
       },
       {
         id: 'accompagnement',
@@ -832,14 +1295,44 @@ const fr: HomeContent = {
         organisation: 'Établissement public [à confirmer]',
       },
       {
-        id: 'etudes',
-        domain: 'Études stratégiques',
+        id: 'formation',
+        domain: 'Formations',
+        icon: 'company',
+        quote:
+          'Les formations partaient de nos propres situations de travail. Dès le lendemain, nos équipes appliquaient ce qu’elles avaient appris.',
+        name: '[Nom à confirmer]',
+        role: 'Directeur des ressources humaines [à confirmer]',
+        organisation: 'Entreprise industrielle [à confirmer]',
+      },
+      {
+        id: 'coaching',
+        domain: 'Coaching',
+        icon: 'company',
+        quote:
+          'Le coaching m’a aidé à prendre du recul. Mon équipe a vu la différence dans ma façon de décider et de déléguer.',
+        name: '[Nom à confirmer]',
+        role: 'Directrice d’unité [à confirmer]',
+        organisation: 'Entreprise industrielle [à confirmer]',
+      },
+      {
+        id: 'communication',
+        domain: 'Communication',
         icon: 'public',
         quote:
-          'Le diagnostic a mis des mots sur ce que nous ressentions. Nous avons pu décider à partir de faits, et non d’impressions.',
+          'Nos messages partaient dans tous les sens. Aujourd’hui, nos équipes et nos partenaires entendent la même chose, au même moment.',
         name: '[Nom à confirmer]',
-        role: 'Directeur général [à confirmer]',
-        organisation: 'Organisme public [à confirmer]',
+        role: 'Responsable de la communication [à confirmer]',
+        organisation: 'Établissement public [à confirmer]',
+      },
+      {
+        id: 'certification',
+        domain: 'Certification',
+        icon: 'company',
+        quote:
+          'OPEM nous a préparés à l’audit pas à pas. Le jour venu, chacun savait ce qu’il avait à montrer, et pourquoi.',
+        name: '[Nom à confirmer]',
+        role: 'Responsable qualité [à confirmer]',
+        organisation: 'Entreprise de services [à confirmer]',
       },
     ],
   },
@@ -898,15 +1391,13 @@ const ar: HomeContent = {
   hero: {
     eyebrow: 'مكتب استشارات وتكوين',
     title: 'الهيكلة، التكوين، الإشهاد: نرتقي بمؤسستكم.',
-    subtitle:
-      'ترافق OPEM المؤسسات والهيئات العمومية الجزائرية، من التشخيص الاستراتيجي إلى الحصول على الشهادات.',
+    subtitle: 'ترافق OPEM المؤسسات، من التشخيص الاستراتيجي إلى الحصول على الشهادات.',
     primary: { label: 'اطلب عرض سعر', href: '/contact' },
     secondary: { label: 'اكتشف التكوينات', href: '/formation' },
   },
   heroCycle: {
     headline: ['نرتقي', 'بأداء مؤسستكم.'],
-    intro:
-      'الهيكلة، التكوين، الإشهاد: ترافق OPEM المؤسسات والهيئات العمومية الجزائرية، من التشخيص إلى الحصول على الشهادة.',
+    intro: 'الهيكلة، التكوين، الإشهاد: ترافق OPEM المؤسسات، من التشخيص إلى الحصول على الشهادة.',
     label: 'منهجيتنا في ثلاث مراحل',
     step: 'المرحلة',
     pause: 'إيقاف الحركة مؤقتًا',
@@ -957,9 +1448,9 @@ const ar: HomeContent = {
     ],
   },
   heroVideo: {
-    headline: ['نرتقي', 'بأداء مؤسستكم.'],
+    headline: ['ما يجعل مؤسستكم', 'تتميّز.'],
     intro:
-      'الهيكلة، التكوين، الإشهاد: ترافق OPEM المؤسسات والهيئات العمومية الجزائرية، من التشخيص إلى الحصول على الشهادة.',
+      'قرارات مستنيرة. مسارات منظّمة. متطلبات متحكَّم فيها. كفاءات مطوَّرة. قيادة راسخة. اتصال يصنع الفرق.',
     pause: 'إيقاف الفيديو مؤقتًا',
     play: 'استئناف الفيديو',
   },
@@ -975,7 +1466,7 @@ const ar: HomeContent = {
     kicker: 'مكتب استشارات وتكوين · الجزائر العاصمة',
     headline: ['نبني مؤسسات', 'عالية الأداء.'],
     intro:
-      'التشخيص، الهيكلة، التكوين والإشهاد: ترافق OPEM المؤسسات والهيئات العمومية الجزائرية بمنهجية، في كل مرحلة من مراحل تطورها.',
+      'التشخيص، الهيكلة، التكوين والإشهاد: ترافق OPEM المؤسسات بمنهجية، في كل مرحلة من مراحل تطورها.',
     caption: 'لكل مؤسسة منهجها. نساعدكم على بناء منهجكم.',
     // Signature de marque (en latin, comme dans le logo) : l'arabe se lit mal sur un petit cercle.
     badge: 'Beyond Quality · OPEM · Beyond Quality · OPEM · ',
@@ -998,38 +1489,258 @@ const ar: HomeContent = {
       },
     ],
   },
+  // Mêmes identifiants qu'en français : seuls les libellés changent.
   heroDiagnostic: {
-    kicker: 'مكتب استشارات وتكوين',
-    headline: 'نجعل مؤسستكم أكثر أداءً.',
-    question: 'ما هي أولويتكم هذه السنة؟',
-    choices: [
+    label: 'تشخيص ذاتي 7S',
+    duration: '10 أسئلة · لا يُرسَل شيء',
+    intro: {
+      title: 'من أين نبدأ؟',
+      text: 'قيّموا وضعكم في دقيقتين، ونحن نوجّهكم.',
+      start: 'ابدأوا الاختبار',
+    },
+    modelLabel:
+      'نموذج 7S: الاستراتيجية، الهيكل، الأنظمة، القيم المشتركة، الأسلوب، الأفراد والكفاءات.',
+    progress: 'الرافعة {current} من {total}',
+    back: 'السؤال السابق',
+    keys: ['1', '2', '3', '4'],
+    close: 'خروج',
+    context: {
+      label: 'مؤسستكم',
+      progress: 'السؤال {current} من {total} حول مؤسستكم',
+      questions: [
+        {
+          id: 'secteur',
+          label: 'القطاع',
+          text: 'في أي قطاع تنشط مؤسستكم؟',
+          choices: [
+            { id: 'btph', label: 'البناء والأشغال العمومية والري' },
+            { id: 'industrie', label: 'الصناعة' },
+            { id: 'energie', label: 'الطاقة والمناجم' },
+            { id: 'agroalimentaire', label: 'الصناعات الغذائية' },
+            { id: 'sante', label: 'الصحة' },
+            { id: 'transport', label: 'النقل واللوجستيك' },
+            { id: 'services', label: 'الخدمات' },
+            { id: 'administration', label: 'الإدارة العمومية' },
+            { id: 'enseignement', label: 'التعليم والتكوين' },
+            { id: 'autre', label: 'قطاع آخر' },
+          ],
+        },
+        {
+          id: 'effectif',
+          label: 'عدد العمال',
+          text: 'كم عدد العاملين في مؤسستكم؟',
+          choices: [
+            { id: 'moins-50', label: 'أقل من 50 عاملًا' },
+            { id: '50-249', label: 'من 50 إلى 249 عاملًا' },
+            { id: '250-999', label: 'من 250 إلى 999 عاملًا' },
+            { id: '1000-plus', label: '1000 عامل فأكثر' },
+          ],
+        },
+        {
+          id: 'fonction',
+          label: 'الوظيفة',
+          text: 'ما هي وظيفتكم؟',
+          choices: [
+            { id: 'direction', label: 'الإدارة العامة' },
+            { id: 'rh', label: 'الموارد البشرية' },
+            { id: 'qualite', label: 'الجودة أو الصحة والسلامة أو التنظيم' },
+            { id: 'encadrement', label: 'وظيفة تأطير أخرى' },
+          ],
+        },
+      ],
+    },
+    questions: [
       {
-        id: 'former',
-        icon: 'coaching',
-        label: 'تكوين فرقي',
-        href: '/autodiagnostic?priorite=former',
+        id: 'strategie',
+        text: 'هل استراتيجيتكم واضحة ومشتركة بين الجميع؟',
+        choices: [
+          { id: 'implicite', label: 'تبقى ضمنية' },
+          { id: 'direction', label: 'واضحة للإدارة فقط' },
+          { id: 'ecrite', label: 'مكتوبة ومنشورة' },
+          { id: 'pilotee', label: 'مشتركة ومتابَعة بمؤشرات' },
+        ],
       },
       {
-        id: 'certifier',
-        icon: 'certification',
-        label: 'الحصول على شهادة',
-        href: '/autodiagnostic?priorite=certifier',
+        id: 'structure',
+        text: 'هل يعرف كل واحد من يقرّر ومن يفعل ماذا؟',
+        choices: [
+          { id: 'flou', label: 'الأدوار غير واضحة' },
+          { id: 'organigramme', label: 'هيكل تنظيمي موجود، قليل التطبيق' },
+          { id: 'definis', label: 'الأدوار والمسؤوليات محدّدة' },
+          { id: 'revus', label: 'محدّدة، وتُراجَع مع تطوّر المؤسسة' },
+        ],
       },
       {
-        id: 'marche-public',
-        icon: 'strategy',
-        label: 'الاستجابة لصفقة عمومية',
-        href: '/autodiagnostic?priorite=marche-public',
+        id: 'systemes',
+        text: 'هل إجراءاتكم ومسارات عملكم مكتوبة ومطبّقة؟',
+        choices: [
+          { id: 'non', label: 'كلٌّ يعمل على طريقته' },
+          { id: 'en-partie', label: 'جزئيًا' },
+          { id: 'essentiel', label: 'نعم، في معظمها' },
+          { id: 'ameliores', label: 'نعم، تُقاس وتُحسَّن باستمرار' },
+        ],
       },
       {
-        id: 'organiser',
-        icon: 'organization',
-        label: 'تنظيم مصلحتي بشكل أفضل',
-        href: '/autodiagnostic?priorite=organiser',
+        id: 'valeurs',
+        text: 'هل تتقاسم فرقكم القيم نفسها والرؤية نفسها؟',
+        choices: [
+          { id: 'rarement', label: 'نادرًا' },
+          { id: 'certaines', label: 'بعض الفرق فقط' },
+          { id: 'ensemble', label: 'نعم، عمومًا' },
+          { id: 'decisions', label: 'نعم، وهي توجّه قراراتنا' },
+        ],
       },
-      { id: 'formations', icon: 'training', label: 'تكويناتنا', href: '/formation' },
+      {
+        id: 'style',
+        text: 'كيف يقود مسيّروكم فرقهم؟',
+        choices: [
+          { id: 'controle', label: 'بالمراقبة أساسًا' },
+          { id: 'chacun', label: 'كلٌّ على طريقته' },
+          { id: 'ecoute', label: 'بالإصغاء والتفويض' },
+          { id: 'autonomie', label: 'بتنمية استقلالية كل فرد' },
+        ],
+      },
+      {
+        id: 'personnel',
+        text: 'هل لديكم الأشخاص المناسبون في المناصب المناسبة؟',
+        choices: [
+          { id: 'souvent-non', label: 'غالبًا لا' },
+          { id: 'parfois', label: 'أحيانًا' },
+          { id: 'plupart', label: 'في أغلب الأحيان' },
+          { id: 'talents', label: 'نعم، مع تسيير متابَع للمواهب' },
+        ],
+      },
+      {
+        id: 'competences',
+        text: 'كيف تطوّرون كفاءات فرقكم؟',
+        choices: [
+          { id: 'au-cas-par-cas', label: 'حالة بحالة' },
+          { id: 'demandes', label: 'حسب طلبات كل شخص' },
+          { id: 'plan-annuel', label: 'بمخطط تكوين سنوي' },
+          { id: 'evalue', label: 'بمخطط مرتبط بالكفاءات، ومُقيَّم' },
+        ],
+      },
     ],
-    imageAlt: 'قاعة اجتماعات في مكتب استشارات',
+    axes: {
+      strategie: {
+        label: 'الاستراتيجية',
+        title: 'الاستراتيجية',
+        domain: { label: 'الدراسات الاستراتيجية', href: '/expertises/etudes-strategiques' },
+      },
+      structure: {
+        label: 'الهيكل',
+        title: 'الهيكل والأدوار',
+        domain: { label: 'مرافقة المؤسسات', href: '/expertises/accompagnement-des-organisations' },
+      },
+      systemes: {
+        label: 'الأنظمة',
+        title: 'الأنظمة والإجراءات',
+        domain: {
+          label: 'الإشهاد، الاعتماد، العلامات',
+          href: '/expertises/certification-et-accreditation',
+        },
+      },
+      valeurs: {
+        label: 'القيم المشتركة',
+        title: 'القيم المشتركة',
+        domain: { label: 'اتصال المؤسسة', href: '/expertises/communication-d-entreprise' },
+      },
+      style: {
+        label: 'الأسلوب',
+        title: 'أسلوب الإدارة',
+        domain: { label: 'الكوتشينغ المهني', href: '/expertises/coaching-professionnel' },
+      },
+      personnel: {
+        label: 'الأفراد',
+        title: 'الأفراد',
+        domain: { label: 'مرافقة المؤسسات', href: '/expertises/accompagnement-des-organisations' },
+      },
+      competences: {
+        label: 'الكفاءات',
+        title: 'الكفاءات',
+        domain: { label: 'التكوينات التأهيلية', href: '/formation' },
+      },
+    },
+    result: {
+      label: 'بصمة مؤسستكم 7S',
+      profileLabel: 'ملفّكم',
+      scoreLabel: 'النضج',
+      axisScore: '{score} من 3',
+      yours: 'مؤسستكم',
+      ideal: 'مؤسسة متناسقة',
+      weakTitle: 'للتعزيز',
+      noWeak: 'لا توجد رافعة ضعيفة في إجاباتكم.',
+      startTitle: 'نبدأ بـ',
+      callback: { label: 'اطلب مكالمة بخصوص هذه النتيجة', href: '/contact' },
+      restart: 'إعادة التشخيص',
+    },
+    profiles: {
+      alignee: {
+        name: 'المؤسسة المتناسقة',
+        text: 'رافعاتكم السبع تشدّ في الاتجاه نفسه.',
+      },
+      fondation: {
+        name: 'المؤسسة في طور التأسيس',
+        text: 'كل شيء للبناء: أفضل لحظة للبناء الصحيح.',
+      },
+      cap: {
+        name: 'سفينة بلا وجهة',
+        text: 'كل شيء يعمل جيدًا. يبقى أن تعرفوا إلى أين.',
+      },
+      mecanique: {
+        name: 'آلة متقنة تنتظر روحها',
+        text: 'الإطار متين. ينقصه الزخم البشري.',
+      },
+      talents: {
+        name: 'مواهب بلا هيكل',
+        text: 'الطاقة موجودة. ينقصها الإطار.',
+      },
+      mouvement: {
+        name: 'مؤسسة في حركة',
+        text: 'الأسس موجودة. بعض التعديلات، ويتسارع كل شيء.',
+      },
+    },
+    analysis: {
+      title: 'قراءتنا',
+      levelLabel: 'المستوى {level} من 4',
+      levels: [
+        {
+          name: 'مبتدئ',
+          text: 'تقوم المؤسسة أساسًا على طاقة بعض الأشخاص. بعض الأسس البسيطة سيكون لها أثر سريع.',
+        },
+        {
+          name: 'في طور الهيكلة',
+          text: 'توجد أسس، لكنها تبقى جزئية أو قليلة التطبيق: حان وقت ترسيخها.',
+        },
+        {
+          name: 'متحكَّم فيه',
+          text: 'أساسياتكم قائمة. التحدي الآن هو تفعيلها يوميًا وربطها ببعضها.',
+        },
+        {
+          name: 'متقدّم',
+          text: 'مؤسستكم مهيكلة ومتناسقة. الأولوية: الحفاظ على هذا التقدم والتحضير لما بعده.',
+        },
+      ],
+      hard: { label: 'الإطار', hint: 'الاستراتيجية، الهيكل، الأنظمة' },
+      soft: { label: 'العنصر البشري', hint: 'القيم، الأسلوب، الأفراد، الكفاءات' },
+      balance: {
+        hard: 'الإطار ({hard}) يسبق العنصر البشري ({soft}): القواعد موجودة، لكن الفرق لم تتبنّها بعد.',
+        soft: 'العنصر البشري ({soft}) يسبق الإطار ({hard}): الالتزام موجود، لكنه يقوم على الأشخاص أكثر من التنظيم.',
+        even: 'الإطار ({hard}) والعنصر البشري ({soft}) في المستوى نفسه: سيتقدمان معًا، دون أن يعيق أحدهما الآخر.',
+      },
+      strength: 'نقطة ارتكازكم: {axis}. عليها سيُبنى ما بعدها.',
+      noStrength: 'لا توجد بعد رافعة متينة: الأفضل التقدم خطوة خطوة، ورشة واحدة في كل مرة.',
+      sizes: {
+        'moins-50':
+          'في مؤسسة يقل عدد عمالها عن 50، يقع كل شيء غالبًا على عاتق الإدارة: توضيح الأدوار وتدوين الأساسيات يحرّر الوقت للتطور.',
+        '50-249':
+          'بين 50 و249 عاملًا، لم يعد العمل غير الرسمي كافيًا: الأدوار والعمليات والمسيّرون الوسطاء يصبحون حاسمين.',
+        '250-999':
+          'بين 250 و999 عاملًا، التحدي هو التناسق بين المصالح: استراتيجية واحدة، تُنفَّذ وتُتابَع في كل مكان.',
+        '1000-plus':
+          'بعد 1000 عامل، يتوقف كل شيء على التناسق: الاتصال الداخلي، والقيادة بالمؤشرات، وتطوير المسيّرين.',
+      },
+    },
   },
   heroQuestions: {
     questions: [
@@ -1077,6 +1788,57 @@ const ar: HomeContent = {
       { value: '+2000', label: 'شخص تم تكوينه' },
     ],
   },
+  commitments: {
+    eyebrow: 'ما يميّزنا',
+    title: 'مكتب يجعل فرقكم مستقلّة.',
+    heading: ['نجاحنا:', 'فرق تكتسب استقلاليتها.'],
+    lead: 'ثلاثة التزامات توجّه كل مهمة من مهامنا، من أول لقاء إلى آخر وثيقة.',
+    proofLabel: 'عمليًا',
+    elsewhereLabel: 'في أماكن أخرى غالبًا:',
+    provisional: true,
+    note: 'التزامات مقترحة، في انتظار تأكيد OPEM.',
+    items: [
+      {
+        id: 'chez-vous',
+        icon: 'relay',
+        title: 'فرقكم تتسلّم المشعل.',
+        text: 'نسلّمكم المناهج والأدوات والوثائق، ونكوّن فرقكم على استعمالها. مهمة بعد مهمة، تكتسب مؤسستكم استقلاليتها.',
+        proofs: [
+          'وثائق مسلَّمة بصيغ قابلة للتعديل',
+          'فرقكم مكوَّنة على استعمالها',
+          'لا أدوات خاصة تربطكم بالمكتب',
+        ],
+        elsewhere: 'وثائق لا يعرف تشغيلها إلا المستشار.',
+        short: { title: 'فرقكم تتسلّم المشعل', text: 'مكوَّنة ومجهَّزة، تُبقي المقاربة حيّة.' },
+      },
+      {
+        id: 'confidentialite',
+        icon: 'lock',
+        title: 'معطياتكم تبقى سرّية.',
+        text: 'ما تأتمنوننا عليه يخدم مهمتكم وحدها. الوثائق والأرقام والمبادلات محمية، ولا نذكر شيئًا دون موافقتكم الكتابية.',
+        proofs: [
+          'التزام بالسرّية يُوقَّع قبل أي تبادل للوثائق',
+          'اطّلاع مقتصر على مستشاري المهمة',
+          'لا نذكر أي مرجع دون موافقتكم',
+        ],
+        elsewhere: 'معلومات حسّاسة تتداول دون إطار.',
+        short: { title: 'معطياتكم محمية', text: 'لا شيء يُشارَك دون موافقتكم الكتابية.' },
+      },
+      {
+        id: 'terrain',
+        icon: 'field',
+        title: 'متخصصون يعرفون الميدان.',
+        text: 'مستشارونا ومكوّنونا ممارسون: يعرفون القطاعات التي يرافقونها، ومهنها وقيودها الفعلية.',
+        proofs: [
+          'خبراء من قطاعات نشاطكم',
+          'حلول مكيّفة مع قيودكم الفعلية',
+          'شبكة تضم أكثر من 165 خبيرًا يمكن تجنيدهم',
+        ],
+        elsewhere: 'توصيات نظرية بعيدة عن واقع الميدان.',
+        short: { title: 'متخصصون في الميدان', text: 'يعرفون مهنكم وقيودكم.' },
+      },
+    ],
+  },
   domains: {
     title: 'مجالاتنا',
     selectLabel: 'اختيار مجال',
@@ -1091,10 +1853,16 @@ const ar: HomeContent = {
       {
         id: 'etudes-strategiques',
         title: 'الدراسات الاستراتيجية',
-        text: 'ننجز دراسات تنير قراراتكم.',
-        points: ['مجموعة من الخبراء', 'مناهج معترف بها', 'أنواع الدراسات [في انتظار التأكيد]'],
+        text: 'تضع دراساتنا في منظور واضح تطوّر المنظومات الاقتصادية، وديناميكيات المؤسسات وفرص التطوير، في خدمة قراراتكم الاستراتيجية.',
+        points: [
+          'المنظومات الاقتصادية، القطاعات والشُّعب',
+          'الدراسات الاقتصادية والتكنولوجية',
+          'فرص المشاريع وجدواها',
+        ],
         href: '/expertises/etudes-strategiques',
         image: '/images/domaines/etudes-strategiques.jpg',
+        illustration: '/images/domaines/illustrations/etudes-strategiques.webp',
+        emblem: '/images/domaines/emblemes/etudes-strategiques.webp',
       },
       {
         id: 'accompagnement',
@@ -1103,6 +1871,8 @@ const ar: HomeContent = {
         points: ['التشخيص', 'تنفيذ مرافَق', 'نقل الكفاءات'],
         href: '/expertises/accompagnement-des-organisations',
         image: '/images/domaines/accompagnement.jpg?v=2',
+        illustration: '/images/domaines/illustrations/accompagnement.webp',
+        emblem: '/images/domaines/emblemes/accompagnement.webp',
       },
       {
         id: 'formations',
@@ -1115,6 +1885,8 @@ const ar: HomeContent = {
         ],
         href: '/formation',
         image: '/images/domaines/formations.jpg?v=2',
+        illustration: '/images/domaines/illustrations/formations.webp',
+        emblem: '/images/domaines/emblemes/formations.webp',
       },
       {
         id: 'coaching',
@@ -1123,6 +1895,18 @@ const ar: HomeContent = {
         points: ['الصيغ [في انتظار التأكيد]', 'السرية', 'لقاء أول بكل تكتّم'],
         href: '/expertises/coaching-professionnel',
         image: '/images/domaines/coaching.jpg',
+        illustration: '/images/domaines/illustrations/coaching.webp',
+        emblem: '/images/domaines/emblemes/coaching.webp',
+      },
+      {
+        id: 'communication',
+        title: 'اتصال المؤسسة',
+        text: 'نبني صورتكم ورسائلكم، داخل المؤسسة ولدى شركائكم.',
+        points: ['الصورة والهوية', 'الاتصال الداخلي', 'العلاقات المؤسساتية'],
+        href: '/expertises/communication-d-entreprise',
+        image: '/images/domaines/communication.jpg',
+        illustration: '/images/domaines/illustrations/communication.webp',
+        emblem: '/images/domaines/emblemes/communication.webp',
       },
       {
         id: 'certification',
@@ -1135,7 +1919,22 @@ const ar: HomeContent = {
         ],
         href: '/expertises/certification-et-accreditation',
         image: '/images/domaines/certification.jpg',
+        illustration: '/images/domaines/illustrations/certification.webp',
+        emblem: '/images/domaines/emblemes/certification.webp',
       },
+    ],
+  },
+  ai: {
+    eyebrow: 'الذكاء الاصطناعي التطبيقي',
+    title: 'الذكاء الاصطناعي يدخل المؤسسة من باب التنظيم.',
+    text: 'قبل الحديث عن الأدوات، ننظر في الطريقة التي تعمل بها مؤسستكم فعلًا. لا يتدخل الذكاء الاصطناعي إلا حيث يخلق قيمة، مع معطيات محمية منذ البداية.',
+    cta: { label: 'اكتشفوا مقاربتنا', href: '/expertises/intelligence-artificielle' },
+    illustration: '/images/ia/porte.webp',
+    stepsLabel: 'مقاربتنا في ثلاث مراحل',
+    steps: [
+      { label: 'التشخيص', text: 'تحديد المواضع التي يخلق فيها الذكاء الاصطناعي قيمة فعلية' },
+      { label: 'التكوين', text: 'استعمال الذكاء الاصطناعي يوميًا، في صميم المهن' },
+      { label: 'الإدماج', text: 'النشر، مع معطيات تحت السيطرة' },
     ],
   },
   insights: {
@@ -1220,7 +2019,7 @@ const ar: HomeContent = {
     ],
   },
   markers: [
-    { icon: 'domains', label: '5 مجالات خبرة' },
+    { icon: 'domains', label: '6 مجالات خبرة' },
     { icon: 'sectors', label: 'القطاعان العام والخاص' },
     { icon: 'map', label: 'عبر كامل التراب الوطني' },
   ],
@@ -1325,13 +2124,13 @@ const ar: HomeContent = {
   figures: {
     eyebrow: 'بالأرقام',
     title: 'OPEM في أرقام',
-    provisional: true,
-    note: 'أرقام مؤقتة في انتظار مصادقة OPEM.',
+    provisional: false,
+    note: 'أرقام قدّمتها OPEM.',
     items: [
-      { value: 5, label: 'مجالات خبرة' },
-      { value: 15, label: 'سنة من الخبرة' },
-      { value: 120, prefix: '+', label: 'مؤسسة مرافَقة' },
-      { value: 2000, prefix: '+', label: 'شخص تم تكوينه' },
+      { value: 7, prefix: '+', label: 'سنوات من الخبرة المتراكمة' },
+      { value: 62, prefix: '+', label: 'مؤسسة مرافَقة' },
+      { value: 1500, prefix: '+', label: 'إطار وعون تم تكوينهم' },
+      { value: 165, prefix: '+', label: 'خبيرًا يمكن تجنيدهم' },
     ],
   },
   sectors: {
@@ -1355,7 +2154,8 @@ const ar: HomeContent = {
   },
   trainings: {
     eyebrow: 'الأجندة',
-    title: 'التكوينات القادمة',
+    title: 'الدورات القادمة',
+    listLabel: 'الدورات القادمة',
     all: { label: 'الرزنامة الكاملة', href: '/formation' },
     register: 'التسجيل',
     provisional: true,
@@ -1364,6 +2164,7 @@ const ar: HomeContent = {
     items: [
       {
         id: 'iso-9001',
+        topic: 'الجودة',
         date: '2026-11-16',
         title: 'إدارة الجودة وفق ISO 9001',
         format: 'حضوري · الجزائر العاصمة · 3 أيام',
@@ -1371,6 +2172,7 @@ const ar: HomeContent = {
       },
       {
         id: 'iso-45001',
+        topic: 'الصحة والسلامة والبيئة',
         date: '2026-11-24',
         title: 'الصحة والسلامة المهنية (ISO 45001)',
         format: 'حضوري · الجزائر العاصمة · يومان',
@@ -1378,6 +2180,7 @@ const ar: HomeContent = {
       },
       {
         id: 'leadership',
+        topic: 'التسيير',
         date: '2026-12-07',
         title: 'تسيير الفرق والقيادة',
         format: 'حضوري · الجزائر العاصمة · يومان',
@@ -1385,6 +2188,7 @@ const ar: HomeContent = {
       },
       {
         id: 'projets-btph',
+        topic: 'البناء والأشغال العمومية',
         date: '2026-12-14',
         title: 'تسيير مشاريع البناء والأشغال العمومية',
         format: 'حضوري · الجزائر العاصمة · 4 أيام',
@@ -1405,24 +2209,14 @@ const ar: HomeContent = {
     link: { label: 'اطّلعوا على مهامنا وإنجازاتنا', href: '/missions' },
     items: [
       {
-        id: 'formation',
-        domain: 'التكوين',
-        icon: 'company',
+        id: 'etudes',
+        domain: 'الدراسات الاستراتيجية',
+        icon: 'public',
         quote:
-          'انطلقت التكوينات من وضعيات عملنا الفعلية. ومنذ اليوم التالي، طبّقت فرقنا ما تعلّمته.',
+          'وضع التشخيص كلمات على ما كنا نشعر به. واستطعنا أن نقرّر انطلاقًا من الوقائع لا من الانطباعات.',
         name: '[الاسم في انتظار التأكيد]',
-        role: 'مدير الموارد البشرية [في انتظار التأكيد]',
-        organisation: 'مؤسسة صناعية [في انتظار التأكيد]',
-      },
-      {
-        id: 'certification',
-        domain: 'الإشهاد',
-        icon: 'company',
-        quote:
-          'أعدّتنا OPEM للتدقيق خطوة بخطوة. وفي اليوم الموعود، كان كل واحد يعرف ما عليه أن يُظهره ولماذا.',
-        name: '[الاسم في انتظار التأكيد]',
-        role: 'مسؤول الجودة [في انتظار التأكيد]',
-        organisation: 'مؤسسة خدمات [في انتظار التأكيد]',
+        role: 'المدير العام [في انتظار التأكيد]',
+        organisation: 'هيئة عمومية [في انتظار التأكيد]',
       },
       {
         id: 'accompagnement',
@@ -1435,14 +2229,43 @@ const ar: HomeContent = {
         organisation: 'مؤسسة عمومية [في انتظار التأكيد]',
       },
       {
-        id: 'etudes',
-        domain: 'الدراسات الاستراتيجية',
-        icon: 'public',
+        id: 'formation',
+        domain: 'التكوين',
+        icon: 'company',
         quote:
-          'وضع التشخيص كلمات على ما كنا نشعر به. واستطعنا أن نقرّر انطلاقًا من الوقائع لا من الانطباعات.',
+          'انطلقت التكوينات من وضعيات عملنا الفعلية. ومنذ اليوم التالي، طبّقت فرقنا ما تعلّمته.',
         name: '[الاسم في انتظار التأكيد]',
-        role: 'المدير العام [في انتظار التأكيد]',
-        organisation: 'هيئة عمومية [في انتظار التأكيد]',
+        role: 'مدير الموارد البشرية [في انتظار التأكيد]',
+        organisation: 'مؤسسة صناعية [في انتظار التأكيد]',
+      },
+      {
+        id: 'coaching',
+        domain: 'الكوتشينغ',
+        icon: 'company',
+        quote:
+          'ساعدني الكوتشينغ على أخذ مسافة. ولاحظ فريقي الفرق في طريقتي في اتخاذ القرار والتفويض.',
+        name: '[الاسم في انتظار التأكيد]',
+        role: 'مديرة وحدة [في انتظار التأكيد]',
+        organisation: 'مؤسسة صناعية [في انتظار التأكيد]',
+      },
+      {
+        id: 'communication',
+        domain: 'الاتصال',
+        icon: 'public',
+        quote: 'كانت رسائلنا مشتّتة. اليوم، تسمع فرقنا وشركاؤنا الرسالة نفسها في الوقت نفسه.',
+        name: '[الاسم في انتظار التأكيد]',
+        role: 'مسؤول الاتصال [في انتظار التأكيد]',
+        organisation: 'مؤسسة عمومية [في انتظار التأكيد]',
+      },
+      {
+        id: 'certification',
+        domain: 'الإشهاد',
+        icon: 'company',
+        quote:
+          'أعدّتنا OPEM للتدقيق خطوة بخطوة. وفي اليوم الموعود، كان كل واحد يعرف ما عليه أن يُظهره ولماذا.',
+        name: '[الاسم في انتظار التأكيد]',
+        role: 'مسؤول الجودة [في انتظار التأكيد]',
+        organisation: 'مؤسسة خدمات [في انتظار التأكيد]',
       },
     ],
   },

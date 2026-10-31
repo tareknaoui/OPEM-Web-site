@@ -1,0 +1,136 @@
+/* Radar des 7S. Deux tons :
+   - light (carte blanche de l'accroche) : bleu OPEM, anneaux gris clair ;
+   - dark (plein écran bleu nuit) : blanc et bleu 30 %, jamais de bleu OPEM au contact du fond ;
+     le nom du levier en cours et les ondes (levier en cours, leviers à renforcer) en ambre,
+     qui ne vit que sur fond foncé.
+   Pas de dégradé : la forme est un aplat translucide. Mouvement réduit : ondes coupées par la
+   règle globale, la forme ne glisse plus (useTweened). */
+
+.radar {
+  --grid: var(--opem-gray-light);
+  --shape: var(--color-primary);
+  --shape-fill: rgb(0 77 145 / 0.14);
+  --ideal: var(--opem-blue-50);
+  --label: var(--opem-night);
+  --label-current: var(--color-primary);
+  --beacon: var(--label-current);
+
+  margin: 0;
+  container-type: inline-size;
+}
+
+.radar[data-tone='dark'] {
+  --grid: rgb(255 255 255 / 0.16);
+  --shape: var(--opem-white);
+  --shape-fill: rgb(255 255 255 / 0.16);
+  --ideal: var(--opem-blue-30);
+  --label: var(--opem-blue-30);
+  --label-current: var(--opem-amber);
+  --beacon: var(--opem-amber);
+}
+
+/* Ancres de texte physiques (début = à droite du point), y compris en arabe. */
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  direction: ltr;
+}
+
+.ring,
+.spoke {
+  fill: none;
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+
+/* Résultat : l'anneau extérieur devient l'organisation alignée, en pointillés. */
+.ideal {
+  stroke: var(--ideal);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  animation: appear 900ms ease-out 1.1s both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+.shape {
+  fill: var(--shape-fill);
+  stroke: var(--shape);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.dot {
+  fill: var(--shape);
+}
+
+/* Résultat : les points des leviers à renforcer prennent la couleur des ondes. */
+.dot[data-weak] {
+  fill: var(--beacon);
+}
+
+/* Onde qui part d'une branche : question en cours, levier à renforcer. */
+.beacon {
+  fill: none;
+  stroke: var(--beacon);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: beacon 1.8s ease-out infinite;
+}
+
+@keyframes beacon {
+  from {
+    opacity: 0.9;
+    scale: 0.5;
+  }
+
+  to {
+    opacity: 0;
+    scale: 2.2;
+  }
+}
+
+.label {
+  fill: var(--label);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  transition: fill 300ms;
+}
+
+.label:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 14px;
+}
+
+.label[data-current] {
+  fill: var(--label-current);
+}
+
+/* Petit radar sans noms (signature) : traits épaissis pour rester nets. */
+.radar[data-compact] .ring,
+.radar[data-compact] .spoke {
+  stroke-width: 2.5;
+}
+
+.radar[data-compact] .shape {
+  stroke-width: 5;
+}
+
+.radar[data-compact] .dot {
+  display: none;
+}
+
+/* Petit radar : sans noms (illisibles). */
+@container (max-width: 16rem) {
+  .label {
+    display: none;
+  }
+}
