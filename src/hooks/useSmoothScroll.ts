@@ -7,8 +7,7 @@ import { useEffect } from 'react';
  * Le défilement reste celui du navigateur (barre, clavier, position sticky, liens d'ancre) ;
  * au doigt, rien ne change. Désactivé si l'utilisateur a demandé moins d'animations.
  * - Menus en fenêtre (<dialog>) : défilement natif à l'intérieur, page figée derrière.
- * - Zones marquées data-lenis-prevent(-horizontal) : laissées au navigateur (rail de cartes,
- *   panneau des maquettes).
+ * - Zones marquées data-lenis-prevent(-horizontal) : laissées au navigateur (rail de cartes).
  */
 export function useSmoothScroll() {
   useEffect(() => {

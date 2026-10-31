@@ -1,5 +1,5 @@
-import { Icon, MapPinIcon, type IconProps } from '@/components/icons';
-import type { AudienceIcon, CommitmentIcon, MarkerIcon, NeedIcon } from './content';
+import { Icon, type IconProps } from '@/components/icons';
+import type { AudienceIcon, CommitmentIcon, NeedIcon } from './content';
 
 // Pictogrammes de l'accueil (trait simple, couleur héritée : vert OPEM sur fond blanc).
 
@@ -75,22 +75,6 @@ export function CommitmentPictogram({ name, ...props }: IconProps & { name: Comm
   return <Pictogram strokeWidth={1.6} {...props} />;
 }
 
-const markerIcons: Record<MarkerIcon, (props: IconProps) => React.JSX.Element> = {
-  domains: (props) => (
-    <Icon {...props}>
-      <path d="m12 2 10 5-10 5L2 7l10-5Z" />
-      <path d="m2 17 10 5 10-5M2 12l10 5 10-5" />
-    </Icon>
-  ),
-  sectors: (props) => (
-    <Icon {...props}>
-      <rect x="4" y="2" width="16" height="20" rx="1" />
-      <path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01" />
-    </Icon>
-  ),
-  map: MapPinIcon,
-};
-
 const audienceIcons: Record<AudienceIcon, (props: IconProps) => React.JSX.Element> = {
   // Bâtiment public à colonnes.
   public: (props) => (
@@ -116,9 +100,4 @@ export function AudiencePictogram({ name, ...props }: IconProps & { name: Audien
 export function NeedPictogram({ name, ...props }: IconProps & { name: NeedIcon }) {
   const Pictogram = needIcons[name];
   return <Pictogram strokeWidth={1.6} {...props} />;
-}
-
-export function MarkerPictogram({ name, ...props }: IconProps & { name: MarkerIcon }) {
-  const Pictogram = markerIcons[name];
-  return <Pictogram strokeWidth={1.8} {...props} />;
 }

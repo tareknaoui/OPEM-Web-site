@@ -51,9 +51,8 @@ const ALIGN_LABELS: Record<Align, string> = { start: 'Début', center: 'Centre',
 
 const round = (value: number) => Math.round(value * 10) / 10;
 const wait = (ms: number) => new Promise((done) => window.setTimeout(done, ms));
-// L'éditeur lui-même et les autres outils de développement (comparateur de maquettes).
 const isEditorUi = (target: EventTarget | null) =>
-  target instanceof Element && !!target.closest('[data-live-editor], [data-dev-tool]');
+  target instanceof Element && !!target.closest('[data-live-editor]');
 
 /** Classe de module CSS de l'élément et fichier qui la définit. */
 function sourceOf(element: HTMLElement) {

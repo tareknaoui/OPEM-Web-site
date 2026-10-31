@@ -4,10 +4,9 @@ import { ProvisionalNote } from './SectionHeader';
 import styles from './CommitmentsEssential.module.css';
 
 /**
- * « Ce qui nous distingue », version « L'essentiel » (retenue) : sur bleu très clair, un titre
- * court centré puis trois engagements, chacun en un grand pictogramme, quelques mots et une
- * phrase. Ordinateur : trois colonnes séparées d'un filet. Mobile : une ligne par engagement.
- * La version détaillée (preuves, « Ailleurs, souvent ») reste dans Commitments.tsx.
+ * « Ce qui nous distingue » : sur bleu très clair, un titre court centré puis trois engagements,
+ * chacun en un grand pictogramme, quelques mots et une phrase. Ordinateur : trois colonnes
+ * séparées d'un filet. Mobile : une ligne par engagement.
  */
 export function CommitmentsEssential({ commitments }: { commitments: HomeContent['commitments'] }) {
   return (

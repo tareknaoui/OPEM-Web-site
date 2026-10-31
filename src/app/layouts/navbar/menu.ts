@@ -10,9 +10,6 @@ export const MAX_TOP_LEVEL_ITEMS = 8;
 export const QUOTE_HREF = '/contact';
 export const CALLBACK_HREF = '/contact';
 
-/** Encart « Prendre rendez-vous » du méga-menu « prestige ». */
-export const APPOINTMENT_HREF = '/contact/demande-de-rendez-vous';
-
 /** Doit correspondre au point de rupture desktop de Navbar.module.css. */
 export const DESKTOP_QUERY = '(min-width: 80em)';
 

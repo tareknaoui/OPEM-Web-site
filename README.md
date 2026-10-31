@@ -17,7 +17,7 @@ de certification. Bilingue français / arabe (mise en page en miroir pour l'arab
 2. [Commandes](#2-commandes)
 3. [Architecture](#3-architecture)
 4. [Page d'accueil, section par section](#4-page-daccueil-section-par-section)
-5. [En-tête, pied de page et maquettes](#5-en-tête-pied-de-page-et-maquettes)
+5. [En-tête et pied de page](#5-en-tête-et-pied-de-page)
 6. [Charte graphique et règles de contenu](#6-charte-graphique-et-règles-de-contenu)
 7. [Langues (FR / AR)](#7-langues-fr--ar)
 8. [Animations et défilement](#8-animations-et-défilement)
@@ -58,16 +58,16 @@ Variables d'environnement (`.env.local`, jamais commité) :
 
 ## 2. Commandes
 
-| Commande            | Rôle                                                                  |
-| ------------------- | --------------------------------------------------------------------- |
-| `npm run dev`       | Serveur de développement, rechargement à chaud, panneau « Maquettes » |
-| `npm run build`     | Vérifie les types (`tsc -b`) puis génère le site dans `dist/`         |
-| `npm run preview`   | Sert `dist/` en local avec les en-têtes de sécurité de production     |
-| `npm test`          | Lance les tests une fois (`npm run test:watch` : en continu)          |
-| `npm run typecheck` | Vérifie les types sans générer                                        |
-| `npm run lint`      | Analyse le code (qualité, hooks React, règles de sécurité)            |
-| `npm run format`    | Formate tout avec Prettier                                            |
-| `npm run audit`     | Cherche des failles connues dans les dépendances de production        |
+| Commande            | Rôle                                                              |
+| ------------------- | ----------------------------------------------------------------- |
+| `npm run dev`       | Serveur de développement, rechargement à chaud, éditeur en direct |
+| `npm run build`     | Vérifie les types (`tsc -b`) puis génère le site dans `dist/`     |
+| `npm run preview`   | Sert `dist/` en local avec les en-têtes de sécurité de production |
+| `npm test`          | Lance les tests une fois (`npm run test:watch` : en continu)      |
+| `npm run typecheck` | Vérifie les types sans générer                                    |
+| `npm run lint`      | Analyse le code (qualité, hooks React, règles de sécurité)        |
+| `npm run format`    | Formate tout avec Prettier                                        |
+| `npm run audit`     | Cherche des failles connues dans les dépendances de production    |
 
 **Avant chaque push** : `npm run lint && npm run typecheck && npm test && npm run build`.
 
@@ -82,9 +82,9 @@ src/
 │   ├── RouteError.tsx       page d'erreur
 │   └── layouts/
 │       ├── RootLayout.tsx   squelette commun : barre, <main>, pied, défilement fluide, apparitions
-│       ├── navbar/          barre de navigation, menus ordinateur / mobile / plein écran, menu.ts
-│       ├── footer/          pied de page (colonnes générées depuis le menu) + variante compacte
-│       └── variants/        comparateur de maquettes (outil temporaire, voir § 5)
+│       ├── navbar/          barre de navigation, menus ordinateur / mobile, menu.ts
+│       ├── footer/          pied de page (colonnes générées depuis le menu)
+│       └── liveEdit/        éditeur en direct (développement seulement, voir § 15)
 ├── features/                une fonctionnalité / page par dossier
 │   ├── home/
 │   │   ├── HomePage.tsx     assemble les sections dans l'ordre
@@ -122,23 +122,22 @@ content.ts ──(useLanguage().lang)──> HomePage ──props──> section
 menu WordPress ─(lib/wordpress.ts, revalidé)─┐
 menu.ts (repli si WordPress absent) ─────────┴─> useMenu ──> Navbar, Footer
 config/company.ts ──> Footer, bandeau d'appel, pages contact
-layoutVariants.ts ──(URL ?nav=…&hero=…)──> RootLayout / HomePage (maquette affichée)
 ```
 
 ## 4. Page d'accueil, section par section
 
 Ordre d'affichage (`HomePage.tsx`). Clé = entrée correspondante dans `content.ts`.
 
-| #   | Section                        | Composant                                        | Clé `content.ts`                              | Comportement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sur téléphone                                                                                |
-| --- | ------------------------------ | ------------------------------------------------ | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| 1   | Accroche « Autodiagnostic 7S » | `HeroDiagnostic` + `DiagnosticCard`              | `hero`, `heroVideo` (titre), `heroDiagnostic` | Éditorial : bleu nuit à gauche, le métier d'abord (titre, texte, 4 chiffres clés animés) ; vidéo de l'équipe à droite jusqu'au bord ; en bas, bandeau blanc « Par où commencer ? » de l'autodiagnostic 7S. Voir ci-dessous                                                                                                                                                                                                                                                                                                         | Panneau sous le texte                                                                        |
-| 2   | Ce qui nous distingue          | `CommitmentsEssential` (version « L'essentiel ») | `commitments` (`heading`, `items[].short`)    | Bande bleu très clair, très grand titre centré sur deux lignes (bleu nuit puis bleu OPEM), 3 engagements : grand pictogramme (vert au survol), quelques mots, une phrase. Version détaillée en cartes (`Commitments`, `?engagements=cartes`) gardée dans le comparateur                                                                                                                                                                                                                                                            | Une ligne par engagement, pictogramme à gauche                                               |
-| 3   | Nos domaines                   | `DomainsMosaic` (`layout="rangee"`)              | `domains`                                     | Les 6 domaines visibles d'un coup, sans attente, sur bleu OPEM : sur ordinateur, deux lignes de 3 cartes égales (illustration du domaine dans un passe-partout blanc, titre, 3 lignes, « Découvrir ») ; avec 5 domaines, une seule ligne de 5. La grille s'adapte au nombre de domaines. Cartes entièrement cliquables, illustration qui zoome et carte qui se soulève au survol. Illustrations : `public/images/domaines/illustrations/` (WebP 1376 et 800 px, fond ramené au bleu nuit), champ `illustration` de `domains.items` | Une carte par domaine (illustration, titre, 2 lignes), bouton « Être rappelé » sous la liste |
-| 4   | Bandeau IA                     | `AiBand`                                         | `ai`                                          | Sous les domaines, même bleu OPEM : panneau arrondi à fond blanc translucide. « Intelligence artificielle appliquée » (étoile qui scintille), grand titre, texte, bouton « Découvrir l'approche » ; à droite les 3 temps (Diagnostic, Formation, Intégration) dans un cadre, parcourus l'un après l'autre par un filet lumineux                                                                                                                                                                                                    | Texte puis cadre des 3 temps                                                                 |
-| 5   | Prochaines sessions            | `UpcomingSessions`                               | `trainings`                                   | Fond bleu très clair (transition entre le bleu des domaines et le blanc des éclairages). Une carte-calendrier par session : grande date, compte à rebours calculé (« Dans 19 jours », « Demain »), thème, titre, format, « S'inscrire » (`/contact?formation=<id>`). Sessions passées masquées d'elles-mêmes ; message d'attente si aucune. 4 colonnes (ordinateur), 2 (tablette)                                                                                                                                                  | Rangée de cartes qu'on fait glisser                                                          |
-| 6   | Éclairages et actualités       | `Insights`                                       | `insights`                                    | Filtres Tout / Éclairages / Actualités, une publication à la une, 2 compactes, cartes à image                                                                                                                                                                                                                                                                                                                                                                                                                                      | Rangée de cartes qu'on fait glisser (scroll-snap)                                            |
-| 7   | Témoignages                    | `Testimonials`                                   | `testimonials`                                | Citation sur carte blanche, liste à côté, flèches et compteur, pas de défilement auto                                                                                                                                                                                                                                                                                                                                                                                                                                              | Pastilles défilantes                                                                         |
-| 8   | Questions fréquentes           | `Faq`                                            | `faq`                                         | Accordéon WAI-ARIA (plusieurs ouvertes), encadré d'aide collant à gauche                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Encadré d'aide après les questions                                                           |
+| #   | Section                        | Composant                           | Clé `content.ts`                              | Comportement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sur téléphone                                                                                |
+| --- | ------------------------------ | ----------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| 1   | Accroche « Autodiagnostic 7S » | `HeroDiagnostic` + `DiagnosticCard` | `hero`, `heroVideo` (titre), `heroDiagnostic` | Éditorial : bleu nuit à gauche, le métier d'abord (titre, texte, 4 chiffres clés animés) ; vidéo de l'équipe à droite jusqu'au bord ; en bas, bandeau blanc « Par où commencer ? » de l'autodiagnostic 7S. Voir ci-dessous                                                                                                                                                                                                                                                                                                         | Panneau sous le texte                                                                        |
+| 2   | Ce qui nous distingue          | `CommitmentsEssential`              | `commitments` (`heading`, `items[].short`)    | Bande bleu très clair, très grand titre centré sur deux lignes (bleu nuit puis bleu OPEM), 3 engagements : grand pictogramme (vert au survol), quelques mots, une phrase. Version détaillée en cartes (`Commitments`, `?engagements=cartes`) gardée dans le comparateur                                                                                                                                                                                                                                                            | Une ligne par engagement, pictogramme à gauche                                               |
+| 3   | Nos domaines                   | `DomainsMosaic` (`layout="rangee"`) | `domains`                                     | Les 6 domaines visibles d'un coup, sans attente, sur bleu OPEM : sur ordinateur, deux lignes de 3 cartes égales (illustration du domaine dans un passe-partout blanc, titre, 3 lignes, « Découvrir ») ; avec 5 domaines, une seule ligne de 5. La grille s'adapte au nombre de domaines. Cartes entièrement cliquables, illustration qui zoome et carte qui se soulève au survol. Illustrations : `public/images/domaines/illustrations/` (WebP 1376 et 800 px, fond ramené au bleu nuit), champ `illustration` de `domains.items` | Une carte par domaine (illustration, titre, 2 lignes), bouton « Être rappelé » sous la liste |
+| 4   | Bandeau IA                     | `AiBand`                            | `ai`                                          | Sous les domaines, même bleu OPEM : panneau arrondi à fond blanc translucide. « Intelligence artificielle appliquée » (étoile qui scintille), grand titre, texte, bouton « Découvrir l'approche » ; à droite les 3 temps (Diagnostic, Formation, Intégration) dans un cadre, parcourus l'un après l'autre par un filet lumineux                                                                                                                                                                                                    | Texte puis cadre des 3 temps                                                                 |
+| 5   | Prochaines sessions            | `UpcomingSessions`                  | `trainings`                                   | Fond bleu très clair (transition entre le bleu des domaines et le blanc des éclairages). Une carte-calendrier par session : grande date, compte à rebours calculé (« Dans 19 jours », « Demain »), thème, titre, format, « S'inscrire » (`/contact?formation=<id>`). Sessions passées masquées d'elles-mêmes ; message d'attente si aucune. 4 colonnes (ordinateur), 2 (tablette)                                                                                                                                                  | Rangée de cartes qu'on fait glisser                                                          |
+| 6   | Éclairages et actualités       | `Insights`                          | `insights`                                    | Filtres Tout / Éclairages / Actualités, une publication à la une, 2 compactes, cartes à image                                                                                                                                                                                                                                                                                                                                                                                                                                      | Rangée de cartes qu'on fait glisser (scroll-snap)                                            |
+| 7   | Témoignages                    | `Testimonials`                      | `testimonials`                                | Citation sur carte blanche, liste à côté, flèches et compteur, pas de défilement auto                                                                                                                                                                                                                                                                                                                                                                                                                                              | Pastilles défilantes                                                                         |
+| 8   | Questions fréquentes           | `Faq`                               | `faq`                                         | Accordéon WAI-ARIA (plusieurs ouvertes), encadré d'aide collant à gauche                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Encadré d'aide après les questions                                                           |
 
 **Autodiagnostic 7S.** Fondé sur le modèle des 7S de McKinsey : une question par levier
 (stratégie, structure, systèmes, valeurs partagées, style, personnel, compétences). Questions,
@@ -201,7 +200,7 @@ suffit pour les remettre) : `Needs` (« Quel est votre besoin ? »), `Audiences`
 `Approach` (« Trois temps »), `KeyFigures`, `Sectors`, `Trainings` (agenda en liste, remplacé
 par `UpcomingSessions`).
 
-## 5. En-tête, pied de page et maquettes
+## 5. En-tête et pied de page
 
 ### Barre de navigation (`layouts/navbar/`)
 
@@ -216,26 +215,6 @@ par `UpcomingSessions`).
 - Bandeau d'appel bleu OPEM (téléphone + « Être rappelé »), puis corps bleu nuit.
 - Colonnes générées depuis le menu (une par rubrique ayant des sous-pages, puis « Découvrir »).
 - Téléphone : coordonnées d'abord, rubriques repliées en accordéon (une ouverte à la fois).
-
-### Comparateur de maquettes (`layouts/variants/`) — outil temporaire
-
-Plusieurs versions de chaque bloc ont été présentées au client. Les **versions retenues** sont
-celles de `DEFAULTS` dans `layoutVariants.ts` et s'affichent sans paramètre.
-
-| Bloc         | Paramètre     | Retenue          | Autres valeurs                                                                                           |
-| ------------ | ------------- | ---------------- | -------------------------------------------------------------------------------------------------------- |
-| Barre        | `nav`         | `editorialenuit` | `nuit`, `blanche`, `editoriale`, `flottante`, `centree`, `pleinecran`, `prestige`                        |
-| Accroche     | `hero`        | `diagnostic`     | `reseau`, `cycle`, `video`, `immersive`, `editorial`, `editorialnuit`, `questions`, `publics`, `reperes` |
-| Engagements  | `engagements` | `essentiel`      | `cartes`                                                                                                 |
-| Nos domaines | `domaines`    | `rangee`         | `mosaique`, `anime`, `onglets`, `carrousel`, `sommaire`                                                  |
-| Éclairages   | `eclairages`  | `une`            | `rail`                                                                                                   |
-| Pied de page | `footer`      | `nuit`           | `clair`, `compact`                                                                                       |
-
-- En développement, un panneau « Maquettes » s'affiche en bas à gauche.
-- En production : ajouter `?maquettes` à l'adresse, ex. `/?maquettes&hero=cycle&domaines=sommaire`.
-
-**À terme**, supprimer `layouts/variants/`, le panneau, et les composants non retenus
-(voir [Recettes](#retirer-le-comparateur-de-maquettes)).
 
 ## 6. Charte graphique et règles de contenu
 
@@ -290,7 +269,7 @@ les éléments ajoutés plus tard (filtres, changement de langue).
 
 ### Vidéo d'accueil — `public/videos/hero-opem.mp4` (+ `hero-opem.jpg`, première image)
 
-Affichée par l'accroche retenue (moitié droite) et par les autres maquettes du comparateur.
+Affichée par l'accroche (moitié droite).
 
 Montage de 14,6 s, 1,4 Mo, sans son, 1280 × 720, H.264 `+faststart`, en attendant un tournage
 au cabinet. Uniquement des scènes de cabinet (aucun chantier ni usine, pour qu'on ne prenne pas
@@ -309,13 +288,11 @@ Lue sur tous les écrans (image fixe en mouvement réduit). Adresse dans
 
 ### Photos — `public/images/`
 
-- `domaines/` : une photo 4:3 (1280 × 960) par domaine. `accompagnement.jpg` est un montage en Y
-  de 3 photos Pexels (8961027, 2760241, 3183197) ; `formations.jpg` : Pexels 18999540 ;
-  `communication.jpg` : Pexels 6950231 (dirigeant face aux micros, recadré). Les photos sont
-  recadrées vers le haut à l'affichage (`object-position`), pour garder les visages entiers.
+- `domaines/illustrations/` : une illustration 16:9 par domaine (+ version `-800.webp`).
+- `domaines/` : photos 4:3 encore utilisées par les publications d'exemple (`formations.jpg` :
+  Pexels 18999540).
 - `actualites/` : illustrations des publications d'exemple.
-- Toutes provisoires (Pexels / Unsplash, licences gratuites). À vérifier avant mise en ligne
-  définitive : un logo de marque (NLMK) est visible sur `certification.jpg`.
+- Toutes provisoires (Pexels / Unsplash, licences gratuites).
 
 ### Remplacer un média sous le même nom
 
@@ -394,11 +371,9 @@ dépend du chemin du projet) : c'est normal, le rendu est identique.
       unique) : à confirmer par OPEM, en particulier l'engagement de confidentialité signé.
 - [ ] Page « Le cabinet » (`features/cabinet/content.ts`, textes repris du site de 2019) : titre
       officiel de Mme Bourahla (« Gérante » retenu), citation sur l'excellence, phrases sous les
-      6 valeurs (proposées), agrément n° 539 et dispositif qualité de la formation (catalogue
-      2021) toujours valables.
+      6 valeurs (proposées), agrément n° 539 et dispositif qualité de la formation (catalogue 2021) toujours valables.
 - [ ] Traductions arabes.
-- [ ] Vraies photos (même nom de fichier, 4:3 pour les domaines) et, idéalement, une vidéo
-      tournée au cabinet ; licence de `certification.jpg` (logo NLMK).
+- [ ] Vraies photos et, idéalement, une vidéo tournée au cabinet.
 
 **Développement**
 
@@ -413,7 +388,6 @@ dépend du chemin du projet) : c'est normal, le rendu est identique.
 - [ ] Faire valider par OPEM l'autodiagnostic 7S : questions (organisation et leviers), règles
       et textes des 6 profils, textes de « Notre lecture », domaines associés à chaque levier.
 - [ ] Brancher publications et actualités sur WordPress (aujourd'hui dans `content.ts`).
-- [ ] Retirer le comparateur de maquettes et les variantes non retenues.
 - [ ] Passer le dépôt GitHub en privé si le contenu doit rester confidentiel.
 
 ## 15. Recettes
@@ -472,22 +446,17 @@ ffmpeg -i source.mp4 -an -vf "scale=1280:720:force_original_aspect_ratio=increas
 ffmpeg -i hero-opem.mp4 -frames:v 1 -q:v 3 hero-opem.jpg
 ```
 
-### Retirer le comparateur de maquettes
-
-1. Dans `RootLayout.tsx` et `HomePage.tsx`, remplacer la lecture de la variante par les
-   composants retenus (`editorialenuit`, `HeroDiagnostic`, `CommitmentsEssential`, `DomainsMosaic`, `Insights`, pied `nuit`).
-2. Supprimer `src/app/layouts/variants/`, les composants non retenus et leurs tests.
-3. `npm run build` et `npm test` doivent passer ; vérifier `?maquettes` (sans effet désormais).
-
 ## 16. Historique
 
-| Date       | Commit    | Changements                                                                                                    |
-| ---------- | --------- | -------------------------------------------------------------------------------------------------------------- |
-| 2026-10-26 | `7dbc197` | Site initial : barre, accueil, pied de page, FR/AR, menu WordPress, comparateur de maquettes                   |
-| 2026-10-26 | `0b06f7c` | Versions retenues par OPEM par défaut ; configuration Vercel (`vercel.json`)                                   |
-| 2026-10-27 | `39ff135` | Vidéo d'accueil (montage Pexels) ; photos Accompagnement (montage en Y) et Formations                          |
-| 2026-10-27 | `b567ab0` | Plan formation en vidéo ; fondu des photos de « Nos domaines » ; plus de bande blanche sous la barre           |
-| 2026-10-27 | `806ac9f` | Version mobile : vidéo dès le 1ᵉʳ écran, éclairages à faire glisser, pied de page en accordéon, FAQ réordonnée |
+| Date       | Commit    | Changements                                                                                                                        |
+| ---------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-10-26 | `7dbc197` | Site initial : barre, accueil, pied de page, FR/AR, menu WordPress, comparateur de maquettes                                       |
+| 2026-10-26 | `0b06f7c` | Versions retenues par OPEM par défaut ; configuration Vercel (`vercel.json`)                                                       |
+| 2026-10-27 | `39ff135` | Vidéo d'accueil (montage Pexels) ; photos Accompagnement (montage en Y) et Formations                                              |
+| 2026-10-27 | `b567ab0` | Plan formation en vidéo ; fondu des photos de « Nos domaines » ; plus de bande blanche sous la barre                               |
+| 2026-10-27 | `806ac9f` | Version mobile : vidéo dès le 1ᵉʳ écran, éclairages à faire glisser, pied de page en accordéon, FAQ réordonnée                     |
+| 2026-10-31 | `aac332d` | Accueil retravaillé, autodiagnostic complet, page « Le cabinet », éditeur en direct. Dernier commit contenant toutes les maquettes |
+| 2026-10-31 | `e292f9a` | Maquettes retirées : seules les versions retenues restent (barre 4, accueil 7, engagements 1, domaines 1, éclairages 1, pied 1)    |
 
 Choix structurants pris en cours de route :
 

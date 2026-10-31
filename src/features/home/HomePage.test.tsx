@@ -21,7 +21,6 @@ function renderHome() {
 }
 
 describe('HomePage', () => {
-  // Bandeau retenu par défaut : « Autodiagnostic » (voir layouts/variants).
   it('affiche le grand titre et l’invitation au diagnostic 7S', () => {
     renderHome();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(

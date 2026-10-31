@@ -10,13 +10,6 @@
   padding-top: var(--shell-offset);
 }
 
-/* Maquette « logo centré » : sur ordinateur, la bande du menu s'ajoute sous la barre. */
-@media (min-width: 80em) {
-  .shell[data-navbar='centree'] {
-    --shell-offset: calc(var(--header-height) + var(--nav-row-height));
-  }
-}
-
 /* Zone réservée sous la barre, de la couleur de la barre : quand la barre réduite
    reprend sa hauteur (retour en haut de page), la bande qu'elle découvre un instant ne
    se voit pas (sinon, une ligne blanche entre la barre et l'accroche). */
@@ -26,10 +19,6 @@
   top: 0;
   inset-inline: 0;
   height: var(--shell-offset);
-  background: var(--color-bg);
-}
-
-.shell:is([data-navbar='nuit'], [data-navbar='editorialenuit'], [data-navbar='prestige'])::before {
   background: var(--color-nav-bg);
 }
 

@@ -10,16 +10,9 @@ export const strings = {
     quote: 'Demander un devis',
     openMenu: 'Ouvrir le menu',
     closeMenu: 'Fermer le menu',
-    menu: 'Menu',
-    close: 'Fermer',
     seeAll: 'Tout voir',
     submenu: (label: string) => `Afficher le sous-menu ${label}`,
     languageSwitcher: 'Choix de la langue',
-    megaFeature: {
-      title: 'Un projet, une question ?',
-      text: 'Échangeons sur vos enjeux avec un consultant OPEM.',
-      cta: 'Prendre rendez-vous',
-    },
     footer: {
       ctaTitle: 'Un projet, une question ?',
       ctaText:
@@ -53,16 +46,9 @@ export const strings = {
     quote: 'اطلب عرض سعر',
     openMenu: 'فتح القائمة',
     closeMenu: 'إغلاق القائمة',
-    menu: 'القائمة',
-    close: 'إغلاق',
     seeAll: 'عرض الكل',
     submenu: (label: string) => `عرض القائمة الفرعية ${label}`,
     languageSwitcher: 'اختيار اللغة',
-    megaFeature: {
-      title: 'مشروع أو سؤال؟',
-      text: 'لنتحدث عن تحدياتكم مع أحد مستشاري OPEM.',
-      cta: 'حدّدوا موعدًا',
-    },
     footer: {
       ctaTitle: 'مشروع أو سؤال؟',
       ctaText: 'الإشهاد، التكوين، المرافقة: يتصل بكم أحد مستشاري OPEM للحديث عن ذلك.',

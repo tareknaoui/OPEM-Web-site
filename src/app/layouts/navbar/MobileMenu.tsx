@@ -4,7 +4,7 @@ import { ChevronDownIcon, CloseIcon } from '@/components/icons';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { Logo, type LogoTone } from './Logo';
+import { Logo } from './Logo';
 import { DESKTOP_QUERY, QUOTE_HREF, type MenuItem } from './menu';
 import { MenuLink, NestedLinks } from './MenuLink';
 import styles from './Navbar.module.css';
@@ -14,7 +14,6 @@ type MobileMenuProps = {
   items: MenuItem[];
   open: boolean;
   onClose: () => void;
-  logoTone?: LogoTone;
 };
 
 /**
@@ -22,7 +21,7 @@ type MobileMenuProps = {
  * le piège du focus, la touche Échap, le retour du focus sur le burger
  * et rend le reste de la page inaccessible tant qu'il est ouvert.
  */
-export function MobileMenu({ id, items, open, onClose, logoTone = 'white' }: MobileMenuProps) {
+export function MobileMenu({ id, items, open, onClose }: MobileMenuProps) {
   const { t } = useLanguage();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -49,7 +48,7 @@ export function MobileMenu({ id, items, open, onClose, logoTone = 'white' }: Mob
   return (
     <dialog ref={dialogRef} id={id} className={styles.mobilePanel} onClose={onClose}>
       <div className={styles.mobileHeader}>
-        <Logo onClick={onClose} tone={logoTone} />
+        <Logo onClick={onClose} />
         <button
           ref={closeRef}
           type="button"

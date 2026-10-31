@@ -7,9 +7,7 @@ import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { CALLBACK_HREF, type MenuItem } from '../navbar/menu';
 import { useMenu } from '../navbar/useMenu';
-import type { FooterVariant } from '../variants/layoutVariants';
 import styles from './Footer.module.css';
-import { FooterCompact } from './FooterCompact';
 import { legalLinks } from './legalLinks';
 
 type FooterLink = { id: string; label: string; href: string };
@@ -63,22 +61,14 @@ function FooterAnchor({ link }: { link: FooterLink }) {
   );
 }
 
-/**
- * Pied de page : à gauche le logo et la présentation, au milieu « Nos expertises » et « Le
- * site », à droite « Nous contacter ». Trois maquettes à comparer (voir ../variants) :
- * - « nuit » (version 1, par défaut) : bandeau d'appel bleu OPEM + corps bleu nuit ;
- * - « clair » : même structure sur fond bleu très clair, logo couleur ;
- * - « compact » : une seule bande bleu nuit (voir FooterCompact).
- */
-export function Footer({ variant = 'nuit' }: { variant?: FooterVariant }) {
-  if (variant === 'compact') return <FooterCompact />;
-  return <FooterColumns light={variant === 'clair'} />;
-}
-
 /** Sur mobile, chaque rubrique du plan du site se replie (titre-bouton, motif accordéon). */
 const FOOTER_ACCORDION_QUERY = '(max-width: 47.99em)';
 
-function FooterColumns({ light }: { light: boolean }) {
+/**
+ * Pied de page : bandeau d'appel bleu OPEM, puis corps bleu nuit avec à gauche le logo et la
+ * présentation, au milieu « Nos expertises » et « Le site », à droite « Nous contacter ».
+ */
+export function Footer() {
   const { lang, t } = useLanguage();
   const items = useMenu(lang);
   const columns = buildColumns(items, t.footer, t.footer.contactLink);
@@ -87,7 +77,7 @@ function FooterColumns({ light }: { light: boolean }) {
   const baseId = useId();
 
   return (
-    <footer className={cx(styles.footer, light && styles.clair)}>
+    <footer className={styles.footer}>
       {/* Bandeau d'appel à l'action */}
       <section className={styles.cta} aria-labelledby="footer-cta-title">
         <div className={cx('container', styles.ctaInner)}>
@@ -118,7 +108,7 @@ function FooterColumns({ light }: { light: boolean }) {
         <div className={styles.brand}>
           <Link to="/" className={styles.logoLink}>
             <img
-              src={light ? '/logo-opem-couleur.svg' : '/logo-opem.svg'}
+              src="/logo-opem.svg"
               alt={t.homeLink}
               width={199}
               height={75}

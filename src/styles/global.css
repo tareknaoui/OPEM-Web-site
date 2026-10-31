@@ -69,7 +69,6 @@
 
   --header-height: 5rem;
   --header-height-compact: 4rem;
-  --nav-row-height: 3rem; /* bande du menu de la maquette « logo centré » */
 
   /* Sens de lecture : 1 en français, -1 en arabe (flèches, glissements). */
   --dir: 1;

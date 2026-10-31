@@ -17,7 +17,6 @@ import type { Lang } from '@/i18n/language';
 
 export type NeedIcon =
   'strategy' | 'organization' | 'certification' | 'training' | 'coaching' | 'safety';
-export type MarkerIcon = 'domains' | 'sectors' | 'map';
 export type AudienceIcon = 'public' | 'company';
 export type CommitmentIcon = 'relay' | 'lock' | 'field';
 /** Les sept leviers du modèle des 7S (McKinsey), mesurés par l'autodiagnostic de l'accroche. */
@@ -35,28 +34,6 @@ export type HomeContent = {
   title: string;
   hero: {
     eyebrow: string;
-    title: string;
-    subtitle: string;
-    primary: Link;
-    secondary: Link;
-  };
-  /** Bandeau « Cycle OPEM » : grand titre + schéma animé de la démarche en 3 étapes. */
-  heroCycle: {
-    /** Deux lignes : la seconde est en bleu OPEM. */
-    headline: [string, string];
-    intro: string;
-    /** Nom du groupe d'onglets (lecteurs d'écran). */
-    label: string;
-    step: string;
-    pause: string;
-    play: string;
-    phases: {
-      id: string;
-      tab: string;
-      caption: string;
-      checklist: { title: string; items: { label: string; done: boolean }[] };
-      note: { title: string; meta: string; status: string };
-    }[];
   };
   /** Bandeau « Vidéo » : texte sur panneau bleu nuit, vidéo à côté, jamais dessous. */
   heroVideo: {
@@ -64,22 +41,6 @@ export type HomeContent = {
     intro: string;
     pause: string;
     play: string;
-  };
-  /** Bandeau « Immersif » (même vidéo) : carte d'orientation « De quoi avez-vous besoin ? ». */
-  heroImmersive: {
-    question: string;
-    choices: Link[];
-  };
-  /** Bandeau « Éditorial » : grand titre, vidéo en fenêtre avec légende sur bandeau bleu nuit. */
-  heroEditorial: {
-    kicker: string;
-    headline: [string, string];
-    intro: string;
-    caption: string;
-    /** Texte qui tourne autour du badge circulaire (se termine par un séparateur). */
-    badge: string;
-    pillarsLabel: string;
-    pillars: { title: string; text: string; href: string }[];
   };
   /**
    * Bandeau « Autodiagnostic 7S » : titre, texte et boutons à gauche ; à droite, à la place de la
@@ -158,40 +119,6 @@ export type HomeContent = {
       sizes: Record<string, string>;
     };
   };
-  /** Bandeau « Trois questions » : le titre remplacé par trois questions, chacune un lien. */
-  heroQuestions: {
-    questions: Link[];
-    line: string;
-    cta: Link;
-  };
-  /** Bandeau « Public / entreprise » : sous le titre, un grand bloc par type de client. */
-  heroAudiences: {
-    kicker: string;
-    /** Deux lignes : la seconde en bleu clair. */
-    headline: [string, string];
-    intro: string;
-    blocks: {
-      id: string;
-      icon: AudienceIcon;
-      title: string;
-      /** Les trois sujets du bloc, en étiquettes. */
-      tags: string[];
-      text: string;
-      link: Link;
-    }[];
-  };
-  /**
-   * Bandeau « Repères » : sous les boutons, trois faits courts. Valeurs d'exemple tant que
-   * provisional vaut true (mention « à confirmer » affichée) : à remplacer par les vrais chiffres.
-   */
-  heroFacts: {
-    /** Liens à côté du bouton principal : le conseil et la formation, à égalité. */
-    links: Link[];
-    label: string;
-    provisional: boolean;
-    note: string;
-    items: { value: string; label: string }[];
-  };
   /**
    * Section « Ce qui nous distingue », juste sous l'accroche : trois engagements, chacun avec
    * des preuves concrètes et, en bas de carte, ce qu'on trouve souvent ailleurs.
@@ -199,43 +126,24 @@ export type HomeContent = {
    */
   commitments: {
     eyebrow: string;
-    title: string;
-    /** Titre de la version « L'essentiel », sur deux lignes (la seconde en bleu OPEM). */
+    /** Titre sur deux lignes (la seconde en bleu OPEM). */
     heading: [string, string];
-    lead: string;
-    /** Étiquette au-dessus des preuves concrètes. */
-    proofLabel: string;
-    /** Étiquette de la comparaison, en bas de carte. */
-    elsewhereLabel: string;
     provisional: boolean;
     note: string;
     items: {
       id: string;
       icon: CommitmentIcon;
-      title: string;
-      text: string;
-      proofs: string[];
-      elsewhere: string;
-      /** Version « L'essentiel » : quelques mots et une phrase. */
+      /** Quelques mots et une phrase. */
       short: { title: string; text: string };
     }[];
   };
   /**
-   * Section « Nos domaines », sous « Ce qui nous distingue » : un onglet par domaine, un panneau qui
-   * en affiche un en entier. Ordre des domaines à confirmer par OPEM. Ne jamais écrire « DAS ».
+   * Section « Nos domaines », sous « Ce qui nous distingue » : tous les domaines en rangée.
+   * Ordre des domaines à confirmer par OPEM. Ne jamais écrire « DAS ».
    */
   domains: {
     title: string;
-    /** Liste déroulante qui remplace les onglets sur mobile. */
-    selectLabel: string;
-    previous: string;
-    next: string;
-    /** « {current} sur {total} » */
-    counter: string;
     discover: string;
-    /** Carrousel animé : bouton pause / reprise du défilement. */
-    pause: string;
-    play: string;
     callback: Link;
     items: {
       id: string;
@@ -243,15 +151,11 @@ export type HomeContent = {
       text: string;
       points: string[];
       href: string;
-      /** Photo 4:3, sans texte dessus (provisoire : à remplacer par une vraie photo). */
-      image: string;
       /**
-       * Illustration 16:9 (métaphore du domaine, fond bleu nuit, une pièce ambre), utilisée par
-       * la rangée retenue. Une version de 800 px de large existe à côté (« -800.webp »).
+       * Illustration 16:9 (métaphore du domaine, fond bleu nuit, une pièce ambre). Une version
+       * de 800 px de large existe à côté (« -800.webp »).
        */
       illustration: string;
-      /** Vignette carrée tirée de l'illustration (l'objet ambre), pour la version « en coin ». */
-      emblem: string;
     }[];
   };
   /**
@@ -284,9 +188,6 @@ export type HomeContent = {
     filtersLabel: string;
     filters: { all: string; eclairage: string; actualite: string };
     readMore: string;
-    /** Flèches du rail (version « Rail défilant »). */
-    previous: string;
-    next: string;
     provisional: boolean;
     note: string;
     links: Link[];
@@ -305,7 +206,6 @@ export type HomeContent = {
       image: string;
     }[];
   };
-  markers: { icon: MarkerIcon; label: string }[];
   needs: {
     eyebrow: string;
     title: string;
@@ -419,67 +319,6 @@ const fr: HomeContent = {
   title: 'OPEM — Conseil et formation en Algérie',
   hero: {
     eyebrow: 'Cabinet de conseil et de formation',
-    title: 'Structurer, former, certifier : faire progresser votre organisation.',
-    subtitle: 'OPEM accompagne les organisations, du diagnostic stratégique à la certification.',
-    primary: { label: 'Demander un devis', href: '/contact' },
-    secondary: { label: 'Voir les formations', href: '/formation' },
-  },
-  heroCycle: {
-    headline: ['Faire progresser', 'votre organisation.'],
-    intro:
-      'Des décisions éclairées. Des processus structurés. Des exigences maîtrisées. Des compétences développées. Un leadership affirmé. Une communication qui fait la différence.',
-    label: 'Notre démarche en trois étapes',
-    step: 'Étape',
-    pause: 'Mettre l’animation en pause',
-    play: 'Relancer l’animation',
-    phases: [
-      {
-        id: 'diagnostiquer',
-        tab: 'Diagnostiquer',
-        caption: 'On mesure avant d’agir',
-        checklist: {
-          title: 'Diagnostic d’entreprise',
-          items: [
-            { label: 'Gouvernance', done: true },
-            { label: 'Processus clés', done: true },
-            { label: 'Compétences', done: false },
-          ],
-        },
-        note: { title: 'Rapport de diagnostic', meta: 'Constats et priorités', status: 'Remis' },
-      },
-      {
-        id: 'structurer',
-        tab: 'Structurer et former',
-        caption: 'On construit avec vos équipes',
-        checklist: {
-          title: 'Plan d’actions',
-          items: [
-            { label: 'Procédures rédigées', done: true },
-            { label: 'Indicateurs de pilotage', done: true },
-            { label: 'Formation des équipes', done: false },
-          ],
-        },
-        note: {
-          title: 'Formation qualifiante',
-          meta: 'Management de la qualité',
-          status: 'Session planifiée',
-        },
-      },
-      {
-        id: 'certifier',
-        tab: 'Certifier',
-        caption: 'On sécurise la reconnaissance',
-        checklist: {
-          title: 'Préparation à l’audit',
-          items: [
-            { label: 'Système documentaire', done: true },
-            { label: 'Audit à blanc', done: true },
-            { label: 'Revue de direction', done: true },
-          ],
-        },
-        note: { title: 'Certification ISO 9001', meta: 'Organisme accrédité', status: 'Obtenue' },
-      },
-    ],
   },
   heroVideo: {
     headline: ['Ce qui fait exceller', 'votre organisation.'],
@@ -487,40 +326,6 @@ const fr: HomeContent = {
       'Des décisions éclairées. Des processus structurés. Des exigences maîtrisées. Des compétences développées. Un leadership affirmé. Une communication qui fait la différence.',
     pause: 'Mettre la vidéo en pause',
     play: 'Relancer la vidéo',
-  },
-  heroImmersive: {
-    question: 'De quoi avez-vous besoin ?',
-    choices: [
-      { label: 'Études stratégiques', href: '/expertises/etudes-strategiques' },
-      { label: 'Formation qualifiante', href: '/formation' },
-      { label: 'Certification', href: '/expertises/certification-et-accreditation' },
-    ],
-  },
-  heroEditorial: {
-    kicker: 'Cabinet de conseil et de formation · Alger',
-    headline: ['Bâtir des organisations', 'qui performent.'],
-    intro:
-      'Diagnostic, structuration, formation et certification : OPEM accompagne les organisations avec méthode, à chaque étape de leur progression.',
-    caption: 'Chaque organisation a sa méthode. Nous vous aidons à construire la vôtre.',
-    badge: 'Beyond Quality · Conseil · Formation · Certification · ',
-    pillarsLabel: 'Nos trois métiers',
-    pillars: [
-      {
-        title: 'Conseil',
-        text: 'Études stratégiques, organisation, communication.',
-        href: '/expertises',
-      },
-      {
-        title: 'Formation',
-        text: 'Des parcours qualifiants, en entreprise ou en session.',
-        href: '/formation',
-      },
-      {
-        title: 'Certification',
-        text: 'Normes ISO et accréditation, de la préparation à l’audit.',
-        href: '/expertises/certification-et-accreditation',
-      },
-    ],
   },
   // Espaces insécables avant « ? » : le point d'interrogation ne passe jamais seul à la ligne.
   heroDiagnostic: {
@@ -787,81 +592,15 @@ const fr: HomeContent = {
       },
     },
   },
-  heroQuestions: {
-    // Espaces insécables avant « ? » : le point d'interrogation ne passe jamais seul à la ligne.
-    questions: [
-      {
-        label: 'Un audit de certification approche ?',
-        href: '/expertises/certification-et-accreditation',
-      },
-      { label: 'Des équipes à former ?', href: '/formation' },
-      {
-        label: 'Une décision importante à préparer ?',
-        href: '/expertises/etudes-strategiques',
-      },
-    ],
-    line: 'OPEM vous accompagne, du diagnostic au résultat.',
-    cta: { label: 'Être rappelé', href: '/contact' },
-  },
-  heroAudiences: {
-    kicker: 'Cabinet de conseil et de formation',
-    headline: ['Nous rendons votre organisation', 'plus performante.'],
-    intro: 'Deux publics, une même exigence de méthode.',
-    blocks: [
-      {
-        id: 'public',
-        icon: 'public',
-        title: 'Vous êtes un organisme public',
-        tags: ['Marchés publics', 'Références publiques', 'Dossier administratif'],
-        text: 'Des offres conformes et des références vérifiables pour vos marchés.',
-        link: { label: 'Voir nos références', href: '/missions/references-clients' },
-      },
-      {
-        id: 'entreprise',
-        icon: 'company',
-        title: 'Vous êtes une entreprise',
-        tags: ['Diagnostic', 'Formation', 'Certification'],
-        text: 'Une démarche claire pour faire progresser votre organisation.',
-        link: { label: 'Découvrir nos expertises', href: '/expertises' },
-      },
-    ],
-  },
-  heroFacts: {
-    links: [
-      { label: 'Nos expertises', href: '/expertises' },
-      { label: 'Nos formations', href: '/formation' },
-    ],
-    label: 'OPEM en bref',
-    // Valeurs d'exemple (mêmes que les chiffres clés provisoires), à confirmer par OPEM.
-    provisional: true,
-    note: 'Chiffres provisoires, à confirmer par OPEM.',
-    items: [
-      { value: '15 ans', label: 'd’expérience' },
-      { value: '+120', label: 'organisations accompagnées' },
-      { value: '+2 000', label: 'personnes formées' },
-    ],
-  },
   commitments: {
     eyebrow: 'Ce qui nous distingue',
-    title: 'Un cabinet qui rend vos équipes autonomes.',
     heading: ['Notre réussite :', 'des équipes qui gagnent en autonomie.'],
-    lead: 'Trois engagements guident chacune de nos missions, du premier échange au dernier livrable.',
-    proofLabel: 'Concrètement',
-    elsewhereLabel: 'Ailleurs, souvent :',
     provisional: true,
     note: 'Engagements proposés, à confirmer par OPEM.',
     items: [
       {
         id: 'chez-vous',
         icon: 'relay',
-        title: 'Vos équipes prennent le relais.',
-        text: 'Méthodes, outils et documents vous sont remis, et vos équipes sont formées pour les faire vivre. Mission après mission, votre organisation gagne en autonomie.',
-        proofs: [
-          'Des livrables remis dans des formats modifiables',
-          'Vos équipes formées à les utiliser',
-          'Aucun outil propriétaire qui vous lie au cabinet',
-        ],
-        elsewhere: 'des livrables que seul le consultant sait faire vivre.',
         short: {
           title: 'Vos équipes prennent le relais',
           text: 'Formées et outillées, elles font vivre la démarche.',
@@ -870,14 +609,6 @@ const fr: HomeContent = {
       {
         id: 'confidentialite',
         icon: 'lock',
-        title: 'Vos données restent confidentielles.',
-        text: 'Ce que vous nous confiez sert votre mission, et elle seule. Documents, chiffres et échanges sont protégés, et rien n’est cité sans votre accord écrit.',
-        proofs: [
-          'Un engagement de confidentialité signé avant tout échange de documents',
-          'Un accès limité aux consultants de la mission',
-          'Aucune référence citée sans votre accord',
-        ],
-        elsewhere: 'des informations sensibles qui circulent sans cadre.',
         short: {
           title: 'Vos données protégées',
           text: 'Rien n’est partagé sans votre accord écrit.',
@@ -886,14 +617,6 @@ const fr: HomeContent = {
       {
         id: 'terrain',
         icon: 'field',
-        title: 'Des spécialistes qui connaissent le terrain.',
-        text: 'Nos consultants et formateurs sont des praticiens : ils connaissent les secteurs qu’ils accompagnent, leurs métiers et leurs contraintes réelles.',
-        proofs: [
-          'Des experts issus de vos secteurs d’activité',
-          'Des solutions adaptées à vos contraintes réelles',
-          'Un réseau de plus de 165 experts mobilisables',
-        ],
-        elsewhere: 'des recommandations théoriques, loin de la réalité du terrain.',
         short: {
           title: 'Des spécialistes du terrain',
           text: 'Ils connaissent vos métiers et vos contraintes.',
@@ -903,13 +626,7 @@ const fr: HomeContent = {
   },
   domains: {
     title: 'Nos domaines',
-    selectLabel: 'Choisir un domaine',
-    previous: 'Domaine précédent',
-    next: 'Domaine suivant',
-    counter: '{current} sur {total}',
     discover: 'Découvrir ce domaine',
-    pause: 'Mettre le défilement en pause',
-    play: 'Relancer le défilement',
     callback: { label: 'Être rappelé', href: '/contact' },
     // Ordre à confirmer par OPEM.
     items: [
@@ -923,9 +640,7 @@ const fr: HomeContent = {
           'Opportunités et faisabilité des projets',
         ],
         href: '/expertises/etudes-strategiques',
-        image: '/images/domaines/etudes-strategiques.jpg',
         illustration: '/images/domaines/illustrations/etudes-strategiques.webp',
-        emblem: '/images/domaines/emblemes/etudes-strategiques.webp',
       },
       {
         id: 'accompagnement',
@@ -933,9 +648,7 @@ const fr: HomeContent = {
         text: 'Nous vous accompagnons, du diagnostic à la mise en œuvre.',
         points: ['Diagnostic', 'Mise en œuvre accompagnée', 'Transfert de compétences'],
         href: '/expertises/accompagnement-des-organisations',
-        image: '/images/domaines/accompagnement.jpg?v=2',
         illustration: '/images/domaines/illustrations/accompagnement.webp',
-        emblem: '/images/domaines/emblemes/accompagnement.webp',
       },
       {
         id: 'formations',
@@ -947,9 +660,7 @@ const fr: HomeContent = {
           'Une fiche détaillée par formation',
         ],
         href: '/formation',
-        image: '/images/domaines/formations.jpg?v=2',
         illustration: '/images/domaines/illustrations/formations.webp',
-        emblem: '/images/domaines/emblemes/formations.webp',
       },
       {
         id: 'coaching',
@@ -957,9 +668,7 @@ const fr: HomeContent = {
         text: 'Un accompagnement individuel ou d’équipe [à confirmer], en toute confidentialité.',
         points: ['Formats [à confirmer]', 'Confidentialité', 'Premier échange discret'],
         href: '/expertises/coaching-professionnel',
-        image: '/images/domaines/coaching.jpg',
         illustration: '/images/domaines/illustrations/coaching.webp',
-        emblem: '/images/domaines/emblemes/coaching.webp',
       },
       {
         id: 'communication',
@@ -967,9 +676,7 @@ const fr: HomeContent = {
         text: 'Nous construisons votre image et vos messages, en interne comme auprès de vos partenaires.',
         points: ['Image et identité', 'Communication interne', 'Relations institutionnelles'],
         href: '/expertises/communication-d-entreprise',
-        image: '/images/domaines/communication.jpg',
         illustration: '/images/domaines/illustrations/communication.webp',
-        emblem: '/images/domaines/emblemes/communication.webp',
       },
       {
         id: 'certification',
@@ -981,9 +688,7 @@ const fr: HomeContent = {
           'Accompagnement jusqu’à l’audit [à confirmer]',
         ],
         href: '/expertises/certification-et-accreditation',
-        image: '/images/domaines/certification.jpg',
         illustration: '/images/domaines/illustrations/certification.webp',
-        emblem: '/images/domaines/emblemes/certification.webp',
       },
     ],
   },
@@ -1007,8 +712,6 @@ const fr: HomeContent = {
     filtersLabel: 'Filtrer les publications',
     filters: { all: 'Tout', eclairage: 'Éclairages', actualite: 'Actualités' },
     readMore: 'Lire l’article',
-    previous: 'Publications précédentes',
-    next: 'Publications suivantes',
     provisional: true,
     note: 'Publications d’exemple, à remplacer par les articles et actualités d’OPEM.',
     links: [
@@ -1084,11 +787,6 @@ const fr: HomeContent = {
       },
     ],
   },
-  markers: [
-    { icon: 'domains', label: '6 domaines d’expertise' },
-    { icon: 'sectors', label: 'Public et privé' },
-    { icon: 'map', label: 'Partout en Algérie' },
-  ],
   needs: {
     eyebrow: 'Nos expertises',
     title: 'Quel est votre besoin ?',
@@ -1390,62 +1088,6 @@ const ar: HomeContent = {
   title: 'OPEM — الاستشارة والتكوين في الجزائر',
   hero: {
     eyebrow: 'مكتب استشارات وتكوين',
-    title: 'الهيكلة، التكوين، الإشهاد: نرتقي بمؤسستكم.',
-    subtitle: 'ترافق OPEM المؤسسات، من التشخيص الاستراتيجي إلى الحصول على الشهادات.',
-    primary: { label: 'اطلب عرض سعر', href: '/contact' },
-    secondary: { label: 'اكتشف التكوينات', href: '/formation' },
-  },
-  heroCycle: {
-    headline: ['نرتقي', 'بأداء مؤسستكم.'],
-    intro: 'الهيكلة، التكوين، الإشهاد: ترافق OPEM المؤسسات، من التشخيص إلى الحصول على الشهادة.',
-    label: 'منهجيتنا في ثلاث مراحل',
-    step: 'المرحلة',
-    pause: 'إيقاف الحركة مؤقتًا',
-    play: 'استئناف الحركة',
-    phases: [
-      {
-        id: 'diagnostiquer',
-        tab: 'التشخيص',
-        caption: 'نقيس قبل أن نتصرف',
-        checklist: {
-          title: 'تشخيص المؤسسة',
-          items: [
-            { label: 'الحوكمة', done: true },
-            { label: 'العمليات الرئيسية', done: true },
-            { label: 'الكفاءات', done: false },
-          ],
-        },
-        note: { title: 'تقرير التشخيص', meta: 'الملاحظات والأولويات', status: 'تم التسليم' },
-      },
-      {
-        id: 'structurer',
-        tab: 'الهيكلة والتكوين',
-        caption: 'نبني مع فرقكم',
-        checklist: {
-          title: 'خطة العمل',
-          items: [
-            { label: 'إعداد الإجراءات', done: true },
-            { label: 'مؤشرات القيادة', done: true },
-            { label: 'تكوين الفرق', done: false },
-          ],
-        },
-        note: { title: 'التكوين التأهيلي', meta: 'إدارة الجودة', status: 'دورة مبرمجة' },
-      },
-      {
-        id: 'certifier',
-        tab: 'الإشهاد',
-        caption: 'نضمن الاعتراف بجهودكم',
-        checklist: {
-          title: 'التحضير للتدقيق',
-          items: [
-            { label: 'النظام الوثائقي', done: true },
-            { label: 'تدقيق تجريبي', done: true },
-            { label: 'مراجعة الإدارة', done: true },
-          ],
-        },
-        note: { title: 'شهادة ISO 9001', meta: 'هيئة معتمدة', status: 'تم الحصول عليها' },
-      },
-    ],
   },
   heroVideo: {
     headline: ['ما يجعل مؤسستكم', 'تتميّز.'],
@@ -1453,41 +1095,6 @@ const ar: HomeContent = {
       'قرارات مستنيرة. مسارات منظّمة. متطلبات متحكَّم فيها. كفاءات مطوَّرة. قيادة راسخة. اتصال يصنع الفرق.',
     pause: 'إيقاف الفيديو مؤقتًا',
     play: 'استئناف الفيديو',
-  },
-  heroImmersive: {
-    question: 'ما الذي تحتاجونه؟',
-    choices: [
-      { label: 'الدراسات الاستراتيجية', href: '/expertises/etudes-strategiques' },
-      { label: 'التكوين التأهيلي', href: '/formation' },
-      { label: 'الإشهاد', href: '/expertises/certification-et-accreditation' },
-    ],
-  },
-  heroEditorial: {
-    kicker: 'مكتب استشارات وتكوين · الجزائر العاصمة',
-    headline: ['نبني مؤسسات', 'عالية الأداء.'],
-    intro:
-      'التشخيص، الهيكلة، التكوين والإشهاد: ترافق OPEM المؤسسات بمنهجية، في كل مرحلة من مراحل تطورها.',
-    caption: 'لكل مؤسسة منهجها. نساعدكم على بناء منهجكم.',
-    // Signature de marque (en latin, comme dans le logo) : l'arabe se lit mal sur un petit cercle.
-    badge: 'Beyond Quality · OPEM · Beyond Quality · OPEM · ',
-    pillarsLabel: 'مهننا الثلاث',
-    pillars: [
-      {
-        title: 'الاستشارة',
-        text: 'الدراسات الاستراتيجية، التنظيم، الاتصال.',
-        href: '/expertises',
-      },
-      {
-        title: 'التكوين',
-        text: 'مسارات تأهيلية، داخل المؤسسة أو في دورات.',
-        href: '/formation',
-      },
-      {
-        title: 'الإشهاد',
-        text: 'معايير ISO والاعتماد، من التحضير إلى التدقيق.',
-        href: '/expertises/certification-et-accreditation',
-      },
-    ],
   },
   // Mêmes identifiants qu'en français : seuls les libellés changent.
   heroDiagnostic: {
@@ -1742,112 +1349,32 @@ const ar: HomeContent = {
       },
     },
   },
-  heroQuestions: {
-    questions: [
-      { label: 'تدقيق الإشهاد يقترب؟', href: '/expertises/certification-et-accreditation' },
-      { label: 'فرق تحتاج إلى تكوين؟', href: '/formation' },
-      { label: 'قرار مهم تحضّرون له؟', href: '/expertises/etudes-strategiques' },
-    ],
-    line: 'ترافقكم OPEM، من التشخيص إلى النتيجة.',
-    cta: { label: 'اطلب مكالمة', href: '/contact' },
-  },
-  heroAudiences: {
-    kicker: 'مكتب استشارات وتكوين',
-    headline: ['نجعل مؤسستكم', 'أكثر أداءً.'],
-    intro: 'فئتان، ونفس الصرامة في المنهجية.',
-    blocks: [
-      {
-        id: 'public',
-        icon: 'public',
-        title: 'أنتم هيئة عمومية',
-        tags: ['الصفقات العمومية', 'المراجع العمومية', 'الملف الإداري'],
-        text: 'عروض مطابقة ومراجع موثّقة لصفقاتكم.',
-        link: { label: 'اطّلعوا على مراجعنا', href: '/missions/references-clients' },
-      },
-      {
-        id: 'entreprise',
-        icon: 'company',
-        title: 'أنتم مؤسسة',
-        tags: ['التشخيص', 'التكوين', 'الإشهاد'],
-        text: 'منهجية واضحة للارتقاء بمؤسستكم.',
-        link: { label: 'اكتشفوا خبراتنا', href: '/expertises' },
-      },
-    ],
-  },
-  heroFacts: {
-    links: [
-      { label: 'خبراتنا', href: '/expertises' },
-      { label: 'تكويناتنا', href: '/formation' },
-    ],
-    label: 'OPEM باختصار',
-    provisional: true,
-    note: 'أرقام مؤقتة في انتظار مصادقة OPEM.',
-    items: [
-      { value: '15 سنة', label: 'من الخبرة' },
-      { value: '+120', label: 'مؤسسة مرافَقة' },
-      { value: '+2000', label: 'شخص تم تكوينه' },
-    ],
-  },
   commitments: {
     eyebrow: 'ما يميّزنا',
-    title: 'مكتب يجعل فرقكم مستقلّة.',
     heading: ['نجاحنا:', 'فرق تكتسب استقلاليتها.'],
-    lead: 'ثلاثة التزامات توجّه كل مهمة من مهامنا، من أول لقاء إلى آخر وثيقة.',
-    proofLabel: 'عمليًا',
-    elsewhereLabel: 'في أماكن أخرى غالبًا:',
     provisional: true,
     note: 'التزامات مقترحة، في انتظار تأكيد OPEM.',
     items: [
       {
         id: 'chez-vous',
         icon: 'relay',
-        title: 'فرقكم تتسلّم المشعل.',
-        text: 'نسلّمكم المناهج والأدوات والوثائق، ونكوّن فرقكم على استعمالها. مهمة بعد مهمة، تكتسب مؤسستكم استقلاليتها.',
-        proofs: [
-          'وثائق مسلَّمة بصيغ قابلة للتعديل',
-          'فرقكم مكوَّنة على استعمالها',
-          'لا أدوات خاصة تربطكم بالمكتب',
-        ],
-        elsewhere: 'وثائق لا يعرف تشغيلها إلا المستشار.',
         short: { title: 'فرقكم تتسلّم المشعل', text: 'مكوَّنة ومجهَّزة، تُبقي المقاربة حيّة.' },
       },
       {
         id: 'confidentialite',
         icon: 'lock',
-        title: 'معطياتكم تبقى سرّية.',
-        text: 'ما تأتمنوننا عليه يخدم مهمتكم وحدها. الوثائق والأرقام والمبادلات محمية، ولا نذكر شيئًا دون موافقتكم الكتابية.',
-        proofs: [
-          'التزام بالسرّية يُوقَّع قبل أي تبادل للوثائق',
-          'اطّلاع مقتصر على مستشاري المهمة',
-          'لا نذكر أي مرجع دون موافقتكم',
-        ],
-        elsewhere: 'معلومات حسّاسة تتداول دون إطار.',
         short: { title: 'معطياتكم محمية', text: 'لا شيء يُشارَك دون موافقتكم الكتابية.' },
       },
       {
         id: 'terrain',
         icon: 'field',
-        title: 'متخصصون يعرفون الميدان.',
-        text: 'مستشارونا ومكوّنونا ممارسون: يعرفون القطاعات التي يرافقونها، ومهنها وقيودها الفعلية.',
-        proofs: [
-          'خبراء من قطاعات نشاطكم',
-          'حلول مكيّفة مع قيودكم الفعلية',
-          'شبكة تضم أكثر من 165 خبيرًا يمكن تجنيدهم',
-        ],
-        elsewhere: 'توصيات نظرية بعيدة عن واقع الميدان.',
         short: { title: 'متخصصون في الميدان', text: 'يعرفون مهنكم وقيودكم.' },
       },
     ],
   },
   domains: {
     title: 'مجالاتنا',
-    selectLabel: 'اختيار مجال',
-    previous: 'المجال السابق',
-    next: 'المجال التالي',
-    counter: '{current} من {total}',
     discover: 'اكتشفوا هذا المجال',
-    pause: 'إيقاف التمرير مؤقتًا',
-    play: 'استئناف التمرير',
     callback: { label: 'اطلب مكالمة', href: '/contact' },
     items: [
       {
@@ -1860,9 +1387,7 @@ const ar: HomeContent = {
           'فرص المشاريع وجدواها',
         ],
         href: '/expertises/etudes-strategiques',
-        image: '/images/domaines/etudes-strategiques.jpg',
         illustration: '/images/domaines/illustrations/etudes-strategiques.webp',
-        emblem: '/images/domaines/emblemes/etudes-strategiques.webp',
       },
       {
         id: 'accompagnement',
@@ -1870,9 +1395,7 @@ const ar: HomeContent = {
         text: 'نرافقكم من التشخيص إلى التنفيذ.',
         points: ['التشخيص', 'تنفيذ مرافَق', 'نقل الكفاءات'],
         href: '/expertises/accompagnement-des-organisations',
-        image: '/images/domaines/accompagnement.jpg?v=2',
         illustration: '/images/domaines/illustrations/accompagnement.webp',
-        emblem: '/images/domaines/emblemes/accompagnement.webp',
       },
       {
         id: 'formations',
@@ -1884,9 +1407,7 @@ const ar: HomeContent = {
           'بطاقة مفصّلة لكل تكوين',
         ],
         href: '/formation',
-        image: '/images/domaines/formations.jpg?v=2',
         illustration: '/images/domaines/illustrations/formations.webp',
-        emblem: '/images/domaines/emblemes/formations.webp',
       },
       {
         id: 'coaching',
@@ -1894,9 +1415,7 @@ const ar: HomeContent = {
         text: 'مرافقة فردية أو جماعية [في انتظار التأكيد]، في سرية تامة.',
         points: ['الصيغ [في انتظار التأكيد]', 'السرية', 'لقاء أول بكل تكتّم'],
         href: '/expertises/coaching-professionnel',
-        image: '/images/domaines/coaching.jpg',
         illustration: '/images/domaines/illustrations/coaching.webp',
-        emblem: '/images/domaines/emblemes/coaching.webp',
       },
       {
         id: 'communication',
@@ -1904,9 +1423,7 @@ const ar: HomeContent = {
         text: 'نبني صورتكم ورسائلكم، داخل المؤسسة ولدى شركائكم.',
         points: ['الصورة والهوية', 'الاتصال الداخلي', 'العلاقات المؤسساتية'],
         href: '/expertises/communication-d-entreprise',
-        image: '/images/domaines/communication.jpg',
         illustration: '/images/domaines/illustrations/communication.webp',
-        emblem: '/images/domaines/emblemes/communication.webp',
       },
       {
         id: 'certification',
@@ -1918,9 +1435,7 @@ const ar: HomeContent = {
           'المرافقة حتى التدقيق [في انتظار التأكيد]',
         ],
         href: '/expertises/certification-et-accreditation',
-        image: '/images/domaines/certification.jpg',
         illustration: '/images/domaines/illustrations/certification.webp',
-        emblem: '/images/domaines/emblemes/certification.webp',
       },
     ],
   },
@@ -1944,8 +1459,6 @@ const ar: HomeContent = {
     filtersLabel: 'تصفية المنشورات',
     filters: { all: 'الكل', eclairage: 'إضاءات', actualite: 'أخبار' },
     readMore: 'اقرأ المقال',
-    previous: 'المنشورات السابقة',
-    next: 'المنشورات التالية',
     provisional: true,
     note: 'منشورات على سبيل المثال، تُستبدل بمقالات وأخبار OPEM.',
     links: [
@@ -2018,11 +1531,6 @@ const ar: HomeContent = {
       },
     ],
   },
-  markers: [
-    { icon: 'domains', label: '6 مجالات خبرة' },
-    { icon: 'sectors', label: 'القطاعان العام والخاص' },
-    { icon: 'map', label: 'عبر كامل التراب الوطني' },
-  ],
   needs: {
     eyebrow: 'خبراتنا',
     title: 'ما هي حاجتكم؟',
