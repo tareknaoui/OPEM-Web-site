@@ -29,9 +29,30 @@
   justify-self: start;
 }
 
-.title {
+.heading {
   grid-area: title;
+}
+
+/* Sur bleu nuit : bleu 30 %, comme les autres surtitres sur fond foncé. */
+.eyebrow {
+  margin: 0 0 var(--space-4);
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title {
+  max-width: 22em;
   margin: 0;
+  text-wrap: balance;
   color: var(--opem-white);
   font-family: var(--font-heading);
   font-size: clamp(1.875rem, 1.3rem + 2vw, 3rem);

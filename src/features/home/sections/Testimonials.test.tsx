@@ -1,48 +1,50 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { homeContent } from '../content';
 import { Testimonials } from './Testimonials';
 
+const { testimonials } = homeContent.fr;
+
 function renderSection() {
-  const Page = () => <Testimonials testimonials={homeContent.fr.testimonials} />;
+  const Page = () => <Testimonials testimonials={testimonials} />;
   const router = createMemoryRouter([{ path: '*', Component: Page }]);
   return render(<RouterProvider router={router} />);
 }
 
 describe('Section « Témoignages »', () => {
-  it('affiche les six témoignages dans l’ordre des domaines, le premier ouvert', () => {
+  it('raconte l’étude de cas en trois temps, dans l’ordre', () => {
     renderSection();
-    const tabs = screen.getAllByRole('tab');
-    expect(tabs).toHaveLength(6);
-    [
-      'Études stratégiques',
-      'Accompagnement',
-      'Formations',
-      'Coaching',
-      'Communication',
-      'Certification',
-    ].forEach((domain, index) => expect(tabs[index]).toHaveTextContent(domain));
-    expect(screen.getByRole('tab', { selected: true })).toHaveTextContent('Études stratégiques');
-    expect(screen.getByRole('blockquote')).toHaveTextContent(/Le diagnostic a mis des mots/);
+    expect(screen.getByRole('heading', { level: 3, name: /audit approuvé/ })).toBeInTheDocument();
+    const steps = within(screen.getAllByRole('list')[0]!).getAllByRole('listitem');
+    expect(steps).toHaveLength(3);
+    ['L’audit', 'Le verdict', 'La confiance'].forEach((label, index) =>
+      expect(steps[index]).toHaveTextContent(label),
+    );
+    expect(screen.getByRole('link', { name: /Lire l’étude de cas/ })).toHaveAttribute(
+      'href',
+      '/missions',
+    );
   });
 
-  it('change de témoignage au clic, aux flèches et au clavier', () => {
+  it('affiche les 3 recommandations, sans nom de personne, chacune avec son lien', () => {
     renderSection();
-    fireEvent.click(screen.getByRole('tab', { name: /Formations/ }));
-    expect(screen.getByRole('blockquote')).toHaveTextContent(/Les formations partaient/);
-    fireEvent.click(screen.getByRole('button', { name: 'Témoignage suivant' }));
-    expect(screen.getByRole('tab', { selected: true })).toHaveTextContent('Coaching');
-    expect(screen.getByText('Témoignage 4 sur 6')).toBeInTheDocument();
-    fireEvent.keyDown(screen.getByRole('tab', { selected: true }), { key: 'End' });
-    expect(screen.getByRole('tab', { name: /Certification/ })).toHaveFocus();
-    expect(screen.getByRole('blockquote')).toHaveTextContent(/préparés à l’audit/);
-    fireEvent.keyDown(screen.getByRole('tab', { selected: true }), { key: 'ArrowRight' });
-    expect(screen.getByRole('tab', { selected: true })).toHaveTextContent('Études stratégiques');
+    expect(screen.getAllByRole('blockquote')).toHaveLength(3);
+    expect(screen.getByText(/Directeur général d’une entreprise publique, 2020/)).toBeVisible();
+    expect(screen.getAllByRole('link', { name: /Lire le témoignage/ })).toHaveLength(3);
   });
 
-  it('signale que les témoignages sont des exemples', () => {
+  it('présente les institutions qui confient leurs études', () => {
     renderSection();
-    expect(screen.getByText(/Témoignages d’exemple/)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 3, name: testimonials.studies.title }),
+    ).toBeInTheDocument();
+    testimonials.studies.ministries.items.forEach((item) =>
+      expect(screen.getByText(item)).toBeInTheDocument(),
+    );
+    expect(screen.getByRole('link', { name: /Découvrir nos études/ })).toHaveAttribute(
+      'href',
+      '/expertises/etudes-strategiques',
+    );
   });
 });

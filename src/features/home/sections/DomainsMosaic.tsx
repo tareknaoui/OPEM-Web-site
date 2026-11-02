@@ -29,9 +29,14 @@ export function DomainsMosaic({ domains }: { domains: HomeContent['domains'] }) 
     <section className={styles.section} aria-labelledby="domains-title">
       {/* Mobile : titre, domaines, puis le bouton ; ordinateur : bouton à côté du titre. */}
       <div className={cx('container', styles.layout)}>
-        <h2 id="domains-title" className={styles.title} data-reveal="title">
-          {domains.title}
-        </h2>
+        <div className={styles.heading}>
+          <p className={styles.eyebrow} data-reveal>
+            {domains.eyebrow}
+          </p>
+          <h2 id="domains-title" className={styles.title} data-reveal="title">
+            {domains.title}
+          </h2>
+        </div>
 
         <ul className={gridClass} data-reveal-stagger>
           {domains.items.map((item, index) => (
@@ -67,7 +72,7 @@ export function DomainsMosaic({ domains }: { domains: HomeContent['domains'] }) 
                   ))}
                 </ul>
                 <span className={styles.discover} aria-hidden="true">
-                  {domains.discover}
+                  {item.discover ?? domains.discover}
                   <ArrowRightIcon size={16} className="arrow" />
                 </span>
               </div>
@@ -75,8 +80,8 @@ export function DomainsMosaic({ domains }: { domains: HomeContent['domains'] }) 
           ))}
         </ul>
 
-        <Link to={domains.callback.href} className={cx('btn btn-light', styles.cta)} data-reveal>
-          {domains.callback.label}
+        <Link to={domains.all.href} className={cx('btn btn-light', styles.cta)} data-reveal>
+          {domains.all.label}
           <ArrowRightIcon size={18} className="arrow" />
         </Link>
       </div>

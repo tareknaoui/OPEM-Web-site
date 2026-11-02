@@ -128,18 +128,23 @@ config/company.ts ──> Footer, bandeau d'appel, pages contact
 
 Ordre d'affichage (`HomePage.tsx`). Clé = entrée correspondante dans `content.ts`.
 
-| #   | Section                        | Composant                           | Clé `content.ts`                              | Comportement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sur téléphone                                                                                |
-| --- | ------------------------------ | ----------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| 1   | Accroche « Autodiagnostic 7S » | `HeroDiagnostic` + `DiagnosticCard` | `hero`, `heroVideo` (titre), `heroDiagnostic` | Éditorial : bleu nuit à gauche, le métier d'abord (titre, texte, 4 chiffres clés animés) ; vidéo de l'équipe à droite jusqu'au bord ; en bas, bandeau blanc « Par où commencer ? » de l'autodiagnostic 7S. Voir ci-dessous                                                                                                                                                                                                                                                                                                         | Panneau sous le texte                                                                        |
-| 2   | Ce qui nous distingue          | `CommitmentsEssential`              | `commitments` (`heading`, `items[].short`)    | Bande bleu très clair, très grand titre centré sur deux lignes (bleu nuit puis bleu OPEM), 3 engagements : grand pictogramme (vert au survol), quelques mots, une phrase. Version détaillée en cartes (`Commitments`, `?engagements=cartes`) gardée dans le comparateur                                                                                                                                                                                                                                                            | Une ligne par engagement, pictogramme à gauche                                               |
-| 3   | Nos domaines                   | `DomainsMosaic` (`layout="rangee"`) | `domains`                                     | Les 6 domaines visibles d'un coup, sans attente, sur bleu OPEM : sur ordinateur, deux lignes de 3 cartes égales (illustration du domaine dans un passe-partout blanc, titre, 3 lignes, « Découvrir ») ; avec 5 domaines, une seule ligne de 5. La grille s'adapte au nombre de domaines. Cartes entièrement cliquables, illustration qui zoome et carte qui se soulève au survol. Illustrations : `public/images/domaines/illustrations/` (WebP 1376 et 800 px, fond ramené au bleu nuit), champ `illustration` de `domains.items` | Une carte par domaine (illustration, titre, 2 lignes), bouton « Être rappelé » sous la liste |
-| 4   | Bandeau IA                     | `AiBand`                            | `ai`                                          | Sous les domaines, même bleu OPEM : panneau arrondi à fond blanc translucide. « Intelligence artificielle appliquée » (étoile qui scintille), grand titre, texte, bouton « Découvrir l'approche » ; à droite les 3 temps (Diagnostic, Formation, Intégration) dans un cadre, parcourus l'un après l'autre par un filet lumineux                                                                                                                                                                                                    | Texte puis cadre des 3 temps                                                                 |
-| 5   | Prochaines sessions            | `UpcomingSessions`                  | `trainings`                                   | Fond bleu très clair (transition entre le bleu des domaines et le blanc des éclairages). Une carte-calendrier par session : grande date, compte à rebours calculé (« Dans 19 jours », « Demain »), thème, titre, format, « S'inscrire » (`/contact?formation=<id>`). Sessions passées masquées d'elles-mêmes ; message d'attente si aucune. 4 colonnes (ordinateur), 2 (tablette)                                                                                                                                                  | Rangée de cartes qu'on fait glisser                                                          |
-| 6   | Éclairages et actualités       | `Insights`                          | `insights`                                    | Filtres Tout / Éclairages / Actualités, une publication à la une, 2 compactes, cartes à image                                                                                                                                                                                                                                                                                                                                                                                                                                      | Rangée de cartes qu'on fait glisser (scroll-snap)                                            |
-| 7   | Témoignages                    | `Testimonials`                      | `testimonials`                                | Citation sur carte blanche, liste à côté, flèches et compteur, pas de défilement auto                                                                                                                                                                                                                                                                                                                                                                                                                                              | Pastilles défilantes                                                                         |
-| 8   | Questions fréquentes           | `Faq`                               | `faq`                                         | Accordéon WAI-ARIA (plusieurs ouvertes), encadré d'aide collant à gauche                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Encadré d'aide après les questions                                                           |
+| #   | Section                        | Composant                           | Clé `content.ts`                              | Comportement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sur téléphone                                                                           |
+| --- | ------------------------------ | ----------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 1   | Accroche « Autodiagnostic 7S » | `HeroDiagnostic` + `DiagnosticCard` | `hero`, `heroVideo` (titre), `heroDiagnostic` | Éditorial : bleu nuit à gauche, le métier d'abord (titre, texte, 4 chiffres clés animés) ; vidéo de l'équipe à droite jusqu'au bord ; en bas, bandeau blanc « Par où commencer ? » de l'autodiagnostic 7S. Voir ci-dessous                                                                                                                                                                                                                                                                                                         | Panneau sous le texte                                                                   |
+| 2   | Ce qui nous distingue          | `CommitmentsEssential`              | `commitments` (`heading`, `items`)            | Bande bleu très clair, très grand titre centré sur deux lignes (bleu nuit puis bleu OPEM), « Pourquoi choisir OPEM » : 3 engagements (textes d'OPEM), grand pictogramme (vert au survol), titre, court texte                                                                                                                                                                                                                                                                                                                       | Une ligne par engagement, pictogramme à gauche                                          |
+| 3   | Nos expertises (domaines)      | `DomainsMosaic` (`layout="rangee"`) | `domains`                                     | Les 6 domaines visibles d'un coup, sans attente, sur bleu OPEM : sur ordinateur, deux lignes de 3 cartes égales (illustration du domaine dans un passe-partout blanc, titre, 3 lignes, « Découvrir ») ; avec 5 domaines, une seule ligne de 5. La grille s'adapte au nombre de domaines. Cartes entièrement cliquables, illustration qui zoome et carte qui se soulève au survol. Illustrations : `public/images/domaines/illustrations/` (WebP 1376 et 800 px, fond ramené au bleu nuit), champ `illustration` de `domains.items` | Une carte par domaine (illustration, titre, 2 lignes), bouton « Toutes nos expertises » |
+| 4   | Bandeau IA                     | `AiBand`                            | `ai`                                          | Sous les domaines, même bleu OPEM : panneau arrondi à fond blanc translucide. « Intelligence artificielle appliquée » (étoile qui scintille), grand titre, texte, bouton « Découvrir l'approche » ; à droite les 3 temps (Diagnostic, Formation, Intégration) dans un cadre, parcourus l'un après l'autre par un filet lumineux                                                                                                                                                                                                    | Texte puis cadre des 3 temps                                                            |
+| 5   | Prochaines sessions            | `UpcomingSessions`                  | `trainings`                                   | Fond bleu très clair (transition entre le bleu des domaines et le blanc des témoignages). Une carte-calendrier par session : grande date, compte à rebours calculé (« Dans 19 jours », « Demain »), thème, titre, format, « S'inscrire » (`/contact?formation=<id>`). Sessions passées masquées d'elles-mêmes ; message d'attente si aucune. 4 colonnes (ordinateur), 2 (tablette)                                                                                                                                                 | Rangée de cartes qu'on fait glisser                                                     |
+| 6   | Témoignages                    | `Testimonials`                      | `testimonials`                                | Fond blanc : étude de cas en 3 temps. Bleu très clair : recommandations. Bleu nuit : institutions qui confient leurs études (maquette validée par OPEM)                                                                                                                                                                                                                                                                                                                                                                            | Une colonne                                                                             |
+| 7   | Éclairages                     | `Insights`                          | `insights`                                    | 3 articles en cartes (filet de couleur), question, encadré bleu nuit « Actualité » (maquette validée par OPEM)                                                                                                                                                                                                                                                                                                                                                                                                                     | Une colonne                                                                             |
+| 8   | Questions fréquentes           | `Faq`                               | `faq`                                         | Sur bleu nuit : filtres par thème, 10 questions numérotées, réponse choisie sur panneau blanc (maquette validée par OPEM)                                                                                                                                                                                                                                                                                                                                                                                                          | Réponse insérée sous la question choisie                                                |
 
-**Autodiagnostic 7S.** Fondé sur le modèle des 7S de McKinsey : une question par levier
+**Autodiagnostic 7S.** Fondé sur le modèle des 7S de McKinsey : un écran d'accueil (titre, bouton,
+carte animée des 7 leviers `SevenSMap`), 3 questions sur l'organisation, puis une question par
+levier, avec en fond l'illustration du levier montré (`LeverScenes`, fichiers dans
+`public/images/diagnostic/`, un nom par levier + une version `-1100`). Stratégie, structure,
+systèmes et valeurs ont leur image propre ; style, personnel, compétences et organisation
+reprennent pour l'instant une illustration des domaines : remplacer le fichier suffit
 (stratégie, structure, systèmes, valeurs partagées, style, personnel, compétences). Questions,
 réponses, leviers, domaines associés, profils et libellés : `heroDiagnostic` dans `content.ts`
 (mêmes identifiants en FR et AR). Sans IA : tout est calculé dans le navigateur
@@ -153,46 +158,71 @@ réponses, leviers, domaines associés, profils et libellés : `heroDiagnostic` 
    commencer ? » (`sections/DiagnosticCard.tsx`) : petit radar des 7S en signature
    (`sections/SevenSRadar.tsx`, version sans noms), une phrase, le bouton « Faire le test ».
 2. **Plein écran** (`sections/DiagnosticExperience.tsx`, `<dialog>` natif sur bleu nuit) :
-   d'abord 3 questions sur l'organisation (`heroDiagnostic.context` : secteur, effectif,
-   fonction ; radar en attente), puis une question par levier : très grand numéro ambre
-   (« 03/07 »), puis, après un filet, la famille du levier (« Le cadre » ou « L'humain ») et
-   son nom, réponses au clic ou au clavier (A à D, 1 à 4), 3 + 7 segments d'avancement. À côté,
-   le radar se déforme à chaque réponse (`hooks/useTweened.ts`), le levier en cours en ambre.
-3. **Profil** : secteur et effectif rappelés, nom du profil et une phrase, pourcentage qui
-   défile (compteur CSS animé par `@property`), niveau de maturité sur une échelle de 4, barres
-   « cadre » et « humain », « Notre lecture » (`heroDiagnostic.analysis`, quelques phrases
-   composées selon les réponses), leviers à renforcer (ondes sur le radar), domaines par où
-   commencer ; le radar pousse depuis le centre face à « l'organisation alignée ».
+   d'abord 3 questions sur l'organisation (`heroDiagnostic.context` ; radar en attente). La
+   question 1 se fait en deux temps, le statut puis le secteur (`secondStep` : même numéro,
+   rappel du statut et lien « Modifier », secteurs rangés par famille), puis la taille (catégorie d'entreprise pour l'EPE et l'entreprise privée, `companyStatuses`) et la
+   fonction. Ensuite une question par levier : très grand numéro ambre
+   (« 03/07 »), puis, après un filet, « Étape 2 · Levier n sur 7 » et l'intitulé du levier
+   (`questions[].title`), l'aide commune (`leverHelp`), réponses au clic ou au clavier (A à D,
+   1 à 4). À côté, le radar se déforme à chaque réponse (`hooks/useTweened.ts`), le levier en
+   cours en ambre. En haut : les trois étapes (`steps`), 3 + 7 segments et « Question n sur
+   10 ». Pas de retour sur la première question. « Quitter » ramène à l'accueil (réponses
+   effacées), « Fermer » (accueil) ferme le plein écran.
+3. **Fin** : « Merci, vos dix réponses sont enregistrées. », bouton « Voir mon résultat »
+   (`heroDiagnostic.done`).
+4. **Résultat** (`sections/DiagnosticResult.tsx`, textes d'OPEM), seul à l'écran, en 7 blocs :
+   votre profil (statut, secteur et taille rappelés) ; votre empreinte (radar, niveau global,
+   barres cadre et humain et phrase d'équilibre) ; points d'appui (constat) ; points de fragilité
+   (constat et « ce que cela vous coûte ») ; commencer par (première action, indicateur à suivre,
+   phrases de taille, de statut et de secteur, domaine OPEM, rappel du rapport) ; votre rôle
+   (phrase selon la fonction) ; pour aller plus loin (formulaire du rapport détaillé,
+   « Échanger avec un consultant », « Refaire le test », « Revoir mes réponses »). Textes :
+   `heroDiagnostic.levers` (par levier et par note), `profiles`, `analysis`, `modulations`.
 
 Calcul :
 
-- chaque réponse vaut 0 à 3 points selon son rang (réponses rangées de la moins à la plus
-  avancée) ; maturité globale = part du total ;
-- profil, dans cet ordre : **alignée** (plus des 2/3, aucun levier faible), **en fondation**
-  (1/3 au plus), **navire sans cap** (stratégie à 0 ou 1, tout le reste à 2 ou 3), **belle
-  mécanique** (stratégie, structure et systèmes nettement devant les 4 leviers humains), **talent
-  sans charpente** (l'inverse), sinon **en mouvement** ;
-- niveau : un par quart du total (initial, en structuration, maîtrisé, avancé) ;
-- cadre = stratégie, structure, systèmes ; humain = les 4 autres ; l'un « devance » l'autre à
-  15 points d'écart ou plus ;
-- notre lecture : la phrase du niveau, celle de l'équilibre cadre / humain, le point d'appui
-  (premier levier noté 2 ou 3 au plus haut) et une phrase selon l'effectif ;
-- leviers à renforcer : 0 ou 1 point, du plus faible au moins faible ;
-- par où commencer : les domaines OPEM de ces leviers (2 au plus, sans doublon) ; s'il n'y en a
-  aucun, celui du levier le moins avancé. Stratégie → Études stratégiques ; structure et
+Règles d'OPEM (`sections/diagnosticScore.ts`), sans IA : les mêmes réponses donnent toujours
+le même résultat.
+
+- note d'un levier : la 1re réponse vaut 0, la 4e vaut 3 ; total des 7 leviers de 0 à 21 ;
+  maturité affichée = part du total ;
+- cadre = moyenne des leviers 1 à 3 ; humain = moyenne des leviers 4 à 7 ; dans « Notre
+  lecture », l'un « devance » l'autre à 15 points d'écart ou plus ;
+- profil, la première règle vérifiée l'emporte : **alignée** (tous les leviers à 2 ou plus,
+  moyenne d'au moins 2,5), **navire sans cap** (levier 1 à 0 ou 1, moyenne des six autres d'au
+  moins 1,5), **belle mécanique** (cadre d'au moins 1,5, devant l'humain d'au moins 0,75),
+  **talent sans charpente** (l'inverse), **en mouvement** (moyenne d'au moins 1,5), sinon **en
+  fondation** ;
+- niveau global sur le total : 0 à 5 initial, 6 à 10 en structuration, 11 à 16 maîtrisé, 17 à
+  21 avancé ;
+- points d'appui : les leviers notés 3, à défaut 2, deux au plus, dans l'ordre des leviers ; un
+  seul levier noté 3 est complété par le premier noté 2 ; aucun à 2 : un texte unique ;
+- points de fragilité (« À renforcer ») : les deux plus faibles parmi les leviers notés 0 ou 1 ;
+  à égalité, l'ordre de priorité cap, organisation, processus, compétences, style, équipes,
+  culture ; aucun sous 2 : un texte unique ;
+- notre lecture : la phrase du niveau, celle de l'équilibre cadre / humain, les points d'appui
+  et une phrase selon la taille ;
+- commencer par : le premier point de fragilité, à défaut le levier le plus faible (même ordre) ;
+  son domaine OPEM est proposé. Stratégie → Études stratégiques ; structure et
   personnel → Accompagnement des organisations ; systèmes → Certification ; valeurs partagées →
   Communication d'entreprise ; style → Coaching professionnel ; compétences → Formations ;
-- le bouton « Être rappelé avec ce résultat » mène à
-  `/contact?source=autodiagnostic&secteur=…&effectif=…&fonction=…&strategie=…&…&profil=…&maturite=52` : le futur formulaire
-  pourra lire ces paramètres pour pré-remplir la demande.
+- « Échanger avec un consultant » mène à
+  `/contact?source=autodiagnostic&statut=…&secteur=…&effectif=…&fonction=…&strategie=…&…&profil=…&maturite=52` : le futur formulaire
+  pourra lire ces paramètres pour pré-remplir la demande ;
+- le formulaire du rapport détaillé envoie un JSON à `POST /api/rapport` (`lib/http.ts`) :
+  coordonnées, consentement à un échange avec un consultant, réponses et résultat. **Ce point
+  d'accès n'existe pas encore** : il faut une fonction côté serveur (par exemple une fonction
+  Vercel) reliée à un service d'envoi de courriels, clé gardée côté serveur. Tant qu'il manque,
+  le formulaire affiche un message d'erreur ; la confirmation ne s'affiche que sur une réponse
+  JSON du serveur.
 
-Questions, règles des profils, noms et portraits des profils, textes de « Notre lecture »,
-correspondances leviers → domaines : propositions à faire valider par OPEM.
+Textes et règles : ceux d'OPEM. À compléter : constat et première piste du levier 6 (Équipes
+et talents), durée de conservation et adresse de contact de la mention sous le formulaire.
 
 **Contenu provisoire.** Chaque bloc marqué `provisional: true` affiche une mention « à confirmer »
 sous la section (composant `ProvisionalNote`). Sont provisoires : les 3 engagements de « Ce qui
 nous distingue », les 4 sessions de l'agenda (dates et intitulés), les 6
-publications, les 4 témoignages, les 6 réponses de la FAQ. Passer `provisional` à `false` une fois
+publications. Passer `provisional` à `false` une fois
 les vrais contenus validés par OPEM.
 
 **Sections retirées** à la demande du client, fichiers conservés (une ligne dans `HomePage.tsx`
@@ -366,9 +396,7 @@ dépend du chemin du projet) : c'est normal, le rendu est identique.
 
 **Contenus (à fournir ou valider par OPEM)**
 
-- [ ] Chiffres repères, publications, témoignages (avec accord écrit), réponses de la FAQ.
-- [ ] Engagements de « Ce qui nous distingue » (confidentialité, livrables remis, référent
-      unique) : à confirmer par OPEM, en particulier l'engagement de confidentialité signé.
+- [ ] Chiffres repères, publications, accord écrit des auteurs des témoignages, traduction arabe de la FAQ et des témoignages à relire.
 - [ ] Page « Le cabinet » (`features/cabinet/content.ts`, textes repris du site de 2019) : titre
       officiel de Mme Bourahla (« Gérante » retenu), citation sur l'excellence, phrases sous les
       6 valeurs (proposées), agrément n° 539 et dispositif qualité de la formation (catalogue 2021) toujours valables.

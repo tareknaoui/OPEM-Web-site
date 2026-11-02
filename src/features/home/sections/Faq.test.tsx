@@ -1,46 +1,58 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { homeContent } from '../content';
 import { Faq } from './Faq';
 
+const { faq } = homeContent.fr;
+
 function renderSection() {
-  const Page = () => <Faq faq={homeContent.fr.faq} />;
+  const Page = () => <Faq faq={faq} />;
   const router = createMemoryRouter([{ path: '*', Component: Page }]);
   return render(<RouterProvider router={router} />);
 }
 
+// Testing Library compare un texte aux espaces normalisés : même chose pour les insécables.
+const answer = (index: number) => faq.items[index]!.answer.replace(/\s+/g, ' ');
+
+const questionButtons = () =>
+  within(screen.getByRole('region', { name: faq.title }))
+    .getAllByRole('button')
+    .filter((button) => button.hasAttribute('aria-controls'));
+
 describe('Section « Questions fréquentes »', () => {
-  it('liste les questions, la première ouverte', () => {
+  it('liste les 10 questions, la première choisie et sa réponse affichée', () => {
     renderSection();
-    const questions = screen.getAllByRole('button', { expanded: false });
-    expect(questions).toHaveLength(homeContent.fr.faq.items.length - 1);
-    expect(
-      screen.getByRole('button', { name: 'Quels types d’organisations accompagnez-vous ?' }),
-    ).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('region', { name: /Quels types/ })).toHaveTextContent(
-      /organismes publics/,
+    const questions = questionButtons();
+    expect(questions).toHaveLength(10);
+    expect(questions[0]).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+      faq.items[0]!.question.replace(/\s+/g, ' '),
     );
+    expect(screen.getByText(answer(0))).toBeInTheDocument();
   });
 
-  it('ouvre et ferme une réponse ; fermée, elle est inerte', () => {
+  it('affiche une seule réponse : celle de la question choisie', () => {
     renderSection();
-    const question = screen.getByRole('button', { name: /certification ISO/ });
-    const answer = document.getElementById(question.getAttribute('aria-controls')!)!;
-    expect(answer).toHaveAttribute('inert');
+    const question = screen.getByRole('button', { name: /Nos équipes sauront-elles/ });
     fireEvent.click(question);
-    expect(question).toHaveAttribute('aria-expanded', 'true');
-    expect(answer).not.toHaveAttribute('inert');
-    fireEvent.click(question);
-    expect(question).toHaveAttribute('aria-expanded', 'false');
+    expect(question).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText(answer(7))).toBeInTheDocument();
+    expect(screen.queryByText(answer(0))).not.toBeInTheDocument();
   });
 
-  it('propose de poser une autre question et signale des réponses provisoires', () => {
+  it('filtre par thème, garde la numérotation et affiche la première question du thème', () => {
     renderSection();
-    expect(screen.getByRole('link', { name: /Poser votre question/ })).toHaveAttribute(
-      'href',
-      '/contact',
-    );
-    expect(screen.getByText(/Réponses provisoires/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Résultats et conditions' }));
+    const questions = questionButtons();
+    expect(questions).toHaveLength(3);
+    expect(questions[0]).toHaveTextContent(/^08/);
+    expect(questions[0]).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText(answer(7))).toBeInTheDocument();
+  });
+
+  it('propose de poser une autre question', () => {
+    renderSection();
+    expect(screen.getByRole('link', { name: /Posez-la-nous/ })).toHaveAttribute('href', '/contact');
   });
 });

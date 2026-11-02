@@ -40,11 +40,11 @@ export function AiBand({ ai }: { ai: HomeContent['ai'] }) {
             <img
               className={styles.image}
               src={ai.illustration}
-              srcSet={`${ai.illustration.replace(/\.webp$/, '-700.webp')} 700w, ${ai.illustration} 1200w`}
+              srcSet={`${ai.illustration.replace(/\.webp$/, '-700.webp')} 700w, ${ai.illustration} 1024w`}
               sizes="(min-width: 64em) 45vw, 100vw"
               alt=""
-              width={1200}
-              height={1042}
+              width={1024}
+              height={572}
               loading="lazy"
               decoding="async"
             />

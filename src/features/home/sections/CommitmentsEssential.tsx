@@ -1,12 +1,11 @@
 import type { HomeContent } from '../content';
 import { CommitmentPictogram } from '../icons';
-import { ProvisionalNote } from './SectionHeader';
 import styles from './CommitmentsEssential.module.css';
 
 /**
- * « Ce qui nous distingue » : sur bleu très clair, un titre court centré puis trois engagements,
- * chacun en un grand pictogramme, quelques mots et une phrase. Ordinateur : trois colonnes
- * séparées d'un filet. Mobile : une ligne par engagement.
+ * « Ce qui nous distingue » (« Pourquoi choisir OPEM ») : sur bleu très clair, un titre centré
+ * puis trois engagements, chacun en un grand pictogramme, un titre et un court texte.
+ * Ordinateur : trois colonnes séparées d'un filet. Mobile : un engagement sous l'autre.
  */
 export function CommitmentsEssential({ commitments }: { commitments: HomeContent['commitments'] }) {
   return (
@@ -29,16 +28,12 @@ export function CommitmentsEssential({ commitments }: { commitments: HomeContent
                 <CommitmentPictogram name={item.icon} size={30} />
               </span>
               <div>
-                <h3 className={styles.title}>{item.short.title}</h3>
-                <p className={styles.text}>{item.short.text}</p>
+                <h3 className={styles.title}>{item.title}</h3>
+                <p className={styles.text}>{item.text}</p>
               </div>
             </li>
           ))}
         </ul>
-
-        <div className={styles.note}>
-          <ProvisionalNote show={commitments.provisional}>{commitments.note}</ProvisionalNote>
-        </div>
       </div>
     </section>
   );

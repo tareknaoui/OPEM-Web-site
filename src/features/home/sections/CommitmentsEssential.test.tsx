@@ -3,27 +3,28 @@ import { describe, expect, it } from 'vitest';
 import { homeContent } from '../content';
 import { CommitmentsEssential } from './CommitmentsEssential';
 
-describe('« Ce qui nous distingue », version « L’essentiel »', () => {
-  it('résume chaque engagement en quelques mots et une phrase', () => {
+const normalize = (text: string | null) => text?.replace(/\s+/g, ' ');
+
+describe('« Ce qui nous distingue »', () => {
+  it('présente les trois engagements d’OPEM', () => {
     render(<CommitmentsEssential commitments={homeContent.fr.commitments} />);
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
-      /^Notre réussite\s: des équipes qui gagnent en autonomie\.$/,
+    expect(screen.getByText('Pourquoi choisir OPEM')).toBeInTheDocument();
+    expect(normalize(screen.getByRole('heading', { level: 2 }).textContent)).toBe(
+      'Comprendre avant d’agir, transmettre avant de partir, mesurer avant de conclure.',
     );
     expect(
-      screen.getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
+      screen.getAllByRole('heading', { level: 3 }).map((heading) => normalize(heading.textContent)),
     ).toEqual([
-      'Vos équipes prennent le relais',
-      'Vos données protégées',
-      'Des spécialistes du terrain',
+      'Du sur-mesure, jamais du prêt-à-porter',
+      'Notre réussite : ne plus vous être indispensables',
+      'Mesurer, ou ne rien promettre',
     ]);
-    expect(screen.getByText('Rien n’est partagé sans votre accord écrit.')).toBeInTheDocument();
-    // Pas de preuves détaillées ni de comparaison dans cette version.
-    expect(screen.queryByText(/Ailleurs, souvent/)).toBeNull();
+    expect(screen.getByText(/satisfaction moyenne de 4,6/)).toBeInTheDocument();
   });
 
   it('passe en arabe avec les mêmes engagements', () => {
     render(<CommitmentsEssential commitments={homeContent.ar.commitments} />);
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(3);
-    expect(screen.getByText('متخصصون في الميدان')).toBeInTheDocument();
+    expect(screen.getByText('نقيس، أو لا نَعِد بشيء')).toBeInTheDocument();
   });
 });

@@ -7,7 +7,7 @@ export const strings = {
     homeLink: 'OPEM, retour à l’accueil',
     mainNav: 'Navigation principale',
     callback: 'Être rappelé',
-    quote: 'Demander un devis',
+    quote: 'Parlons de votre projet',
     openMenu: 'Ouvrir le menu',
     closeMenu: 'Fermer le menu',
     seeAll: 'Tout voir',

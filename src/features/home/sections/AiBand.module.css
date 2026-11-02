@@ -27,7 +27,7 @@
    Taille contenue : elle accompagne le titre sans l'écraser. */
 .visual {
   justify-self: center;
-  width: min(100%, 18rem);
+  width: min(100%, 34rem);
   mask-image:
     linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
     linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
@@ -233,12 +233,12 @@
   }
 
   .intro {
-    grid-column: 1 / span 7;
+    grid-column: 1 / span 6;
   }
 
   .visual {
-    grid-column: 8 / -1;
-    width: min(100%, 26rem);
+    grid-column: 7 / -1;
+    width: 100%;
   }
 
   .steps {

@@ -5,33 +5,49 @@ type Diagnostic = HomeContent['heroDiagnostic'];
 /** Réponses données : levier → identifiant de la réponse. */
 export type DiagnosticAnswers = Partial<Record<DiagnosticAxis, string>>;
 
-/** Points obtenus par levier (0 à 3) ; absent : pas encore répondu. */
+/** Note de chaque levier répondu (0 à 3) ; absent : pas encore répondu. */
 export type AxisScores = Partial<Record<DiagnosticAxis, number>>;
 
 export type DiagnosticResult = {
   scores: AxisScores;
+  /** Total des sept leviers, de 0 à 21. */
+  total: number;
   /** Part du total obtenue, en pourcentage arrondi. */
   percent: number;
   profile: DiagnosticProfile;
-  /** Leviers notés 0 ou 1 sur 3, du plus faible au moins faible. */
-  weak: DiagnosticAxis[];
-  /** Leviers dont le domaine OPEM est proposé (2 au plus, un seul par domaine). */
-  start: DiagnosticAxis[];
-  /** Niveau de maturité, de 0 (initial) à 3 (avancé) : un niveau par quart du total. */
+  /** Niveau global, de 0 (initial) à 3 (avancé), lu sur le total. */
   level: number;
-  /** Part obtenue par le cadre (stratégie, structure, systèmes), puis par l'humain, en %. */
+  /** Moyenne du cadre (leviers 1 à 3), puis de l'humain (leviers 4 à 7), en % de la note 3. */
   hard: number;
   soft: number;
-  /** Qui devance l'autre, à 15 points d'écart au moins ; sinon « even ». */
+  /** Qui dépasse l'autre d'au moins 0,75 (moyennes sur 3) ; sinon « even ». */
   balance: 'hard' | 'soft' | 'even';
-  /** Levier le plus avancé s'il est noté 2 ou 3 (le premier dans l'ordre en cas d'égalité). */
-  strongest?: DiagnosticAxis;
+  /** Points d'appui : deux leviers au plus, dans l'ordre des leviers ; vide si aucun n'atteint 2. */
+  strengths: DiagnosticAxis[];
+  /** Points de fragilité : les deux leviers les plus faibles parmi ceux notés 0 ou 1. */
+  weak: DiagnosticAxis[];
+  /** Commencer par : le premier point de fragilité, à défaut le levier le plus faible. */
+  start: DiagnosticAxis;
 };
 
-/** Leviers « durs » du modèle (le cadre) ; les quatre autres sont les leviers humains. */
+/** Le cadre : leviers 1 à 3 ; les quatre autres forment l'humain. */
 export const HARD: DiagnosticAxis[] = ['strategie', 'structure', 'systemes'];
 
-/** Points de chaque levier répondu : le rang de la réponse, de 0 (moins avancée) à 3. */
+/**
+ * Ordre de priorité entre leviers à égalité (fragilité, commencer par) : ce qui débloque le
+ * reste d'abord.
+ */
+export const PRIORITY: DiagnosticAxis[] = [
+  'strategie',
+  'structure',
+  'systemes',
+  'competences',
+  'style',
+  'personnel',
+  'valeurs',
+];
+
+/** Note de chaque levier répondu : la première réponse vaut 0, la quatrième 3. */
 export function axisScores(diagnostic: Diagnostic, answers: DiagnosticAnswers): AxisScores {
   const scores: AxisScores = {};
   for (const question of diagnostic.questions) {
@@ -44,88 +60,69 @@ export function axisScores(diagnostic: Diagnostic, answers: DiagnosticAnswers): 
 const average = (values: number[]) =>
   values.length > 0 ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
 
-/** Écart (en points de pourcentage) à partir duquel le cadre ou l'humain « devance » l'autre. */
-const BALANCE_GAP = 15;
+/** Écart de moyennes à partir duquel le cadre ou l'humain dépasse l'autre (profil, équilibre). */
+const GAP = 0.75;
+
+/** Niveau global lu sur le total : 0 à 5, 6 à 10, 11 à 16, 17 à 21. */
+const levelOf = (total: number) => (total >= 17 ? 3 : total >= 11 ? 2 : total >= 6 ? 1 : 0);
 
 /**
- * Profil, dans cet ordre : alignée (plus des 2/3 du total, aucun levier faible), en fondation
- * (1/3 au plus), navire sans cap (stratégie faible, tout le reste à 2 ou 3), belle mécanique (cadre
- * nettement devant l'humain), talent sans charpente (l'inverse), sinon en mouvement.
- * Règles proposées, à faire valider par OPEM.
- */
-function profileOf(
-  ranked: { axis: DiagnosticAxis; score: number }[],
-  share: number,
-  weak: DiagnosticAxis[],
-): DiagnosticProfile {
-  const score = (axis: DiagnosticAxis) => ranked.find((item) => item.axis === axis)?.score ?? 0;
-  const hard = average(ranked.filter(({ axis }) => HARD.includes(axis)).map(({ score }) => score));
-  const soft = average(ranked.filter(({ axis }) => !HARD.includes(axis)).map(({ score }) => score));
-  const othersSolid = ranked.every(({ axis, score }) => axis === 'strategie' || score >= 2);
-
-  if (share > 2 / 3 && weak.length === 0) return 'alignee';
-  if (share <= 1 / 3) return 'fondation';
-  if (score('strategie') <= 1 && othersSolid) return 'cap';
-  if (hard - soft >= 0.75) return 'mecanique';
-  if (soft - hard >= 0.75) return 'talents';
-  return 'mouvement';
-}
-
-/**
- * Résultat de l'autodiagnostic 7S, calculé dans le navigateur (rien n'est envoyé).
- * Domaines proposés : ceux des leviers faibles ; à défaut, celui du levier le moins avancé.
+ * Résultat de l'autodiagnostic 7S, calculé dans le navigateur, sans IA et sans envoi : des
+ * règles fixes, donc les mêmes réponses donnent toujours le même résultat. Règles d'OPEM.
  */
 export function scoreDiagnostic(
   diagnostic: Diagnostic,
   answers: DiagnosticAnswers,
 ): DiagnosticResult {
   const scores = axisScores(diagnostic, answers);
-  const ranked = diagnostic.questions
-    .map(({ id }) => ({ axis: id, score: scores[id] ?? 0 }))
-    .sort((a, b) => a.score - b.score);
+  const axes = diagnostic.questions.map(({ id }) => id);
+  const score = (axis: DiagnosticAxis) => scores[axis] ?? 0;
 
-  const total = ranked.reduce((sum, { score }) => sum + score, 0);
-  const share = ranked.length > 0 ? total / (ranked.length * 3) : 0;
+  const total = axes.reduce((sum, axis) => sum + score(axis), 0);
+  const mean = average(axes.map(score));
+  const hardMean = average(axes.filter((axis) => HARD.includes(axis)).map(score));
+  const softMean = average(axes.filter((axis) => !HARD.includes(axis)).map(score));
 
-  const weak = ranked.filter(({ score }) => score <= 1).map(({ axis }) => axis);
-  const candidates = weak.length > 0 ? weak : ranked.slice(0, 1).map(({ axis }) => axis);
-  const domains = new Set<string>();
-  const start = candidates
-    .filter((axis) => {
-      const { href } = diagnostic.axes[axis].domain;
-      if (domains.has(href)) return false;
-      domains.add(href);
-      return true;
-    })
-    .slice(0, 2);
+  // Profil d'ensemble : la première règle vérifiée l'emporte.
+  const others = average(axes.filter((axis) => axis !== 'strategie').map(score));
+  const profile: DiagnosticProfile =
+    axes.every((axis) => score(axis) >= 2) && mean >= 2.5
+      ? 'alignee'
+      : score('strategie') <= 1 && others >= 1.5
+        ? 'cap'
+        : hardMean >= 1.5 && hardMean - softMean >= GAP
+          ? 'mecanique'
+          : softMean >= 1.5 && softMean - hardMean >= GAP
+            ? 'talents'
+            : mean >= 1.5
+              ? 'mouvement'
+              : 'fondation';
 
-  const part = (hardSide: boolean) =>
-    Math.round(
-      (average(
-        ranked.filter(({ axis }) => HARD.includes(axis) === hardSide).map(({ score }) => score),
-      ) /
-        3) *
-        100,
-    );
-  const hard = part(true);
-  const soft = part(false);
+  // Points d'appui : les leviers notés 3, ou à défaut 2 ; un seul levier noté 3 est complété
+  // par le premier levier noté 2.
+  const at = (value: number) => axes.filter((axis) => score(axis) === value);
+  const top = at(3);
+  const strengths = (
+    top.length >= 2 ? top : top.length === 1 ? [...top, ...at(2).slice(0, 1)] : at(2)
+  )
+    .slice(0, 2)
+    .sort((a, b) => axes.indexOf(a) - axes.indexOf(b));
 
-  // Premier levier le mieux noté, dans l'ordre des questions.
-  const best = diagnostic.questions.reduce<{ axis?: DiagnosticAxis; score: number }>(
-    (top, { id }) => ((scores[id] ?? 0) > top.score ? { axis: id, score: scores[id] ?? 0 } : top),
-    { score: 1 },
-  );
+  // Du plus faible au moins faible ; à égalité, l'ordre de priorité.
+  const byWeakness = [...PRIORITY].sort((a, b) => score(a) - score(b));
+  const weak = byWeakness.filter((axis) => score(axis) <= 1).slice(0, 2);
 
   return {
     scores,
-    percent: Math.round(share * 100),
-    profile: profileOf(ranked, share, weak),
+    total,
+    percent: axes.length > 0 ? Math.round((total / (axes.length * 3)) * 100) : 0,
+    profile,
+    level: levelOf(total),
+    hard: Math.round((hardMean / 3) * 100),
+    soft: Math.round((softMean / 3) * 100),
+    balance: hardMean - softMean >= GAP ? 'hard' : softMean - hardMean >= GAP ? 'soft' : 'even',
+    strengths,
     weak,
-    start,
-    level: Math.min(3, Math.floor(share * 4)),
-    hard,
-    soft,
-    balance: hard - soft >= BALANCE_GAP ? 'hard' : soft - hard >= BALANCE_GAP ? 'soft' : 'even',
-    strongest: best.axis,
+    start: weak[0] ?? byWeakness[0] ?? 'strategie',
   };
 }

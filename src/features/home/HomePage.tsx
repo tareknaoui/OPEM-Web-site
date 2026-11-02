@@ -11,7 +11,7 @@ import { UpcomingSessions } from './sections/UpcomingSessions';
 
 /**
  * Page d'accueil OPEM. Ordre des sections : bandeau d'accueil, « Ce qui nous distingue »,
- * « Nos domaines », bandeau IA, prochaines sessions, éclairages et actualités, témoignages, questions fréquentes.
+ * « Nos domaines », bandeau IA, prochaines sessions, témoignages, éclairages et actualités, questions fréquentes.
  * Retirées de l'accueil à la demande du client (fichiers conservés dans ./sections pour
  * pouvoir les remettre) : besoins (mosaïque), « Vous êtes… », approche, chiffres clés,
  * secteurs, agenda en liste (Trainings, remplacé par UpcomingSessions).
@@ -34,8 +34,8 @@ export default function HomePage() {
       <DomainsMosaic domains={content.domains} />
       <AiBand ai={content.ai} />
       <UpcomingSessions trainings={content.trainings} />
-      <Insights insights={content.insights} />
       <Testimonials testimonials={content.testimonials} />
+      <Insights insights={content.insights} />
       <Faq faq={content.faq} />
     </>
   );

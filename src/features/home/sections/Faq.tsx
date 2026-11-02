@@ -2,93 +2,100 @@ import { useId, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowRightIcon } from '@/components/icons';
 import type { HomeContent } from '../content';
-import { ProvisionalNote } from './SectionHeader';
 import styles from './Faq.module.css';
 
 type FaqProps = {
   faq: HomeContent['faq'];
 };
 
+type Theme = HomeContent['faq']['themes'][number]['id'];
+
+const formatNumber = (index: number) => String(index + 1).padStart(2, '0');
+
 /**
- * Questions fréquentes, dernière section de l'accueil : à gauche le titre et un encadré
- * « Vous ne trouvez pas votre réponse ? » (reste visible au défilement), à droite les
- * questions en accordéon (titre h3 contenant un bouton, motif WAI-ARIA). Plusieurs
- * réponses peuvent être ouvertes ; la première l'est au départ. Une réponse fermée est
- * inerte (ni lue, ni atteinte au clavier) ; elle s'ouvre en douceur.
+ * Questions fréquentes, dernière section de l'accueil (maquette validée par OPEM) : sur bleu
+ * nuit, des filtres par thème, la liste numérotée des questions et, à côté, la réponse choisie
+ * sur un panneau blanc. Une seule réponse à la fois ; changer de thème affiche sa première
+ * question. Sur téléphone et tablette, le panneau s'insère sous la question choisie.
  */
 export function Faq({ faq }: FaqProps) {
-  const [open, setOpen] = useState<ReadonlySet<string>>(
-    () => new Set(faq.items.slice(0, 1).map((item) => item.id)),
-  );
-  const baseId = useId();
+  const [theme, setTheme] = useState<Theme>('tout');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const panelId = useId();
+  const active = faq.items[activeIndex]!;
 
-  const toggle = (id: string) =>
-    setOpen((current) => {
-      const next = new Set(current);
-      if (!next.delete(id)) next.add(id);
-      return next;
-    });
+  const selectTheme = (next: Theme) => {
+    setTheme(next);
+    setActiveIndex(faq.items.findIndex((item) => next === 'tout' || item.theme === next));
+  };
 
   return (
     <section className={styles.section} aria-labelledby="faq-title">
-      <div className={`container ${styles.layout}`}>
-        <div className={styles.aside}>
-          <p className="eyebrow" data-reveal>
-            {faq.eyebrow}
-          </p>
-          <h2 id="faq-title" className={styles.title} data-reveal="title">
-            {faq.title}
-          </h2>
-          <p className={styles.lead} data-reveal>
-            {faq.lead}
-          </p>
-          <div className={styles.help} data-reveal>
-            <p className={styles.helpTitle}>{faq.asideTitle}</p>
-            <p className={styles.helpText}>{faq.asideText}</p>
-            <Link to={faq.contact.href} className="btn btn-primary">
-              {faq.contact.label}
-              <ArrowRightIcon size={18} className="arrow" />
-            </Link>
-          </div>
-        </div>
+      <div className="container">
+        <div className={styles.wrap}>
+          <header className={styles.header}>
+            <p className={styles.eyebrow} data-reveal>
+              {faq.eyebrow}
+            </p>
+            <h2 id="faq-title" className={styles.title} data-reveal="title">
+              {faq.title}
+            </h2>
+          </header>
 
-        <div className={styles.main}>
-          <ul className={styles.list} data-reveal-stagger>
-            {faq.items.map((item) => {
-              const expanded = open.has(item.id);
-              const buttonId = `${baseId}-${item.id}-question`;
-              const answerId = `${baseId}-${item.id}-answer`;
-              return (
-                <li key={item.id} className={styles.item} data-open={expanded || undefined}>
-                  <h3 className={styles.heading}>
-                    <button
-                      id={buttonId}
-                      type="button"
-                      className={styles.question}
-                      aria-expanded={expanded}
-                      aria-controls={answerId}
-                      onClick={() => toggle(item.id)}
-                    >
-                      <span>{item.question}</span>
-                      <span className={styles.icon} aria-hidden="true" />
-                    </button>
-                  </h3>
-                  <div
-                    id={answerId}
-                    role="region"
-                    aria-labelledby={buttonId}
-                    className={styles.answer}
-                    inert={!expanded}
+          <div className={styles.themes} role="group" aria-label={faq.themesLabel} data-reveal>
+            {faq.themes.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                className={styles.theme}
+                aria-pressed={theme === id}
+                onClick={() => selectTheme(id)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.body} data-reveal>
+            <div className={styles.list}>
+              {faq.items.map((item, index) =>
+                theme === 'tout' || item.theme === theme ? (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={styles.question}
+                    style={{ order: index * 2 }}
+                    aria-pressed={index === activeIndex}
+                    aria-controls={panelId}
+                    onClick={() => setActiveIndex(index)}
                   >
-                    <div className={styles.answerInner}>
-                      <p className={styles.answerText}>{item.answer}</p>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-          <ProvisionalNote show={faq.provisional}>{faq.note}</ProvisionalNote>
+                    <span className={styles.questionNumber}>{formatNumber(index)}</span>
+                    <span className={styles.questionText}>{item.question}</span>
+                  </button>
+                ) : null,
+              )}
+            </div>
+
+            <article
+              id={panelId}
+              className={styles.panel}
+              style={{ order: activeIndex * 2 + 1 }}
+              aria-live="polite"
+            >
+              <p className={styles.panelNumber} aria-hidden="true">
+                {formatNumber(activeIndex)}
+              </p>
+              <h3 className={styles.panelTitle}>{active.question}</h3>
+              <p className={styles.answer}>{active.answer}</p>
+              <div className={styles.foot}>
+                <p>{faq.footText}</p>
+                <Link to={faq.contact.href} className={`btn ${styles.contact}`}>
+                  {faq.contact.label}
+                  <ArrowRightIcon size={18} className="arrow" />
+                </Link>
+              </div>
+            </article>
+          </div>
         </div>
       </div>
     </section>

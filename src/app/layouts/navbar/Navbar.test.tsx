@@ -81,7 +81,9 @@ describe('Navbar', () => {
     fireEvent.click(burger);
     expect(dialog.open).toBe(true);
     expect(burger).toHaveAttribute('aria-expanded', 'true');
-    expect(within(dialog).getByRole('link', { name: 'Demander un devis' })).toBeInTheDocument();
+    expect(
+      within(dialog).getByRole('link', { name: 'Parlons de votre projet' }),
+    ).toBeInTheDocument();
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'Fermer le menu' }));
     expect(dialog.open).toBe(false);

@@ -10,7 +10,7 @@ function renderDomains() {
   return render(<RouterProvider router={router} />);
 }
 
-describe('« Nos domaines »', () => {
+describe('« Nos expertises » (domaines)', () => {
   it('affiche tous les domaines en même temps, chacun avec son lien', () => {
     renderDomains();
     const { items } = homeContent.fr.domains;
@@ -18,16 +18,29 @@ describe('« Nos domaines »', () => {
     expect(titles.map((title) => title.textContent)).toEqual(items.map((item) => item.title));
     for (const item of items) {
       expect(screen.getByRole('link', { name: item.title })).toHaveAttribute('href', item.href);
-      expect(screen.getByText(item.text)).toBeVisible();
+      expect(screen.getByText(item.text.replace(/\s+/g, ' '))).toBeVisible();
     }
     // Aucun carrousel : ni onglets ni bouton pause.
     expect(screen.queryByRole('tablist')).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
   });
 
-  it('propose d’être rappelé', () => {
+  it('garde l’appel propre à la formation', () => {
     renderDomains();
-    expect(screen.getByRole('link', { name: /Être rappelé/ })).toHaveAttribute('href', '/contact');
+    expect(screen.getByText('Programmer une première session')).toBeInTheDocument();
+    expect(screen.getAllByText('Découvrir ce domaine')).toHaveLength(5);
+  });
+
+  it('présente les six domaines et mène à toutes les expertises', () => {
+    renderDomains();
+    expect(screen.getByText('Nos expertises')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2 }).textContent?.replace(/\s+/g, ' ')).toBe(
+      'Six domaines, un seul fil conducteur : votre performance.',
+    );
+    expect(screen.getByRole('link', { name: /Toutes nos expertises/ })).toHaveAttribute(
+      'href',
+      '/expertises',
+    );
   });
 
   it('affiche les 6 domaines ensemble, chacun avec son illustration et ses points', () => {

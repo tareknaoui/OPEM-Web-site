@@ -11,10 +11,11 @@
   text-align: center;
 }
 
-/* Titre sur deux lignes : l'accroche en bleu nuit, la promesse en bleu OPEM, en très grand. */
+/* Titre en deux temps : le début en bleu nuit, la fin en bleu OPEM. */
 .heading {
-  max-width: none;
-  font-size: clamp(2.25rem, 1.3rem + 3.2vw, 4.25rem);
+  max-width: 24em;
+  margin-inline: auto;
+  font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3.25rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
 }
@@ -47,7 +48,7 @@
 .item {
   display: grid;
   grid-template-columns: auto 1fr;
-  align-items: center;
+  align-items: start;
   gap: var(--space-4) var(--space-6);
   padding-block: var(--space-6);
 }
@@ -93,12 +94,7 @@
 
 .text {
   margin: var(--space-2) 0 0;
-  line-height: 1.55;
-}
-
-.note {
-  display: flex;
-  justify-content: center;
+  line-height: 1.6;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -129,7 +125,7 @@
   }
 
   .text {
-    max-width: 22rem;
+    max-width: 24rem;
     margin-inline: auto;
   }
 }

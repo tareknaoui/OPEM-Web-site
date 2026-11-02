@@ -7,12 +7,15 @@ import {
   type KeyboardEvent,
   type RefObject,
 } from 'react';
-import { Link } from 'react-router';
-import { ArrowRightIcon, CloseIcon } from '@/components/icons';
+import { ArrowRightIcon, CheckIcon, CloseIcon } from '@/components/icons';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
-import type { DiagnosticContextId, HomeContent } from '../content';
-import { HARD, scoreDiagnostic, type DiagnosticAnswers } from './diagnosticScore';
+import type { DiagnosticAxis, DiagnosticContextId, HomeContent } from '../content';
+import { DiagnosticResult } from './DiagnosticResult';
+import { scoreDiagnostic, type DiagnosticAnswers } from './diagnosticScore';
+import { LeverFrame } from './LeverFrame';
+import { LeverScenes, type SceneId } from './LeverScenes';
+import { SevenSMap } from './SevenSMap';
 import { SevenSRadar } from './SevenSRadar';
 import styles from './DiagnosticExperience.module.css';
 
@@ -27,6 +30,20 @@ type DiagnosticExperienceProps = {
   onClose: () => void;
 };
 
+type ContextChoice = Diagnostic['context']['questions'][number]['choices'][number];
+
+/**
+ * Libellé d'une réponse sur l'organisation : la taille s'affiche en catégorie d'entreprise
+ * (« Petite entreprise, de 10 à 49 personnes ») pour l'EPE et l'entreprise privée seulement.
+ */
+function choiceLabel(diagnostic: Diagnostic, context: ContextAnswers, choice: ContextChoice) {
+  const company = diagnostic.context.companyStatuses.includes(context.statut ?? '');
+  return (company && choice.companyLabel) || choice.label;
+}
+
+/** Étape de l'écran d'accueil, avant la première question (étape 0). */
+const WELCOME = -1;
+
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /** Pourcentage écrit selon la langue (lu par les lecteurs d'écran). */
@@ -35,40 +52,65 @@ const percentFormat = (lang: string) =>
 
 /**
  * L'autodiagnostic 7S en plein écran, sur bleu nuit (<dialog> natif : focus gardé, Échap,
- * page inerte derrière). D'abord quelques questions sur l'organisation (secteur, effectif,
- * fonction), radar en attente ; puis une question par levier : très grand numéro ambre, à côté
+ * page inerte derrière). En fond, une illustration au trait du levier montré (LeverScenes).
+ * D'abord un écran d'accueil (titre, bouton et carte animée des 7 leviers, SevenSMap), quelques
+ * questions sur l'organisation (statut puis secteur, taille, fonction), radar en attente ; puis une question
+ * par levier : très grand numéro ambre, à côté
  * la famille du levier et son nom, réponses au clic ou au clavier (A à D, 1 à 4), le radar se déforme
  * à chaque réponse. À la fin, le profil, le pourcentage qui défile, le niveau de maturité,
- * l'équilibre cadre / humain, notre lecture, les leviers à renforcer et les domaines ; sous le
- * radar, « Refaire le diagnostic » puis, en grand, « Être rappelé avec ce résultat ».
- * Fermer remet le diagnostic à zéro.
+ * l'écran de résultat (DiagnosticResult), seul, sans les questions autour. Entre le dernier
+ * levier et le résultat, un écran de fin (« Voir mon résultat »). En haut, les trois
+ * étapes et « Question n sur 10 ». « Quitter » ramène à l'accueil ; « Fermer » (accueil) ou
+ * Échap ferment le plein écran. Les deux remettent le diagnostic à zéro.
  */
 export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticExperienceProps) {
   const { lang } = useLanguage();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(WELCOME);
+  // Levier allumé sur la carte de l'écran d'accueil : l'illustration de fond le suit.
+  const [featured, setFeatured] = useState<DiagnosticAxis>('strategie');
   const [context, setContext] = useState<ContextAnswers>({});
   const [answers, setAnswers] = useState<DiagnosticAnswers>({});
   const ids = useId();
 
-  const contextCount = diagnostic.context.questions.length;
+  const contextQuestions = diagnostic.context.questions;
+  // Écrans sur l'organisation, et numéro de question de chacun : un second temps (le secteur
+  // après le statut) garde le numéro de la question qu'il complète.
+  const contextCount = contextQuestions.length;
+  const contextNumbers = contextQuestions.map(
+    (_, index) => contextQuestions.slice(0, index + 1).filter((item) => !item.secondStep).length,
+  );
+  const contextTotal = contextNumbers.at(-1) ?? 0;
   const total = diagnostic.questions.length;
-  const contextQuestion = step < contextCount ? diagnostic.context.questions[step] : undefined;
+  const contextQuestion = step < contextCount ? contextQuestions[step] : undefined;
+  const firstStep = contextQuestion?.secondStep ? contextQuestions[step - 1] : undefined;
+  const firstAnswer = firstStep?.choices.find((choice) => choice.id === context[firstStep.id]);
+  // Segment de la barre de progression : un par question (pas par écran).
+  const segment =
+    step < contextCount ? (contextNumbers[step] ?? 1) - 1 : contextTotal + step - contextCount;
   const leverQuestion =
     step >= contextCount ? diagnostic.questions.at(step - contextCount) : undefined;
   const result = scoreDiagnostic(diagnostic, answers);
+  const welcome = step === WELCOME;
+  // Après le dernier levier : l'écran de fin, puis le résultat.
+  const doneStep = contextCount + total;
+  const done = step === doneStep;
+  const finished = step >= doneStep;
+  // Étape du parcours : votre organisation (0), sept leviers (1), votre résultat (2).
+  const phase = step < contextCount ? 0 : finished ? 2 : 1;
 
   // Écran en cours, quelle que soit la phase : organisation, puis leviers.
   const screen = contextQuestion
     ? {
         id: contextQuestion.id,
         text: contextQuestion.text,
+        help: contextQuestion.help,
         choices: contextQuestion.choices,
         word: contextQuestion.label,
         group: diagnostic.context.label,
-        index: step,
-        count: contextCount,
+        index: (contextNumbers[step] ?? 1) - 1,
+        count: contextTotal,
         progress: diagnostic.context.progress,
         title: contextQuestion.label,
         selected: context[contextQuestion.id],
@@ -77,19 +119,52 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
       ? {
           id: leverQuestion.id,
           text: leverQuestion.text,
+          help: diagnostic.leverHelp,
           choices: leverQuestion.choices,
-          word: diagnostic.axes[leverQuestion.id].label,
-          // Famille du levier : le cadre (stratégie, structure, systèmes) ou l'humain.
-          group: diagnostic.analysis[HARD.includes(leverQuestion.id) ? 'hard' : 'soft'].label,
+          // Intitulé du levier (« Cap et priorités ») ; à défaut, son nom court.
+          word: leverQuestion.title ?? diagnostic.axes[leverQuestion.id].label,
+          // « Étape 2 · Levier 1 sur 7 »
+          group: diagnostic.progress
+            .replace('{current}', String(step - contextCount + 1))
+            .replace('{total}', String(total)),
           index: step - contextCount,
           count: total,
           progress: diagnostic.progress,
-          title: diagnostic.axes[leverQuestion.id].title,
+          title: leverQuestion.title ?? diagnostic.axes[leverQuestion.id].title,
           selected: answers[leverQuestion.id],
         }
       : undefined;
-  // Au-delà de 4 réponses (secteur) : grille de boutons, sans touches.
-  const withKeys = (screen?.choices.length ?? 0) <= diagnostic.keys.length;
+  // Écran de résultat : réponses sur l'organisation (« Entreprise privée · Industrie · … »,
+  // sans la fonction), et libellé de la fonction choisie (valeur de départ du formulaire).
+  const answerLabel = (question: (typeof contextQuestions)[number]) => {
+    const choice = question.choices.find((item) => item.id === context[question.id]);
+    return choice ? choiceLabel(diagnostic, context, choice) : undefined;
+  };
+  const facts = contextQuestions
+    .filter(({ id }) => id !== 'fonction')
+    .map(answerLabel)
+    .filter((label): label is string => Boolean(label));
+  const fonctionQuestion = contextQuestions.find(({ id }) => id === 'fonction');
+  const fonction = (fonctionQuestion && answerLabel(fonctionQuestion)) ?? '';
+  // Au-delà de 4 réponses (statut, secteur, fonction) : sans touches. Grille de boutons
+  // (statut) ; pastilles au-delà de 8 réponses (fonction) ou par famille (secteur).
+  const choiceCount = screen?.choices.length ?? 0;
+  const withKeys = choiceCount <= diagnostic.keys.length;
+  const layout = withKeys ? undefined : choiceCount > 8 ? 'chips' : 'grid';
+  // Réponses rangées par famille (secteurs) ; sinon un seul groupe, sans titre.
+  const groups: { family?: string; choices: { id: string; label: string; index: number }[] }[] = [];
+  (screen?.choices as ContextChoice[] | undefined)?.forEach((choice, index) => {
+    const item = { id: choice.id, label: choiceLabel(diagnostic, context, choice), index };
+    const last = groups.at(-1);
+    if (last && last.family === choice.family) last.choices.push(item);
+    else groups.push({ family: choice.family, choices: [item] });
+  });
+  const mode = welcome ? 'welcome' : screen ? 'question' : done ? 'done' : 'result';
+  const scene: SceneId | null = welcome
+    ? featured
+    : contextQuestion || done
+      ? 'organisation'
+      : (leverQuestion?.id ?? null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -103,10 +178,16 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     if (open) headingRef.current?.focus({ preventScroll: true });
   }, [open, step]);
 
-  const handleClose = () => {
-    setStep(0);
+  // Remise à zéro : sortie du questionnaire (« Quitter ») ou fermeture.
+  const reset = () => {
+    setStep(WELCOME);
+    setFeatured('strategie');
     setContext({});
     setAnswers({});
+  };
+
+  const handleClose = () => {
+    reset();
     onClose();
   };
 
@@ -138,36 +219,68 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     >
       {open && (
         <>
-          <header className={styles.top}>
+          <LeverScenes active={scene} shifted={welcome} />
+          <header className={styles.top} data-mode={mode}>
             <div className={cx('container', styles.topInner)}>
-              <span className={styles.brand}>{diagnostic.label}</span>
-              <ol className={styles.segments} aria-hidden="true">
-                {[...diagnostic.context.questions, ...diagnostic.questions].map((item, index) => (
-                  <li
-                    key={item.id}
-                    className={styles.segment}
-                    data-phase-start={index === contextCount || undefined}
-                    data-done={index < step || undefined}
-                    data-current={index === step || undefined}
-                  />
-                ))}
-              </ol>
+              {!welcome && (
+                <>
+                  {/* Les trois étapes du parcours, l'étape en cours en blanc. */}
+                  <ol className={styles.steps}>
+                    {diagnostic.steps.map((label, index) => (
+                      <li
+                        key={label}
+                        data-done={index < phase || undefined}
+                        aria-current={index === phase ? 'step' : undefined}
+                      >
+                        {label}
+                      </li>
+                    ))}
+                  </ol>
+                  <div className={styles.progress}>
+                    <ol className={styles.segments} aria-hidden="true">
+                      {[
+                        ...contextQuestions.filter((item) => !item.secondStep),
+                        ...diagnostic.questions,
+                      ].map((item, index) => (
+                        <li
+                          key={item.id}
+                          className={styles.segment}
+                          data-phase-start={index === contextTotal || undefined}
+                          data-done={index < segment || undefined}
+                          data-current={index === segment || undefined}
+                        />
+                      ))}
+                    </ol>
+                    <p className={styles.count}>
+                      {finished
+                        ? diagnostic.finished
+                        : diagnostic.count
+                            .replace('{current}', String(segment + 1))
+                            .replace('{total}', String(contextTotal + total))}
+                    </p>
+                  </div>
+                </>
+              )}
+              {/* Accueil : « Fermer » ferme le plein écran ; ensuite, « Quitter » ramène à
+                  l'accueil et efface les réponses. */}
               <button
                 type="button"
                 className={styles.close}
-                onClick={() => dialogRef.current?.close()}
+                onClick={welcome ? () => dialogRef.current?.close() : reset}
               >
-                {diagnostic.close}
+                {welcome ? diagnostic.welcome.close : diagnostic.close}
                 <CloseIcon size={20} />
               </button>
             </div>
           </header>
 
-          <div className={cx('container', styles.body)} data-mode={screen ? 'question' : 'result'}>
-            {screen ? (
+          <div className={cx('container', styles.body)} data-mode={mode}>
+            {welcome ? (
+              <Welcome diagnostic={diagnostic} headingRef={headingRef} onStart={() => setStep(0)} />
+            ) : screen ? (
               <div key={step} className={styles.content}>
-                {/* Grand numéro ambre | famille (« Le cadre », « L'humain », « Votre
-                    organisation ») et nom du levier, séparés par un filet. */}
+                {/* Grand numéro ambre | étape (« Étape 2 · Levier 1 sur 7 », « Étape 1 · Votre
+                    organisation ») et intitulé, séparés par un filet. */}
                 <p className={styles.counter}>
                   <span className={styles.number} aria-hidden="true">
                     <span className={styles.index}>{pad(screen.index + 1)}</span>
@@ -185,6 +298,24 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                     {screen.title}
                   </span>
                 </p>
+                {/* Second temps : rappel du premier, avec un lien pour y revenir. */}
+                {firstStep && firstAnswer && (
+                  <p className={styles.recall}>
+                    <span id={`${ids}-recall`}>
+                      {diagnostic.context.recall
+                        .replace('{question}', firstStep.label)
+                        .replace('{answer}', firstAnswer.label)}
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.edit}
+                      aria-describedby={`${ids}-recall`}
+                      onClick={() => setStep(step - 1)}
+                    >
+                      {diagnostic.context.edit}
+                    </button>
+                  </p>
+                )}
                 <h2
                   ref={headingRef}
                   id={`${ids}-question`}
@@ -193,29 +324,43 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                 >
                   {screen.text}
                 </h2>
-                <ul
-                  className={styles.choices}
-                  data-layout={withKeys ? undefined : 'grid'}
-                  aria-labelledby={`${ids}-question`}
-                >
-                  {screen.choices.map((choice, index) => (
-                    <li key={choice.id} style={{ '--i': index } as CSSProperties}>
-                      <button
-                        type="button"
-                        className={styles.choice}
-                        aria-current={screen.selected === choice.id ? 'true' : undefined}
-                        onClick={() => choose(choice.id)}
-                      >
-                        {withKeys && (
-                          <span className={styles.key} aria-hidden="true">
-                            {diagnostic.keys[index]}
-                          </span>
-                        )}
-                        <span className={styles.choiceLabel}>{choice.label}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                {screen.help && <p className={styles.help}>{screen.help}</p>}
+                {groups.map((group, groupIndex) => (
+                  <div key={group.family ?? 'all'} className={cx(group.family && styles.family)}>
+                    {group.family && (
+                      <p id={`${ids}-family-${groupIndex}`} className={styles.familyLabel}>
+                        {group.family}
+                      </p>
+                    )}
+                    <ul
+                      className={styles.choices}
+                      data-layout={group.family ? 'chips' : layout}
+                      aria-labelledby={cx(
+                        `${ids}-question`,
+                        group.family && `${ids}-family-${groupIndex}`,
+                      )}
+                    >
+                      {group.choices.map((choice) => (
+                        <li key={choice.id} style={{ '--i': choice.index } as CSSProperties}>
+                          <button
+                            type="button"
+                            className={styles.choice}
+                            aria-current={screen.selected === choice.id ? 'true' : undefined}
+                            onClick={() => choose(choice.id)}
+                          >
+                            {withKeys && (
+                              <span className={styles.key} aria-hidden="true">
+                                {diagnostic.keys[choice.index]}
+                              </span>
+                            )}
+                            <span className={styles.choiceLabel}>{choice.label}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                {/* Pas de retour sur la première question. */}
                 {step > 0 && (
                   <p className={styles.foot}>
                     <button type="button" className={styles.back} onClick={() => setStep(step - 1)}>
@@ -225,72 +370,74 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                   </p>
                 )}
               </div>
+            ) : done ? (
+              <div className={styles.content}>
+                <h2 ref={headingRef} tabIndex={-1} className={styles.doneTitle}>
+                  {diagnostic.done.title}
+                </h2>
+                <p className={styles.doneText}>{diagnostic.done.text}</p>
+                <button
+                  type="button"
+                  className={cx('btn btn-light', styles.doneButton)}
+                  onClick={() => setStep(doneStep + 1)}
+                >
+                  {diagnostic.done.cta}
+                  <ArrowRightIcon size={20} className="arrow" />
+                </button>
+                <p className={styles.foot}>
+                  <button type="button" className={styles.back} onClick={() => setStep(step - 1)}>
+                    <ArrowRightIcon size={16} className={styles.backIcon} />
+                    {diagnostic.back}
+                  </button>
+                </p>
+              </div>
             ) : (
-              <ResultView
+              <DiagnosticResult
                 diagnostic={diagnostic}
                 result={result}
                 context={context}
+                answers={answers}
+                facts={facts}
+                fonction={fonction}
                 format={percentFormat(lang)}
                 headingRef={headingRef}
+                onReview={() => setStep(0)}
+                onRetake={reset}
               />
             )}
 
-            <div className={styles.visual}>
-              {contextQuestion ? (
-                <SevenSRadar key="idle" diagnostic={diagnostic} mode="idle" tone="dark" />
-              ) : leverQuestion ? (
-                <SevenSRadar
-                  key="live"
-                  diagnostic={diagnostic}
-                  mode="live"
-                  scores={result.scores}
-                  current={leverQuestion.id}
-                  tone="dark"
-                />
-              ) : (
-                <>
-                  <SevenSRadar
-                    key="result"
-                    diagnostic={diagnostic}
-                    mode="result"
-                    scores={result.scores}
-                    weak={result.weak}
-                    tone="dark"
-                  />
-                  <p className={styles.legend} aria-hidden="true">
-                    <span className={styles.legendYours}>{diagnostic.result.yours}</span>
-                    <span className={styles.legendIdeal}>{diagnostic.result.ideal}</span>
-                    {result.weak.length > 0 && (
-                      <span className={styles.legendWeak}>{diagnostic.result.weakTitle}</span>
+            {mode !== 'result' && (
+              <div className={styles.visual}>
+                {welcome ? (
+                  <>
+                    <SevenSMap diagnostic={diagnostic} active={featured} onActive={setFeatured} />
+                    <Caption
+                      text={diagnostic.welcome.caption}
+                      highlight={diagnostic.welcome.captionHighlight}
+                    />
+                  </>
+                ) : (
+                  <LeverFrame
+                    label={diagnostic.welcome.mapLabel}
+                    count={Object.keys(answers).length}
+                    total={total}
+                    compact
+                  >
+                    {/* Écran de fin : la forme complète, sans levier en cours. */}
+                    {leverQuestion || done ? (
+                      <SevenSRadar
+                        key="live"
+                        diagnostic={diagnostic}
+                        mode="live"
+                        scores={result.scores}
+                        current={leverQuestion?.id}
+                        tone="dark"
+                      />
+                    ) : (
+                      <SevenSRadar key="idle" diagnostic={diagnostic} mode="idle" tone="dark" />
                     )}
-                  </p>
-                </>
-              )}
-            </div>
-
-            {/* Sous le radar (ordinateur) ; à la fin du résultat (mobile). */}
-            {!screen && (
-              <div className={styles.actions}>
-                <div className={styles.actionsInner}>
-                  <button
-                    type="button"
-                    className={cx(styles.back, styles.restart)}
-                    onClick={() => {
-                      setAnswers({});
-                      setStep(contextCount);
-                    }}
-                  >
-                    {diagnostic.result.restart}
-                  </button>
-                  {/* L'action principale, en grand et en dernier : on ne peut pas la manquer. */}
-                  <Link
-                    to={callbackHref(diagnostic, result, context, answers)}
-                    className={cx('btn btn-light', styles.callback)}
-                  >
-                    {diagnostic.result.callback.label}
-                    <ArrowRightIcon size={20} className="arrow" />
-                  </Link>
-                </div>
+                  </LeverFrame>
+                )}
               </div>
             )}
           </div>
@@ -300,160 +447,61 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
   );
 }
 
-/** Lien de rappel : les réponses en paramètres, pour pré-remplir le futur formulaire. */
-function callbackHref(
-  diagnostic: Diagnostic,
-  result: ReturnType<typeof scoreDiagnostic>,
-  context: ContextAnswers,
-  answers: DiagnosticAnswers,
-) {
-  const params = new URLSearchParams({ source: 'autodiagnostic' });
-  for (const [id, choice] of Object.entries(context)) params.set(id, choice);
-  for (const [axis, choice] of Object.entries(answers)) params.set(axis, choice);
-  params.set('profil', result.profile);
-  params.set('maturite', String(result.percent));
-  return `${diagnostic.result.callback.href}?${params.toString()}`;
-}
-
-type ResultViewProps = {
+type WelcomeProps = {
   diagnostic: Diagnostic;
-  result: ReturnType<typeof scoreDiagnostic>;
-  context: ContextAnswers;
-  format: Intl.NumberFormat;
   headingRef: RefObject<HTMLHeadingElement | null>;
+  onStart: () => void;
 };
 
-function ResultView({ diagnostic, result, context, format, headingRef }: ResultViewProps) {
-  const labels = diagnostic.result;
-  const { analysis } = diagnostic;
-  const profile = diagnostic.profiles[result.profile];
-  const level = analysis.levels[result.level];
-  const percent = (value: number) => format.format(value / 100);
-
-  // Rappel du contexte sous le titre : « Industrie · De 50 à 249 personnes ».
-  const facts = diagnostic.context.questions
-    .filter(({ id }) => id !== 'fonction')
-    .map(({ id, choices }) => choices.find((choice) => choice.id === context[id])?.label)
-    .filter(Boolean);
-
-  // Notre lecture : niveau, équilibre cadre / humain, point d'appui, puis l'effectif.
-  const reading = [
-    level?.text,
-    analysis.balance[result.balance]
-      .replace('{hard}', percent(result.hard))
-      .replace('{soft}', percent(result.soft)),
-    result.strongest
-      ? analysis.strength.replace('{axis}', diagnostic.axes[result.strongest].title)
-      : analysis.noStrength,
-    context.effectif ? analysis.sizes[context.effectif] : undefined,
-  ].filter(Boolean);
-
+/**
+ * Écran d'accueil : l'étiquette, le titre en deux temps, puis une carte avec le sous-titre, ce
+ * que le test apporte et le bouton de départ.
+ */
+function Welcome({ diagnostic, headingRef, onStart }: WelcomeProps) {
+  const { welcome } = diagnostic;
   return (
     <div className={styles.content}>
-      <p className={styles.eyebrow}>
-        {labels.profileLabel}
-        {facts.length > 0 && <span className={styles.facts}>{facts.join(' · ')}</span>}
-      </p>
-      <h2 ref={headingRef} tabIndex={-1} className={styles.profile}>
-        {profile.name}
+      <p className={styles.welcomeLabel}>{welcome.label}</p>
+      <h2 ref={headingRef} tabIndex={-1} className={styles.welcomeTitle}>
+        {welcome.title[0]} <span className={styles.welcomeAccent}>{welcome.title[1]}</span>
       </h2>
-      <p className={styles.profileText}>{profile.text}</p>
-
-      <div className={styles.metrics}>
-        <p className={styles.score}>
-          <span
-            className={styles.scoreValue}
-            style={{ '--target': result.percent } as CSSProperties}
-            aria-hidden="true"
-          />
-          <span className="sr-only">{percent(result.percent)}</span>{' '}
-          <span className={styles.scoreLabel}>{labels.scoreLabel}</span>
-        </p>
-        <div className={styles.level}>
-          <p className={styles.levelName}>
-            <span className={styles.levelLabel}>
-              {analysis.levelLabel.replace('{level}', String(result.level + 1))}
-            </span>{' '}
-            {level?.name}
-          </p>
-          <ol className={styles.scale} aria-hidden="true">
-            {analysis.levels.map((item, index) => (
-              <li
-                key={item.name}
-                data-on={index <= result.level || undefined}
-                data-current={index === result.level || undefined}
-              />
-            ))}
-          </ol>
-        </div>
-      </div>
-
-      <dl className={styles.balance}>
-        {(['hard', 'soft'] as const).map((side) => (
-          <div key={side} className={styles.bar}>
-            <dt>
-              <span className={styles.barLabel}>{analysis[side].label}</span>
-              <span className={styles.hint}>{analysis[side].hint}</span>
-            </dt>
-            <dd>
-              <span className={styles.track} aria-hidden="true">
-                <span
-                  className={styles.fill}
-                  style={{ '--value': `${result[side]}%` } as CSSProperties}
-                />
-              </span>
-              <span className={styles.barValue}>{percent(result[side])}</span>
-            </dd>
-          </div>
-        ))}
-      </dl>
-
-      <div className={styles.reading}>
-        <h3 className={styles.subtitle}>{analysis.title}</h3>
-        <ul className={styles.readingList}>
-          {reading.map((sentence) => (
-            <li key={sentence}>{sentence}</li>
+      <div className={styles.welcomeCard}>
+        <p className={styles.welcomeText}>{welcome.subtitle}</p>
+        <ul className={styles.benefits}>
+          {welcome.benefits.map((benefit) => (
+            <li key={benefit}>
+              <CheckIcon size={18} className={styles.benefitIcon} />
+              {benefit}
+            </li>
           ))}
         </ul>
-      </div>
-
-      <div className={styles.summary}>
-        <div>
-          <h3 className={styles.subtitle}>{labels.weakTitle}</h3>
-          {result.weak.length > 0 ? (
-            <ul className={styles.chips}>
-              {result.weak.map((axis) => (
-                <li key={axis} className={styles.chip}>
-                  {diagnostic.axes[axis].title}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.small}>{labels.noWeak}</p>
-          )}
-        </div>
-        <div>
-          <h3 className={styles.subtitle}>{labels.startTitle}</h3>
-          <ul className={styles.links}>
-            {result.start.map((axis) => {
-              const { label, href } = diagnostic.axes[axis].domain;
-              // Dernier mot et flèche insécables : la flèche ne passe jamais seule à la ligne.
-              const cut = label.lastIndexOf(' ') + 1;
-              return (
-                <li key={axis}>
-                  <Link to={href} className={styles.domainLink}>
-                    {label.slice(0, cut)}
-                    <span className={styles.nowrap}>
-                      {label.slice(cut)}
-                      <ArrowRightIcon size={16} className="arrow" />
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <button
+          type="button"
+          className={cx('btn btn-primary', styles.welcomeStart)}
+          onClick={onStart}
+        >
+          {welcome.start}
+          <ArrowRightIcon size={20} className="arrow" />
+        </button>
       </div>
     </div>
+  );
+}
+
+/** Légende de la carte des leviers, un passage en ambre et en gras. */
+function Caption({ text, highlight }: { text: string; highlight: string }) {
+  const at = text.indexOf(highlight);
+  return (
+    <p className={styles.welcomeCaption}>
+      {at < 0 ? (
+        text
+      ) : (
+        <>
+          {text.slice(0, at)}
+          <strong className={styles.captionHighlight}>{highlight}</strong>
+          {text.slice(at + highlight.length)}
+        </>
+      )}
+    </p>
   );
 }
