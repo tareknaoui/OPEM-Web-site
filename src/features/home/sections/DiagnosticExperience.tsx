@@ -15,9 +15,7 @@ import { cx } from '@/lib/cx';
 import type { DiagnosticAxis, DiagnosticContextId, HomeContent } from '../content';
 import { DiagnosticResult } from './DiagnosticResult';
 import { scoreDiagnostic, type DiagnosticAnswers } from './diagnosticScore';
-import { LeverFrame } from './LeverFrame';
 import { LeverScenes, type SceneId } from './LeverScenes';
-import { SevenSRadar } from './SevenSRadar';
 import styles from './DiagnosticExperience.module.css';
 
 type Diagnostic = HomeContent['heroDiagnostic'];
@@ -37,6 +35,7 @@ const TOUR_MS = 4500;
 const CONTEXT_SCENES: Partial<Record<DiagnosticContextId, SceneId>> = {
   secteur: 'secteur',
   effectif: 'taille',
+  fonction: 'fonction',
 };
 /** Réponses auxquelles le clavier répond : A à D, ou 1 à 4. */
 const KEYS = 4;
@@ -186,7 +185,18 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     else groups.push({ family: choice.family, choices: [item] });
   });
   const families = groups.some((group) => group.family);
-  const half = Math.ceil(groups.length / 2);
+  // Coupure entre les deux colonnes de familles : la plus équilibrée, chaque famille pesant
+  // ses réponses plus son titre.
+  const weight = (list: typeof groups) =>
+    list.reduce((sum, group) => sum + group.choices.length + 1.5, 0);
+  const half = groups.reduce(
+    (best, _, index) =>
+      Math.max(weight(groups.slice(0, index)), weight(groups.slice(index))) <
+      Math.max(weight(groups.slice(0, best)), weight(groups.slice(best)))
+        ? index
+        : best,
+    Math.ceil(groups.length / 2),
+  );
   const renderGroup = (group: (typeof groups)[number], groupIndex: number) => (
     <div key={group.family ?? 'all'} className={cx(group.family && styles.family)}>
       {group.family && (
@@ -220,7 +230,7 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     : contextQuestion
       ? (CONTEXT_SCENES[contextQuestion.id] ?? 'organisation')
       : done
-        ? 'organisation'
+        ? 'fin'
         : (leverQuestion?.id ?? null);
 
   useEffect(() => {
@@ -380,7 +390,7 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                 </h2>
                 {screen.help && <p className={styles.help}>{screen.help}</p>}
                 {families ? (
-                  // Secteurs : deux colonnes de familles (une seule sur téléphone), le nom de
+                  // Secteurs et fonctions : deux colonnes de familles (une seule sur téléphone), le nom de
                   // chaque famille au-dessus de ses réponses.
                   <div className={styles.families}>
                     {[groups.slice(0, half), groups.slice(half)].map((column, columnIndex) => (
@@ -440,27 +450,11 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
               />
             )}
 
-            {/* Légende sous l'illustration à l'accueil, forme complète à l'écran de fin ; rien
-                pendant les questions, où seule l'illustration de fond occupe la droite. */}
-            {(welcome || done) && (
+            {/* Légende sous l'illustration à l'accueil ; ailleurs, seule l'illustration de fond
+                occupe la droite. */}
+            {welcome && (
               <div className={styles.visual}>
-                {welcome ? (
-                  <WelcomeTour diagnostic={diagnostic} onNext={nextScene} />
-                ) : (
-                  <LeverFrame
-                    label={diagnostic.welcome.mapLabel}
-                    count={Object.keys(answers).length}
-                    total={total}
-                    compact
-                  >
-                    <SevenSRadar
-                      diagnostic={diagnostic}
-                      mode="live"
-                      scores={result.scores}
-                      tone="dark"
-                    />
-                  </LeverFrame>
-                )}
+                <WelcomeTour diagnostic={diagnostic} onNext={nextScene} />
               </div>
             )}
           </div>

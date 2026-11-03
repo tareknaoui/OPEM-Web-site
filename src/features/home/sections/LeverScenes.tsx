@@ -1,12 +1,14 @@
 import type { DiagnosticAxis } from '../content';
 import styles from './LeverScenes.module.css';
 
-export type SceneId = DiagnosticAxis | 'organisation' | 'secteur' | 'taille';
+export type SceneId = DiagnosticAxis | 'organisation' | 'secteur' | 'taille' | 'fonction' | 'fin';
 
 const SCENES: SceneId[] = [
   'organisation',
   'secteur',
   'taille',
+  'fonction',
+  'fin',
   'strategie',
   'structure',
   'systemes',
@@ -20,11 +22,11 @@ const BASE = '/images/diagnostic';
 
 /**
  * Fond du plein écran de l'autodiagnostic : une illustration par levier, une pour le secteur
- * d'activité, une pour la taille et une pour les autres questions sur l'organisation. Même bleu
- * nuit que la page, sujet à droite, côté opposé au texte. Elle apparaît en fondu quand son écran
- * est montré. Décorative, sans aucun texte. `active` à null : aucune illustration (écran de
- * résultat, déjà dense). Toutes sont chargées à l'ouverture, pour
- * que le fondu ne bute jamais sur une image absente.
+ * d'activité, une pour la taille, une pour la fonction, une pour le statut et une pour la fin du
+ * questionnaire. Même bleu nuit que la page, sujet à droite, côté opposé au texte. Elle apparaît
+ * en fondu quand son écran est montré. Décorative, sans aucun texte. `active` à null : aucune
+ * illustration (écran de résultat, déjà dense). Toutes sont chargées à l'ouverture, pour que le
+ * fondu ne bute jamais sur une image absente.
  */
 export function LeverScenes({ active }: { active: SceneId | null }) {
   return (

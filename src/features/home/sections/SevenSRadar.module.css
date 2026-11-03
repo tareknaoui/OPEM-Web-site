@@ -110,10 +110,6 @@
   font-size: 14px;
 }
 
-.label[data-current] {
-  fill: var(--label-current);
-}
-
 /* Petit radar sans noms (signature) : traits épaissis pour rester nets. */
 .radar[data-compact] .ring,
 .radar[data-compact] .spoke {

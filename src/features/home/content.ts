@@ -86,7 +86,6 @@ export type HomeContent = {
       captionHighlight: string;
       /** Bouton de fermeture de l'écran d'accueil. */
       close: string;
-      mapLabel: string;
       pause: string;
       play: string;
     };
@@ -129,7 +128,7 @@ export type HomeContent = {
         /** Aide sous la question. */
         help?: string;
         /**
-         * `family` : réponses rangées par famille (secteurs), titre de la famille.
+         * `family` : réponses rangées par famille (secteurs, fonctions), titre de la famille.
          * `companyLabel` : libellé vu par les statuts de `companyStatuses` (taille).
          */
         choices: { id: string; label: string; family?: string; companyLabel?: string }[];
@@ -538,7 +537,6 @@ const fr: HomeContent = {
       caption: 'Un seul rouage grippé suffit à ralentir toute la mécanique.',
       captionHighlight: 'ralentir toute la mécanique',
       close: 'Fermer',
-      mapLabel: 'Carte de votre organisation',
       pause: 'Arrêter le défilement des illustrations',
       play: 'Reprendre le défilement des illustrations',
     },
@@ -567,20 +565,21 @@ const fr: HomeContent = {
           text: 'Quel est le statut de votre organisation ?',
           help: 'Retenez le statut inscrit dans ses textes fondateurs.',
           choices: [
-            { id: 'epe', label: 'Entreprise publique économique (EPE)' },
-            {
-              id: 'epic',
-              label: 'Établissement public à caractère industriel et commercial (EPIC)',
-            },
+            // Ordre d'OPEM, lu ligne par ligne dans la grille de deux colonnes.
             {
               id: 'epa',
               label: 'Établissement public à caractère administratif (EPA)',
             },
+            {
+              id: 'epic',
+              label: 'Établissement public à caractère industriel et commercial (EPIC)',
+            },
+            { id: 'epe', label: 'Entreprise publique économique (EPE)' },
+            { id: 'privee', label: 'Entreprise privée' },
             { id: 'agence', label: 'Agence publique' },
             { id: 'administration', label: 'Administration publique' },
-            { id: 'privee', label: 'Entreprise privée' },
-            { id: 'internationale', label: 'Organisation internationale' },
             { id: 'association', label: 'Association' },
+            { id: 'internationale', label: 'Organisation internationale' },
           ],
         },
         {
@@ -663,20 +662,25 @@ const fr: HomeContent = {
           id: 'fonction',
           label: 'Fonction',
           text: 'Quelle est votre fonction ?',
+          help: 'Indiquez celle que vous exercez aujourd’hui.',
           choices: [
-            { id: 'direction', label: 'Direction générale' },
-            { id: 'finances', label: 'Finances et gestion' },
-            { id: 'rh', label: 'Ressources humaines' },
-            { id: 'juridique', label: 'Juridique' },
-            { id: 'achats', label: 'Achats et approvisionnement' },
-            { id: 'commercial', label: 'Commercial et marketing' },
-            { id: 'production', label: 'Production' },
-            { id: 'maintenance', label: 'Maintenance' },
-            { id: 'rd', label: 'Recherche et développement' },
-            { id: 'qualite', label: 'Qualité et HSE' },
-            { id: 'organisation', label: 'Organisation et méthodes' },
-            { id: 'si', label: 'Systèmes d’information' },
-            { id: 'autre', label: 'Autre fonction' },
+            { id: 'direction', label: 'Direction générale', family: 'Direction' },
+            { id: 'finances', label: 'Finances et gestion', family: 'Fonctions support' },
+            { id: 'rh', label: 'Ressources humaines', family: 'Fonctions support' },
+            { id: 'juridique', label: 'Juridique', family: 'Fonctions support' },
+            { id: 'achats', label: 'Achats et approvisionnement', family: 'Fonctions support' },
+            { id: 'si', label: 'Systèmes d’information', family: 'Fonctions support' },
+            { id: 'production', label: 'Production', family: 'Opérations' },
+            { id: 'maintenance', label: 'Maintenance', family: 'Opérations' },
+            { id: 'rd', label: 'Recherche et développement', family: 'Opérations' },
+            { id: 'qualite', label: 'Qualité et HSE', family: 'Qualité et méthodes' },
+            {
+              id: 'organisation',
+              label: 'Organisation et méthodes',
+              family: 'Qualité et méthodes',
+            },
+            { id: 'commercial', label: 'Commercial et marketing', family: 'Commercial' },
+            { id: 'autre', label: 'Autre fonction', family: 'Autre' },
           ],
         },
       ],
@@ -1857,7 +1861,7 @@ const fr: HomeContent = {
         theme: 'resultats',
         question: 'Comment mesurez-vous le retour sur investissement ?',
         answer:
-          'Par des indicateurs fixés avec vous, à la mesure de vos objectifs. Pour chaque mission, ils portent sur ce qui compte pour votre organisation, qu’il s’agisse de coûts, de délais, de qualité ou de conformité. À votre demande, nous établissons aussi la situation initiale, afin de chiffrer précisément l’écart obtenu à la clôture. Nos formations sont évaluées selon les modèles de Kirkpatrick et de Phillips, de la satisfaction des participants jusqu’à l’effet sur leur travail. La satisfaction moyenne atteint aujourd’hui 4,6 sur 5.',
+          'Par des indicateurs fixés avec vous, à la mesure de vos objectifs. Pour chaque mission, ils portent sur ce qui compte pour votre organisation, qu’il s’agisse de coûts, de délais, de qualité ou de conformité. À votre demande, nous établissons aussi la situation initiale, afin de chiffrer précisément l’écart obtenu à la clôture. Nos formations sont évaluées selon les modèles de Kirkpatrick et de Phillips, de la satisfaction des participants jusqu’à l’effet sur leur travail.',
       },
       {
         id: 'delais-couts',
@@ -1904,7 +1908,6 @@ const ar: HomeContent = {
       caption: 'يكفي ترس واحد معطَّل لإبطاء الآلية كلّها.',
       captionHighlight: 'لإبطاء الآلية كلّها',
       close: 'إغلاق',
-      mapLabel: 'خريطة مؤسستكم',
       pause: 'إيقاف تتابع الرسومات',
       play: 'استئناف تتابع الرسومات',
     },
@@ -1933,14 +1936,14 @@ const ar: HomeContent = {
           text: 'ما هو الوضع القانوني لمؤسستكم؟',
           help: 'اعتمدوا الوضع المنصوص عليه في نصوصها التأسيسية.',
           choices: [
-            { id: 'epe', label: 'مؤسسة عمومية اقتصادية (EPE)' },
-            { id: 'epic', label: 'مؤسسة عمومية ذات طابع صناعي وتجاري (EPIC)' },
             { id: 'epa', label: 'مؤسسة عمومية ذات طابع إداري (EPA)' },
+            { id: 'epic', label: 'مؤسسة عمومية ذات طابع صناعي وتجاري (EPIC)' },
+            { id: 'epe', label: 'مؤسسة عمومية اقتصادية (EPE)' },
+            { id: 'privee', label: 'مؤسسة خاصة' },
             { id: 'agence', label: 'وكالة عمومية' },
             { id: 'administration', label: 'إدارة عمومية' },
-            { id: 'privee', label: 'مؤسسة خاصة' },
-            { id: 'internationale', label: 'منظمة دولية' },
             { id: 'association', label: 'جمعية' },
+            { id: 'internationale', label: 'منظمة دولية' },
           ],
         },
         {
@@ -2011,20 +2014,21 @@ const ar: HomeContent = {
           id: 'fonction',
           label: 'الوظيفة',
           text: 'ما هي وظيفتكم؟',
+          help: 'أشيروا إلى الوظيفة التي تمارسونها اليوم.',
           choices: [
-            { id: 'direction', label: 'الإدارة العامة' },
-            { id: 'finances', label: 'المالية والتسيير' },
-            { id: 'rh', label: 'الموارد البشرية' },
-            { id: 'juridique', label: 'الشؤون القانونية' },
-            { id: 'achats', label: 'المشتريات والتموين' },
-            { id: 'commercial', label: 'التجارة والتسويق' },
-            { id: 'production', label: 'الإنتاج' },
-            { id: 'maintenance', label: 'الصيانة' },
-            { id: 'rd', label: 'البحث والتطوير' },
-            { id: 'qualite', label: 'الجودة والصحة والسلامة والبيئة' },
-            { id: 'organisation', label: 'التنظيم والطرائق' },
-            { id: 'si', label: 'أنظمة المعلومات' },
-            { id: 'autre', label: 'وظيفة أخرى' },
+            { id: 'direction', label: 'الإدارة العامة', family: 'الإدارة' },
+            { id: 'finances', label: 'المالية والتسيير', family: 'الوظائف الداعمة' },
+            { id: 'rh', label: 'الموارد البشرية', family: 'الوظائف الداعمة' },
+            { id: 'juridique', label: 'الشؤون القانونية', family: 'الوظائف الداعمة' },
+            { id: 'achats', label: 'المشتريات والتموين', family: 'الوظائف الداعمة' },
+            { id: 'si', label: 'أنظمة المعلومات', family: 'الوظائف الداعمة' },
+            { id: 'production', label: 'الإنتاج', family: 'العمليات' },
+            { id: 'maintenance', label: 'الصيانة', family: 'العمليات' },
+            { id: 'rd', label: 'البحث والتطوير', family: 'العمليات' },
+            { id: 'qualite', label: 'الجودة والصحة والسلامة والبيئة', family: 'الجودة والطرائق' },
+            { id: 'organisation', label: 'التنظيم والطرائق', family: 'الجودة والطرائق' },
+            { id: 'commercial', label: 'التجارة والتسويق', family: 'التجاري' },
+            { id: 'autre', label: 'وظيفة أخرى', family: 'أخرى' },
           ],
         },
       ],
@@ -3134,7 +3138,7 @@ const ar: HomeContent = {
         theme: 'resultats',
         question: 'كيف تقيسون العائد على الاستثمار؟',
         answer:
-          'بمؤشرات نحددها معكم، على قدر أهدافكم. ولكل مهمة، تنصبّ على ما يهم مؤسستكم، سواء تعلق الأمر بالتكاليف أو الآجال أو الجودة أو المطابقة. وبطلب منكم، نُعدّ كذلك الوضعية الأولية، لنقدّر بالأرقام وبدقة الفارق المحقَّق عند الاختتام. وتُقيَّم تكويناتنا وفق نموذجي كيركباتريك وفيليبس، من رضا المشاركين إلى الأثر في عملهم. ويبلغ متوسط الرضا اليوم 4,6 من 5.',
+          'بمؤشرات نحددها معكم، على قدر أهدافكم. ولكل مهمة، تنصبّ على ما يهم مؤسستكم، سواء تعلق الأمر بالتكاليف أو الآجال أو الجودة أو المطابقة. وبطلب منكم، نُعدّ كذلك الوضعية الأولية، لنقدّر بالأرقام وبدقة الفارق المحقَّق عند الاختتام. وتُقيَّم تكويناتنا وفق نموذجي كيركباتريك وفيليبس، من رضا المشاركين إلى الأثر في عملهم.',
       },
       {
         id: 'delais-couts',

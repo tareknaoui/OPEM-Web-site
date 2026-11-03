@@ -128,7 +128,16 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(within(dialog).queryByRole('button', { name: /Question précédente/ })).toBeNull();
     const statuses = within(within(dialog).getByRole('list', { name: /Quel est le statut/ }));
     expect(statuses.getAllByRole('button')).toHaveLength(8);
-    expect(statuses.getAllByRole('button')[2]).toHaveTextContent(/\(EPA\)$/);
+    expect(statuses.getAllByRole('button').map((button) => button.textContent)).toEqual([
+      'Établissement public à caractère administratif (EPA)',
+      'Établissement public à caractère industriel et commercial (EPIC)',
+      'Entreprise publique économique (EPE)',
+      'Entreprise privée',
+      'Agence publique',
+      'Administration publique',
+      'Association',
+      'Organisation internationale',
+    ]);
     // Pendant les questions, pas de carte des leviers : seule l'illustration de fond.
     expect(within(dialog).queryByText('Carte de votre organisation')).toBeNull();
     answer(/Entreprise privée/);
@@ -169,12 +178,20 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     ]);
     fireEvent.keyDown(size, { key: 'b' });
 
-    // Question 3 : la fonction, 13 réponses.
-    const functions = within(
-      within(dialog).getByRole('list', { name: /Quelle est votre fonction/ }),
+    // Question 3 : la fonction, 13 réponses rangées sous 6 familles, avec l'aide.
+    expect(within(dialog).getByText('Indiquez celle que vous exercez aujourd’hui.')).toBeVisible();
+    const functionFamilies = within(dialog).getAllByRole('list', {
+      name: /Quelle est votre fonction/,
+    });
+    expect(functionFamilies).toHaveLength(6);
+    expect(functionFamilies.flatMap((list) => within(list).getAllByRole('button'))).toHaveLength(
+      13,
     );
-    expect(functions.getAllByRole('button')).toHaveLength(13);
-    expect(functions.getByRole('button', { name: 'Systèmes d’information' })).toBeInTheDocument();
+    expect(
+      within(
+        within(dialog).getByRole('list', { name: /Quelle est votre fonction.*Fonctions support/ }),
+      ).getByRole('button', { name: 'Systèmes d’information' }),
+    ).toBeInTheDocument();
     answer(/Direction générale/);
 
     // Étape 2 : les leviers. « Étape 2 · Levier 1 sur 7 », intitulé, aide commune.

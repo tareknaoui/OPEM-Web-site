@@ -17,19 +17,16 @@ const IDLE = [
   [2.8, 2.1, 1.3, 2.2, 2.9, 1.8, 1.5],
 ];
 
-export type RadarMode = 'idle' | 'live' | 'result';
+export type RadarMode = 'idle' | 'result';
 
 type SevenSRadarProps = {
   diagnostic: HomeContent['heroDiagnostic'];
   /**
    * idle : invitation, la forme respire d'un exemple à l'autre ;
-   * live : pendant les questions, la forme suit les réponses ;
    * result : la forme pousse depuis le centre, l'organisation alignée en pointillés.
    */
   mode: RadarMode;
   scores?: AxisScores;
-  /** Levier de la question en cours : une onde part de sa branche. */
-  current?: DiagnosticAxis;
   /** Leviers à renforcer, signalés de la même façon sur le résultat. */
   weak?: DiagnosticAxis[];
   /** light : sur blanc (bleu OPEM) ; dark : sur bleu nuit (blanc). */
@@ -67,7 +64,6 @@ export function SevenSRadar({
   diagnostic,
   mode,
   scores = {},
-  current,
   weak = [],
   tone = 'light',
   labels = true,
@@ -85,16 +81,10 @@ export function SevenSRadar({
 
   const target = mode === 'idle' ? (IDLE[preset] ?? []) : axes.map((axis) => scores[axis] ?? 0);
   const zeros = axes.map(() => 0);
-  const values = useTweened(
-    target,
-    mode === 'idle' ? 1600 : mode === 'result' ? 1400 : 600,
-    mode === 'live' ? target : zeros,
-  );
+  const values = useTweened(target, mode === 'idle' ? 1600 : 1400, zeros);
 
-  // Ondes : la question en cours, ou les leviers à renforcer sur le résultat.
-  const beacons = mode === 'result' ? weak : current ? [current] : [];
-  // Pendant les questions, l'avancement est déjà donné en texte : radar décoratif.
-  const decorative = mode === 'live';
+  // Ondes : les leviers à renforcer, sur le résultat.
+  const beacons = mode === 'result' ? weak : [];
 
   return (
     <figure
@@ -102,8 +92,7 @@ export function SevenSRadar({
       data-tone={tone}
       data-mode={mode}
       data-compact={!labels || undefined}
-      aria-label={decorative ? undefined : diagnostic.modelLabel}
-      aria-hidden={decorative || undefined}
+      aria-label={diagnostic.modelLabel}
     >
       <svg
         className={styles.svg}
@@ -157,7 +146,6 @@ export function SevenSRadar({
                 y={y + sin * 14}
                 textAnchor={Math.abs(cos) < 0.25 ? 'middle' : cos > 0 ? 'start' : 'end'}
                 dominantBaseline={sin < -0.5 ? 'auto' : sin > 0.5 ? 'hanging' : 'central'}
-                data-current={axis === current || undefined}
               >
                 {lines.map((line, row) => (
                   <tspan
