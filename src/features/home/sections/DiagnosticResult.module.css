@@ -4,7 +4,7 @@
 
 .result {
   display: grid;
-  gap: clamp(2.5rem, 2rem + 2vw, 4rem);
+  gap: clamp(3.5rem, 2.5rem + 3vw, 6rem);
   padding-bottom: var(--space-8);
 }
 
@@ -51,21 +51,33 @@
   animation: enter 700ms var(--ease-reveal) both;
 }
 
-/* Rappel du contexte : « Entreprise privée · Industrie · … ». */
-.facts {
-  color: var(--opem-white);
-  letter-spacing: 0.04em;
-  text-transform: none;
+/* « Revoir mes réponses », en haut de l'écran. */
+.review {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
 }
 
-.facts::before {
-  content: '·';
-  margin-inline: 0.5rem;
-  color: var(--opem-blue-30);
+/* Flèche vers l'arrière (retour aux questions). */
+.reviewIcon {
+  scale: -1 1;
+}
+
+.reviewIcon:dir(rtl) {
+  scale: 1;
+}
+
+/* Récapitulatif : « Entreprise privée · Industrie · … · Direction générale », sous le titre. */
+.facts {
+  margin: var(--space-2) 0 0;
+  color: var(--opem-white);
+  font-size: 0.9375rem;
+  line-height: 1.6;
 }
 
 .profile {
-  margin: var(--space-3) 0 0;
+  margin: clamp(1.5rem, 1rem + 1.5vw, 2.5rem) 0 0;
   color: var(--opem-white);
   font-family: var(--font-heading);
   font-size: clamp(2.25rem, 1.3rem + 3.6vw, 4.5rem);
@@ -111,16 +123,21 @@
 
 /* ---------- 2. Votre empreinte ---------- */
 
+/* Le radar en grand, centré, sur presque toute la largeur ; dessous, niveau et équilibre. */
 .footprint {
   display: grid;
   gap: var(--space-8);
-  align-items: center;
   animation: enter 700ms var(--ease-reveal) 300ms both;
 }
 
 .radar {
   justify-self: center;
-  width: min(100%, 26rem);
+  width: min(100%, 60rem);
+}
+
+.analysis {
+  display: grid;
+  gap: var(--space-8);
 }
 
 .legend {
@@ -168,28 +185,28 @@
   gap: 0.5rem;
 }
 
+/* « Niveau 2 sur 4, en structuration », puis le score : lisible d'un coup d'œil. */
 .levelName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem var(--space-4);
   margin: 0;
   color: var(--opem-white);
   font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2.25rem);
   font-weight: 600;
+  line-height: 1.2;
 }
 
-.levelLabel {
-  color: var(--opem-blue-30);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.totalScore {
+  color: var(--opem-amber);
+  font-size: 0.8em;
 }
 
 .levelName:lang(ar) {
   font-family: var(--font-arabic);
-}
-
-.levelLabel:lang(ar) {
-  font-size: 0.875rem;
-  letter-spacing: 0;
+  line-height: 1.5;
 }
 
 .scale {
@@ -219,7 +236,7 @@
 .balance {
   display: grid;
   gap: var(--space-4);
-  margin: var(--space-8) 0 0;
+  margin: 0;
 }
 
 .bar {
@@ -710,8 +727,10 @@
 }
 
 @media (min-width: 64em) {
-  .footprint {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  /* Sous le radar : le niveau à gauche, l'équilibre à droite. */
+  .analysis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
     gap: clamp(2rem, 5vw, 5rem);
   }
 

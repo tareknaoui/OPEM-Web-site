@@ -110,6 +110,20 @@
   font-size: 14px;
 }
 
+/* Radar du résultat, agrandi : noms plus petits dans le dessin pour garder une taille de
+   lecture à l'écran (environ 17 px). */
+@media (min-width: 48em) {
+  .radar[data-mode='result'] .label {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 64em) {
+  .radar[data-mode='result'] .label {
+    font-size: 7.5px;
+  }
+}
+
 /* Petit radar sans noms (signature) : traits épaissis pour rester nets. */
 .radar[data-compact] .ring,
 .radar[data-compact] .spoke {

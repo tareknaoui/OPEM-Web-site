@@ -94,6 +94,8 @@ export type HomeContent = {
      * les sept leviers d'OPEM, sans citer le modèle d'origine.
      */
     modelLabel: string;
+    /** Virgule de la langue, avec son espace : « , » ou « ، ». */
+    comma: string;
     /** Étiquette de chaque levier : « Étape 2 · Levier {current} sur {total} », puis l'intitulé. */
     progress: string;
     /** Aide commune sous chaque question sur un levier. */
@@ -180,6 +182,12 @@ export type HomeContent = {
       profileLabel: string;
       /** Note d'un levier, pour les lecteurs d'écran : « {score} sur 3 ». */
       axisScore: string;
+      /**
+       * Score total, sous le niveau : « {total} points sur {max} », accordé selon le nombre
+       * (règles de pluriel de la langue : `one` en français pour 0 et 1 ; en arabe, `zero`,
+       * `one`, `two`, `few` de 3 à 10, `many` de 11 à 99).
+       */
+      totalScore: Partial<Record<Intl.LDMLPluralRule, string>> & { other: string };
       /** Légende du radar : forme pleine, forme en pointillés. */
       yours: string;
       ideal: string;
@@ -407,8 +415,11 @@ export type HomeContent = {
     /** Version « Prochaines sessions » : nom de la liste (lecteurs d'écran). */
     listLabel: string;
     /**
-     * date au format AAAA-MM-JJ ; les sessions passées sont masquées automatiquement.
-     * topic : thème affiché en étiquette sur la carte.
+     * Sessions inter-entreprises ouvertes au public. date au format AAAA-MM-JJ (premier jour) ;
+     * les sessions passées sont masquées automatiquement. topic : thème affiché en étiquette.
+     * `intra` : session réservée au personnel d'un client, jamais affichée dans l'agenda (le
+     * bouton « S'inscrire » y inviterait le public par erreur). `modules` : calendrier du cycle,
+     * repris sur la fiche de la formation (onglet « Formation qualifiante »).
      */
     items: {
       id: string;
@@ -417,6 +428,8 @@ export type HomeContent = {
       title: string;
       format: string;
       href: string;
+      intra?: boolean;
+      modules?: { label: string; dates: string }[];
     }[];
   };
   /**
@@ -542,6 +555,7 @@ const fr: HomeContent = {
     },
     modelLabel:
       'Les sept leviers OPEM : cap et priorités, organisation et rôles, processus et méthodes, culture et valeurs, style de management, équipes et talents, compétences.',
+    comma: ', ',
     progress: 'Étape 2 · Levier {current} sur {total}',
     leverHelp: 'Choisissez la situation la plus proche de la vôtre aujourd’hui.',
     back: 'Question précédente',
@@ -1106,8 +1120,10 @@ const fr: HomeContent = {
       label: 'Votre résultat',
       profileLabel: 'Votre profil',
       axisScore: '{score} sur 3',
+      totalScore: { one: '{total} point sur {max}', other: '{total} points sur {max}' },
       yours: 'Votre organisation',
-      ideal: 'Organisation alignée',
+      // Pas « Organisation alignée » : ne pas confondre la forme idéale avec le profil du même nom.
+      ideal: 'Niveau maximal',
       footprintTitle: 'Votre empreinte',
       strengthsTitle: 'Vos points d’appui',
       noStrength:
@@ -1138,7 +1154,7 @@ const fr: HomeContent = {
           'J’accepte qu’OPEM utilise ces informations pour m’adresser mon rapport.',
           'J’accepte qu’un consultant d’OPEM me contacte pour échanger sur ce résultat.',
         ],
-        info: 'Vos données servent uniquement à l’envoi de votre rapport et, si vous l’acceptez, à un échange avec un consultant. Elles sont conservées [durée à fixer] et ne sont ni vendues ni cédées. Vous pouvez y accéder, les faire rectifier ou supprimer en écrivant à [adresse à fixer].',
+        info: 'Vos données servent uniquement à l’envoi de votre rapport et, si vous l’acceptez, à un échange avec un consultant. Elles sont conservées trois ans à compter du dernier contact et ne sont ni vendues ni cédées. Vous pouvez y accéder, les faire rectifier ou supprimer en écrivant à contact@opem-dz.com.',
         submit: 'Recevoir mon rapport',
         sending: 'Envoi en cours…',
         done: 'Merci. Votre rapport détaillé vous sera adressé à {email}.',
@@ -1654,41 +1670,30 @@ const fr: HomeContent = {
     listLabel: 'Sessions à venir',
     all: { label: 'Tout le calendrier', href: '/formation' },
     register: 'S’inscrire',
-    provisional: true,
-    note: '.',
+    provisional: false,
+    note: '',
     empty: 'Les prochaines sessions seront annoncées très bientôt.',
     items: [
       {
-        id: 'iso-9001',
-        topic: 'Qualité',
-        date: '2026-11-16',
-        title: 'Management de la qualité selon l’ISO 9001',
-        format: 'Présentiel · Alger · 3 jours',
-        href: '/formation/catalogue-et-sessions',
-      },
-      {
-        id: 'iso-45001',
-        topic: 'HSE',
-        date: '2026-11-24',
-        title: 'Santé et sécurité au travail (ISO 45001)',
-        format: 'Présentiel · Alger · 2 jours',
-        href: '/formation/catalogue-et-sessions',
-      },
-      {
-        id: 'leadership',
+        id: 'management-de-projet',
         topic: 'Management',
-        date: '2026-12-07',
-        title: 'Management d’équipe et leadership',
-        format: 'Présentiel · Alger · 2 jours',
-        href: '/formation/catalogue-et-sessions',
-      },
-      {
-        id: 'projets-btph',
-        topic: 'BTPH',
-        date: '2026-12-14',
-        title: 'Gestion de projets BTPH',
-        format: 'Présentiel · Alger · 4 jours',
-        href: '/formation/catalogue-et-sessions',
+        date: '2026-12-01',
+        title: 'Management de projet',
+        format:
+          'Cycle de 20 jours en 6 modules, de décembre 2026 au premier trimestre 2027 · Présentiel · [lieu à confirmer par OPEM]',
+        href: '/formation/management-de-projet',
+        modules: [
+          { label: 'Module 1', dates: 'du mardi 1er au jeudi 3 décembre 2026 (3 jours)' },
+          { label: 'Module 2', dates: 'du lundi 14 au jeudi 17 décembre 2026 (4 jours)' },
+          { label: 'Module 3', dates: 'du mardi 5 au jeudi 7 janvier 2027 (3 jours)' },
+          { label: 'Module 4', dates: 'du mardi 19 au jeudi 21 janvier 2027 (3 jours)' },
+          { label: 'Module 5', dates: 'du mardi 2 au jeudi 4 février 2027 (3 jours)' },
+          {
+            label: 'Module 6',
+            dates:
+              'du dimanche 14 au mercredi 17 mars 2027 (4 jours), après le ramadan et l’Aïd el-Fitr',
+          },
+        ],
       },
     ],
   },
@@ -1913,6 +1918,7 @@ const ar: HomeContent = {
     },
     modelLabel:
       'روافع OPEM السبعة: التوجّه والأولويات، التنظيم والأدوار، المسارات والطرائق، الثقافة والقيم، أسلوب التسيير، الفرق والمواهب، الكفاءات.',
+    comma: '، ',
     progress: 'المرحلة 2 · الرافعة {current} من {total}',
     leverHelp: 'اختاروا الوضعية الأقرب إلى وضعيتكم اليوم.',
     back: 'السؤال السابق',
@@ -2398,8 +2404,16 @@ const ar: HomeContent = {
       label: 'نتيجتكم',
       profileLabel: 'ملفّكم',
       axisScore: '{score} من 3',
+      totalScore: {
+        zero: '0 نقطة من {max}',
+        one: 'نقطة واحدة من {max}',
+        two: 'نقطتان من {max}',
+        few: '{total} نقاط من {max}',
+        many: '{total} نقطة من {max}',
+        other: '{total} نقطة من {max}',
+      },
       yours: 'مؤسستكم',
-      ideal: 'مؤسسة متناسقة',
+      ideal: 'المستوى الأقصى',
       footprintTitle: 'بصمتكم',
       strengthsTitle: 'نقاط ارتكازكم',
       noStrength: 'لا توجد بعد رافعة متينة: الأفضل التقدم خطوة خطوة، ورشة واحدة في كل مرة.',
@@ -2429,7 +2443,7 @@ const ar: HomeContent = {
           'أوافق على أن تستعمل OPEM هذه المعلومات لإرسال تقريري.',
           'أوافق على أن يتصل بي مستشار من OPEM لتبادل الرأي حول هذه النتيجة.',
         ],
-        info: 'لا تُستعمل معطياتكم إلا لإرسال تقريركم، وإن وافقتم، لتبادل الرأي مع مستشار. تُحفظ [المدة تُحدَّد لاحقًا] ولا تُباع ولا يُتنازَل عنها. يمكنكم الاطلاع عليها أو تصحيحها أو حذفها بالكتابة إلى [العنوان يُحدَّد لاحقًا].',
+        info: 'لا تُستعمل معطياتكم إلا لإرسال تقريركم، وإن وافقتم، لتبادل الرأي مع مستشار. تُحفظ ثلاث سنوات ابتداءً من آخر اتصال ولا تُباع ولا يُتنازَل عنها. يمكنكم الاطلاع عليها أو تصحيحها أو حذفها بالكتابة إلى contact@opem-dz.com.',
         submit: 'استلام تقريري',
         sending: 'جارٍ الإرسال…',
         done: 'شكرًا. سيُرسَل تقريركم المفصّل إلى {email}.',
@@ -2938,41 +2952,29 @@ const ar: HomeContent = {
     listLabel: 'الدورات القادمة',
     all: { label: 'الرزنامة الكاملة', href: '/formation' },
     register: 'التسجيل',
-    provisional: true,
-    note: 'رزنامة تقديرية، في انتظار تأكيد OPEM.',
+    provisional: false,
+    note: '',
     empty: 'سيتم الإعلان عن الدورات القادمة قريبًا.',
     items: [
       {
-        id: 'iso-9001',
-        topic: 'الجودة',
-        date: '2026-11-16',
-        title: 'إدارة الجودة وفق ISO 9001',
-        format: 'حضوري · الجزائر العاصمة · 3 أيام',
-        href: '/formation/catalogue-et-sessions',
-      },
-      {
-        id: 'iso-45001',
-        topic: 'الصحة والسلامة والبيئة',
-        date: '2026-11-24',
-        title: 'الصحة والسلامة المهنية (ISO 45001)',
-        format: 'حضوري · الجزائر العاصمة · يومان',
-        href: '/formation/catalogue-et-sessions',
-      },
-      {
-        id: 'leadership',
+        id: 'management-de-projet',
         topic: 'التسيير',
-        date: '2026-12-07',
-        title: 'تسيير الفرق والقيادة',
-        format: 'حضوري · الجزائر العاصمة · يومان',
-        href: '/formation/catalogue-et-sessions',
-      },
-      {
-        id: 'projets-btph',
-        topic: 'البناء والأشغال العمومية',
-        date: '2026-12-14',
-        title: 'تسيير مشاريع البناء والأشغال العمومية',
-        format: 'حضوري · الجزائر العاصمة · 4 أيام',
-        href: '/formation/catalogue-et-sessions',
+        date: '2026-12-01',
+        title: 'تسيير المشاريع',
+        format:
+          'دورة من 20 يومًا في 6 وحدات، من ديسمبر 2026 إلى الثلاثي الأول من 2027 · حضوري · [المكان في انتظار تأكيد OPEM]',
+        href: '/formation/management-de-projet',
+        modules: [
+          { label: 'الوحدة 1', dates: 'من الثلاثاء 1 إلى الخميس 3 ديسمبر 2026 (3 أيام)' },
+          { label: 'الوحدة 2', dates: 'من الاثنين 14 إلى الخميس 17 ديسمبر 2026 (4 أيام)' },
+          { label: 'الوحدة 3', dates: 'من الثلاثاء 5 إلى الخميس 7 يناير 2027 (3 أيام)' },
+          { label: 'الوحدة 4', dates: 'من الثلاثاء 19 إلى الخميس 21 يناير 2027 (3 أيام)' },
+          { label: 'الوحدة 5', dates: 'من الثلاثاء 2 إلى الخميس 4 فبراير 2027 (3 أيام)' },
+          {
+            label: 'الوحدة 6',
+            dates: 'من الأحد 14 إلى الأربعاء 17 مارس 2027 (4 أيام)، بعد رمضان وعيد الفطر',
+          },
+        ],
       },
     ],
   },

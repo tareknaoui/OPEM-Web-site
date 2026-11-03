@@ -157,14 +157,14 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
           selected: answers[leverQuestion.id],
         }
       : undefined;
-  // Écran de résultat : réponses sur l'organisation (« Entreprise privée · Industrie · … »,
-  // sans la fonction), et libellé de la fonction choisie (valeur de départ du formulaire).
+  // Écran de résultat : réponses sur l'organisation, fonction comprise (« Entreprise privée ·
+  // Industrie · … · Direction générale »), et libellé de la fonction choisie (valeur de départ
+  // du formulaire).
   const answerLabel = (question: (typeof contextQuestions)[number]) => {
     const choice = question.choices.find((item) => item.id === context[question.id]);
     return choice ? choiceLabel(diagnostic, context, choice) : undefined;
   };
   const facts = contextQuestions
-    .filter(({ id }) => id !== 'fonction')
     .map(answerLabel)
     .filter((label): label is string => Boolean(label));
   const fonctionQuestion = contextQuestions.find(({ id }) => id === 'fonction');
@@ -358,7 +358,7 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                     {screen.progress
                       .replace('{current}', String(screen.index + 1))
                       .replace('{total}', String(screen.count))}
-                    {', '}
+                    {diagnostic.comma}
                     {screen.title}
                   </span>
                 </p>

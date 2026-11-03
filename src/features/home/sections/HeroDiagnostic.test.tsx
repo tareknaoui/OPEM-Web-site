@@ -269,8 +269,11 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     const profile = screen.getByRole('heading', { name: 'L’organisation en fondation' });
     await waitFor(() => expect(profile).toHaveFocus());
     const dialog = within(screen.getByRole('dialog'));
+    expect(dialog.getByText('Votre profil')).toBeInTheDocument();
     expect(
-      dialog.getByText('Entreprise privée · Industrie · Moyenne entreprise, de 50 à 250 personnes'),
+      dialog.getByText(
+        'Entreprise privée · Industrie · Moyenne entreprise, de 50 à 250 personnes · Direction générale',
+      ),
     ).toBeInTheDocument();
     expect(dialog.getByText(/La plupart des leviers restent à construire/)).toBeInTheDocument();
     const titles = dialog.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
@@ -286,10 +289,13 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     // 2. Votre empreinte : radar, niveau global, cadre et humain.
     expect(
       within(dialog.getByRole('figure', { name: /Les sept leviers OPEM/ })).getByText(
-        /Cap et priorités – 0 sur 3/,
+        /Cap et priorités, 0 sur 3/,
       ),
     ).toBeInTheDocument();
-    expect(dialog.getByText(/Niveau 1 sur 4/).parentElement).toHaveTextContent(/Initial$/);
+    expect(dialog.getByText(/Niveau 1 sur 4/)).toHaveTextContent(
+      'Niveau 1 sur 4, initial0 point sur 21',
+    );
+    expect(dialog.getByText('Niveau maximal')).toBeInTheDocument();
     expect(dialog.getByText(/Le cadre et l’humain avancent au même rythme/)).toBeInTheDocument();
 
     // 3. Aucun point d'appui ; 4. deux fragilités, avec leur constat et leur coût.

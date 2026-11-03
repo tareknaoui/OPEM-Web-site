@@ -94,17 +94,32 @@
   border-bottom: 1px solid var(--opem-gray-light);
 }
 
-/* Grande date : jour en très grand, mois et année empilés à côté. */
+/* Le corps (thème, titre, format) se fond dans la sous-grille de la carte. */
+.body {
+  display: contents;
+}
+
+/* Grande date : jour de la semaine au-dessus, jour en très grand, mois et année empilés à
+   côté. */
 .date {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
   align-items: center;
-  gap: var(--space-3);
+  column-gap: var(--space-3);
   color: var(--color-primary);
   font-family: var(--font-heading);
 }
 
 .date:lang(ar) {
   font-family: var(--font-arabic);
+}
+
+.weekday {
+  grid-column: 1 / -1;
+  margin-bottom: 0.25rem;
+  color: var(--opem-gray);
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .day {
@@ -124,7 +139,6 @@
 
 .month {
   color: var(--color-primary);
-  text-transform: capitalize;
 }
 
 /* Compte à rebours : pastille bleu très clair. */
@@ -237,6 +251,92 @@
 .register:hover,
 .register:focus-visible {
   border-bottom-color: currentColor;
+}
+
+/* ---------- Une seule session : carte mise en avant ---------- */
+
+.list[data-featured] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: none;
+  grid-auto-columns: auto;
+  grid-auto-flow: row;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.list[data-featured] .card {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  border-top: 4px solid var(--color-primary);
+}
+
+.list[data-featured] .top {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.list[data-featured] .day {
+  font-size: clamp(3.5rem, 2.5rem + 3vw, 5rem);
+}
+
+.list[data-featured] .monthYear {
+  font-size: 1rem;
+}
+
+.list[data-featured] .body {
+  display: block;
+}
+
+.list[data-featured] .topic {
+  margin: 0;
+}
+
+.list[data-featured] .title {
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+}
+
+.list[data-featured] .format {
+  max-width: 38rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+/* Bouton « S'inscrire » : au-dessus du lien étiré de la carte. */
+.registerButton {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+}
+
+@media (min-width: 48em) {
+  .list[data-featured] .card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+
+  /* Date à gauche, séparée par un filet vertical. */
+  .list[data-featured] .top {
+    align-self: stretch;
+    justify-content: center;
+    padding: 0 clamp(2rem, 1rem + 3vw, 4rem) 0 0;
+    border-bottom: 0;
+    border-inline-end: 1px solid var(--opem-gray-light);
+  }
+
+  .list[data-featured] .top:dir(rtl) {
+    padding: 0 0 0 clamp(2rem, 1rem + 3vw, 4rem);
+  }
+
+  .registerButton {
+    align-self: center;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

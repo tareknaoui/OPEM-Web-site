@@ -5,18 +5,8 @@ import { useReveal } from '@/hooks/useReveal';
 import { useLanguage } from '@/i18n/useLanguage';
 import type { HomeContent } from '../content';
 import { ProvisionalNote, SectionHeader } from './SectionHeader';
+import { upcomingSessions } from './sessionDates';
 import styles from './Trainings.module.css';
-
-type Session = HomeContent['trainings']['items'][number];
-
-/** Sessions à venir (aujourd'hui compris), triées par date. */
-function upcoming(items: Session[], today = new Date()) {
-  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-  return items
-    .map((item) => ({ ...item, day: new Date(`${item.date}T12:00:00`) }))
-    .filter((item) => item.day.getTime() >= start)
-    .sort((a, b) => a.day.getTime() - b.day.getTime());
-}
 
 /**
  * Prochaines formations, en liste de type agenda : date en grand à gauche,
@@ -25,7 +15,7 @@ function upcoming(items: Session[], today = new Date()) {
 export function Trainings({ trainings }: { trainings: HomeContent['trainings'] }) {
   const { lang } = useLanguage();
   const reveal = useReveal<HTMLOListElement>();
-  const sessions = upcoming(trainings.items);
+  const sessions = upcomingSessions(trainings.items);
 
   const dates = useMemo(() => {
     const locale = lang === 'ar' ? 'ar-DZ' : 'fr-FR';

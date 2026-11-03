@@ -26,26 +26,40 @@ describe('« Les prochaines sessions »', () => {
     vi.useRealTimers();
   });
 
-  it('affiche les sessions à venir, avec le compte à rebours et l’inscription', () => {
+  it('met en avant la seule session à venir, avec le compte à rebours et l’inscription', () => {
     renderSessions();
     const list = within(screen.getByRole('list', { name: 'Sessions à venir' }));
-    const titles = list.getAllByRole('heading', { level: 3 }).map((title) => title.textContent);
-    expect(titles[0]).toBe('Management de la qualité selon l’ISO 9001');
-    expect(list.getByText('Demain')).toBeInTheDocument();
-    expect(list.getByText('Dans 9 jours')).toBeInTheDocument();
+    expect(list.getAllByRole('heading', { level: 3 }).map((title) => title.textContent)).toEqual([
+      'Management de projet',
+    ]);
+    expect(list.getByText('mardi 1er décembre 2026')).toBeInTheDocument();
+    expect(list.getByText('Dans 16 jours')).toBeInTheDocument();
+    // Catégorie « MANAGEMENT » : écrite « Management », mise en capitales par le style.
+    expect(list.getByText('Management')).toBeInTheDocument();
     expect(
-      list.getByRole('link', { name: /S’inscrire.*Management de la qualité/ }),
-    ).toHaveAttribute('href', '/contact?formation=iso-9001');
+      list.getByText(
+        'Cycle de 20 jours en 6 modules, de décembre 2026 au premier trimestre 2027 · Présentiel · [lieu à confirmer par OPEM]',
+      ),
+    ).toBeInTheDocument();
+    expect(list.getByRole('link', { name: /S’inscrire.*Management de projet/ })).toHaveAttribute(
+      'href',
+      '/contact?formation=management-de-projet',
+    );
     expect(screen.getByRole('link', { name: /Tout le calendrier/ })).toHaveAttribute(
       'href',
       '/formation',
     );
   });
 
-  it('masque les sessions passées', () => {
-    const sessions = upcomingSessions(homeContent.fr.trainings.items, new Date(2026, 11, 8));
-    expect(sessions.map((session) => session.id)).toEqual(['projets-btph']);
-    expect(sessions[0]?.daysLeft).toBe(6);
+  it('masque les sessions passées et les sessions intra-entreprise', () => {
+    const items = [
+      ...homeContent.fr.trainings.items,
+      { ...homeContent.fr.trainings.items[0]!, id: 'intra', date: '2026-12-10', intra: true },
+    ];
+    const sessions = upcomingSessions(items, new Date(2026, 10, 30));
+    expect(sessions.map((session) => session.id)).toEqual(['management-de-projet']);
+    expect(sessions[0]?.daysLeft).toBe(1);
+    expect(upcomingSessions(items, new Date(2026, 11, 2))).toEqual([]);
   });
 
   it('annonce de prochaines sessions quand le calendrier est vide', () => {

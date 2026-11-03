@@ -44,8 +44,8 @@ function vertex(index: number, count: number, level: number) {
   return { x: radius * cos, y: radius * sin, cos, sin };
 }
 
-/** Hauteur d'une ligne de nom, en unités du dessin. */
-const LABEL_LINE = 15;
+/** Hauteur d'une ligne de nom, relative à la taille du texte. */
+const LABEL_LINE = 1.15;
 
 const points = (levels: readonly number[]) =>
   levels
@@ -151,7 +151,7 @@ export function SevenSRadar({
                   <tspan
                     key={line}
                     x={x + cos * 14}
-                    dy={row === 0 ? -shift * LABEL_LINE : LABEL_LINE}
+                    dy={`${row === 0 ? -shift * LABEL_LINE : LABEL_LINE}em`}
                   >
                     {line}
                   </tspan>
@@ -166,7 +166,7 @@ export function SevenSRadar({
           {axes.map((axis) => (
             <li key={axis}>
               {diagnostic.axes[axis].label}
-              {' – '}
+              {diagnostic.comma}
               {diagnostic.result.axisScore.replace('{score}', String(scores[axis] ?? 0))}
             </li>
           ))}

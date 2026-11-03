@@ -21,7 +21,7 @@ type DiagnosticResultProps = {
   result: Result;
   context: ContextAnswers;
   answers: DiagnosticAnswers;
-  /** Libellés des réponses sur l'organisation (statut, secteur, taille), dans l'ordre. */
+  /** Libellés des réponses sur l'organisation (statut, secteur, taille, fonction), dans l'ordre. */
   facts: string[];
   /** Libellé de la fonction choisie : valeur de départ du champ « Fonction ». */
   fonction: string;
@@ -57,6 +57,14 @@ export function DiagnosticResult({
   const profile = diagnostic.profiles[result.profile];
   const level = analysis.levels[result.level];
   const percent = (value: number) => format.format(value / 100);
+  // « 9 points sur 21 » : le total, sur le maximum possible (3 points par levier).
+  const maxScore = Object.keys(axes).length * 3;
+  const plural = new Intl.PluralRules(format.resolvedOptions().locale).select(result.total);
+  const totalScore = (labels.totalScore[plural] ?? labels.totalScore.other)
+    .replace('{total}', String(result.total))
+    .replace('{max}', String(maxScore));
+  // « en structuration » : nom du niveau après une virgule, sans majuscule.
+  const levelName = level ? level.name.charAt(0).toLowerCase() + level.name.slice(1) : '';
   const note = (axis: DiagnosticAxis) => result.scores[axis] ?? 0;
   const domainsOf = (axis: DiagnosticAxis) =>
     (note(axis) >= 2 && axes[axis].domainsFrom2) || axes[axis].domains;
@@ -93,20 +101,31 @@ export function DiagnosticResult({
 
   return (
     <div className={styles.result}>
-      {/* 1. Votre profil */}
+      {/* 1. Votre profil : « Revoir mes réponses » en haut, puis le titre, le récapitulatif
+          des réponses sur l'organisation, et le nom du profil. */}
       <header className={styles.hero}>
-        <p className={styles.eyebrow}>
-          {labels.profileLabel}
-          {facts.length > 0 && <span className={styles.facts}>{facts.join(' · ')}</span>}
-        </p>
+        <button
+          type="button"
+          className={`${styles.textButton} ${styles.review}`}
+          onClick={onReview}
+        >
+          <ArrowRightIcon size={16} className={styles.reviewIcon} />
+          {labels.restart}
+        </button>
+        <p className={styles.eyebrow}>{labels.profileLabel}</p>
+        {facts.length > 0 && <p className={styles.facts}>{facts.join(' · ')}</p>}
         <h2 ref={headingRef} tabIndex={-1} className={styles.profile}>
           {profile.name}
         </h2>
         <p className={styles.lead}>{profile.text}</p>
       </header>
 
-      {/* 2. Votre empreinte : radar, niveau global, cadre et humain. */}
+      {/* 2. Votre empreinte : le radar en grand, centré ; dessous, le niveau et le score, puis
+          l'équilibre entre le cadre et l'humain. */}
       <section className={styles.footprint} aria-labelledby={`${ids}-footprint`}>
+        <h3 id={`${ids}-footprint`} className={styles.blockTitle}>
+          {labels.footprintTitle}
+        </h3>
         <div className={styles.radar}>
           <SevenSRadar
             diagnostic={diagnostic}
@@ -123,16 +142,13 @@ export function DiagnosticResult({
             )}
           </p>
         </div>
-        <div>
-          <h3 id={`${ids}-footprint`} className={styles.blockTitle}>
-            {labels.footprintTitle}
-          </h3>
+        <div className={styles.analysis}>
           <div className={styles.level}>
             <p className={styles.levelName}>
-              <span className={styles.levelLabel}>
-                {analysis.levelLabel.replace('{level}', String(result.level + 1))}
-              </span>{' '}
-              {level?.name}
+              {analysis.levelLabel.replace('{level}', String(result.level + 1))}
+              {diagnostic.comma}
+              {levelName}
+              <span className={styles.totalScore}>{totalScore}</span>
             </p>
             <ol className={styles.scale} aria-hidden="true">
               {analysis.levels.map((item, index) => (
@@ -145,26 +161,28 @@ export function DiagnosticResult({
             </ol>
             <p className={styles.text}>{level?.text}</p>
           </div>
-          <dl className={styles.balance}>
-            {(['hard', 'soft'] as const).map((side) => (
-              <div key={side} className={styles.bar}>
-                <dt>
-                  <span className={styles.barLabel}>{analysis[side].label}</span>
-                  <span className={styles.hint}>{analysis[side].hint}</span>
-                </dt>
-                <dd>
-                  <span className={styles.track} aria-hidden="true">
-                    <span
-                      className={styles.fill}
-                      style={{ '--value': `${result[side]}%` } as CSSProperties}
-                    />
-                  </span>
-                  <span className={styles.barValue}>{percent(result[side])}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className={styles.text}>{analysis.balance[result.balance]}</p>
+          <div>
+            <dl className={styles.balance}>
+              {(['hard', 'soft'] as const).map((side) => (
+                <div key={side} className={styles.bar}>
+                  <dt>
+                    <span className={styles.barLabel}>{analysis[side].label}</span>
+                    <span className={styles.hint}>{analysis[side].hint}</span>
+                  </dt>
+                  <dd>
+                    <span className={styles.track} aria-hidden="true">
+                      <span
+                        className={styles.fill}
+                        style={{ '--value': `${result[side]}%` } as CSSProperties}
+                      />
+                    </span>
+                    <span className={styles.barValue}>{percent(result[side])}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className={styles.text}>{analysis.balance[result.balance]}</p>
+          </div>
         </div>
       </section>
 
@@ -304,9 +322,6 @@ export function DiagnosticResult({
             <div className={styles.otherActions}>
               <button type="button" className={styles.textButton} onClick={onRetake}>
                 {labels.retake}
-              </button>
-              <button type="button" className={styles.textButton} onClick={onReview}>
-                {labels.restart}
               </button>
             </div>
           </div>
