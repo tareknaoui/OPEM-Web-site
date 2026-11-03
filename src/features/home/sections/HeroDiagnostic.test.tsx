@@ -162,10 +162,10 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
         .getAllByRole('button')
         .map((button) => button.textContent),
     ).toEqual([
-      'ATrès petite entreprise, de 1 à 9 personnes',
-      'BPetite entreprise, de 10 à 49 personnes',
-      'CMoyenne entreprise, de 50 à 250 personnes',
-      'DGrande entreprise, plus de 250 personnes',
+      'Très petite entreprise, de 1 à 9 personnes',
+      'Petite entreprise, de 10 à 49 personnes',
+      'Moyenne entreprise, de 50 à 250 personnes',
+      'Grande entreprise, plus de 250 personnes',
     ]);
     fireEvent.keyDown(size, { key: 'b' });
 
@@ -191,10 +191,10 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     ).toBeVisible();
     const choices = within(within(dialog).getByRole('list', { name: /Vos équipes savent-elles/ }));
     expect(choices.getAllByRole('button').map((button) => button.textContent)).toEqual([
-      'ANos orientations se décident au fil des opportunités, sans plan à plusieurs années.',
-      'BLa direction a une vision à plusieurs années, encore peu partagée avec les équipes.',
-      'CUn plan stratégique existe et les cadres le connaissent.',
-      'DChacun connaît les objectifs qui le concernent et en suit l’avancement.',
+      'Nos orientations se décident au fil des opportunités, sans plan à plusieurs années.',
+      'La direction a une vision à plusieurs années, encore peu partagée avec les équipes.',
+      'Un plan stratégique existe et les cadres le connaissent.',
+      'Chacun connaît les objectifs qui le concernent et en suit l’avancement.',
     ]);
 
     fireEvent.keyDown(question, { key: 'c' });
@@ -409,10 +409,10 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
         .getAllByRole('button')
         .map((button) => button.textContent),
     ).toEqual([
-      'ADe 1 à 9 personnes',
-      'BDe 10 à 49 personnes',
-      'CDe 50 à 250 personnes',
-      'DPlus de 250 personnes',
+      'De 1 à 9 personnes',
+      'De 10 à 49 personnes',
+      'De 50 à 250 personnes',
+      'Plus de 250 personnes',
     ]);
   });
 });

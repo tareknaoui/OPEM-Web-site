@@ -105,8 +105,6 @@ export type HomeContent = {
     steps: [string, string, string];
     /** Écran de fin du questionnaire, avant le résultat. */
     done: { title: string; text: string; cta: string };
-    /** Touches affichées devant les réponses (et acceptées au clavier, avec 1 à 4). */
-    keys: [string, string, string, string];
     /** Sortie du questionnaire : retour à l'écran d'accueil. */
     close: string;
     /**
@@ -555,7 +553,6 @@ const fr: HomeContent = {
       text: 'Votre résultat est prêt.',
       cta: 'Voir mon résultat',
     },
-    keys: ['A', 'B', 'C', 'D'],
     close: 'Quitter',
     context: {
       label: 'Étape 1 · Votre organisation',
@@ -638,6 +635,7 @@ const fr: HomeContent = {
           id: 'effectif',
           label: 'Taille',
           text: 'Quelle est la taille de votre organisation ?',
+          help: 'Indiquez l’effectif total, tous sites confondus.',
           choices: [
             {
               id: '1-9',
@@ -1921,7 +1919,6 @@ const ar: HomeContent = {
       text: 'نتيجتكم جاهزة.',
       cta: 'عرض نتيجتي',
     },
-    keys: ['1', '2', '3', '4'],
     close: 'خروج',
     context: {
       label: 'المرحلة 1 · مؤسستكم',
@@ -1986,6 +1983,7 @@ const ar: HomeContent = {
           id: 'effectif',
           label: 'الحجم',
           text: 'ما هو حجم مؤسستكم؟',
+          help: 'أشيروا إلى العدد الإجمالي للعاملين، في جميع المواقع.',
           choices: [
             {
               id: '1-9',

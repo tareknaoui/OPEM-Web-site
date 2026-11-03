@@ -762,29 +762,6 @@
   padding-inline-start: calc(1rem - 3px);
 }
 
-.choice[aria-current='true'] .key {
-  border-color: var(--opem-amber);
-}
-
-.key {
-  display: grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border: 1px solid rgb(255 255 255 / 0.45);
-  border-radius: 0.3rem;
-  color: var(--opem-amber);
-  font-size: 0.8125rem;
-  font-weight: 700;
-}
-
-/* Au survol, le bouton passe en blanc : la lettre revient au bleu nuit (pas d'ambre sur blanc). */
-.choice:hover .key {
-  border-color: var(--opem-night);
-  color: var(--opem-night);
-}
-
 .choiceLabel {
   flex: 1;
 }

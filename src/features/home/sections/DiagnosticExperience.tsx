@@ -33,6 +33,13 @@ const TOUR: DiagnosticAxis[] = [
   'competences',
 ];
 const TOUR_MS = 4500;
+/** Questions sur l'organisation qui ont leur propre illustration (les autres : « organisation »). */
+const CONTEXT_SCENES: Partial<Record<DiagnosticContextId, SceneId>> = {
+  secteur: 'secteur',
+  effectif: 'taille',
+};
+/** Réponses auxquelles le clavier répond : A à D, ou 1 à 4. */
+const KEYS = 4;
 
 /** Réponses aux questions sur l'organisation : question → identifiant de la réponse. */
 type ContextAnswers = Partial<Record<DiagnosticContextId, string>>;
@@ -163,10 +170,12 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     .filter((label): label is string => Boolean(label));
   const fonctionQuestion = contextQuestions.find(({ id }) => id === 'fonction');
   const fonction = (fonctionQuestion && answerLabel(fonctionQuestion)) ?? '';
-  // Au-delà de 4 réponses (statut, secteur, fonction) : sans touches. Grille de boutons
-  // (statut) ; pastilles au-delà de 8 réponses (fonction) ou par famille (secteur).
+  // Jusqu'à 4 réponses (taille, leviers) : une colonne, et le clavier y répond (A à D, 1 à 4),
+  // sans lettre affichée devant les réponses (le test ne doit pas ressembler à un examen).
+  // Au-delà : grille de boutons (statut) ; pastilles au-delà de 8 réponses (fonction) ou par
+  // famille (secteur).
   const choiceCount = screen?.choices.length ?? 0;
-  const withKeys = choiceCount <= diagnostic.keys.length;
+  const withKeys = choiceCount <= KEYS;
   const layout = withKeys ? undefined : choiceCount > 8 ? 'chips' : 'grid';
   // Réponses rangées par famille (secteurs) ; sinon un seul groupe, sans titre.
   const groups: { family?: string; choices: { id: string; label: string; index: number }[] }[] = [];
@@ -198,11 +207,6 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
               aria-current={screen?.selected === choice.id ? 'true' : undefined}
               onClick={() => choose(choice.id)}
             >
-              {withKeys && (
-                <span className={styles.key} aria-hidden="true">
-                  {diagnostic.keys[choice.index]}
-                </span>
-              )}
               <span className={styles.choiceLabel}>{choice.label}</span>
             </button>
           </li>
@@ -213,9 +217,9 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
   const mode = welcome ? 'welcome' : screen ? 'question' : done ? 'done' : 'result';
   const scene: SceneId | null = welcome
     ? featured
-    : contextQuestion?.id === 'secteur'
-      ? 'secteur'
-      : contextQuestion || done
+    : contextQuestion
+      ? (CONTEXT_SCENES[contextQuestion.id] ?? 'organisation')
+      : done
         ? 'organisation'
         : (leverQuestion?.id ?? null);
 
