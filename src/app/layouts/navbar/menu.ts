@@ -3,8 +3,8 @@ import type { MenuItem } from '@/lib/wordpress';
 
 export type { MenuItem };
 
-/** Arborescence validée par OPEM : 8 entrées (la charte en prévoyait 6). */
-export const MAX_TOP_LEVEL_ITEMS = 8;
+/** Arborescence validée par OPEM : 9 entrées, dont « IA appliquée » (la charte en prévoyait 6). */
+export const MAX_TOP_LEVEL_ITEMS = 9;
 
 /** Cible des boutons « Demander un devis » et « Être rappelé ». */
 export const QUOTE_HREF = '/contact';
@@ -124,6 +124,12 @@ const entries: Entry[] = [
         },
       },
     ],
+  },
+  {
+    id: 'ia-appliquee',
+    href: '/ia-appliquee',
+    label: { fr: 'IA appliquée', ar: 'الذكاء الاصطناعي التطبيقي' },
+    shortLabel: { fr: 'IA appliquée', ar: 'الذكاء الاصطناعي' },
   },
   {
     id: 'missions',

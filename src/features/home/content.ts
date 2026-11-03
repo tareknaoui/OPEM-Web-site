@@ -311,7 +311,8 @@ export type HomeContent = {
     eyebrow: string;
     title: string;
     text: string;
-    cta: Link;
+    /** `ariaLabel` : nom du bouton lu par les lecteurs d'écran, à la place du libellé. */
+    cta: Link & { ariaLabel: string };
     /**
      * Illustration (une porte ouverte sur un cerveau fait de neurones, prolongé par les couches
      * d'un réseau de neurones qui s'étendent au-delà ; un seul nœud ambre, au cœur), format
@@ -1452,15 +1453,19 @@ const fr: HomeContent = {
   },
   ai: {
     eyebrow: 'Intelligence artificielle appliquée',
-    title: 'L’IA entre dans l’entreprise par la porte de l’organisation.',
-    text: 'Avant de parler d’outils, nous regardons comment votre entreprise fonctionne réellement. L’IA n’intervient que là où elle crée de la valeur, avec des données protégées dès le départ.',
-    cta: { label: 'Découvrir l’approche', href: '/expertises/intelligence-artificielle' },
+    title: 'L’IA entre par la porte de l’organisation.',
+    text: 'Avant de parler d’outils, nous regardons comment votre organisation fonctionne réellement. L’intelligence artificielle n’y entre que là où elle allège ou fiabilise le travail : rapports, procédures, analyse des risques, tableaux de bord. Vos données sensibles restent sous votre contrôle.',
+    cta: {
+      label: 'Passer la porte',
+      href: '/ia-appliquee',
+      ariaLabel: 'Découvrir nos solutions et notre démarche en intelligence artificielle',
+    },
     illustration: '/images/ia/porte.webp',
     stepsLabel: 'Notre démarche en trois temps',
     steps: [
-      { label: 'Diagnostic', text: 'Repérer où l’IA crée réellement de la valeur' },
-      { label: 'Formation', text: 'Exploiter l’IA au quotidien, côté métier' },
-      { label: 'Intégration', text: 'Déployer, avec des données sous contrôle' },
+      { label: 'Diagnostic', text: 'Une carte des usages prioritaires, chiffrée' },
+      { label: 'Formation', text: 'Des équipes formées au cœur de leur métier' },
+      { label: 'Accompagnement', text: 'Un outil maîtrisé, qui libère temps et ressources' },
     ],
   },
   insights: {
@@ -2737,15 +2742,19 @@ const ar: HomeContent = {
   },
   ai: {
     eyebrow: 'الذكاء الاصطناعي التطبيقي',
-    title: 'الذكاء الاصطناعي يدخل المؤسسة من باب التنظيم.',
-    text: 'قبل الحديث عن الأدوات، ننظر في الطريقة التي تعمل بها مؤسستكم فعلًا. لا يتدخل الذكاء الاصطناعي إلا حيث يخلق قيمة، مع معطيات محمية منذ البداية.',
-    cta: { label: 'اكتشفوا مقاربتنا', href: '/expertises/intelligence-artificielle' },
+    title: 'الذكاء الاصطناعي يدخل من باب التنظيم.',
+    text: 'قبل الحديث عن الأدوات، ننظر في الطريقة التي تعمل بها مؤسستكم فعلًا. لا يدخلها الذكاء الاصطناعي إلا حيث يخفّف العمل أو يجعله أكثر موثوقية: التقارير، الإجراءات، تحليل المخاطر، لوحات القيادة. وتبقى معطياتكم الحساسة تحت سيطرتكم.',
+    cta: {
+      label: 'اعبروا الباب',
+      href: '/ia-appliquee',
+      ariaLabel: 'اكتشفوا حلولنا ومقاربتنا في الذكاء الاصطناعي',
+    },
     illustration: '/images/ia/porte.webp',
     stepsLabel: 'مقاربتنا في ثلاث مراحل',
     steps: [
-      { label: 'التشخيص', text: 'تحديد المواضع التي يخلق فيها الذكاء الاصطناعي قيمة فعلية' },
-      { label: 'التكوين', text: 'استعمال الذكاء الاصطناعي يوميًا، في صميم المهن' },
-      { label: 'الإدماج', text: 'النشر، مع معطيات تحت السيطرة' },
+      { label: 'التشخيص', text: 'خريطة مرقّمة للاستعمالات ذات الأولوية' },
+      { label: 'التكوين', text: 'فرق مكوَّنة في صميم مهنها' },
+      { label: 'المرافقة', text: 'أداة متحكَّم فيها، تحرّر الوقت والموارد' },
     ],
   },
   insights: {

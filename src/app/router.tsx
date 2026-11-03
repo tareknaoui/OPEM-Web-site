@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: 'ia-appliquee',
+        lazy: async () => ({ Component: (await import('@/features/ia/IaPage')).default }),
+      },
+      {
         path: 'about',
         lazy: async () => ({ Component: (await import('@/features/about/AboutPage')).default }),
       },

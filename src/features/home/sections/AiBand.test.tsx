@@ -14,17 +14,19 @@ describe('Bandeau « Intelligence artificielle appliquée »', () => {
   it('présente l’approche et ses trois temps', () => {
     renderBand();
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
-      'L’IA entre dans l’entreprise par la porte de l’organisation.',
+      'L’IA entre par la porte de l’organisation.',
     );
-    expect(screen.getByRole('link', { name: /Découvrir l’approche/ })).toHaveAttribute(
-      'href',
-      '/expertises/intelligence-artificielle',
-    );
+    // « Passer la porte » à l'écran ; nom lu par les lecteurs d'écran : l'étiquette invisible.
+    const cta = screen.getByRole('link', {
+      name: 'Découvrir nos solutions et notre démarche en intelligence artificielle',
+    });
+    expect(cta).toHaveTextContent('Passer la porte');
+    expect(cta).toHaveAttribute('href', '/ia-appliquee');
     const steps = within(screen.getByRole('list', { name: 'Notre démarche en trois temps' }));
     expect(steps.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
-      '01DiagnosticRepérer où l’IA crée réellement de la valeur',
-      '02FormationExploiter l’IA au quotidien, côté métier',
-      '03IntégrationDéployer, avec des données sous contrôle',
+      '01DiagnosticUne carte des usages prioritaires, chiffrée',
+      '02FormationDes équipes formées au cœur de leur métier',
+      '03AccompagnementUn outil maîtrisé, qui libère temps et ressources',
     ]);
     // Illustration décorative : la porte ouverte sur l'organisation.
     expect(document.querySelector('img')).toHaveAttribute('src', '/images/ia/porte.webp');

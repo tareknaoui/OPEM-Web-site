@@ -737,3 +737,34 @@
     display: none;
   }
 }
+
+/* Petit ordinateur (1280 à 1535 px) : neuf rubriques, plus la langue et le bouton. La barre se
+   resserre (écarts, taille du texte, logo, bouton) pour tout tenir sur une ligne. */
+@media (min-width: 80em) and (max-width: 95.99em) {
+  .bar {
+    gap: 0.75rem;
+  }
+
+  .logo,
+  .compact .logo {
+    height: 2.5rem;
+  }
+
+  .editoriale .menu {
+    gap: 0.625rem;
+  }
+
+  .editoriale .topLink {
+    gap: 0.125rem;
+    font-size: 0.8125rem;
+  }
+
+  .actions {
+    gap: var(--space-3);
+  }
+
+  .callback {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+}

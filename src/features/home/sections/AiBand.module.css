@@ -1,37 +1,29 @@
-/* Bandeau « Intelligence artificielle appliquée ». Même bleu nuit que « Nos domaines », qu'il
-   prolonge (le bleu OPEM ne touche jamais le bleu nuit) : textes blancs et bleu 30 %, jamais de
-   vert. Pas de dégradé : les reflets sont des blancs translucides. */
+/* Bandeau « Intelligence artificielle appliquée », sur blanc : il se détache du bleu nuit de
+   « Nos domaines », juste au-dessus, et du bleu très clair des sessions, juste en dessous.
+   Texte anthracite, titres et bouton bleu OPEM, pas d'ambre. Pas de dégradé. */
 
 .section {
-  padding-block: 0 var(--section-space);
-  background: var(--opem-night);
-  color: var(--opem-white);
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+  color: var(--opem-anthracite);
 }
 
-.section :focus-visible {
-  outline-color: var(--opem-white);
-}
-
-/* Pas de panneau : tout se pose sur le bleu nuit, comme les domaines, dont un filet le sépare. */
 .band {
   display: grid;
   gap: clamp(2rem, 1.5rem + 2vw, 3.5rem) var(--grid-gap);
   align-items: center;
-  padding-top: clamp(3rem, 2rem + 4vw, 6rem);
-  border-top: 1px solid rgb(255 255 255 / 0.18);
 }
 
 /* ---------- Illustration ---------- */
 
-/* Bords estompés (masque, rien de visible) : l'image se fond dans le bleu nuit de la section.
-   Taille contenue : elle accompagne le titre sans l'écraser. */
+/* L'illustration (fond bleu nuit) dans un cadre arrondi : sur blanc, une image nette plutôt
+   qu'une tache aux bords estompés. Taille contenue : elle accompagne le titre sans l'écraser. */
 .visual {
   justify-self: center;
   width: min(100%, 34rem);
-  mask-image:
-    linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
-    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
-  mask-composite: intersect;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: var(--opem-night);
 }
 
 .image {
@@ -47,7 +39,7 @@
   align-items: center;
   gap: var(--space-2);
   margin: 0 0 var(--space-4);
-  color: var(--opem-blue-30);
+  color: var(--color-primary);
   font-family: var(--font-heading);
   font-size: var(--eyebrow-size);
   font-weight: 600;
@@ -63,8 +55,8 @@
 
 .spark {
   flex-shrink: 0;
-  /* Seule touche d'ambre du bandeau : l'étincelle, sur le bleu nuit. */
-  color: var(--opem-amber);
+  /* Pas d'ambre sur blanc : l'étincelle en bleu OPEM. */
+  color: var(--color-primary);
   fill: currentColor;
   animation: twinkle 2.8s ease-in-out infinite;
 }
@@ -85,7 +77,7 @@
 .title {
   max-width: 20ch;
   margin: 0;
-  color: var(--opem-white);
+  color: var(--color-primary);
   font-family: var(--font-heading);
   font-size: clamp(2rem, 1.3rem + 2.4vw, 3.5rem);
   font-weight: 600;
@@ -103,7 +95,7 @@
 .text {
   max-width: 34rem;
   margin: var(--space-6) 0 var(--space-8);
-  color: var(--opem-blue-30);
+  color: var(--opem-anthracite);
   font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   line-height: 1.65;
 }
@@ -114,7 +106,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.35);
+  border: 1px solid var(--opem-gray-light);
   border-radius: 0.75rem;
   list-style: none;
 }
@@ -129,38 +121,26 @@
 }
 
 .step + .step {
-  border-top: 1px solid rgb(255 255 255 / 0.25);
+  border-top: 1px solid var(--opem-gray-light);
 }
 
 .step:hover {
-  background: rgb(255 255 255 / 0.07);
+  background: var(--opem-blue-10);
 }
 
-/* « Découvrir l'approche » : bouton blanc qui passe en ambre au survol (demande du client),
-   texte anthracite dans les deux cas (charte : jamais de bleu sur l'ambre). */
+/* « Passer la porte » : bouton bleu OPEM (btn-primary), sans ambre. */
 .cta {
-  border-color: var(--opem-white);
-  background: var(--opem-white);
-  color: var(--opem-anthracite);
-  transition:
-    background-color 200ms,
-    border-color 200ms;
+  transition: background-color 200ms;
 }
 
-.cta:hover {
-  border-color: var(--opem-amber);
-  background: var(--opem-amber);
-  color: var(--opem-anthracite);
-}
-
-/* Filet ambre qui parcourt les trois temps l'un après l'autre (repère sur bleu nuit). */
+/* Filet bleu OPEM qui parcourt les trois temps l'un après l'autre. */
 .step::before {
   content: '';
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
   width: 3px;
-  background: var(--opem-amber);
+  background: var(--color-primary);
   opacity: 0;
   animation: flow 4.5s ease-in-out infinite;
 }
@@ -190,7 +170,7 @@
   grid-row: span 2;
   min-width: 1.5rem;
   padding-top: 0.2em;
-  color: var(--opem-amber);
+  color: var(--color-primary);
   font-family: var(--font-heading);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -198,7 +178,7 @@
 }
 
 .label {
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-family: var(--font-heading);
   font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
   font-weight: 600;
@@ -210,7 +190,7 @@
 }
 
 .stepText {
-  color: var(--opem-blue-30);
+  color: var(--opem-anthracite);
   line-height: 1.5;
 }
 
@@ -249,7 +229,7 @@
 
   .step + .step {
     border-top: 0;
-    border-inline-start: 1px solid rgb(255 255 255 / 0.25);
+    border-inline-start: 1px solid var(--opem-gray-light);
   }
 
   /* Le filet lumineux passe en haut de chaque temps. */

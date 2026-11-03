@@ -39,7 +39,7 @@ describe('HomePage', () => {
       'Ils nous font confiance',
       'Comprendre avant d’agir, transmettre avant de partir, mesurer avant de conclure.',
       'Six domaines, un seul fil conducteur : votre performance.',
-      'L’IA entre dans l’entreprise par la porte de l’organisation.',
+      'L’IA entre par la porte de l’organisation.',
       'Les prochaines sessions',
       'Leurs mots, nos meilleures références.',
       'Des analyses pour décider en connaissance de cause.',

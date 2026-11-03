@@ -6,11 +6,12 @@ import styles from './AiBand.module.css';
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
- * Bandeau « Intelligence artificielle appliquée », juste sous les domaines, dans le même bleu
- * nuit, séparé d'eux par un filet. À gauche l'étiquette (étoile qui scintille), le grand titre,
- * le texte et le bouton ; à droite l'illustration de la porte, qui se fond dans le fond (même
- * bleu, bords estompés) ; dessous, les trois temps dans un cadre à filets, parcourus l'un après
- * l'autre par un filet lumineux. Animations coupées en mouvement réduit.
+ * Bandeau « Intelligence artificielle appliquée », juste sous les domaines, sur blanc (il se
+ * détache du bleu nuit des domaines et du bleu très clair des sessions). À gauche l'étiquette
+ * (étoile qui scintille), le grand titre, le texte et le bouton « Passer la porte », vers la page
+ * IA appliquée ; à droite l'illustration de la porte, dans un cadre arrondi ; dessous, les trois
+ * temps dans un cadre à filets, parcourus l'un après l'autre par un filet bleu. Animations
+ * coupées en mouvement réduit.
  */
 export function AiBand({ ai }: { ai: HomeContent['ai'] }) {
   return (
@@ -30,7 +31,12 @@ export function AiBand({ ai }: { ai: HomeContent['ai'] }) {
             <p className={styles.text} data-reveal>
               {ai.text}
             </p>
-            <Link to={ai.cta.href} className={`btn ${styles.cta}`} data-reveal>
+            <Link
+              to={ai.cta.href}
+              className={`btn btn-primary ${styles.cta}`}
+              aria-label={ai.cta.ariaLabel}
+              data-reveal
+            >
               {ai.cta.label}
               <ArrowRightIcon size={18} className="arrow" />
             </Link>

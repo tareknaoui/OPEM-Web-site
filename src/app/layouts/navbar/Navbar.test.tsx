@@ -26,6 +26,8 @@ describe('Navbar', () => {
       .getAllByRole('listitem')
       .filter((li) => li.parentElement?.parentElement?.tagName === 'NAV');
     expect(topLevel).toHaveLength(MAX_TOP_LEVEL_ITEMS - 1);
+    const labels = topLevel.map((li) => li.querySelector('a, button')?.textContent?.trim());
+    expect(labels.indexOf('IA appliquée')).toBe(labels.indexOf('Formation') + 1);
     expect(within(desktopNav()).queryByRole('link', { name: 'Accueil' })).not.toBeInTheDocument();
   });
 
