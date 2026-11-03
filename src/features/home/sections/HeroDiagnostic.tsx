@@ -67,7 +67,8 @@ export function HeroDiagnostic({ hero, video, diagnostic, figures }: HeroDiagnos
       <div className={styles.text}>
         <p className={styles.kicker}>{hero.eyebrow}</p>
         <h1 id="hero-title" className={styles.headline}>
-          {video.headline[0]} <span className={styles.accent}>{video.headline[1]}</span>
+          <span className={styles.headlineLine}>{video.headline[0]}</span>{' '}
+          <span className={cx(styles.headlineLine, styles.accent)}>{video.headline[1]}</span>
         </h1>
         {/* Phrases courtes réparties sur deux lignes (la moitié chacune). */}
         <p className={styles.intro}>

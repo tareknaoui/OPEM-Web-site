@@ -131,9 +131,13 @@
   letter-spacing: 0;
 }
 
-/* Seconde partie du titre toujours sur sa propre ligne (« ça s'organise. »). */
-.accent {
+/* Chaque partie du titre sur sa propre ligne (« Ce qui fait exceller », puis « votre
+   organisation. ») ; sur mobile, chacune revient à la ligne si besoin. */
+.headlineLine {
   display: block;
+}
+
+.accent {
   color: var(--opem-blue-30);
 }
 
@@ -305,6 +309,25 @@
   }
 }
 
+/* Tablette et ordinateur : le titre tient sur deux lignes exactement, coupé après « exceller ».
+   Chaque ligne reste entière ; la taille suit la largeur de la colonne de texte (cqi) pour
+   qu'elle n'en déborde jamais, sans dépasser la taille de base. */
+@media (min-width: 48em) {
+  .text {
+    container-type: inline-size;
+  }
+
+  .headline {
+    --headline-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.25rem);
+    max-width: none;
+    font-size: min(var(--headline-size), 10.5cqi);
+  }
+
+  .headlineLine {
+    white-space: nowrap;
+  }
+}
+
 /* ---------- Ordinateur ---------- */
 
 @media (min-width: 64em) {
@@ -327,7 +350,7 @@
 
   /* Le titre occupe la largeur de sa colonne : pas de vide au milieu de l'accroche. */
   .headline {
-    font-size: clamp(3rem, 1rem + 3.6vw, 5rem);
+    --headline-size: clamp(3rem, 1rem + 3.6vw, 5rem);
   }
 
   .intro {
