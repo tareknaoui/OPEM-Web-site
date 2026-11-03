@@ -76,9 +76,9 @@ const entries: Entry[] = [
         },
       },
       {
-        id: 'communication-d-entreprise',
-        href: '/expertises/communication-d-entreprise',
-        label: { fr: 'Communication d’entreprise', ar: 'اتصال المؤسسة' },
+        id: 'communication-institutionnelle',
+        href: '/expertises/communication-institutionnelle',
+        label: { fr: 'Communication institutionnelle', ar: 'الاتصال المؤسساتي' },
         description: {
           fr: 'Image, communication interne et relations institutionnelles.',
           ar: 'الصورة، الاتصال الداخلي والعلاقات المؤسساتية.',

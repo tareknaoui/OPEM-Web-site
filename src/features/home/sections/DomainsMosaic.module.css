@@ -401,9 +401,11 @@
 
 /* Bords de l'illustration estompés (masque, rien de visible) : aucun contour ne trahit le
    rectangle de l'image, même si son bleu diffère d'un rien de celui du fond.
-   Illustration à 70 % de la largeur de la carte, centrée. */
+   Téléphone : illustration et texte sur toute la largeur. Tablette et ordinateur : retrait de
+   7,5 % à gauche et à droite, le même pour l'illustration et le texte (ils s'alignent, et deux
+   colonnes de texte restent bien séparées). */
 .blend .framed {
-  width: 85%;
+  width: 100%;
   margin: 0 auto;
   border-radius: 0;
   mask-image:
@@ -444,7 +446,12 @@
 }
 
 @media (min-width: 48em) {
+  .blend .framed {
+    width: 85%;
+  }
+
   .blend .body {
+    margin-inline: 7.5%;
     padding: var(--space-4) 0 0;
   }
 }

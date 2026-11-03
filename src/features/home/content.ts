@@ -892,7 +892,7 @@ const fr: HomeContent = {
         domains: [
           {
             label: 'Communication institutionnelle',
-            href: '/expertises/communication-d-entreprise',
+            href: '/expertises/communication-institutionnelle',
           },
           {
             label: 'Coaching professionnel',
@@ -1372,7 +1372,7 @@ const fr: HomeContent = {
       {
         id: 'etudes-strategiques',
         title: 'Études stratégiques',
-        text: 'Une mauvaise décision coûte toujours plus cher qu’une bonne étude. Marchés, filières, projets, politiques publiques : nous vous apportons les faits, leur analyse et leurs implications concrètes pour votre organisation.',
+        text: 'Une mauvaise décision coûte toujours plus cher qu’une bonne étude. Marchés, filières, politiques publiques : nous établissons les faits qui fondent vos décisions.',
         points: [
           'Études de marché et de faisabilité',
           'Études économiques, sectorielles et de filières',
@@ -1385,7 +1385,7 @@ const fr: HomeContent = {
       {
         id: 'accompagnement',
         title: 'Accompagnement des organisations',
-        text: 'Une organisation désaccordée vous coûte chaque jour, sans jamais apparaître dans vos comptes. Notre diagnostic en révèle les causes racines, notre accompagnement lui rend sa justesse et la force de porter vos ambitions.',
+        text: 'Une organisation désaccordée vous coûte chaque jour, en silence. Notre diagnostic en trouve la cause, notre accompagnement lui rend sa justesse.',
         points: [
           'Diagnostic et transformation organisationnelle',
           'Gouvernance et pilotage de la performance',
@@ -1398,7 +1398,7 @@ const fr: HomeContent = {
       {
         id: 'formations',
         title: 'Formation qualifiante',
-        text: 'Nos formateurs n’enseignent pas un métier : ils l’exercent. Soigneusement sélectionnés selon votre secteur, ils transmettent à vos équipes ce que seule l’expérience apprend. Confiez-nous une première session. Vos équipes vous diront le reste.',
+        text: 'Nos formateurs n’enseignent pas un métier : ils l’exercent et transmettent à vos équipes ce que seule l’expérience apprend.',
         points: [
           'Ingénierie de formation sur mesure',
           'Management et excellence opérationnelle',
@@ -1412,7 +1412,7 @@ const fr: HomeContent = {
       {
         id: 'coaching',
         title: 'Coaching professionnel',
-        text: 'Un bon coach ne donne pas de réponses. Il pose les questions que l’on n’ose pas vous poser. Nous aidons ainsi dirigeants, managers et équipes à affirmer leur posture, à clarifier leurs priorités et à décider avec assurance.',
+        text: 'Un bon coach ne donne pas de réponses. Il pose les questions que l’on n’ose pas vous poser, pour que vous décidiez avec assurance.',
         points: [
           'Coaching de dirigeants',
           'Leadership et efficacité managériale',
@@ -1425,7 +1425,7 @@ const fr: HomeContent = {
       {
         id: 'certification',
         title: 'Certification et accréditation',
-        text: 'Une certification s’obtient une fois et se mérite chaque jour. Exigence après exigence, nous ancrons la norme dans vos pratiques et la conformité devient un réflexe durable.',
+        text: 'Une certification s’obtient une fois et se mérite chaque jour. Nous ancrons la norme dans vos pratiques, jusqu’à faire de la conformité un réflexe.',
         points: [
           'Normes ISO et référentiel accueil',
           'Marquage CE et marquage TEDJ',
@@ -1438,14 +1438,14 @@ const fr: HomeContent = {
       {
         id: 'communication',
         title: 'Communication institutionnelle',
-        text: 'Votre excellence ne vaut que si elle se sait. Parce que nous comprenons vos métiers, nos supports révèlent votre organisation, votre expertise et vos réalisations avec l’élégance qu’elles méritent.',
+        text: 'Votre excellence ne vaut que si elle se sait. Parce que nous comprenons vos métiers, nos supports révèlent votre expertise et vos réalisations avec l’élégance qu’elles méritent.',
         points: [
           'Catalogues de présentation et de savoir-faire',
           'Sites web à votre image',
           'Films et contenus vidéo',
           'Rédaction et direction artistique',
         ],
-        href: '/expertises/communication-d-entreprise',
+        href: '/expertises/communication-institutionnelle',
         illustration: '/images/domaines/illustrations/communication.webp',
       },
     ],
@@ -2180,7 +2180,7 @@ const ar: HomeContent = {
         domains: [
           {
             label: 'الاتصال المؤسساتي',
-            href: '/expertises/communication-d-entreprise',
+            href: '/expertises/communication-institutionnelle',
           },
           {
             label: 'الكوتشينغ المهني',
@@ -2657,7 +2657,7 @@ const ar: HomeContent = {
       {
         id: 'etudes-strategiques',
         title: 'الدراسات الاستراتيجية',
-        text: 'القرار الخاطئ يكلّف دائمًا أكثر من دراسة جيدة. الأسواق، الشُّعب، المشاريع، السياسات العمومية: نقدّم لكم الوقائع وتحليلها وانعكاساتها الملموسة على مؤسستكم.',
+        text: 'القرار الخاطئ يكلّف دائمًا أكثر من دراسة جيدة. الأسواق، الشُّعب، السياسات العمومية: نُثبت الوقائع التي تقوم عليها قراراتكم.',
         points: [
           'دراسات السوق والجدوى',
           'الدراسات الاقتصادية والقطاعية ودراسات الشُّعب',
@@ -2670,7 +2670,7 @@ const ar: HomeContent = {
       {
         id: 'accompagnement',
         title: 'مرافقة المؤسسات',
-        text: 'التنظيم غير المتناغم يكلّفكم كل يوم، دون أن يظهر يومًا في حساباتكم. يكشف تشخيصنا أسبابه الجذرية، وتعيد إليه مرافقتنا انسجامه والقوة اللازمة لحمل طموحاتكم.',
+        text: 'التنظيم غير المتناغم يكلّفكم كل يوم، في صمت. يجد تشخيصنا سببه، وتعيد إليه مرافقتنا انسجامه.',
         points: [
           'التشخيص والتحول التنظيمي',
           'الحوكمة وقيادة الأداء',
@@ -2683,7 +2683,7 @@ const ar: HomeContent = {
       {
         id: 'formations',
         title: 'التكوين التأهيلي',
-        text: 'مكوّنونا لا يدرّسون مهنة: إنهم يمارسونها. يُختارون بعناية حسب قطاعكم، وينقلون إلى فرقكم ما لا تعلّمه إلا التجربة. ائتمنونا على دورة أولى، وستخبركم فرقكم بالباقي.',
+        text: 'مكوّنونا لا يدرّسون مهنة: إنهم يمارسونها، وينقلون إلى فرقكم ما لا تعلّمه إلا التجربة.',
         points: [
           'هندسة التكوين حسب الطلب',
           'التسيير والامتياز العملياتي',
@@ -2697,7 +2697,7 @@ const ar: HomeContent = {
       {
         id: 'coaching',
         title: 'الكوتشينغ المهني',
-        text: 'الكوتش الجيد لا يقدّم إجابات، بل يطرح الأسئلة التي لا يجرؤ أحد على طرحها عليكم. وهكذا نساعد المسيّرين والإطارات والفرق على ترسيخ مكانتهم وتوضيح أولوياتهم واتخاذ القرار بثقة.',
+        text: 'الكوتش الجيد لا يقدّم إجابات، بل يطرح الأسئلة التي لا يجرؤ أحد على طرحها عليكم، لتتخذوا قراراتكم بثقة.',
         points: [
           'كوتشينغ المسيّرين',
           'القيادة والفعالية التسييرية',
@@ -2710,7 +2710,7 @@ const ar: HomeContent = {
       {
         id: 'certification',
         title: 'الإشهاد والاعتماد',
-        text: 'تُنال الشهادة مرة واحدة، وتُستحق كل يوم. متطلبًا بعد متطلب، نرسّخ المعيار في ممارساتكم فتصبح المطابقة عادة دائمة.',
+        text: 'تُنال الشهادة مرة واحدة، وتُستحق كل يوم. نرسّخ المعيار في ممارساتكم، حتى تصبح المطابقة عادة.',
         points: [
           'معايير ISO ومرجع الاستقبال',
           'وسم CE ووسم TEDJ',
@@ -2723,14 +2723,14 @@ const ar: HomeContent = {
       {
         id: 'communication',
         title: 'الاتصال المؤسساتي',
-        text: 'لا قيمة لامتيازكم إلا إذا عُرف. ولأننا نفهم مهنكم، تُبرز دعائمنا مؤسستكم وخبرتها وإنجازاتها بالأناقة التي تستحقها.',
+        text: 'لا قيمة لامتيازكم إلا إذا عُرف. ولأننا نفهم مهنكم، تُبرز دعائمنا خبرتكم وإنجازاتكم بالأناقة التي تستحقها.',
         points: [
           'كتالوجات التعريف والخبرات',
           'مواقع إلكترونية على صورتكم',
           'أفلام ومحتويات فيديو',
           'التحرير والإدارة الفنية',
         ],
-        href: '/expertises/communication-d-entreprise',
+        href: '/expertises/communication-institutionnelle',
         illustration: '/images/domaines/illustrations/communication.webp',
       },
     ],
