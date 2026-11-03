@@ -70,9 +70,8 @@ export type HomeContent = {
    */
   heroDiagnostic: {
     label: string;
-    duration: string;
     /** Carte de l'accroche : le diagnostic présenté comme une aide pour s'orienter. */
-    intro: { title: string; text: string; start: string };
+    intro: { title: string; start: string };
     /** Écran d'accueil du plein écran, avant la première question. */
     welcome: {
       label: string;
@@ -91,7 +90,10 @@ export type HomeContent = {
       pause: string;
       play: string;
     };
-    /** Description du radar pour les lecteurs d'écran. */
+    /**
+     * Description du radar pour les lecteurs d'écran (lue aussi par les moteurs de recherche) :
+     * les sept leviers d'OPEM, sans citer le modèle d'origine.
+     */
     modelLabel: string;
     /** Étiquette de chaque levier : « Étape 2 · Levier {current} sur {total} », puis l'intitulé. */
     progress: string;
@@ -154,8 +156,9 @@ export type HomeContent = {
       choices: { id: string; label: string }[];
     }[];
     /**
-     * Nom court (radar) et intitulé de chaque levier ; domaines OPEM qui y répondent
-     * (`domainsFrom2` : à partir de la note 2, à la place de `domains`).
+     * Nom du levier dans les graphiques (`label`, les noms d'OPEM, jamais ceux du modèle
+     * d'origine) et intitulé ; domaines OPEM qui y répondent (`domainsFrom2` : à partir de la
+     * note 2, à la place de `domains`).
      */
     axes: Record<
       DiagnosticAxis,
@@ -520,10 +523,8 @@ const fr: HomeContent = {
   // Espaces insécables avant « ? » : le point d'interrogation ne passe jamais seul à la ligne.
   heroDiagnostic: {
     label: 'Autodiagnostic 3 minutes chrono',
-    duration: '.',
     intro: {
       title: 'Sept leviers font votre performance. Un seul suffit à la freiner.',
-      text: '.',
       start: 'Faire le test',
     },
     welcome: {
@@ -547,7 +548,7 @@ const fr: HomeContent = {
       play: 'Reprendre le défilement des leviers',
     },
     modelLabel:
-      'Le modèle des 7S : stratégie, structure, systèmes, valeurs partagées, style, personnel et compétences.',
+      'Les sept leviers OPEM : cap et priorités, organisation et rôles, processus et méthodes, culture et valeurs, style de management, équipes et talents, compétences.',
     progress: 'Étape 2 · Levier {current} sur {total}',
     leverHelp: 'Choisissez la situation la plus proche de la vôtre aujourd’hui.',
     back: 'Question précédente',
@@ -833,7 +834,7 @@ const fr: HomeContent = {
     ],
     axes: {
       strategie: {
-        label: 'Stratégie',
+        label: 'Cap et priorités',
         title: 'Cap et priorités',
         domains: [
           {
@@ -843,7 +844,7 @@ const fr: HomeContent = {
         ],
       },
       structure: {
-        label: 'Structure',
+        label: 'Organisation et rôles',
         title: 'Organisation et rôles',
         domains: [
           {
@@ -853,7 +854,7 @@ const fr: HomeContent = {
         ],
       },
       systemes: {
-        label: 'Systèmes',
+        label: 'Processus et méthodes',
         title: 'Processus et méthodes',
         domains: [
           {
@@ -869,7 +870,7 @@ const fr: HomeContent = {
         ],
       },
       valeurs: {
-        label: 'Valeurs partagées',
+        label: 'Culture et valeurs',
         title: 'Culture et valeurs',
         domains: [
           {
@@ -883,7 +884,7 @@ const fr: HomeContent = {
         ],
       },
       style: {
-        label: 'Style',
+        label: 'Style de management',
         title: 'Style de management',
         domains: [
           {
@@ -893,7 +894,7 @@ const fr: HomeContent = {
         ],
       },
       personnel: {
-        label: 'Personnel',
+        label: 'Équipes et talents',
         title: 'Équipes et talents',
         domains: [
           {
@@ -1886,11 +1887,9 @@ const ar: HomeContent = {
   },
   // Mêmes identifiants qu'en français : seuls les libellés changent.
   heroDiagnostic: {
-    label: 'تشخيص ذاتي 7S',
-    duration: '10 أسئلة · لا يُرسَل شيء',
+    label: 'تشخيص ذاتي في 3 دقائق',
     intro: {
-      title: 'من أين نبدأ؟',
-      text: 'قيّموا وضعكم في دقيقتين، ونحن نوجّهكم.',
+      title: 'سبعة روافع تصنع أداءكم، وواحد منها يكفي لكبحه.',
       start: 'ابدأوا الاختبار',
     },
     welcome: {
@@ -1911,7 +1910,7 @@ const ar: HomeContent = {
       play: 'استئناف تتابع الروافع',
     },
     modelLabel:
-      'نموذج 7S: الاستراتيجية، الهيكل، الأنظمة، القيم المشتركة، الأسلوب، الأفراد والكفاءات.',
+      'روافع OPEM السبعة: التوجّه والأولويات، التنظيم والأدوار، المسارات والطرائق، الثقافة والقيم، أسلوب التسيير، الفرق والمواهب، الكفاءات.',
     progress: 'المرحلة 2 · الرافعة {current} من {total}',
     leverHelp: 'اختاروا الوضعية الأقرب إلى وضعيتكم اليوم.',
     back: 'السؤال السابق',
@@ -2130,7 +2129,7 @@ const ar: HomeContent = {
     ],
     axes: {
       strategie: {
-        label: 'الاستراتيجية',
+        label: 'التوجّه والأولويات',
         title: 'التوجّه والأولويات',
         domains: [
           {
@@ -2140,7 +2139,7 @@ const ar: HomeContent = {
         ],
       },
       structure: {
-        label: 'الهيكل',
+        label: 'التنظيم والأدوار',
         title: 'التنظيم والأدوار',
         domains: [
           {
@@ -2150,7 +2149,7 @@ const ar: HomeContent = {
         ],
       },
       systemes: {
-        label: 'الأنظمة',
+        label: 'المسارات والطرائق',
         title: 'المسارات والطرائق',
         domains: [
           {
@@ -2166,7 +2165,7 @@ const ar: HomeContent = {
         ],
       },
       valeurs: {
-        label: 'القيم المشتركة',
+        label: 'الثقافة والقيم',
         title: 'الثقافة والقيم',
         domains: [
           {
@@ -2180,7 +2179,7 @@ const ar: HomeContent = {
         ],
       },
       style: {
-        label: 'الأسلوب',
+        label: 'أسلوب التسيير',
         title: 'أسلوب التسيير',
         domains: [
           {
@@ -2190,7 +2189,7 @@ const ar: HomeContent = {
         ],
       },
       personnel: {
-        label: 'الأفراد',
+        label: 'الفرق والمواهب',
         title: 'الفرق والمواهب',
         domains: [
           {

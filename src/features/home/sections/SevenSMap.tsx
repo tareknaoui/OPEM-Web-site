@@ -3,6 +3,7 @@ import { PauseIcon, PlayIcon } from '@/components/icons';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { DiagnosticAxis, HomeContent } from '../content';
 import { LeverFrame } from './LeverFrame';
+import { labelLines } from './leverLabel';
 import styles from './SevenSMap.module.css';
 
 type SevenSMapProps = {
@@ -112,7 +113,7 @@ export function SevenSMap({ diagnostic, active, onActive }: SevenSMapProps) {
         {TOUR.map((axis, index) => {
           const { x, y } = POINTS[axis];
           const radius = axis === 'valeurs' ? NODE + 16 : NODE;
-          const words = diagnostic.axes[axis].label.split(' ');
+          const words = labelLines(diagnostic.axes[axis].label);
           return (
             <g
               key={axis}

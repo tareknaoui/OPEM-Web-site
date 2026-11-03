@@ -4,6 +4,7 @@ import { useTweened } from '@/hooks/useTweened';
 import { cx } from '@/lib/cx';
 import type { DiagnosticAxis, HomeContent } from '../content';
 import type { AxisScores } from './diagnosticScore';
+import { labelLines } from './leverLabel';
 import styles from './SevenSRadar.module.css';
 
 /** Rayon du niveau 3 (plein), en unités du dessin. */
@@ -45,6 +46,9 @@ function vertex(index: number, count: number, level: number) {
   const sin = Math.sin(angle);
   return { x: radius * cos, y: radius * sin, cos, sin };
 }
+
+/** Hauteur d'une ligne de nom, en unités du dessin. */
+const LABEL_LINE = 15;
 
 const points = (levels: readonly number[]) =>
   levels
@@ -103,7 +107,7 @@ export function SevenSRadar({
     >
       <svg
         className={styles.svg}
-        viewBox={labels ? '-170 -124 340 244' : '-94 -94 188 188'}
+        viewBox={labels ? '-210 -140 420 272' : '-94 -94 188 188'}
         aria-hidden="true"
         focusable="false"
       >
@@ -142,6 +146,9 @@ export function SevenSRadar({
         {labels &&
           axes.map((axis, index) => {
             const { x, y, cos, sin } = vertex(index, count, 3);
+            const lines = labelLines(diagnostic.axes[axis].label);
+            // Nom au-dessus du radar : les lignes montent ; sur les côtés, elles sont centrées.
+            const shift = sin < -0.5 ? lines.length - 1 : sin > 0.5 ? 0 : (lines.length - 1) / 2;
             return (
               <text
                 key={axis}
@@ -152,7 +159,15 @@ export function SevenSRadar({
                 dominantBaseline={sin < -0.5 ? 'auto' : sin > 0.5 ? 'hanging' : 'central'}
                 data-current={axis === current || undefined}
               >
-                {diagnostic.axes[axis].label}
+                {lines.map((line, row) => (
+                  <tspan
+                    key={line}
+                    x={x + cos * 14}
+                    dy={row === 0 ? -shift * LABEL_LINE : LABEL_LINE}
+                  >
+                    {line}
+                  </tspan>
+                ))}
               </text>
             );
           })}

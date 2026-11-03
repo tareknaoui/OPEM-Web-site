@@ -52,6 +52,9 @@ function answerAll() {
   answer(/Voir mon résultat/);
 }
 
+// Parcours complets (dix questions, puis le résultat) : plus longs que la limite par défaut.
+vi.setConfig({ testTimeout: 15_000 });
+
 describe('Bandeau « Autodiagnostic 7S »', () => {
   afterEach(() => vi.restoreAllMocks());
 
@@ -78,7 +81,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
       /Sept leviers font votre performance/,
     );
-    expect(screen.getByRole('figure', { name: /Le modèle des 7S/ })).toBeInTheDocument();
+    expect(screen.getByRole('figure', { name: /Les sept leviers OPEM/ })).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
@@ -105,7 +108,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(welcome).toBeInTheDocument();
 
     // La carte : passer sur un levier le montre, le bouton arrête et reprend la ronde.
-    const structure = within(dialog).getByText('Structure').closest('g')!;
+    const structure = within(dialog).getByText('Organisation').closest('g')!;
     fireEvent.mouseEnter(structure);
     expect(within(dialog).getByText('Organisation et rôles')).toBeInTheDocument();
     answer(/Arrêter le défilement/);
@@ -263,8 +266,8 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
 
     // 2. Votre empreinte : radar, niveau global, cadre et humain.
     expect(
-      within(dialog.getByRole('figure', { name: /Le modèle des 7S/ })).getByText(
-        /Stratégie – 0 sur 3/,
+      within(dialog.getByRole('figure', { name: /Les sept leviers OPEM/ })).getByText(
+        /Cap et priorités – 0 sur 3/,
       ),
     ).toBeInTheDocument();
     expect(dialog.getByText(/Niveau 1 sur 4/).parentElement).toHaveTextContent(/Initial$/);

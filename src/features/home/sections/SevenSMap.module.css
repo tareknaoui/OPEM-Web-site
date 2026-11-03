@@ -77,10 +77,11 @@
     stroke-width 500ms;
 }
 
+/* Noms d'OPEM sur deux lignes : taille réduite pour rester dans le cercle. */
 .node text {
   fill: var(--opem-blue-30);
   font-family: var(--font-heading);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
   text-anchor: middle;
   transition: fill 500ms;

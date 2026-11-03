@@ -45,14 +45,6 @@
   letter-spacing: 0;
 }
 
-/* Titre et phrase sur la même ligne quand la place le permet. */
-.line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.125rem var(--space-4);
-}
-
 .title {
   margin: 0;
   color: var(--opem-night);
@@ -67,25 +59,12 @@
   letter-spacing: 0;
 }
 
-.text {
-  margin: 0;
-  color: var(--opem-gray);
-  line-height: 1.5;
-}
-
 .actions {
   display: flex;
   flex-wrap: wrap;
   grid-column: 1 / -1;
   align-items: center;
   gap: var(--space-3) var(--space-6);
-}
-
-.duration {
-  order: 1;
-  margin: 0;
-  color: var(--opem-gray);
-  font-size: 0.8125rem;
 }
 
 @media (min-width: 48em) {
@@ -95,9 +74,5 @@
 
   .actions {
     grid-column: auto;
-  }
-
-  .duration {
-    order: 0;
   }
 }
