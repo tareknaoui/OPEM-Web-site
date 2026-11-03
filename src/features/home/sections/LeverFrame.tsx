@@ -12,7 +12,7 @@ type LeverFrameProps = {
   children: ReactNode;
 };
 
-/** Cadre commun à la carte de l'accueil et au radar des questions : titre, compteur, contenu. */
+/** Cadre du radar de l'écran de fin : titre, compteur, contenu. */
 export function LeverFrame({ label, count, total, compact, action, children }: LeverFrameProps) {
   return (
     <div className={styles.frame} data-compact={compact || undefined}>

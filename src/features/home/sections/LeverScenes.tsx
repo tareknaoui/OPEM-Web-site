@@ -1,10 +1,11 @@
 import type { DiagnosticAxis } from '../content';
 import styles from './LeverScenes.module.css';
 
-export type SceneId = DiagnosticAxis | 'organisation';
+export type SceneId = DiagnosticAxis | 'organisation' | 'secteur';
 
 const SCENES: SceneId[] = [
   'organisation',
+  'secteur',
   'strategie',
   'structure',
   'systemes',
@@ -17,15 +18,15 @@ const SCENES: SceneId[] = [
 const BASE = '/images/diagnostic';
 
 /**
- * Fond du plein écran de l'autodiagnostic : une illustration par levier (et une pour
- * l'organisation), même bleu nuit que la page, sujet à droite, côté opposé au texte. Elle
- * apparaît en fondu quand ce levier est montré. Décorative, sans aucun texte. `active` à null :
+ * Fond du plein écran de l'autodiagnostic : une illustration par levier, une pour le secteur
+ * d'activité et une pour les autres questions sur l'organisation, même bleu nuit que la page,
+ * sujet à droite, côté opposé au texte. Elle apparaît en fondu quand son écran est montré. Décorative, sans aucun texte. `active` à null :
  * aucune illustration (écran de résultat, déjà dense). Toutes sont chargées à l'ouverture, pour
- * que le fondu ne bute jamais sur une image absente. `shifted` : cadrage de l'écran d'accueil.
+ * que le fondu ne bute jamais sur une image absente.
  */
-export function LeverScenes({ active, shifted }: { active: SceneId | null; shifted?: boolean }) {
+export function LeverScenes({ active }: { active: SceneId | null }) {
   return (
-    <div className={styles.scenes} data-shifted={shifted || undefined} aria-hidden="true">
+    <div className={styles.scenes} aria-hidden="true">
       {SCENES.map((id) => (
         <img
           key={id}

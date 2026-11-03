@@ -103,9 +103,6 @@ export type HomeContent = {
     back: string;
     /** Étapes du parcours : votre organisation, sept leviers, votre résultat. */
     steps: [string, string, string];
-    /** Progression : « Question {current} sur {total} », puis `finished` à la fin. */
-    count: string;
-    finished: string;
     /** Écran de fin du questionnaire, avant le résultat. */
     done: { title: string; text: string; cta: string };
     /** Touches affichées devant les réponses (et acceptées au clavier, avec 1 à 4). */
@@ -544,8 +541,8 @@ const fr: HomeContent = {
       captionHighlight: 'ralentir toute la mécanique',
       close: 'Fermer',
       mapLabel: 'Carte de votre organisation',
-      pause: 'Arrêter le défilement des leviers',
-      play: 'Reprendre le défilement des leviers',
+      pause: 'Arrêter le défilement des illustrations',
+      play: 'Reprendre le défilement des illustrations',
     },
     modelLabel:
       'Les sept leviers OPEM : cap et priorités, organisation et rôles, processus et méthodes, culture et valeurs, style de management, équipes et talents, compétences.',
@@ -553,8 +550,6 @@ const fr: HomeContent = {
     leverHelp: 'Choisissez la situation la plus proche de la vôtre aujourd’hui.',
     back: 'Question précédente',
     steps: ['Votre organisation', 'Sept leviers', 'Votre résultat'],
-    count: 'Question {current} sur {total}',
-    finished: 'Questionnaire terminé',
     done: {
       title: 'Merci, vos dix réponses sont enregistrées.',
       text: 'Votre résultat est prêt.',
@@ -573,11 +568,16 @@ const fr: HomeContent = {
           id: 'statut',
           label: 'Statut',
           text: 'Quel est le statut de votre organisation ?',
+          help: 'Retenez le statut inscrit dans ses textes fondateurs.',
           choices: [
             { id: 'epe', label: 'Entreprise publique économique (EPE)' },
             {
               id: 'epic',
               label: 'Établissement public à caractère industriel et commercial (EPIC)',
+            },
+            {
+              id: 'epa',
+              label: 'Établissement public à caractère administratif (EPA)',
             },
             { id: 'agence', label: 'Agence publique' },
             { id: 'administration', label: 'Administration publique' },
@@ -591,6 +591,7 @@ const fr: HomeContent = {
           secondStep: true,
           label: 'Secteur',
           text: 'Dans quel secteur évolue votre organisation ?',
+          help: 'Retenez le secteur de son activité principale.',
           choices: [
             { id: 'industrie', label: 'Industrie', family: 'Industrie et énergie' },
             { id: 'energie', label: 'Énergie et mines', family: 'Industrie et énergie' },
@@ -1230,7 +1231,7 @@ const fr: HomeContent = {
           text: 'Dans une entreprise publique économique, chaque évolution se discute aussi avec l’actionnaire public et les organes de gestion : un diagnostic chiffré aide à la faire valider.',
         },
         {
-          ids: ['epic', 'agence', 'administration'],
+          ids: ['epic', 'epa', 'agence', 'administration'],
           text: 'Dans un établissement ou une administration publique, le cadre réglementaire et budgétaire fixe les marges de manœuvre : les progrès les plus rapides viennent souvent de l’organisation interne et des méthodes de travail.',
         },
         {
@@ -1304,7 +1305,7 @@ const fr: HomeContent = {
         text: 'Dans une petite organisation, ces actions concernent d’abord la direction et les personnes clés.',
       },
       publicDelegation: {
-        statuses: ['epic', 'agence', 'administration'],
+        statuses: ['epic', 'epa', 'agence', 'administration'],
         levers: ['structure', 'style'],
         text: 'Dans le secteur public, toute délégation s’inscrit dans le cadre réglementaire applicable et se formalise dans les formes requises.',
       },
@@ -1906,8 +1907,8 @@ const ar: HomeContent = {
       captionHighlight: 'لإبطاء الآلية كلّها',
       close: 'إغلاق',
       mapLabel: 'خريطة مؤسستكم',
-      pause: 'إيقاف تتابع الروافع',
-      play: 'استئناف تتابع الروافع',
+      pause: 'إيقاف تتابع الرسومات',
+      play: 'استئناف تتابع الرسومات',
     },
     modelLabel:
       'روافع OPEM السبعة: التوجّه والأولويات، التنظيم والأدوار، المسارات والطرائق، الثقافة والقيم، أسلوب التسيير، الفرق والمواهب، الكفاءات.',
@@ -1915,8 +1916,6 @@ const ar: HomeContent = {
     leverHelp: 'اختاروا الوضعية الأقرب إلى وضعيتكم اليوم.',
     back: 'السؤال السابق',
     steps: ['مؤسستكم', 'سبع روافع', 'نتيجتكم'],
-    count: 'السؤال {current} من {total}',
-    finished: 'اكتمل الاستبيان',
     done: {
       title: 'شكرًا، تم تسجيل إجاباتكم العشر.',
       text: 'نتيجتكم جاهزة.',
@@ -1935,9 +1934,11 @@ const ar: HomeContent = {
           id: 'statut',
           label: 'الوضع القانوني',
           text: 'ما هو الوضع القانوني لمؤسستكم؟',
+          help: 'اعتمدوا الوضع المنصوص عليه في نصوصها التأسيسية.',
           choices: [
             { id: 'epe', label: 'مؤسسة عمومية اقتصادية (EPE)' },
             { id: 'epic', label: 'مؤسسة عمومية ذات طابع صناعي وتجاري (EPIC)' },
+            { id: 'epa', label: 'مؤسسة عمومية ذات طابع إداري (EPA)' },
             { id: 'agence', label: 'وكالة عمومية' },
             { id: 'administration', label: 'إدارة عمومية' },
             { id: 'privee', label: 'مؤسسة خاصة' },
@@ -1950,6 +1951,7 @@ const ar: HomeContent = {
           secondStep: true,
           label: 'القطاع',
           text: 'في أي قطاع تنشط مؤسستكم؟',
+          help: 'اعتمدوا قطاع نشاطها الرئيسي.',
           choices: [
             { id: 'industrie', label: 'الصناعة', family: 'الصناعة والطاقة' },
             { id: 'energie', label: 'الطاقة والمناجم', family: 'الصناعة والطاقة' },
@@ -2519,7 +2521,7 @@ const ar: HomeContent = {
           text: 'في مؤسسة عمومية اقتصادية، يُناقَش كل تطوّر أيضًا مع المساهم العمومي وهيئات التسيير: يساعد تشخيص مرقّم على المصادقة عليه.',
         },
         {
-          ids: ['epic', 'agence', 'administration'],
+          ids: ['epic', 'epa', 'agence', 'administration'],
           text: 'في مؤسسة أو إدارة عمومية، يحدّد الإطار التنظيمي والميزاني هوامش المناورة: غالبًا ما يأتي أسرع تقدّم من التنظيم الداخلي وطرائق العمل.',
         },
         {
@@ -2593,7 +2595,7 @@ const ar: HomeContent = {
         text: 'في مؤسسة صغيرة، تعني هذه الإجراءات أولًا الإدارة والأشخاص الرئيسيين.',
       },
       publicDelegation: {
-        statuses: ['epic', 'agence', 'administration'],
+        statuses: ['epic', 'epa', 'agence', 'administration'],
         levers: ['structure', 'style'],
         text: 'في القطاع العمومي، يندرج كل تفويض في الإطار التنظيمي المعمول به ويُصاغ وفق الأشكال المطلوبة.',
       },

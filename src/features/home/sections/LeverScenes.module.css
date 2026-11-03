@@ -32,15 +32,6 @@
   opacity: 1;
 }
 
-/* Écran d'accueil : l'image glisse vers le texte, la pièce ambre passe entre le texte et la
-   carte au lieu de se cacher derrière. */
-@media (min-width: 64em) {
-  .scenes[data-shifted] .scene {
-    translate: -9vw 0;
-    mask-image: linear-gradient(to right, transparent 34%, #000 48%, #000 86%, transparent 100%);
-  }
-}
-
 /* Téléphone et tablette : l'image reste un fond, le texte passe partout par-dessus. */
 @media (max-width: 63.99em) {
   .scene {

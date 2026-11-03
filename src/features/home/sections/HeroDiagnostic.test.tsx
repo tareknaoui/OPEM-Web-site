@@ -101,32 +101,34 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(highlight.parentElement).toHaveTextContent(
       'Un seul rouage grippé suffit à ralentir toute la mécanique.',
     );
-    expect(within(dialog).getByText('Carte de votre organisation').parentElement).toHaveTextContent(
-      '0 / 7',
-    );
+    // Plus de carte des leviers : seules les illustrations défilent, avec un bouton pause.
+    expect(within(dialog).queryByText('Carte de votre organisation')).toBeNull();
     fireEvent.keyDown(welcome, { key: 'a' });
     expect(welcome).toBeInTheDocument();
-
-    // La carte : passer sur un levier le montre, le bouton arrête et reprend la ronde.
-    const structure = within(dialog).getByText('Organisation').closest('g')!;
-    fireEvent.mouseEnter(structure);
-    expect(within(dialog).getByText('Organisation et rôles')).toBeInTheDocument();
-    answer(/Arrêter le défilement/);
-    answer(/Reprendre le défilement/);
+    answer(/Arrêter le défilement des illustrations/);
+    answer(/Reprendre le défilement des illustrations/);
     begin();
 
     // Puis l'organisation. Question 1 en deux temps : le statut…
     const status = within(dialog).getByRole('heading', { name: /Quel est le statut/ });
     await waitFor(() => expect(status).toHaveFocus());
     expect(within(dialog).getByText(/Question 1 sur 3 sur votre organisation/)).toBeInTheDocument();
-    // En haut : les trois étapes et « Question 1 sur 10 » ; pas de retour sur la 1re question.
+    // En haut : les trois étapes ; un seul compteur, le grand numéro 01/10 ; pas de retour
+    // sur la 1re question.
     expect(within(dialog).getByText('Votre organisation')).toHaveAttribute('aria-current', 'step');
-    expect(within(dialog).getByText('Question 1 sur 10')).toBeInTheDocument();
+    expect(within(dialog).queryByText(/Question 1 sur 10/)).toBeNull();
+    expect(within(dialog).getByText('01')).toBeInTheDocument();
+    expect(within(dialog).getByText('/10')).toBeInTheDocument();
+    expect(
+      within(dialog).getByText(/Question 1 sur 3 sur votre organisation, Statut/),
+    ).toBeInTheDocument();
+    expect(
+      within(dialog).getByText('Retenez le statut inscrit dans ses textes fondateurs.'),
+    ).toBeVisible();
     expect(within(dialog).queryByRole('button', { name: /Question précédente/ })).toBeNull();
-    // Pas de phrase d'aide sous les questions sur l'organisation.
-    expect(dialog.querySelector('[class*="help"]')).toBeNull();
     const statuses = within(within(dialog).getByRole('list', { name: /Quel est le statut/ }));
-    expect(statuses.getAllByRole('button')).toHaveLength(7);
+    expect(statuses.getAllByRole('button')).toHaveLength(8);
+    expect(statuses.getAllByRole('button')[2]).toHaveTextContent(/\(EPA\)$/);
     // Pendant les questions, pas de carte des leviers : seule l'illustration de fond.
     expect(within(dialog).queryByText('Carte de votre organisation')).toBeNull();
     answer(/Entreprise privée/);
@@ -179,9 +181,10 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     const question = within(dialog).getByRole('heading', { name: /Vos équipes savent-elles/ });
     await waitFor(() => expect(question).toHaveFocus());
     expect(within(dialog).getByText('Sept leviers')).toHaveAttribute('aria-current', 'step');
-    expect(within(dialog).getByText('Question 4 sur 10')).toBeInTheDocument();
+    expect(within(dialog).getByText('04')).toBeInTheDocument();
+    expect(within(dialog).getByText('/10')).toBeInTheDocument();
     expect(
-      within(dialog).getByText(/Étape 2 · Levier 1 sur 7 – Cap et priorités/),
+      within(dialog).getByText(/Étape 2 · Levier 1 sur 7, Cap et priorités/),
     ).toBeInTheDocument();
     expect(
       within(dialog).getByText('Choisissez la situation la plus proche de la vôtre aujourd’hui.'),
@@ -199,7 +202,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
       /chacun sait-il ce qu’il doit faire/,
     );
     expect(
-      within(dialog).getByText(/Étape 2 · Levier 2 sur 7 – Organisation et rôles/),
+      within(dialog).getByText(/Étape 2 · Levier 2 sur 7, Organisation et rôles/),
     ).toBeInTheDocument();
     answer(/Question précédente/);
     expect(screen.getByRole('button', { name: /Un plan stratégique existe/ })).toHaveAttribute(
@@ -231,7 +234,6 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     });
     await waitFor(() => expect(done).toHaveFocus());
     expect(screen.getByText('Votre résultat est prêt.')).toBeInTheDocument();
-    expect(screen.getByText('Questionnaire terminé')).toBeInTheDocument();
     expect(screen.getByText('Votre résultat')).toHaveAttribute('aria-current', 'step');
     answer(/Question précédente/);
     expect(within(screen.getByRole('dialog')).getByRole('heading', { level: 2 })).toHaveTextContent(
@@ -332,7 +334,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     // Rouvert, il repart de l'écran d'accueil.
     start();
     expect(
-      within(screen.getByRole('dialog')).getByText('Carte de votre organisation'),
+      within(screen.getByRole('dialog')).getByRole('heading', { name: /Sept leviers font/ }),
     ).toBeVisible();
   });
 

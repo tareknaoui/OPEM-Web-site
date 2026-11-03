@@ -1,7 +1,7 @@
 /**
  * Nom d'un levier sur deux lignes, coupé à l'espace la plus proche du milieu (« Style de » /
- * « management »). Un nom d'un seul mot reste sur une ligne. Utilisé par les graphiques des
- * leviers (radar et carte), où la place est comptée.
+ * « management »). Un nom d'un seul mot reste sur une ligne. Utilisé par le radar des leviers,
+ * où la place est comptée.
  */
 export function labelLines(label: string): string[] {
   const middle = label.length / 2;

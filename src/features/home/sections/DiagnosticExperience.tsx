@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -7,7 +8,8 @@ import {
   type KeyboardEvent,
   type RefObject,
 } from 'react';
-import { ArrowRightIcon, CheckIcon, CloseIcon } from '@/components/icons';
+import { ArrowRightIcon, CheckIcon, CloseIcon, PauseIcon, PlayIcon } from '@/components/icons';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import type { DiagnosticAxis, DiagnosticContextId, HomeContent } from '../content';
@@ -15,11 +17,22 @@ import { DiagnosticResult } from './DiagnosticResult';
 import { scoreDiagnostic, type DiagnosticAnswers } from './diagnosticScore';
 import { LeverFrame } from './LeverFrame';
 import { LeverScenes, type SceneId } from './LeverScenes';
-import { SevenSMap } from './SevenSMap';
 import { SevenSRadar } from './SevenSRadar';
 import styles from './DiagnosticExperience.module.css';
 
 type Diagnostic = HomeContent['heroDiagnostic'];
+
+/** Écran d'accueil : les illustrations des leviers défilent en fond, dans cet ordre. */
+const TOUR: DiagnosticAxis[] = [
+  'strategie',
+  'structure',
+  'systemes',
+  'valeurs',
+  'style',
+  'personnel',
+  'competences',
+];
+const TOUR_MS = 4500;
 
 /** Réponses aux questions sur l'organisation : question → identifiant de la réponse. */
 type ContextAnswers = Partial<Record<DiagnosticContextId, string>>;
@@ -53,14 +66,14 @@ const percentFormat = (lang: string) =>
 /**
  * L'autodiagnostic 7S en plein écran, sur bleu nuit (<dialog> natif : focus gardé, Échap,
  * page inerte derrière). En fond, une illustration au trait du levier montré (LeverScenes).
- * D'abord un écran d'accueil (titre, bouton et carte animée des 7 leviers, SevenSMap), quelques
+ * D'abord un écran d'accueil (titre, bouton, illustrations des leviers qui défilent), quelques
  * questions sur l'organisation (statut puis secteur, taille, fonction) ; puis une question par
  * levier : très grand numéro ambre, à côté la famille du levier et son nom, réponses au clic ou au
  * clavier (A à D, 1 à 4). Pendant les questions, à droite, seulement l'illustration du levier
  * (pas de carte). À la fin, le profil, le pourcentage qui défile, le niveau de maturité,
  * l'écran de résultat (DiagnosticResult), seul, sans les questions autour. Entre le dernier
  * levier et le résultat, un écran de fin (« Voir mon résultat »). En haut, les trois
- * étapes et « Question n sur 10 ». « Quitter » ramène à l'accueil ; « Fermer » (accueil) ou
+ * étapes et la barre d'avancement. « Quitter » ramène à l'accueil ; « Fermer » (accueil) ou
  * Échap ferment le plein écran. Les deux remettent le diagnostic à zéro.
  */
 export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticExperienceProps) {
@@ -70,6 +83,10 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
   const [step, setStep] = useState(WELCOME);
   // Levier allumé sur la carte de l'écran d'accueil : l'illustration de fond le suit.
   const [featured, setFeatured] = useState<DiagnosticAxis>('strategie');
+  const nextScene = useCallback(
+    () => setFeatured((current) => TOUR[(TOUR.indexOf(current) + 1) % TOUR.length]!),
+    [],
+  );
   const [context, setContext] = useState<ContextAnswers>({});
   const [answers, setAnswers] = useState<DiagnosticAnswers>({});
   const ids = useId();
@@ -159,12 +176,48 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     if (last && last.family === choice.family) last.choices.push(item);
     else groups.push({ family: choice.family, choices: [item] });
   });
+  const families = groups.some((group) => group.family);
+  const half = Math.ceil(groups.length / 2);
+  const renderGroup = (group: (typeof groups)[number], groupIndex: number) => (
+    <div key={group.family ?? 'all'} className={cx(group.family && styles.family)}>
+      {group.family && (
+        <p id={`${ids}-family-${groupIndex}`} className={styles.familyLabel}>
+          {group.family}
+        </p>
+      )}
+      <ul
+        className={styles.choices}
+        data-layout={group.family ? 'chips' : layout}
+        aria-labelledby={cx(`${ids}-question`, group.family && `${ids}-family-${groupIndex}`)}
+      >
+        {group.choices.map((choice) => (
+          <li key={choice.id} style={{ '--i': choice.index } as CSSProperties}>
+            <button
+              type="button"
+              className={styles.choice}
+              aria-current={screen?.selected === choice.id ? 'true' : undefined}
+              onClick={() => choose(choice.id)}
+            >
+              {withKeys && (
+                <span className={styles.key} aria-hidden="true">
+                  {diagnostic.keys[choice.index]}
+                </span>
+              )}
+              <span className={styles.choiceLabel}>{choice.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
   const mode = welcome ? 'welcome' : screen ? 'question' : done ? 'done' : 'result';
   const scene: SceneId | null = welcome
     ? featured
-    : contextQuestion || done
-      ? 'organisation'
-      : (leverQuestion?.id ?? null);
+    : contextQuestion?.id === 'secteur'
+      ? 'secteur'
+      : contextQuestion || done
+        ? 'organisation'
+        : (leverQuestion?.id ?? null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -219,7 +272,7 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     >
       {open && (
         <>
-          <LeverScenes active={scene} shifted={welcome} />
+          <LeverScenes active={scene} />
           <header className={styles.top} data-mode={mode}>
             <div className={cx('container', styles.topInner)}>
               {!welcome && (
@@ -251,13 +304,6 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                         />
                       ))}
                     </ol>
-                    <p className={styles.count}>
-                      {finished
-                        ? diagnostic.finished
-                        : diagnostic.count
-                            .replace('{current}', String(segment + 1))
-                            .replace('{total}', String(contextTotal + total))}
-                    </p>
                   </div>
                 </>
               )}
@@ -278,17 +324,18 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
             {welcome ? (
               <Welcome diagnostic={diagnostic} headingRef={headingRef} onStart={() => setStep(0)} />
             ) : screen ? (
-              <div key={step} className={styles.content}>
+              <div key={step} className={styles.content} data-wide={families || undefined}>
                 {/* Surtitre de l'étape (« Étape 2 · Levier 1 sur 7 », « Étape 1 · Votre
                     organisation »), comme celui de l'accueil du site : trait ambre, capitales. */}
                 <p className={styles.kicker} aria-hidden="true">
                   {screen.group}
                 </p>
-                {/* Grand numéro ambre | intitulé, séparés par un filet. */}
+                {/* Grand numéro ambre | intitulé, séparés par un filet. Un seul compteur sur
+                    les dix questions (01/10 à 10/10), comme le promet l'écran d'accueil. */}
                 <p className={styles.counter}>
                   <span className={styles.number} aria-hidden="true">
-                    <span className={styles.index}>{pad(screen.index + 1)}</span>
-                    <span className={styles.of}>/{pad(screen.count)}</span>
+                    <span className={styles.index}>{pad(segment + 1)}</span>
+                    <span className={styles.of}>/{pad(contextTotal + total)}</span>
                   </span>
                   <span className={styles.lever} aria-hidden="true">
                     <span className={styles.leverName}>{screen.word}</span>
@@ -297,7 +344,7 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                     {screen.progress
                       .replace('{current}', String(screen.index + 1))
                       .replace('{total}', String(screen.count))}
-                    {' – '}
+                    {', '}
                     {screen.title}
                   </span>
                 </p>
@@ -328,41 +375,21 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                   {screen.text}
                 </h2>
                 {screen.help && <p className={styles.help}>{screen.help}</p>}
-                {groups.map((group, groupIndex) => (
-                  <div key={group.family ?? 'all'} className={cx(group.family && styles.family)}>
-                    {group.family && (
-                      <p id={`${ids}-family-${groupIndex}`} className={styles.familyLabel}>
-                        {group.family}
-                      </p>
-                    )}
-                    <ul
-                      className={styles.choices}
-                      data-layout={group.family ? 'chips' : layout}
-                      aria-labelledby={cx(
-                        `${ids}-question`,
-                        group.family && `${ids}-family-${groupIndex}`,
-                      )}
-                    >
-                      {group.choices.map((choice) => (
-                        <li key={choice.id} style={{ '--i': choice.index } as CSSProperties}>
-                          <button
-                            type="button"
-                            className={styles.choice}
-                            aria-current={screen.selected === choice.id ? 'true' : undefined}
-                            onClick={() => choose(choice.id)}
-                          >
-                            {withKeys && (
-                              <span className={styles.key} aria-hidden="true">
-                                {diagnostic.keys[choice.index]}
-                              </span>
-                            )}
-                            <span className={styles.choiceLabel}>{choice.label}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+                {families ? (
+                  // Secteurs : deux colonnes de familles (une seule sur téléphone), le nom de
+                  // chaque famille au-dessus de ses réponses.
+                  <div className={styles.families}>
+                    {[groups.slice(0, half), groups.slice(half)].map((column, columnIndex) => (
+                      <div key={columnIndex} className={styles.familyColumn}>
+                        {column.map((group, index) =>
+                          renderGroup(group, columnIndex === 0 ? index : half + index),
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  groups.map(renderGroup)
+                )}
                 {/* Pas de retour sur la première question. */}
                 {step > 0 && (
                   <p className={styles.foot}>
@@ -409,18 +436,12 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
               />
             )}
 
-            {/* Carte animée à l'accueil, forme complète à l'écran de fin ; rien pendant les
-                questions, où seule l'illustration de fond occupe la droite. */}
+            {/* Légende sous l'illustration à l'accueil, forme complète à l'écran de fin ; rien
+                pendant les questions, où seule l'illustration de fond occupe la droite. */}
             {(welcome || done) && (
               <div className={styles.visual}>
                 {welcome ? (
-                  <>
-                    <SevenSMap diagnostic={diagnostic} active={featured} onActive={setFeatured} />
-                    <Caption
-                      text={diagnostic.welcome.caption}
-                      highlight={diagnostic.welcome.captionHighlight}
-                    />
-                  </>
+                  <WelcomeTour diagnostic={diagnostic} onNext={nextScene} />
                 ) : (
                   <LeverFrame
                     label={diagnostic.welcome.mapLabel}
@@ -486,7 +507,41 @@ function Welcome({ diagnostic, headingRef, onStart }: WelcomeProps) {
   );
 }
 
-/** Légende de la carte des leviers, un passage en ambre et en gras. */
+/**
+ * Accueil, sous l'illustration de fond : la légende, et le bouton qui arrête le défilement des
+ * illustrations (WCAG 2.2.2). Le défilement ne démarre pas si l'utilisateur demande moins
+ * d'animations.
+ */
+function WelcomeTour({ diagnostic, onNext }: { diagnostic: Diagnostic; onNext: () => void }) {
+  const reduced = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const [paused, setPaused] = useState(false);
+  const moving = !paused && !reduced;
+  const { welcome } = diagnostic;
+
+  useEffect(() => {
+    if (!moving) return;
+    const timer = setInterval(onNext, TOUR_MS);
+    return () => clearInterval(timer);
+  }, [moving, onNext]);
+
+  return (
+    <div className={styles.tour}>
+      <Caption text={welcome.caption} highlight={welcome.captionHighlight} />
+      {!reduced && (
+        <button
+          type="button"
+          className={styles.tourToggle}
+          aria-label={paused ? welcome.play : welcome.pause}
+          onClick={() => setPaused(!paused)}
+        >
+          {paused ? <PlayIcon size={14} /> : <PauseIcon size={14} />}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** Légende de l'écran d'accueil, un passage en ambre et en gras. */
 function Caption({ text, highlight }: { text: string; highlight: string }) {
   const at = text.indexOf(highlight);
   return (
