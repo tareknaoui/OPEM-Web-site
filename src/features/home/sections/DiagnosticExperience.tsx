@@ -54,10 +54,10 @@ const percentFormat = (lang: string) =>
  * L'autodiagnostic 7S en plein écran, sur bleu nuit (<dialog> natif : focus gardé, Échap,
  * page inerte derrière). En fond, une illustration au trait du levier montré (LeverScenes).
  * D'abord un écran d'accueil (titre, bouton et carte animée des 7 leviers, SevenSMap), quelques
- * questions sur l'organisation (statut puis secteur, taille, fonction), radar en attente ; puis une question
- * par levier : très grand numéro ambre, à côté
- * la famille du levier et son nom, réponses au clic ou au clavier (A à D, 1 à 4), le radar se déforme
- * à chaque réponse. À la fin, le profil, le pourcentage qui défile, le niveau de maturité,
+ * questions sur l'organisation (statut puis secteur, taille, fonction) ; puis une question par
+ * levier : très grand numéro ambre, à côté la famille du levier et son nom, réponses au clic ou au
+ * clavier (A à D, 1 à 4). Pendant les questions, à droite, seulement l'illustration du levier
+ * (pas de carte). À la fin, le profil, le pourcentage qui défile, le niveau de maturité,
  * l'écran de résultat (DiagnosticResult), seul, sans les questions autour. Entre le dernier
  * levier et le résultat, un écran de fin (« Voir mon résultat »). En haut, les trois
  * étapes et « Question n sur 10 ». « Quitter » ramène à l'accueil ; « Fermer » (accueil) ou
@@ -279,15 +279,18 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
               <Welcome diagnostic={diagnostic} headingRef={headingRef} onStart={() => setStep(0)} />
             ) : screen ? (
               <div key={step} className={styles.content}>
-                {/* Grand numéro ambre | étape (« Étape 2 · Levier 1 sur 7 », « Étape 1 · Votre
-                    organisation ») et intitulé, séparés par un filet. */}
+                {/* Surtitre de l'étape (« Étape 2 · Levier 1 sur 7 », « Étape 1 · Votre
+                    organisation »), comme celui de l'accueil du site : trait ambre, capitales. */}
+                <p className={styles.kicker} aria-hidden="true">
+                  {screen.group}
+                </p>
+                {/* Grand numéro ambre | intitulé, séparés par un filet. */}
                 <p className={styles.counter}>
                   <span className={styles.number} aria-hidden="true">
                     <span className={styles.index}>{pad(screen.index + 1)}</span>
                     <span className={styles.of}>/{pad(screen.count)}</span>
                   </span>
                   <span className={styles.lever} aria-hidden="true">
-                    <span className={styles.group}>{screen.group}</span>
                     <span className={styles.leverName}>{screen.word}</span>
                   </span>
                   <span className="sr-only">
@@ -406,7 +409,9 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
               />
             )}
 
-            {mode !== 'result' && (
+            {/* Carte animée à l'accueil, forme complète à l'écran de fin ; rien pendant les
+                questions, où seule l'illustration de fond occupe la droite. */}
+            {(welcome || done) && (
               <div className={styles.visual}>
                 {welcome ? (
                   <>
@@ -423,19 +428,12 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
                     total={total}
                     compact
                   >
-                    {/* Écran de fin : la forme complète, sans levier en cours. */}
-                    {leverQuestion || done ? (
-                      <SevenSRadar
-                        key="live"
-                        diagnostic={diagnostic}
-                        mode="live"
-                        scores={result.scores}
-                        current={leverQuestion?.id}
-                        tone="dark"
-                      />
-                    ) : (
-                      <SevenSRadar key="idle" diagnostic={diagnostic} mode="idle" tone="dark" />
-                    )}
+                    <SevenSRadar
+                      diagnostic={diagnostic}
+                      mode="live"
+                      scores={result.scores}
+                      tone="dark"
+                    />
                   </LeverFrame>
                 )}
               </div>

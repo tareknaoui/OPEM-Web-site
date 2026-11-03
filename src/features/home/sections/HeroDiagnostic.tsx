@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState, type CSSProperties } from 'react';
-import { PauseIcon, PlayIcon } from '@/components/icons';
+import { Link } from 'react-router';
+import { ArrowRightIcon, PauseIcon, PlayIcon } from '@/components/icons';
 import { CountUp } from '@/components/ui/CountUp';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cx } from '@/lib/cx';
@@ -76,6 +77,11 @@ export function HeroDiagnostic({ hero, video, diagnostic, figures }: HeroDiagnos
             </span>
           ))}
         </p>
+        <p className={styles.tagline}>{video.tagline}</p>
+        <Link to={video.cta.href} className={`btn ${styles.cta}`}>
+          {video.cta.label}
+          <ArrowRightIcon size={18} className="arrow" />
+        </Link>
 
         <ul className={styles.figures} aria-label={figures.title}>
           {figures.items.map((item, index) => (

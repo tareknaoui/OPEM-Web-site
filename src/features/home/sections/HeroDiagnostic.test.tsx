@@ -62,6 +62,12 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     );
     // Le devis est dans la barre de navigation, pas dans l'accroche.
     expect(screen.queryByRole('link', { name: /Demander un devis/ })).toBeNull();
+    // Sous le texte : la phrase des sept leviers, puis le bouton vers les expertises.
+    expect(screen.getByText(/Un seul suffit à la freiner/, { selector: 'p' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Découvrir nos expertises/ })).toHaveAttribute(
+      'href',
+      '/expertises',
+    );
     // Le métier d'abord : les chiffres clés sous le titre (valeur finale lue d'emblée).
     const keyFigures = within(screen.getByRole('list', { name: 'OPEM en quelques chiffres' }));
     const items = keyFigures.getAllByRole('listitem');
@@ -114,9 +120,12 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(within(dialog).getByText('Votre organisation')).toHaveAttribute('aria-current', 'step');
     expect(within(dialog).getByText('Question 1 sur 10')).toBeInTheDocument();
     expect(within(dialog).queryByRole('button', { name: /Question précédente/ })).toBeNull();
-    expect(within(dialog).getByText('Choisissez la forme qui la décrit le mieux.')).toBeVisible();
+    // Pas de phrase d'aide sous les questions sur l'organisation.
+    expect(dialog.querySelector('[class*="help"]')).toBeNull();
     const statuses = within(within(dialog).getByRole('list', { name: /Quel est le statut/ }));
     expect(statuses.getAllByRole('button')).toHaveLength(7);
+    // Pendant les questions, pas de carte des leviers : seule l'illustration de fond.
+    expect(within(dialog).queryByText('Carte de votre organisation')).toBeNull();
     answer(/Entreprise privée/);
 
     // … puis le secteur (15 réponses par famille), avec le rappel du statut et « Modifier ».
@@ -143,7 +152,6 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(within(dialog).getByText(/Question 2 sur 3 sur votre organisation/)).toBeInTheDocument();
     // Question 2 : la taille. Pour une EPE, la catégorie d'entreprise s'affiche.
     const size = within(dialog).getByRole('heading', { name: /Quelle est la taille/ });
-    expect(within(dialog).getByText('Effectif total, tous sites confondus.')).toBeVisible();
     expect(
       within(within(dialog).getByRole('list', { name: /Quelle est la taille/ }))
         .getAllByRole('button')
@@ -157,7 +165,6 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     fireEvent.keyDown(size, { key: 'b' });
 
     // Question 3 : la fonction, 13 réponses.
-    expect(within(dialog).getByText('Celle que vous exercez aujourd’hui.')).toBeVisible();
     const functions = within(
       within(dialog).getByRole('list', { name: /Quelle est votre fonction/ }),
     );

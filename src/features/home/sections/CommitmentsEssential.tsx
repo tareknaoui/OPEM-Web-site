@@ -4,7 +4,8 @@ import styles from './CommitmentsEssential.module.css';
 
 /**
  * « Ce qui nous distingue » (« Pourquoi choisir OPEM ») : sur bleu très clair, un titre centré
- * puis trois engagements, chacun en un grand pictogramme, un titre et un court texte.
+ * puis trois engagements, chacun en un grand pictogramme, un titre sur deux lignes (l'amorce,
+ * puis l'engagement) et un court texte.
  * Ordinateur : trois colonnes séparées d'un filet. Mobile : un engagement sous l'autre.
  */
 export function CommitmentsEssential({ commitments }: { commitments: HomeContent['commitments'] }) {
@@ -28,7 +29,9 @@ export function CommitmentsEssential({ commitments }: { commitments: HomeContent
                 <CommitmentPictogram name={item.icon} size={30} />
               </span>
               <div>
-                <h3 className={styles.title}>{item.title}</h3>
+                <h3 className={styles.title}>
+                  <span className={styles.titleLead}>{item.title[0]}</span> {item.title[1]}
+                </h3>
                 <p className={styles.text}>{item.text}</p>
               </div>
             </li>

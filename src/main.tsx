@@ -8,6 +8,10 @@ import '@/styles/global.css';
 // évite un flash de la mise en page française pour un visiteur arabophone.
 applyLanguage(readStoredLanguage());
 
+// Le <title> d'index.html sert aux robots qui n'exécutent pas le JavaScript. Chaque page pose
+// ensuite le sien : on retire celui d'ouverture pour ne jamais en avoir deux.
+document.head.querySelector('title')?.remove();
+
 const container = document.getElementById('root');
 if (!container) throw new Error('Élément #root introuvable dans index.html');
 

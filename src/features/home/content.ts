@@ -19,6 +19,9 @@ export type NeedIcon =
   'strategy' | 'organization' | 'certification' | 'training' | 'coaching' | 'safety';
 export type AudienceIcon = 'public' | 'company';
 export type CommitmentIcon = 'tailor' | 'relay' | 'measure';
+
+/** Logo client : `logo` est le nom du fichier dans /images/clients (sans .webp). */
+export type ClientLogo = { name: string; logo: string; width: number; height: number };
 /** Les sept leviers du modèle des 7S (McKinsey), mesurés par l'autodiagnostic de l'accroche. */
 export type DiagnosticAxis =
   'strategie' | 'structure' | 'systemes' | 'valeurs' | 'style' | 'personnel' | 'competences';
@@ -52,6 +55,9 @@ export type HomeContent = {
   heroVideo: {
     headline: [string, string];
     intro: string;
+    /** Phrase sous le texte, puis le bouton vers les expertises. */
+    tagline: string;
+    cta: Link;
     pause: string;
     play: string;
   };
@@ -214,6 +220,8 @@ export type HomeContent = {
       };
       /** Demande de rendez-vous : les réponses y sont ajoutées en paramètres. */
       consultant: Link;
+      /** Encart mis en avant autour du bouton du consultant (textes à faire valider par OPEM). */
+      consultantCard: { title: string; text: string };
       /** Efface les réponses et ramène à l'écran d'accueil. */
       retake: string;
       /** Ramène à la première question, réponses conservées. */
@@ -247,8 +255,10 @@ export type HomeContent = {
       safety: { lever: DiagnosticAxis; note: number; sectors: string[]; text: string };
     };
   };
+  /** Bandeau des logos clients, juste sous l'accroche : la preuve sociale dès le premier écran. */
+  clients: { title: string; items: ClientLogo[] };
   /**
-   * Section « Ce qui nous distingue » (« Pourquoi choisir OPEM »), juste sous l'accroche : textes
+   * Section « Ce qui nous distingue » (« Pourquoi choisir OPEM »), juste sous les logos : textes
    * d'OPEM, trois engagements.
    */
   commitments: {
@@ -258,7 +268,8 @@ export type HomeContent = {
     items: {
       id: string;
       icon: CommitmentIcon;
-      title: string;
+      /** Deux lignes : l'amorce (« Notre réussite »), puis l'engagement. */
+      title: [string, string];
       text: string;
     }[];
   };
@@ -297,7 +308,8 @@ export type HomeContent = {
     text: string;
     cta: Link;
     /**
-     * Illustration (une porte ouverte sur un réseau de neurones qui s'étend au-delà), format
+     * Illustration (une porte ouverte sur un cerveau fait de neurones, prolongé par les couches
+     * d'un réseau de neurones qui s'étendent au-delà ; un seul nœud ambre, au cœur), format
      * paysage 1024 × 572, fond bleu nuit ; une version de 700 px de large existe à côté
      * (« -700.webp »).
      */
@@ -420,8 +432,22 @@ export type HomeContent = {
     caseStudy: {
       eyebrow: string;
       title: string;
+      /** L'histoire en une phrase par étape, sous le titre (texte à faire valider par OPEM). */
+      summary: string;
       link: Link;
-      steps: { id: string; label: string; headline: string; text: string; tone: StepTone }[];
+      /**
+       * Étapes dans l'ordre chronologique, toutes visibles : année, puis étape. `since` : le temps
+       * écoulé depuis l'étape précédente, écrit sur la flèche qui y mène.
+       */
+      steps: {
+        id: string;
+        year: string;
+        since?: string;
+        label: string;
+        headline: string;
+        text: string;
+        tone: StepTone;
+      }[];
     };
     /** Recommandation mise en avant, sur carte blanche. */
     featured: TestimonialQuote;
@@ -449,8 +475,36 @@ export type HomeContent = {
   };
 };
 
+/**
+ * Logos des clients (fournis par OPEM, « LOGO CLIENTS.docx ») : nom, fichier et taille réelle du
+ * fichier, pour équilibrer les logos larges et les logos carrés. Ordre : les plus connus d'abord.
+ */
+const CLIENT_LOGOS: ClientLogo[] = [
+  { name: 'Lafarge', logo: 'lafarge', width: 254, height: 90 },
+  { name: 'Algérie Télécom Satellite (ATS)', logo: 'ats', width: 232, height: 144 },
+  { name: 'Radio Algérienne', logo: 'radio-algerienne', width: 222, height: 222 },
+  { name: 'Office National de l’Assainissement (ONA)', logo: 'ona', width: 150, height: 136 },
+  { name: 'CTTP', logo: 'cttp', width: 238, height: 226 },
+  {
+    name: 'Centre National de l’Ingénierie de la Construction (CNIC)',
+    logo: 'cnic',
+    width: 234,
+    height: 134,
+  },
+  { name: 'Agrolog', logo: 'agrolog', width: 112, height: 52 },
+  { name: 'Frigomedit', logo: 'frigomedit', width: 192, height: 94 },
+  { name: 'Recibat', logo: 'recibat', width: 82, height: 110 },
+  { name: 'ETAC', logo: 'etac', width: 234, height: 58 },
+  { name: 'Batmetal', logo: 'batmetal', width: 210, height: 234 },
+  { name: 'REELEC', logo: 'reelec', width: 208, height: 238 },
+  { name: 'UMF', logo: 'umf', width: 232, height: 232 },
+  { name: 'Integration', logo: 'integration', width: 116, height: 72 },
+  { name: 'CESI Algérie', logo: 'cesi-algerie', width: 70, height: 32 },
+];
+
 const fr: HomeContent = {
-  title: 'OPEM — Conseil et formation en Algérie',
+  // Titre de l'onglet et de Google, identique à celui d'index.html. Jamais de tiret long.
+  title: 'OPEM, cabinet de conseil et de formation en Algérie',
   hero: {
     eyebrow: 'Cabinet de conseil et de formation',
   },
@@ -458,6 +512,8 @@ const fr: HomeContent = {
     headline: ['Ce qui fait exceller', 'votre organisation.'],
     intro:
       'Des décisions éclairées. Des processus structurés. Des exigences maîtrisées. Des compétences développées. Un leadership affirmé. Une communication qui fait la différence.',
+    tagline: 'Sept leviers font votre performance. Un seul suffit à la freiner.',
+    cta: { label: 'Découvrir nos expertises', href: '/expertises' },
     pause: 'Mettre la vidéo en pause',
     play: 'Relancer la vidéo',
   },
@@ -516,7 +572,6 @@ const fr: HomeContent = {
           id: 'statut',
           label: 'Statut',
           text: 'Quel est le statut de votre organisation ?',
-          help: 'Choisissez la forme qui la décrit le mieux.',
           choices: [
             { id: 'epe', label: 'Entreprise publique économique (EPE)' },
             {
@@ -535,7 +590,6 @@ const fr: HomeContent = {
           secondStep: true,
           label: 'Secteur',
           text: 'Dans quel secteur évolue votre organisation ?',
-          help: 'Son secteur d’activité principal.',
           choices: [
             { id: 'industrie', label: 'Industrie', family: 'Industrie et énergie' },
             { id: 'energie', label: 'Énergie et mines', family: 'Industrie et énergie' },
@@ -582,7 +636,6 @@ const fr: HomeContent = {
           id: 'effectif',
           label: 'Taille',
           text: 'Quelle est la taille de votre organisation ?',
-          help: 'Effectif total, tous sites confondus.',
           choices: [
             {
               id: '1-9',
@@ -610,7 +663,6 @@ const fr: HomeContent = {
           id: 'fonction',
           label: 'Fonction',
           text: 'Quelle est votre fonction ?',
-          help: 'Celle que vous exercez aujourd’hui.',
           choices: [
             { id: 'direction', label: 'Direction générale' },
             { id: 'finances', label: 'Finances et gestion' },
@@ -1093,6 +1145,10 @@ const fr: HomeContent = {
         label: 'Échanger avec un consultant',
         href: '/contact',
       },
+      consultantCard: {
+        title: 'Votre résultat, commenté par un consultant',
+        text: 'Un consultant OPEM reprend avec vous vos points de fragilité et la première action à engager.',
+      },
       retake: 'Refaire le test',
       restart: 'Revoir mes réponses',
     },
@@ -1259,6 +1315,7 @@ const fr: HomeContent = {
       },
     },
   },
+  clients: { title: 'Ils nous font confiance', items: CLIENT_LOGOS },
   commitments: {
     eyebrow: 'Pourquoi choisir OPEM',
     heading: [
@@ -1269,19 +1326,19 @@ const fr: HomeContent = {
       {
         id: 'sur-mesure',
         icon: 'tailor',
-        title: 'Du sur-mesure, jamais du prêt-à-porter',
+        title: ['Du sur-mesure', 'jamais du prêt-à-porter'],
         text: 'Une solution qui convient à tout le monde ne convient à personne. Vous connaissez vos difficultés, notre diagnostic en révèle la cause réelle dans votre organisation et vos processus. Nous bâtissons ensemble la réponse qui vous ressemble.',
       },
       {
         id: 'autonomie',
         icon: 'relay',
-        title: 'Notre réussite : ne plus vous être indispensables',
+        title: ['Notre réussite', 'ne plus vous être indispensables'],
         text: 'Procédures écrites, outils de pilotage et formations qualifiantes bâtis sur vos situations de travail : vos équipes se les approprient jusqu’à l’autonomie. Quand nous partons, la performance reste chez vous.',
       },
       {
         id: 'mesure',
         icon: 'measure',
-        title: 'Mesurer, ou ne rien promettre',
+        title: ['Pas de vaines promesses', 'des résultats mesurés'],
         text: 'Dès le lancement, nous fixons avec vous les indicateurs qui comptent pour votre organisation. À la clôture, un bilan chiffré vous permet d’apprécier le retour sur votre investissement. En formation, nos participants nous attribuent déjà une satisfaction moyenne de 4,6 sur 5.',
       },
     ],
@@ -1637,25 +1694,32 @@ const fr: HomeContent = {
     caseStudy: {
       eyebrow: 'Étude de cas | Accompagnement des organisations',
       title: 'Un audit approuvé à l’unanimité, puis tout le plan de formation confié à OPEM',
+      summary:
+        'Un établissement public économique nous confie l’audit de son organisation. Son conseil d’administration approuve le rapport à l’unanimité. Deux ans plus tard, il nous confie tout son plan de formation annuel.',
       link: { label: 'Lire l’étude de cas', href: '/missions' },
       steps: [
         {
           id: 'audit',
-          label: '2021 | L’audit',
+          year: '2021',
+          label: 'L’audit',
           headline: 'Organisation et fonctionnement passés au crible',
           text: 'Un établissement public économique confie à OPEM l’audit organisationnel et fonctionnel de sa structure.',
           tone: 'plain',
         },
         {
           id: 'verdict',
-          label: '2021 | Le verdict',
+          year: '2021',
+          since: 'La même année',
+          label: 'Le verdict',
           headline: 'À l’unanimité',
           text: 'Le conseil d’administration approuve le rapport et félicite l’équipe pour son professionnalisme.',
           tone: 'blue',
         },
         {
           id: 'confiance',
-          label: '2023 | La confiance',
+          year: '2023',
+          since: 'Deux ans plus tard',
+          label: 'La confiance',
           headline: '100 %',
           text: 'de son plan de formation annuel, confié à OPEM.',
           tone: 'green',
@@ -1807,7 +1871,7 @@ const fr: HomeContent = {
 };
 
 const ar: HomeContent = {
-  title: 'OPEM — الاستشارة والتكوين في الجزائر',
+  title: 'OPEM، مكتب استشارات وتكوين في الجزائر',
   hero: {
     eyebrow: 'مكتب استشارات وتكوين',
   },
@@ -1815,6 +1879,8 @@ const ar: HomeContent = {
     headline: ['ما يجعل مؤسستكم', 'تتميّز.'],
     intro:
       'قرارات مستنيرة. مسارات منظّمة. متطلبات متحكَّم فيها. كفاءات مطوَّرة. قيادة راسخة. اتصال يصنع الفرق.',
+    tagline: 'سبعة روافع تصنع أداءكم، وواحد منها يكفي لكبحه.',
+    cta: { label: 'اكتشفوا خبراتنا', href: '/expertises' },
     pause: 'إيقاف الفيديو مؤقتًا',
     play: 'استئناف الفيديو',
   },
@@ -1870,7 +1936,6 @@ const ar: HomeContent = {
           id: 'statut',
           label: 'الوضع القانوني',
           text: 'ما هو الوضع القانوني لمؤسستكم؟',
-          help: 'اختاروا الشكل الذي يصفها على أفضل وجه.',
           choices: [
             { id: 'epe', label: 'مؤسسة عمومية اقتصادية (EPE)' },
             { id: 'epic', label: 'مؤسسة عمومية ذات طابع صناعي وتجاري (EPIC)' },
@@ -1886,7 +1951,6 @@ const ar: HomeContent = {
           secondStep: true,
           label: 'القطاع',
           text: 'في أي قطاع تنشط مؤسستكم؟',
-          help: 'قطاع نشاطها الرئيسي.',
           choices: [
             { id: 'industrie', label: 'الصناعة', family: 'الصناعة والطاقة' },
             { id: 'energie', label: 'الطاقة والمناجم', family: 'الصناعة والطاقة' },
@@ -1921,7 +1985,6 @@ const ar: HomeContent = {
           id: 'effectif',
           label: 'الحجم',
           text: 'ما هو حجم مؤسستكم؟',
-          help: 'العدد الإجمالي للعاملين، في جميع المواقع.',
           choices: [
             {
               id: '1-9',
@@ -1949,7 +2012,6 @@ const ar: HomeContent = {
           id: 'fonction',
           label: 'الوظيفة',
           text: 'ما هي وظيفتكم؟',
-          help: 'التي تمارسونها اليوم.',
           choices: [
             { id: 'direction', label: 'الإدارة العامة' },
             { id: 'finances', label: 'المالية والتسيير' },
@@ -2374,6 +2436,10 @@ const ar: HomeContent = {
         label: 'التحدث مع مستشار',
         href: '/contact',
       },
+      consultantCard: {
+        title: 'نتيجتكم، يشرحها لكم مستشار',
+        text: 'يراجع معكم مستشار من OPEM نقاط الهشاشة لديكم وأوّل إجراء ينبغي اتخاذه.',
+      },
       retake: 'إعادة الاختبار',
       restart: 'مراجعة إجاباتي',
     },
@@ -2540,6 +2606,7 @@ const ar: HomeContent = {
       },
     },
   },
+  clients: { title: 'يثقون بنا', items: CLIENT_LOGOS },
   commitments: {
     eyebrow: 'لماذا تختارون OPEM',
     heading: ['أن نفهم قبل أن نتصرّف، وننقل قبل أن نغادر،', 'ونقيس قبل أن نحكم.'],
@@ -2547,19 +2614,19 @@ const ar: HomeContent = {
       {
         id: 'sur-mesure',
         icon: 'tailor',
-        title: 'على المقاس، لا جاهز أبدًا',
+        title: ['على المقاس', 'لا جاهز أبدًا'],
         text: 'الحلّ الذي يناسب الجميع لا يناسب أحدًا. أنتم تعرفون صعوباتكم، وتشخيصنا يكشف سببها الحقيقي في تنظيمكم ومساراتكم. ونبني معًا الاستجابة التي تشبهكم.',
       },
       {
         id: 'autonomie',
         icon: 'relay',
-        title: 'نجاحنا: ألّا تبقوا في حاجة إلينا',
+        title: ['نجاحنا', 'ألّا تبقوا في حاجة إلينا'],
         text: 'إجراءات مكتوبة، وأدوات قيادة، وتكوينات تأهيلية مبنية على وضعيات عملكم: تتملّكها فرقكم حتى تبلغ الاستقلالية. وحين نغادر، يبقى الأداء عندكم.',
       },
       {
         id: 'mesure',
         icon: 'measure',
-        title: 'نقيس، أو لا نَعِد بشيء',
+        title: ['لا وعود جوفاء', 'بل نتائج مُقاسة'],
         text: 'منذ الانطلاق، نحدّد معكم المؤشرات المهمّة لمؤسستكم. وعند الاختتام، تتيح لكم حصيلة مرقّمة تقدير العائد على استثماركم. وفي التكوين، يمنحنا المشاركون فعلًا متوسط رضا يبلغ 4,6 من 5.',
       },
     ],
@@ -2912,25 +2979,32 @@ const ar: HomeContent = {
     caseStudy: {
       eyebrow: 'دراسة حالة | مرافقة المؤسسات',
       title: 'تدقيق صودق عليه بالإجماع، ثم خطة التكوين بأكملها أُسندت إلى OPEM',
+      summary:
+        'تُسند إلينا مؤسسة عمومية اقتصادية تدقيق تنظيمها. ويصادق مجلس إدارتها على التقرير بالإجماع. وبعد سنتين، تُسند إلينا خطة تكوينها السنوية بأكملها.',
       link: { label: 'اقرأوا دراسة الحالة', href: '/missions' },
       steps: [
         {
           id: 'audit',
-          label: '2021 | التدقيق',
+          year: '2021',
+          label: 'التدقيق',
           headline: 'التنظيم والتسيير تحت المجهر',
           text: 'تُسند مؤسسة عمومية اقتصادية إلى OPEM التدقيق التنظيمي والوظيفي لهيكلها.',
           tone: 'plain',
         },
         {
           id: 'verdict',
-          label: '2021 | القرار',
+          year: '2021',
+          since: 'في السنة نفسها',
+          label: 'القرار',
           headline: 'بالإجماع',
           text: 'يصادق مجلس الإدارة على التقرير ويهنّئ الفريق على احترافيته.',
           tone: 'blue',
         },
         {
           id: 'confiance',
-          label: '2023 | الثقة',
+          year: '2023',
+          since: 'بعد سنتين',
+          label: 'الثقة',
           headline: '100 %',
           text: 'من خطتها السنوية للتكوين أُسندت إلى OPEM.',
           tone: 'green',

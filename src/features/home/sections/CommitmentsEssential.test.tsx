@@ -15,9 +15,9 @@ describe('« Ce qui nous distingue »', () => {
     expect(
       screen.getAllByRole('heading', { level: 3 }).map((heading) => normalize(heading.textContent)),
     ).toEqual([
-      'Du sur-mesure, jamais du prêt-à-porter',
-      'Notre réussite : ne plus vous être indispensables',
-      'Mesurer, ou ne rien promettre',
+      'Du sur-mesure jamais du prêt-à-porter',
+      'Notre réussite ne plus vous être indispensables',
+      'Pas de vaines promesses des résultats mesurés',
     ]);
     expect(screen.getByText(/satisfaction moyenne de 4,6/)).toBeInTheDocument();
   });
@@ -25,6 +25,6 @@ describe('« Ce qui nous distingue »', () => {
   it('passe en arabe avec les mêmes engagements', () => {
     render(<CommitmentsEssential commitments={homeContent.ar.commitments} />);
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(3);
-    expect(screen.getByText('نقيس، أو لا نَعِد بشيء')).toBeInTheDocument();
+    expect(screen.getByText('لا وعود جوفاء')).toBeInTheDocument();
   });
 });

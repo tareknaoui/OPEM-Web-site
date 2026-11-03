@@ -608,16 +608,58 @@
 }
 
 /* Autres actions : consultant, nouveau test, revoir ses réponses. */
-.otherActions {
+/* Mobile : l'encart du consultant avant le formulaire, les deux liens après. */
+.side {
+  display: contents;
+}
+
+.consultantCard {
   display: grid;
+  order: -1;
   gap: var(--space-4);
-  justify-items: start;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  /* Touche d'ambre très légère : contour et voile, jamais le texte. */
+  border: 1px solid rgb(242 178 48 / 0.55);
+  border-radius: 14px;
+  background: rgb(242 178 48 / 0.07);
+}
+
+.consultantTitle {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.consultantText {
+  margin: 0;
+  color: var(--opem-blue-30);
+  line-height: 1.6;
+}
+
+.consultantTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.45;
 }
 
 .consultant {
-  min-height: 3.5rem;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 3.75rem;
+  margin-top: var(--space-2);
   padding-inline: var(--space-6);
+  font-size: 1.0625rem;
   white-space: normal;
+}
+
+.otherActions {
+  display: grid;
+  order: 1;
+  gap: var(--space-4);
+  justify-items: start;
 }
 
 .textButton {
@@ -687,5 +729,13 @@
   .moreGrid {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  /* L'encart et les liens restent à l'écran pendant qu'on remplit le formulaire. */
+  .side {
+    position: sticky;
+    top: 6rem;
+    display: grid;
+    gap: var(--space-8);
   }
 }

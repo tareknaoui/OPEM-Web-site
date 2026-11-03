@@ -1,0 +1,142 @@
+/* Bandeau des logos clients : une bande fine sur blanc, entre deux filets. Mobile : le petit
+   titre au-dessus, la rangée sur toute la largeur. Ordinateur : le titre à gauche, séparé de la
+   rangée par un filet vertical. */
+
+.section {
+  border-block: 1px solid var(--opem-gray-light);
+  background: var(--opem-white);
+}
+
+.band {
+  display: grid;
+  gap: var(--space-4);
+  align-items: center;
+  padding-block: var(--space-6);
+}
+
+.title {
+  margin: 0;
+  color: var(--opem-gray);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.marquee {
+  --gap: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  --scale: 0.8;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: scroll 45s linear infinite;
+}
+
+/* Pause le temps de regarder un logo, ou de passer au clavier. */
+.marquee:hover .track,
+.marquee:focus-within .track {
+  animation-play-state: paused;
+}
+
+/* Chaque exemplaire porte l'écart final, pour que la boucle tombe juste. */
+.list {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  padding-inline-end: var(--gap);
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 3.5rem;
+}
+
+/* Hauteur propre à chaque logo (--h, en pixels), réduite sur mobile. Gris, en couleur au survol ;
+   le blanc des fichiers se fond dans le fond. */
+.logo {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: calc(var(--h) * 1px * var(--scale));
+  filter: grayscale(1) contrast(1.1);
+  opacity: 0.75;
+  mix-blend-mode: multiply;
+  transition:
+    filter 300ms ease,
+    opacity 300ms ease;
+}
+
+.item:hover .logo {
+  filter: none;
+  opacity: 1;
+}
+
+@keyframes scroll {
+  to {
+    translate: calc(-100% / 3 * var(--dir)) 0;
+  }
+}
+
+@media (min-width: 48em) {
+  .marquee {
+    --scale: 1;
+  }
+}
+
+@media (min-width: 64em) {
+  .band {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--space-8);
+  }
+
+  .title {
+    max-width: 11rem;
+    padding-inline-end: var(--space-8);
+    border-inline-end: 1px solid var(--opem-gray-light);
+  }
+}
+
+/* Mouvement réduit : les logos posés, immobiles, sans les copies. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+
+  .track {
+    width: auto;
+    animation: none;
+  }
+
+  .list {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-4);
+    padding-inline-end: 0;
+  }
+
+  .list[aria-hidden] {
+    display: none;
+  }
+
+  .logo {
+    transition: none;
+  }
+}

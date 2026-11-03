@@ -92,6 +92,15 @@
   letter-spacing: 0;
 }
 
+/* L'amorce (« Notre réussite ») sur sa propre ligne, plus petite, en bleu OPEM. */
+.titleLead {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  letter-spacing: 0;
+}
+
 .text {
   margin: var(--space-2) 0 0;
   line-height: 1.6;

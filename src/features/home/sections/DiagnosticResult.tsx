@@ -285,20 +285,30 @@ export function DiagnosticResult({
             fonction={fonction}
             payload={{ context, answers, profile: result.profile, total: result.total }}
           />
-          <div className={styles.otherActions}>
-            <Link
-              to={consultantHref(labels.consultant, result, context, answers)}
-              className={`btn btn-light ${styles.consultant}`}
-            >
-              {labels.consultant.label}
-              <ArrowRightIcon size={20} className="arrow" />
-            </Link>
-            <button type="button" className={styles.textButton} onClick={onRetake}>
-              {labels.retake}
-            </button>
-            <button type="button" className={styles.textButton} onClick={onReview}>
-              {labels.restart}
-            </button>
+          {/* Encart du consultant, mis en avant : avant le formulaire sur mobile ; à côté sur
+              ordinateur, où il reste à l'écran pendant qu'on remplit le formulaire. */}
+          <div className={styles.side}>
+            <aside className={styles.consultantCard} aria-labelledby={`${ids}-consultant`}>
+              <p id={`${ids}-consultant`} className={styles.consultantTitle}>
+                {labels.consultantCard.title}
+              </p>
+              <p className={styles.consultantText}>{labels.consultantCard.text}</p>
+              <Link
+                to={consultantHref(labels.consultant, result, context, answers)}
+                className={`btn btn-light ${styles.consultant}`}
+              >
+                {labels.consultant.label}
+                <ArrowRightIcon size={20} className="arrow" />
+              </Link>
+            </aside>
+            <div className={styles.otherActions}>
+              <button type="button" className={styles.textButton} onClick={onRetake}>
+                {labels.retake}
+              </button>
+              <button type="button" className={styles.textButton} onClick={onReview}>
+                {labels.restart}
+              </button>
+            </div>
           </div>
         </div>
       </section>

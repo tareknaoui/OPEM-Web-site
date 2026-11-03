@@ -150,6 +150,43 @@
   display: block;
 }
 
+/* Phrase d'appui sous le texte, en blanc, puis le bouton vers les expertises : blanc sur bleu
+   nuit, comme celui du bandeau IA. */
+.tagline {
+  max-width: 40rem;
+  margin: var(--space-6) 0 0;
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
+  font-weight: 600;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.tagline:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.cta {
+  margin-top: var(--space-6);
+  border-color: var(--opem-white);
+  background: var(--opem-white);
+  color: var(--opem-anthracite);
+  transition:
+    background-color 200ms,
+    border-color 200ms;
+}
+
+.cta:hover {
+  border-color: var(--opem-amber);
+  background: var(--opem-amber);
+  color: var(--opem-anthracite);
+}
+
+.cta:focus-visible {
+  outline-color: var(--color-on-nav);
+}
+
 /* ---------- Chiffres clés ---------- */
 
 /* Un filet clair au-dessus de chaque chiffre, un repère ambre à son début. À l'arrivée, les

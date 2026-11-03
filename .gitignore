@@ -22,3 +22,6 @@ Thumbs.db
 # Photos d'origine fournies (déjà recadrées dans public/images) et captures d'écran
 /*.jpg
 /*.png
+# Documents de travail fournis (offres, listes de logos) : internes, jamais publiés
+/*.docx
+/*.pdf

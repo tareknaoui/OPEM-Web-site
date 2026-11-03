@@ -9,8 +9,9 @@ type TestimonialsProps = {
 
 /**
  * Témoignages, maquette validée par OPEM, en trois bandes : sur blanc, le titre et une étude de
- * cas en trois temps ; sur bleu très clair, les recommandations ; sur bleu nuit, les institutions
- * qui confient leurs études au cabinet. Recommandations anonymes, sans photo de personne.
+ * cas racontée en une phrase, puis en trois temps tous visibles, reliés par des flèches qui
+ * disent le temps écoulé (« Deux ans plus tard ») ; sur bleu très clair, les recommandations ;
+ * sur bleu nuit, les institutions qui confient leurs études au cabinet. Recommandations anonymes, sans photo de personne.
  */
 export function Testimonials({ testimonials }: TestimonialsProps) {
   const { caseStudy, featured, quotes, studies } = testimonials;
@@ -34,6 +35,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 <div className={styles.caseHeading}>
                   <p className={styles.eyebrow}>{caseStudy.eyebrow}</p>
                   <h3 className={styles.caseTitle}>{caseStudy.title}</h3>
+                  <p className={styles.caseSummary}>{caseStudy.summary}</p>
                 </div>
                 <Link to={caseStudy.link.href} className={`btn btn-primary ${styles.cta}`}>
                   {caseStudy.link.label}
@@ -42,13 +44,27 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               </div>
 
               <ol className={styles.steps} data-reveal-stagger>
-                {caseStudy.steps.map((step) => (
-                  <li key={step.id} className={styles.step} data-tone={step.tone}>
-                    <p className={styles.stepLabel}>{step.label}</p>
-                    <p className={styles.stepHeadline}>{step.headline}</p>
-                    <p className={styles.stepText}>{step.text}</p>
-                  </li>
-                ))}
+                {caseStudy.steps.map((step, index) => {
+                  const next = caseStudy.steps[index + 1];
+                  return (
+                    <li key={step.id} className={styles.step} data-tone={step.tone}>
+                      <p className={styles.stepYear}>
+                        {step.since && <span className="sr-only">{step.since}, </span>}
+                        <time dateTime={step.year}>{step.year}</time>
+                      </p>
+                      {/* Flèche vers l'étape suivante, avec le temps écoulé (lu dans l'étape suivante). */}
+                      {next?.since && (
+                        <p className={styles.since} aria-hidden="true">
+                          <span className={styles.sinceText}>{next.since}</span>
+                          <ArrowRightIcon size={16} className={styles.sinceArrow} />
+                        </p>
+                      )}
+                      <p className={styles.stepLabel}>{step.label}</p>
+                      <p className={styles.stepHeadline}>{step.headline}</p>
+                      <p className={styles.stepText}>{step.text}</p>
+                    </li>
+                  );
+                })}
               </ol>
             </article>
           </div>

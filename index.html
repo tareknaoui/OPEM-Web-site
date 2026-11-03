@@ -3,9 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Site web" />
+    <!--
+      Titre et description de l'accueil, présents dès l'ouverture : Google, les aperçus de liens
+      et les outils d'IA qui n'exécutent pas le JavaScript les lisent ici. Au démarrage,
+      src/main.tsx retire ce <title> pour que chaque page pose le sien (sans doublon). Les garder
+      d'accord avec `homeContent.fr.title` (src/features/home/content.ts).
+    -->
+    <title>OPEM, cabinet de conseil et de formation en Algérie</title>
+    <meta
+      name="description"
+      content="Études, accompagnement, formation qualifiante, coaching, certification et communication : OPEM aide les organisations de toute l’Algérie à exceller."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="OPEM, cabinet de conseil et de formation en Algérie" />
+    <meta
+      property="og:description"
+      content="Études, accompagnement, formation qualifiante, coaching, certification et communication : OPEM aide les organisations de toute l’Algérie à exceller."
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Mon site</title>
   </head>
   <body>
     <noscript>Ce site nécessite JavaScript.</noscript>

@@ -6,6 +6,13 @@ import { Testimonials } from './Testimonials';
 
 const { testimonials } = homeContent.fr;
 
+/** Texte lu de l'étape, sans les flèches (masquées aux lecteurs d'écran). */
+const normalize = (element: HTMLElement) =>
+  [...element.children]
+    .filter((child) => child.getAttribute('aria-hidden') !== 'true')
+    .map((child) => child.textContent)
+    .join(' ');
+
 function renderSection() {
   const Page = () => <Testimonials testimonials={testimonials} />;
   const router = createMemoryRouter([{ path: '*', Component: Page }]);
@@ -16,11 +23,16 @@ describe('Section « Témoignages »', () => {
   it('raconte l’étude de cas en trois temps, dans l’ordre', () => {
     renderSection();
     expect(screen.getByRole('heading', { level: 3, name: /audit approuvé/ })).toBeInTheDocument();
+    // L'histoire en une phrase, puis les trois temps, tous visibles, dans l'ordre ; le temps
+    // écoulé depuis l'étape précédente est lu avec l'année.
+    expect(screen.getByText(/Deux ans plus tard, il nous confie tout son plan/)).toBeVisible();
     const steps = within(screen.getAllByRole('list')[0]!).getAllByRole('listitem');
     expect(steps).toHaveLength(3);
-    ['L’audit', 'Le verdict', 'La confiance'].forEach((label, index) =>
-      expect(steps[index]).toHaveTextContent(label),
-    );
+    [
+      /^2021 L’audit Organisation/,
+      /La même année, 2021 Le verdict À l’unanimité/,
+      /Deux ans plus tard, 2023 La confiance 100\s%/,
+    ].forEach((text, index) => expect(normalize(steps[index]!)).toMatch(text));
     expect(screen.getByRole('link', { name: /Lire l’étude de cas/ })).toHaveAttribute(
       'href',
       '/missions',
