@@ -43,7 +43,7 @@ export function Trainings({ trainings }: { trainings: HomeContent['trainings'] }
         />
 
         {sessions.length === 0 ? (
-          <p className={styles.empty}>{trainings.empty}</p>
+          <p className={styles.empty}>{trainings.empty.text}</p>
         ) : (
           <ol ref={reveal} data-reveal className={styles.agenda}>
             {sessions.map((session) => (

@@ -412,25 +412,40 @@ export type HomeContent = {
     register: string;
     provisional: boolean;
     note: string;
-    empty: string;
+    /** Aucune session programmée : message, puis lien vers le formulaire de contact. */
+    empty: { text: string; link: Link };
     /** Version « Prochaines sessions » : nom de la liste (lecteurs d'écran). */
     listLabel: string;
+    /** Dates en petit sous le mois : « du {start} au {end} ». */
+    range: string;
+    /** Badge de la première édition d'une formation chez OPEM. */
+    newBadge: string;
     /**
-     * Sessions inter-entreprises ouvertes au public. date au format AAAA-MM-JJ (premier jour) ;
-     * les sessions passées sont masquées automatiquement. topic : thème affiché en étiquette.
-     * `intra` : session réservée au personnel d'un client, jamais affichée dans l'agenda (le
-     * bouton « S'inscrire » y inviterait le public par erreur). `modules` : calendrier du cycle,
-     * repris sur la fiche de la formation (onglet « Formation qualifiante »).
+     * Photo réelle d'une session, tirée de l'album OPEM, dans la dernière case de la grille.
+     * Sans `src`, un emplacement neutre, sans texte, en attendant la photo.
+     */
+    photo: { src: string; alt: string };
+    /**
+     * Sessions inter-entreprises programmées par OPEM, publiées par périodes de deux mois avec
+     * des dates fermes. date / end : premier et dernier jour, au format AAAA-MM-JJ ; les
+     * sessions passées sont masquées automatiquement et le bloc montre au plus les cinq plus
+     * proches. title : titre court (avant les deux-points) ; promise : la suite. href : fiche
+     * de la formation (onglet « Formation qualifiante ») ; « S'inscrire » mène à sa partie
+     * « Inscription ». `isNew` : première édition chez OPEM, badge « Nouveau » et carte mise en
+     * avant, à retirer pour les sessions suivantes. `intra` : session réservée au personnel
+     * d'un client, jamais affichée dans l'agenda.
      */
     items: {
       id: string;
       date: string;
+      end: string;
       topic: string;
       title: string;
+      promise: string;
       format: string;
       href: string;
+      isNew?: boolean;
       intra?: boolean;
-      modules?: { label: string; dates: string }[];
     }[];
   };
   /**
@@ -1677,28 +1692,67 @@ const fr: HomeContent = {
     register: 'S’inscrire',
     provisional: false,
     note: '',
-    empty: 'Les prochaines sessions seront annoncées très bientôt.',
+    empty: {
+      text: 'Le prochain calendrier sera publié très prochainement.',
+      link: {
+        label: 'Contactez-nous pour organiser une session dans vos locaux.',
+        href: '/contact',
+      },
+    },
+    range: 'du {start} au {end}',
+    newBadge: 'Nouveau',
+    photo: { src: '', alt: '' },
     items: [
       {
-        id: 'management-de-projet',
-        topic: 'Management',
-        date: '2026-12-01',
-        title: 'Management de projet',
-        format:
-          'Cycle de 20 jours en 6 modules, de décembre 2026 au premier trimestre 2027 · Présentiel · [lieu à confirmer par OPEM]',
-        href: '/formation/management-de-projet',
-        modules: [
-          { label: 'Module 1', dates: 'du mardi 1er au jeudi 3 décembre 2026 (3 jours)' },
-          { label: 'Module 2', dates: 'du lundi 14 au jeudi 17 décembre 2026 (4 jours)' },
-          { label: 'Module 3', dates: 'du mardi 5 au jeudi 7 janvier 2027 (3 jours)' },
-          { label: 'Module 4', dates: 'du mardi 19 au jeudi 21 janvier 2027 (3 jours)' },
-          { label: 'Module 5', dates: 'du mardi 2 au jeudi 4 février 2027 (3 jours)' },
-          {
-            label: 'Module 6',
-            dates:
-              'du dimanche 14 au mercredi 17 mars 2027 (4 jours), après le ramadan et l’Aïd el-Fitr',
-          },
-        ],
+        id: 'diagnostic-d-organisation',
+        date: '2026-12-06',
+        end: '2026-12-09',
+        topic: 'Organisation',
+        title: 'Diagnostic d’organisation',
+        promise: 'Repérer les blocages, optimiser les processus',
+        format: 'Présentiel · Alger · 4 jours',
+        href: '/formation/fiches-formation/diagnostic-d-organisation',
+      },
+      {
+        id: 'plan-de-formation-2027',
+        date: '2026-12-08',
+        end: '2026-12-10',
+        topic: 'Ingénierie de la formation',
+        title: 'Plan de formation 2027',
+        promise: 'De l’analyse des besoins au pilotage',
+        format: 'Présentiel · Alger · 3 jours',
+        href: '/formation/fiches-formation/plan-de-formation-2027',
+      },
+      {
+        id: 'cybersecurite-operationnelle',
+        date: '2026-12-13',
+        end: '2026-12-17',
+        topic: 'Cybersécurité',
+        title: 'Cybersécurité opérationnelle',
+        promise: 'Protéger, détecter, réagir',
+        format: 'Présentiel · Alger · 5 jours',
+        href: '/formation/fiches-formation/cybersecurite-operationnelle',
+      },
+      {
+        id: 'iso-9001-2026',
+        date: '2026-12-15',
+        end: '2026-12-17',
+        topic: 'Qualité et systèmes de management',
+        title: 'ISO 9001:2026',
+        promise: 'Ce qui change vraiment pour votre système qualité',
+        format: 'Présentiel · Alger · 3 jours',
+        href: '/formation/fiches-formation/iso-9001-2026',
+      },
+      {
+        id: 'chatgpt-et-claude-en-pratique',
+        date: '2026-12-20',
+        end: '2026-12-24',
+        topic: 'Intelligence artificielle',
+        title: 'ChatGPT et Claude en pratique',
+        promise: 'Travailler mieux, plus vite, dès demain',
+        format: 'Présentiel · Alger · 5 jours',
+        href: '/formation/fiches-formation/chatgpt-et-claude-en-pratique',
+        isNew: true,
       },
     ],
   },
@@ -2963,27 +3017,64 @@ const ar: HomeContent = {
     register: 'التسجيل',
     provisional: false,
     note: '',
-    empty: 'سيتم الإعلان عن الدورات القادمة قريبًا.',
+    empty: {
+      text: 'ستُنشر الرزنامة القادمة قريبًا جدًا.',
+      link: { label: 'اتصلوا بنا لتنظيم دورة في مقراتكم.', href: '/contact' },
+    },
+    range: 'من {start} إلى {end}',
+    newBadge: 'جديد',
+    photo: { src: '', alt: '' },
     items: [
       {
-        id: 'management-de-projet',
-        topic: 'التسيير',
-        date: '2026-12-01',
-        title: 'تسيير المشاريع',
-        format:
-          'دورة من 20 يومًا في 6 وحدات، من ديسمبر 2026 إلى الثلاثي الأول من 2027 · حضوري · [المكان في انتظار تأكيد OPEM]',
-        href: '/formation/management-de-projet',
-        modules: [
-          { label: 'الوحدة 1', dates: 'من الثلاثاء 1 إلى الخميس 3 ديسمبر 2026 (3 أيام)' },
-          { label: 'الوحدة 2', dates: 'من الاثنين 14 إلى الخميس 17 ديسمبر 2026 (4 أيام)' },
-          { label: 'الوحدة 3', dates: 'من الثلاثاء 5 إلى الخميس 7 يناير 2027 (3 أيام)' },
-          { label: 'الوحدة 4', dates: 'من الثلاثاء 19 إلى الخميس 21 يناير 2027 (3 أيام)' },
-          { label: 'الوحدة 5', dates: 'من الثلاثاء 2 إلى الخميس 4 فبراير 2027 (3 أيام)' },
-          {
-            label: 'الوحدة 6',
-            dates: 'من الأحد 14 إلى الأربعاء 17 مارس 2027 (4 أيام)، بعد رمضان وعيد الفطر',
-          },
-        ],
+        id: 'diagnostic-d-organisation',
+        date: '2026-12-06',
+        end: '2026-12-09',
+        topic: 'التنظيم',
+        title: 'تشخيص التنظيم',
+        promise: 'رصد مواطن الانسداد وتحسين العمليات',
+        format: 'حضوري · الجزائر العاصمة · 4 أيام',
+        href: '/formation/fiches-formation/diagnostic-d-organisation',
+      },
+      {
+        id: 'plan-de-formation-2027',
+        date: '2026-12-08',
+        end: '2026-12-10',
+        topic: 'هندسة التكوين',
+        title: 'مخطط التكوين 2027',
+        promise: 'من تحليل الاحتياجات إلى القيادة',
+        format: 'حضوري · الجزائر العاصمة · 3 أيام',
+        href: '/formation/fiches-formation/plan-de-formation-2027',
+      },
+      {
+        id: 'cybersecurite-operationnelle',
+        date: '2026-12-13',
+        end: '2026-12-17',
+        topic: 'الأمن السيبراني',
+        title: 'الأمن السيبراني العملياتي',
+        promise: 'الحماية، الرصد، الاستجابة',
+        format: 'حضوري · الجزائر العاصمة · 5 أيام',
+        href: '/formation/fiches-formation/cybersecurite-operationnelle',
+      },
+      {
+        id: 'iso-9001-2026',
+        date: '2026-12-15',
+        end: '2026-12-17',
+        topic: 'الجودة وأنظمة الإدارة',
+        title: 'ISO 9001:2026',
+        promise: 'ما الذي يتغير فعلًا في نظام الجودة لديكم',
+        format: 'حضوري · الجزائر العاصمة · 3 أيام',
+        href: '/formation/fiches-formation/iso-9001-2026',
+      },
+      {
+        id: 'chatgpt-et-claude-en-pratique',
+        date: '2026-12-20',
+        end: '2026-12-24',
+        topic: 'الذكاء الاصطناعي',
+        title: 'ChatGPT و Claude في الممارسة',
+        promise: 'اعملوا أفضل وأسرع، ابتداءً من الغد',
+        format: 'حضوري · الجزائر العاصمة · 5 أيام',
+        href: '/formation/fiches-formation/chatgpt-et-claude-en-pratique',
+        isNew: true,
       },
     ],
   },
