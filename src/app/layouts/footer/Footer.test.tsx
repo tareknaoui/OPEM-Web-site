@@ -87,7 +87,7 @@ describe('Footer', () => {
 
   it('passe en arabe', () => {
     renderFooter();
-    fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
+    fireEvent.click(screen.getByRole('button', { name: 'عربي' }));
     expect(screen.getByRole('heading', { name: 'مشروع أو سؤال؟' })).toBeInTheDocument();
     expect(screen.getByText(/بوزريعة/)).toBeInTheDocument();
   });

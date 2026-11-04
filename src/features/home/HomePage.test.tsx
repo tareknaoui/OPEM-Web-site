@@ -49,7 +49,7 @@ describe('HomePage', () => {
 
   it('passe entièrement en arabe', () => {
     renderHome();
-    fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
+    fireEvent.click(screen.getByRole('button', { name: 'عربي' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/ما يجعل مؤسستكم تتميّز/);
     expect(screen.getByRole('heading', { name: 'كلماتهم، خير مراجعنا.' })).toBeInTheDocument();
   });

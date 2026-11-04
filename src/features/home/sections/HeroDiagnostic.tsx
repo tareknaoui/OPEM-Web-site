@@ -6,7 +6,13 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cx } from '@/lib/cx';
 import type { HomeContent } from '../content';
 import { DiagnosticCard } from './DiagnosticCard';
-import { HERO_POSTER_SRC, HERO_VIDEO_QUERY, HERO_VIDEO_SRC } from './heroMedia';
+import {
+  HERO_POSTER_SRC,
+  HERO_VIDEO_MOBILE_QUERY,
+  HERO_VIDEO_MOBILE_SRC,
+  HERO_VIDEO_QUERY,
+  HERO_VIDEO_SRC,
+} from './heroMedia';
 import styles from './HeroDiagnostic.module.css';
 
 /** « +1 500 » dans les deux langues (en arabe, ar-DZ écrirait « 1.500 », lu comme 1,5). */
@@ -38,6 +44,7 @@ type HeroDiagnosticProps = {
  */
 export function HeroDiagnostic({ hero, video, diagnostic, figures }: HeroDiagnosticProps) {
   const withVideo = useMediaQuery(HERO_VIDEO_QUERY);
+  const smallScreen = useMediaQuery(HERO_VIDEO_MOBILE_QUERY);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
 
@@ -110,7 +117,7 @@ export function HeroDiagnostic({ hero, video, diagnostic, figures }: HeroDiagnos
             <video
               ref={videoRef}
               className={styles.video}
-              src={HERO_VIDEO_SRC}
+              src={smallScreen ? HERO_VIDEO_MOBILE_SRC : HERO_VIDEO_SRC}
               poster={HERO_POSTER_SRC}
               autoPlay
               muted

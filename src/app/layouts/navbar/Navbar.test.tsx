@@ -94,13 +94,13 @@ describe('Navbar', () => {
 
   it('passe en arabe, de droite à gauche', () => {
     renderNavbar();
-    fireEvent.click(screen.getAllByRole('button', { name: 'العربية' })[0]!);
+    fireEvent.click(screen.getAllByRole('button', { name: 'عربي' })[0]!);
 
     expect(document.documentElement.dir).toBe('rtl');
     expect(document.documentElement.lang).toBe('ar');
     const nav = desktopNav('التنقل الرئيسي');
     expect(within(nav).getByRole('link', { name: 'خبراتنا' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'العربية' })[0]).toHaveAttribute(
+    expect(screen.getAllByRole('button', { name: 'عربي' })[0]).toHaveAttribute(
       'aria-pressed',
       'true',
     );

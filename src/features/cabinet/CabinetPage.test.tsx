@@ -61,7 +61,7 @@ describe('Page « Le cabinet »', () => {
 
   it('passe en arabe', () => {
     renderCabinet();
-    fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
+    fireEvent.click(screen.getByRole('button', { name: 'عربي' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('في خدمة أدائكم.');
   });
 });
