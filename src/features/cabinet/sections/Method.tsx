@@ -72,6 +72,9 @@ export function Method({ method }: { method: CabinetContent['method'] }) {
             </li>
           ))}
         </ol>
+        <p className={styles.note} data-reveal>
+          {method.note}
+        </p>
       </div>
     </section>
   );

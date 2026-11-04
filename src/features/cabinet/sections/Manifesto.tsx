@@ -7,8 +7,8 @@ import styles from './Manifesto.module.css';
 /**
  * « Qui nous sommes » : un manifeste en très grand, dont les mots passent du gris au bleu OPEM
  * à mesure qu'on fait défiler la page (lecture guidée, sans re-rendu : data-lit posé
- * directement). Mouvement réduit : tout est allumé d'emblée. Puis la citation sur
- * l'excellence.
+ * directement). Mouvement réduit : tout est allumé d'emblée. Puis la vision du cabinet et la
+ * citation sur l'excellence.
  */
 export function Manifesto({ about }: { about: CabinetContent['about'] }) {
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -41,6 +41,11 @@ export function Manifesto({ about }: { about: CabinetContent['about'] }) {
             </span>
           ))}
         </p>
+
+        <div className={styles.vision} data-reveal>
+          <h3 className={styles.visionTitle}>{about.vision.title}</h3>
+          <p className={styles.visionText}>{about.vision.text}</p>
+        </div>
 
         <blockquote className={styles.quote} data-reveal="title">
           <p>{about.quote}</p>

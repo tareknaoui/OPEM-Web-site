@@ -2,7 +2,8 @@ import type { Lang } from '@/i18n/language';
 
 /**
  * Textes de la page « Le cabinet ». Source : la page « À propos » du site de 2019
- * (présentation, démarche en 3 niveaux, 6 valeurs, équipe) et son catalogue de formation
+ * (hbourahla.wixsite.com/website-8/a-propos : présentation, vision, positionnement, démarche
+ * en 3 niveaux, 6 valeurs, équipe) et son catalogue de formation
  * (agrément, dispositif qualité), réécrits court. Règle : rien de ce que dit déjà l'accueil
  * (chiffres, domaines, titre sur l'excellence), et rien qui se répète d'une section à l'autre.
  * provisional : contenu à faire valider par OPEM (une mention discrète s'affiche).
@@ -19,16 +20,21 @@ export type CabinetContent = {
   about: {
     title: string;
     statement: string;
+    /** Le cap fixé à la création du cabinet, tenu depuis. */
+    vision: { title: string; text: string };
     quote: string;
   };
   method: {
     eyebrow: string;
     title: string;
     steps: { title: string; text: string }[];
+    /** Sous les trois niveaux : formation ciblée et coaching de proximité. */
+    note: string;
   };
   values: {
     eyebrow: string;
     title: string;
+    intro: string;
     provisional: boolean;
     note: string;
     items: { title: string; text: string }[];
@@ -57,12 +63,16 @@ const fr: CabinetContent = {
     eyebrow: 'Le cabinet',
     headline: ['Conseil, études et formation,', 'au service de votre performance.'],
     intro:
-      'Basé à Alger, OPEM (Optimum Performance Management) accompagne les organisations, publiques comme privées, dans un environnement complexe et exigeant.',
+      'Basé à Alger, OPEM (Optimum Performance Management) accompagne les organisations, publiques comme privées, dans un environnement complexe et exigeant. Organisé par domaines d’expertise, il a fait un choix résolument différent de celui des grands cabinets : rester au plus près de chacun de vos enjeux.',
   },
   about: {
     title: 'Qui nous sommes',
     statement:
       'Chaque organisation a son secteur, ses contraintes et son histoire. Nous commençons par les comprendre, avec vous. Puis nous construisons avec vos équipes, pas à leur place.',
+    vision: {
+      title: 'Notre vision',
+      text: 'À sa création, OPEM s’est fixé un cap : contribuer à une Algérie meilleure, qui sait mobiliser les compétences nombreuses et variées de ses femmes et de ses hommes. Les crises traversées depuis n’ont pas changé ce cap. Le cabinet a choisi la persévérance et la ténacité, pour rester au service des organisations et leur apporter une forte valeur ajoutée.',
+    },
     quote: 'L’excellence est une démarche de progrès continu, et non le fruit du hasard.',
   },
   method: {
@@ -82,10 +92,13 @@ const fr: CabinetContent = {
         text: 'Nous restons à vos côtés pour transformer la stratégie retenue en résultats, et la faire adopter par vos équipes.',
       },
     ],
+    note: 'À chaque niveau, des formations ciblées et un coaching de proximité font progresser vos collaborateurs, renforcent l’engagement de chacun et la cohésion de l’ensemble.',
   },
   values: {
     eyebrow: 'Nos valeurs',
     title: 'Six valeurs qui guident chaque mission.',
+    intro:
+      'Ce ne sont pas de vains mots, mais des principes que nous appliquons rigoureusement : ils donnent sa crédibilité à la signature OPEM et guident chacun de nous au quotidien.',
     provisional: true,
     note: 'Valeurs du cabinet ; textes d’explication proposés, à valider par OPEM.',
     items: [
@@ -118,8 +131,8 @@ const fr: CabinetContent = {
   team: {
     eyebrow: 'Notre équipe',
     title: 'Une direction engagée, un réseau au-delà de nos frontières.',
-    text: 'Autour de la direction, des consultants et des formateurs issus des secteurs qu’ils accompagnent, et un réseau international pour les compétences rares.',
-    lead: { label: 'Direction', name: 'Houda Bourahla', role: 'Gérante du cabinet' },
+    text: 'Ce qui nous rassemble : la rigueur, et le client au centre de chaque décision. Autour de la direction, des professionnels aux compétences confirmées, dont certains ont occupé de hautes fonctions de direction, et des consultants et experts choisis pour chaque type de mission. Quand votre projet demande une compétence rare, introuvable localement, nous la cherchons dans notre vivier de consultants internationaux.',
+    lead: { label: 'Direction', name: 'Houda Bourahla', role: 'Directrice générale' },
   },
   pledges: {
     eyebrow: 'Nos garanties',
@@ -147,12 +160,16 @@ const ar: CabinetContent = {
     eyebrow: 'المكتب',
     headline: ['استشارة ودراسات وتكوين،', 'في خدمة أدائكم.'],
     intro:
-      'يقع مقرّ OPEM (Optimum Performance Management) في الجزائر العاصمة، وترافق المؤسسات، العمومية والخاصة، في محيط معقّد وصعب.',
+      'يقع مقرّ OPEM (Optimum Performance Management) في الجزائر العاصمة، وترافق المؤسسات، العمومية والخاصة، في محيط معقّد وصعب. وبتنظيمه حسب مجالات الخبرة، اختار المكتب نهجًا مختلفًا تمامًا عن المكاتب الكبرى: البقاء على مقربة من كل رهان من رهاناتكم.',
   },
   about: {
     title: 'من نحن',
     statement:
       'لكل مؤسسة قطاعها وقيودها وتاريخها. نبدأ بفهمها، معكم. ثم نبني مع فرقكم، لا بدلًا منها.',
+    vision: {
+      title: 'رؤيتنا',
+      text: 'منذ تأسيسها، حدّدت OPEM لنفسها وجهة: المساهمة في جزائر أفضل، تعرف كيف تستثمر الكفاءات الكثيرة والمتنوعة لنسائها ورجالها. ولم تغيّر الأزمات التي مرّت بها البلاد منذ ذلك الحين هذه الوجهة. فقد اختار المكتب المثابرة والعزيمة، ليبقى في خدمة المؤسسات ويقدّم لها قيمة مضافة عالية.',
+    },
     quote: 'التميّز مسار تحسّن مستمر، وليس وليد الصدفة.',
   },
   method: {
@@ -172,10 +189,13 @@ const ar: CabinetContent = {
         text: 'نبقى إلى جانبكم لتحويل الاستراتيجية المعتمدة إلى نتائج، وجعل فرقكم تتبنّاها.',
       },
     ],
+    note: 'في كل مستوى، تكوينات موجّهة ومرافقة عن قرب ترفع مستوى معاونيكم، وتعزّز التزام كل فرد وتماسك المجموعة.',
   },
   values: {
     eyebrow: 'قيمنا',
     title: 'ست قيم توجّه كل مهمة.',
+    intro:
+      'ليست كلمات جوفاء، بل مبادئ نطبّقها بصرامة: تمنح توقيع OPEM مصداقيته، وتوجّه كل واحد منا في عمله اليومي.',
     provisional: true,
     note: 'قيم المكتب؛ نصوص الشرح مقترحة، في انتظار مصادقة OPEM.',
     items: [
@@ -208,8 +228,8 @@ const ar: CabinetContent = {
   team: {
     eyebrow: 'فريقنا',
     title: 'إدارة ملتزمة، وشبكة تتجاوز حدودنا.',
-    text: 'حول الإدارة، مستشارون ومكوّنون من القطاعات التي يرافقونها، وشبكة دولية للكفاءات النادرة.',
-    lead: { label: 'الإدارة', name: 'هدى بورحلة', role: 'مسيّرة المكتب' },
+    text: 'ما يجمعنا: الصرامة، ووضع العميل في صميم كل قرار. حول الإدارة، مهنيون ذوو كفاءات مؤكدة، شغل بعضهم مناصب إدارية عليا، ومستشارون وخبراء يُختارون لكل نوع من المهام. وحين يتطلب مشروعكم كفاءة نادرة غير متوفرة محليًا، نبحث عنها في شبكتنا من المستشارين الدوليين.',
+    lead: { label: 'الإدارة', name: 'هدى بورحلة', role: 'المديرة العامة' },
   },
   pledges: {
     eyebrow: 'ضماناتنا',

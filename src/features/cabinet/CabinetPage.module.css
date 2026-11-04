@@ -108,6 +108,11 @@
   margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
 }
 
+.valuesIntro {
+  max-width: 40rem;
+  margin: var(--space-4) 0 0;
+}
+
 /* ==========================================================================
    Valeurs, sur blanc : deux colonnes de lignes (numéro | titre et phrase) ; à l'arrivée,
    le filet de chaque ligne se trace, gris puis un court trait bleu OPEM à son début.

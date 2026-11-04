@@ -51,6 +51,7 @@ export default function CabinetPage() {
             <h2 id="values-title" className="h2">
               {values.title}
             </h2>
+            <p className={cx('lead', styles.valuesIntro)}>{values.intro}</p>
           </div>
           <ul className={styles.valueList} data-reveal-stagger>
             {values.items.map((value, index) => (

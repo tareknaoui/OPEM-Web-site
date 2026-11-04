@@ -121,6 +121,17 @@
   letter-spacing: 0;
 }
 
+/* Sous les trois niveaux : formation ciblée et coaching de proximité, sous un filet. */
+.note {
+  max-width: 38rem;
+  margin: clamp(1.5rem, 1rem + 1.5vw, 2.5rem) 0 0;
+  padding-top: clamp(1.25rem, 1rem + 1vw, 2rem);
+  border-top: 1px solid var(--opem-blue-50);
+  color: var(--color-text);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.65;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .step {
     opacity: 1;
@@ -165,8 +176,12 @@
     font-size: 1.25rem;
   }
 
-  .steps {
+  .steps,
+  .note {
     grid-column: 7 / -1;
+  }
+
+  .steps {
     margin-top: 0;
   }
 
