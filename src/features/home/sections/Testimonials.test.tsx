@@ -25,7 +25,7 @@ describe('Section « Témoignages »', () => {
     expect(screen.getByRole('heading', { level: 3, name: /audit approuvé/ })).toBeInTheDocument();
     // L'histoire en une phrase, puis les trois temps, tous visibles, dans l'ordre ; le temps
     // écoulé depuis l'étape précédente est lu avec l'année.
-    expect(screen.getByText(/Deux ans plus tard, il nous confie tout son plan/)).toBeVisible();
+    expect(screen.getByText(/Deux ans plus tard, elle nous confie tout son plan/)).toBeVisible();
     const steps = within(screen.getAllByRole('list')[0]!).getAllByRole('listitem');
     expect(steps).toHaveLength(3);
     [
@@ -33,17 +33,29 @@ describe('Section « Témoignages »', () => {
       /La même année, 2021 Le verdict À l’unanimité/,
       /Deux ans plus tard, 2023 La confiance 100\s%/,
     ].forEach((text, index) => expect(normalize(steps[index]!)).toMatch(text));
+    expect(screen.getByText(/^Une entreprise publique économique nous confie/)).toBeVisible();
+    expect(screen.queryByText(/établissement public/)).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Lire l’étude de cas/ })).toHaveAttribute(
       'href',
-      '/missions',
+      '/missions/etudes-de-cas/audit-organisationnel-et-plan-de-formation',
     );
   });
 
-  it('affiche les 3 recommandations, sans nom de personne, chacune avec son lien', () => {
+  it('affiche les 3 recommandations, signées d’une direction, puis un seul lien', () => {
     renderSection();
     expect(screen.getAllByRole('blockquote')).toHaveLength(3);
-    expect(screen.getByText(/Directeur général d’une entreprise publique, 2020/)).toBeVisible();
-    expect(screen.getAllByRole('link', { name: /Lire le témoignage/ })).toHaveLength(3);
+    expect(
+      [...document.querySelectorAll('figcaption')].map((caption) => caption.textContent),
+    ).toEqual([
+      'Direction générale d’une entreprise publique, 2020',
+      'Direction d’une entreprise industrielle, 2025',
+      'Direction générale d’un office public national, 2024',
+    ]);
+    expect(screen.queryByRole('link', { name: /Lire le témoignage/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Lire d’autres témoignages/ })).toHaveAttribute(
+      'href',
+      '/missions/references-clients',
+    );
   });
 
   it('présente les institutions qui confient leurs études', () => {

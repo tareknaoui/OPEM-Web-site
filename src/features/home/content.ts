@@ -43,7 +43,6 @@ export type TestimonialQuote = {
   eyebrow: string;
   quote: string;
   author: string;
-  link: Link;
 };
 
 export type HomeContent = {
@@ -478,6 +477,8 @@ export type HomeContent = {
     /** Recommandation mise en avant, sur carte blanche. */
     featured: TestimonialQuote;
     quotes: TestimonialQuote[];
+    /** Sous les trois témoignages : vers « Références clients », qui les réunit tous. */
+    more: Link;
     studies: {
       eyebrow: string;
       title: string;
@@ -1763,15 +1764,18 @@ const fr: HomeContent = {
       eyebrow: 'Étude de cas | Accompagnement des organisations',
       title: 'Un audit approuvé à l’unanimité, puis tout le plan de formation confié à OPEM',
       summary:
-        'Un établissement public économique nous confie l’audit de son organisation. Son conseil d’administration approuve le rapport à l’unanimité. Deux ans plus tard, il nous confie tout son plan de formation annuel.',
-      link: { label: 'Lire l’étude de cas', href: '/missions' },
+        'Une entreprise publique économique nous confie l’audit de son organisation. Son conseil d’administration approuve le rapport à l’unanimité. Deux ans plus tard, elle nous confie tout son plan de formation annuel.',
+      link: {
+        label: 'Lire l’étude de cas',
+        href: '/missions/etudes-de-cas/audit-organisationnel-et-plan-de-formation',
+      },
       steps: [
         {
           id: 'audit',
           year: '2021',
           label: 'L’audit',
           headline: 'Organisation et fonctionnement passés au crible',
-          text: 'Un établissement public économique confie à OPEM l’audit organisationnel et fonctionnel de sa structure.',
+          text: 'Une entreprise publique économique confie à OPEM l’audit organisationnel et fonctionnel de sa structure.',
           tone: 'plain',
         },
         {
@@ -1799,17 +1803,15 @@ const fr: HomeContent = {
       eyebrow: 'Recommandation',
       quote:
         'Nous avons particulièrement apprécié la qualité des services d’OPEM, son écoute active et la rigueur d’un partenaire de haut niveau. Je recommande à toute entreprise en quête de performance de solliciter les compétences du cabinet.',
-      author: 'Directeur général d’une entreprise publique, 2020',
-      link: { label: 'Lire le témoignage', href: '/missions' },
+      author: 'Direction générale d’une entreprise publique, 2020',
     },
     quotes: [
       {
         id: 'certification',
         eyebrow: 'Certification',
         quote:
-          'Conduire de front trois normes ISO demandait une méthode rigoureuse. OPEM nous l’a apportée, dans le respect des délais et des exigences de qualité convenus.',
-        author: 'Co-gérante d’une entreprise industrielle, 2025',
-        link: { label: 'Lire le témoignage', href: '/missions' },
+          'Conduire de front trois normes, ISO 9001, ISO 14001 et ISO 45001, a exigé une méthode rigoureuse. OPEM nous l’a apportée. Notre système de management intégré a été mis en place dans le respect des délais et des exigences de qualité convenus.',
+        author: 'Direction d’une entreprise industrielle, 2025',
       },
       {
         id: 'formation',
@@ -1817,9 +1819,9 @@ const fr: HomeContent = {
         quote:
           'La formation s’est déroulée dans les meilleures conditions, sur les plans logistique et organisationnel comme dans le choix du formateur. Elle a été conduite avec diligence et professionnalisme.',
         author: 'Direction générale d’un office public national, 2024',
-        link: { label: 'Lire le témoignage', href: '/missions' },
       },
     ],
+    more: { label: 'Lire d’autres témoignages', href: '/missions/references-clients' },
     studies: {
       eyebrow: 'Études et évaluations',
       title: 'Les institutions nous confient leurs études.',
@@ -3086,7 +3088,10 @@ const ar: HomeContent = {
       title: 'تدقيق صودق عليه بالإجماع، ثم خطة التكوين بأكملها أُسندت إلى OPEM',
       summary:
         'تُسند إلينا مؤسسة عمومية اقتصادية تدقيق تنظيمها. ويصادق مجلس إدارتها على التقرير بالإجماع. وبعد سنتين، تُسند إلينا خطة تكوينها السنوية بأكملها.',
-      link: { label: 'اقرأوا دراسة الحالة', href: '/missions' },
+      link: {
+        label: 'اقرأوا دراسة الحالة',
+        href: '/missions/etudes-de-cas/audit-organisationnel-et-plan-de-formation',
+      },
       steps: [
         {
           id: 'audit',
@@ -3121,17 +3126,15 @@ const ar: HomeContent = {
       eyebrow: 'توصية',
       quote:
         'لقد قدّرنا بوجه خاص جودة خدمات OPEM وحسن إصغائها وصرامة شريك رفيع المستوى. وأوصي كل مؤسسة تنشد الأداء بالاستعانة بكفاءات المكتب.',
-      author: 'مدير عام مؤسسة عمومية، 2020',
-      link: { label: 'اقرأوا الشهادة', href: '/missions' },
+      author: 'المديرية العامة لمؤسسة عمومية، 2020',
     },
     quotes: [
       {
         id: 'certification',
         eyebrow: 'الإشهاد',
         quote:
-          'كانت قيادة ثلاثة معايير ISO في آن واحد تتطلب منهجية صارمة. وقد وفّرتها لنا OPEM، في احترام للآجال ولمتطلبات الجودة المتفق عليها.',
-        author: 'شريكة مسيّرة لمؤسسة صناعية، 2025',
-        link: { label: 'اقرأوا الشهادة', href: '/missions' },
+          'إن قيادة ثلاثة معايير في آن واحد، ISO 9001 و ISO 14001 و ISO 45001، تطلّبت منهجية صارمة. وقد وفّرتها لنا OPEM. ووُضع نظام الإدارة المدمج لدينا في احترام للآجال ولمتطلبات الجودة المتفق عليها.',
+        author: 'مديرية مؤسسة صناعية، 2025',
       },
       {
         id: 'formation',
@@ -3139,9 +3142,9 @@ const ar: HomeContent = {
         quote:
           'جرى التكوين في أفضل الظروف، من الناحيتين اللوجستية والتنظيمية كما في اختيار المكوّن. وقد أُنجز بعناية واحترافية.',
         author: 'المديرية العامة لديوان عمومي وطني، 2024',
-        link: { label: 'اقرأوا الشهادة', href: '/missions' },
       },
     ],
+    more: { label: 'اقرأوا شهادات أخرى', href: '/missions/references-clients' },
     studies: {
       eyebrow: 'الدراسات والتقييمات',
       title: 'المؤسسات تأتمننا على دراساتها.',

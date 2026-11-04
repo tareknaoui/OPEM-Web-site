@@ -11,10 +11,12 @@ type TestimonialsProps = {
  * Témoignages, maquette validée par OPEM, en trois bandes : sur blanc, le titre et une étude de
  * cas racontée en une phrase, puis en trois temps tous visibles, reliés par des flèches qui
  * disent le temps écoulé (« Deux ans plus tard ») ; sur bleu très clair, les recommandations ;
- * sur bleu nuit, les institutions qui confient leurs études au cabinet. Recommandations anonymes, sans photo de personne.
+ * sur bleu nuit, les institutions qui confient leurs études au cabinet. Recommandations anonymes
+ * (signées d'une direction, sans nom ni fonction de personne), sans photo, puis un seul lien vers
+ * « Références clients », qui réunit tous les témoignages autorisés.
  */
 export function Testimonials({ testimonials }: TestimonialsProps) {
-  const { caseStudy, featured, quotes, studies } = testimonials;
+  const { caseStudy, featured, quotes, more, studies } = testimonials;
 
   return (
     <section aria-labelledby="testimonials-title">
@@ -80,6 +82,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 <Quote key={item.id} item={item} />
               ))}
             </div>
+            <Link to={more.href} className={styles.more} data-reveal>
+              {more.label}
+              <ArrowRightIcon size={18} className="arrow" />
+            </Link>
           </div>
         </div>
       </div>
@@ -129,13 +135,7 @@ function Quote({ item, featured = false }: { item: TestimonialQuote; featured?: 
         {item.quote}
         <span className={styles.mark}>{' »'}</span>
       </blockquote>
-      <div className={styles.quoteFoot}>
-        <figcaption className={styles.author}>{item.author}</figcaption>
-        <Link to={item.link.href} className={styles.quoteLink}>
-          {item.link.label}
-          <ArrowRightIcon size={16} className="arrow" />
-        </Link>
-      </div>
+      <figcaption className={styles.author}>{item.author}</figcaption>
     </figure>
   );
 }
