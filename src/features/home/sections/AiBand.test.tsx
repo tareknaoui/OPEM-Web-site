@@ -29,7 +29,7 @@ describe('Bandeau « Intelligence artificielle appliquée »', () => {
       '03AccompagnementUn outil maîtrisé, qui libère temps et ressources',
     ]);
     // Illustration décorative : la porte ouverte sur l'organisation.
-    expect(document.querySelector('img')).toHaveAttribute('src', '/images/ia/porte.webp');
+    expect(document.querySelector('img')).toHaveAttribute('src', '/images/ia/porte-claire.webp');
     expect(document.querySelector('img')).toHaveAttribute('alt', '');
   });
 

@@ -16,14 +16,11 @@
 
 /* ---------- Illustration ---------- */
 
-/* L'illustration (fond bleu nuit) dans un cadre arrondi : sur blanc, une image nette plutôt
-   qu'une tache aux bords estompés. Taille contenue : elle accompagne le titre sans l'écraser. */
+/* L'illustration, bleu nuit sur fond blanc, se fond dans le blanc du bloc, sans cadre. Taille
+   contenue : elle accompagne le titre sans l'écraser. */
 .visual {
   justify-self: center;
   width: min(100%, 34rem);
-  overflow: hidden;
-  border-radius: 0.75rem;
-  background: var(--opem-night);
 }
 
 .image {

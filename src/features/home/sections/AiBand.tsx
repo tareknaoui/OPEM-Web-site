@@ -9,7 +9,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
  * Bandeau « Intelligence artificielle appliquée », juste sous les domaines, sur blanc (il se
  * détache du bleu nuit des domaines et du bleu très clair des sessions). À gauche l'étiquette
  * (étoile qui scintille), le grand titre, le texte et le bouton « Passer la porte », vers la page
- * IA appliquée ; à droite l'illustration de la porte, dans un cadre arrondi ; dessous, les trois
+ * IA appliquée ; à droite l'illustration de la porte, sur blanc, sans cadre ; dessous, les trois
  * temps dans un cadre à filets, parcourus l'un après l'autre par un filet bleu. Animations
  * coupées en mouvement réduit.
  */

@@ -314,8 +314,8 @@ export type HomeContent = {
     cta: Link & { ariaLabel: string };
     /**
      * Illustration (une porte ouverte sur un cerveau fait de neurones, prolongé par les couches
-     * d'un réseau de neurones qui s'étendent au-delà ; un seul nœud ambre, au cœur), format
-     * paysage 1024 × 572, fond bleu nuit ; une version de 700 px de large existe à côté
+     * d'un réseau de neurones qui s'efface au loin ; un seul nœud ambre, au cœur), format
+     * paysage 1024 × 572, bleu nuit sur fond blanc ; une version de 700 px de large existe à côté
      * (« -700.webp »).
      */
     illustration: string;
@@ -1476,7 +1476,7 @@ const fr: HomeContent = {
       href: '/ia-appliquee',
       ariaLabel: 'Découvrir nos solutions et notre démarche en intelligence artificielle',
     },
-    illustration: '/images/ia/porte.webp',
+    illustration: '/images/ia/porte-claire.webp',
     stepsLabel: 'Notre démarche en trois temps',
     steps: [
       { label: 'Diagnostic', text: 'Une carte des usages prioritaires, chiffrée' },
@@ -2805,7 +2805,7 @@ const ar: HomeContent = {
       href: '/ia-appliquee',
       ariaLabel: 'اكتشفوا حلولنا ومقاربتنا في الذكاء الاصطناعي',
     },
-    illustration: '/images/ia/porte.webp',
+    illustration: '/images/ia/porte-claire.webp',
     stepsLabel: 'مقاربتنا في ثلاث مراحل',
     steps: [
       { label: 'التشخيص', text: 'خريطة مرقّمة للاستعمالات ذات الأولوية' },
