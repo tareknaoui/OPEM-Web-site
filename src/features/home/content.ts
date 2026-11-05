@@ -19,6 +19,8 @@ export type NeedIcon =
   'strategy' | 'organization' | 'certification' | 'training' | 'coaching' | 'safety';
 export type AudienceIcon = 'public' | 'company';
 export type CommitmentIcon = 'tailor' | 'relay' | 'measure';
+/** Pictogrammes des partenaires d'études (bande « Études et évaluations »). */
+export type StudyIcon = 'globe' | 'cooperation' | 'network';
 
 /** Logo client : `logo` est le nom du fichier dans /images/clients (sans .webp). */
 export type ClientLogo = { name: string; logo: string; width: number; height: number };
@@ -36,13 +38,24 @@ export type Link = { label: string; href: string };
 export type FaqTheme = 'perimetre' | 'methode' | 'resultats';
 
 /** Couleur d'un temps de l'étude de cas : filet du haut et, sauf `plain`, grand texte. */
-export type StepTone = 'plain' | 'blue' | 'green';
-
 export type TestimonialQuote = {
   id: string;
   eyebrow: string;
   quote: string;
   author: string;
+  /**
+   * Illustration (fond bleu très clair #E6EDF4, celui de la bande ; format 4:3, 763 × 572) ;
+   * une version de 700 px de large existe à côté (« -700.webp »).
+   */
+  illustration?: string;
+  /**
+   * `company` : l'entreprise qui témoigne (son logo, affiché dans la version « portraits »,
+   * avec son accord écrit). `person` : la personne qui signe, quand elle accepte d'être nommée ;
+   * son nom et sa fonction remplacent alors la signature anonyme. Pas de photo de personne
+   * (choix d'OPEM) ; jamais de logo deviné.
+   */
+  company?: { name: string; logo: string };
+  person?: { name: string; role: string; photo?: string };
 };
 
 export type HomeContent = {
@@ -303,6 +316,25 @@ export type HomeContent = {
     }[];
   };
   /**
+   * Citation du mois, entre les domaines et le bandeau IA : à changer chaque mois (citation, mois,
+   * auteur). Jamais de citation attribuée à quelqu'un sans source sûre.
+   */
+  quoteOfMonth: {
+    eyebrow: string;
+    /**
+     * Les quatre champs remplacés chaque mois depuis WordPress (Réglages > Citation du mois,
+     * plugin wordpress/opem-quote-api.php) ; les valeurs ci-dessous servent de repli.
+     */
+    quote: string;
+    author: string;
+    /** L'ouvrage (en italique) ou la fonction de l'auteur ; facultative. */
+    source?: string;
+    /** Commentaire d'OPEM, sous l'auteur ; facultatif. */
+    comment?: string;
+    /** Petit titre de l'encadré du commentaire (fixe, pas dans WordPress). */
+    commentLabel: string;
+  };
+  /**
    * Bandeau « Intelligence artificielle appliquée », sous les domaines : titre, texte, bouton,
    * et trois temps (diagnostic, formation, intégration) dans un cadre à filets.
    */
@@ -310,12 +342,17 @@ export type HomeContent = {
     eyebrow: string;
     title: string;
     text: string;
+    /**
+     * Mots mis en évidence : dans le titre (ambre, écho du nœud ambre de l'illustration) et dans
+     * le texte (blanc). Mot absent du texte : rien n'est mis en évidence.
+     */
+    highlight: { title: string; text: string };
     /** `ariaLabel` : nom du bouton lu par les lecteurs d'écran, à la place du libellé. */
     cta: Link & { ariaLabel: string };
     /**
-     * Illustration (une porte ouverte sur un cerveau fait de neurones, prolongé par les couches
-     * d'un réseau de neurones qui s'efface au loin ; un seul nœud ambre, au cœur), format
-     * paysage 1024 × 572, bleu nuit sur fond blanc ; une version de 700 px de large existe à côté
+     * Illustration (une porte ouverte sur un cerveau fait de neurones, d'où partent, à gauche et
+     * à droite, des réseaux qui s'étendent en s'éloignant ; un seul nœud ambre, au cœur), format
+     * paysage 1024 × 572, fond bleu nuit ; une version de 700 px de large existe à côté
      * (« -700.webp »).
      */
     illustration: string;
@@ -343,8 +380,10 @@ export type HomeContent = {
       date: string;
       dateLabel: string;
       href: string;
-      /** Couleur du filet du haut. */
+      /** Couleur du filet sous la photo. */
       tone: 'blue' | 'green' | 'amber';
+      /** Photo 3:2 en tête de carte (décorative) ; une version « -700.webp » existe à côté. */
+      image: string;
     }[];
     question: { text: string; link: Link };
     news: {
@@ -420,10 +459,14 @@ export type HomeContent = {
     /** Badge de la première édition d'une formation chez OPEM. */
     newBadge: string;
     /**
-     * Photo réelle d'une session, tirée de l'album OPEM, dans la dernière case de la grille.
-     * Sans `src`, un emplacement neutre, sans texte, en attendant la photo.
+     * Photos réelles de sessions, tirées de l'album OPEM, visages floutés (participants non
+     * reconnaissables), dans la dernière case de la grille ; plusieurs photos défilent (fondu,
+     * bouton pause). Chacune existe aussi en 700 px de large (« -700.webp »). Liste vide : un
+     * emplacement neutre, sans texte.
      */
-    photo: { src: string; alt: string };
+    photos: { src: string; alt: string }[];
+    /** Défilement des photos : boutons pause / reprise, et « Photo {n} sur {total} ». */
+    photoControls: { pause: string; play: string; show: string };
     /**
      * Sessions inter-entreprises programmées par OPEM, publiées par périodes de deux mois avec
      * des dates fermes. date / end : premier et dernier jour, au format AAAA-MM-JJ ; les
@@ -457,23 +500,27 @@ export type HomeContent = {
     caseStudy: {
       eyebrow: string;
       title: string;
-      /** L'histoire en une phrase par étape, sous le titre (texte à faire valider par OPEM). */
-      summary: string;
       link: Link;
+      /** Illustration (fond blanc, format 4:3, 763 × 572 ; version « -700.webp » à côté). */
+      illustration: string;
       /**
-       * Étapes dans l'ordre chronologique, toutes visibles : année, puis étape. `since` : le temps
-       * écoulé depuis l'étape précédente, écrit sur la flèche qui y mène.
+       * Étapes dans l'ordre chronologique, en frise verticale : l'année, le nom de l'étape, puis
+       * une phrase complète. `emphasis` : le passage de la phrase mis en valeur (en gras).
        */
       steps: {
         id: string;
         year: string;
-        since?: string;
         label: string;
-        headline: string;
         text: string;
-        tone: StepTone;
+        emphasis: string;
       }[];
     };
+    /**
+     * Présentation des témoignages : « illustrations » (dessins, signatures anonymes) ou
+     * « portraits » (logo de chaque entreprise ; nom, fonction et photo de la personne quand
+     * elle a donné son accord). Les deux sont prêtes ; « portraits » attend le matériel réel.
+     */
+    layout: 'illustrations' | 'portraits';
     /** Recommandation mise en avant, sur carte blanche. */
     featured: TestimonialQuote;
     quotes: TestimonialQuote[];
@@ -484,8 +531,20 @@ export type HomeContent = {
       title: string;
       text: string;
       cta: Link;
+      /** Grande carte : le nombre de ministères (compté dans la liste) au-dessus du titre. */
       ministries: { title: string; items: string[] };
-      partners: { title: string; text: string }[];
+      /**
+       * Cartes des partenaires : pictogramme, titre, puis au choix un sigle en grand (`highlight`),
+       * un nombre en grand (celui des `tags`, suivi de `countLabel`) et ses pastilles, ou un texte.
+       */
+      partners: {
+        icon: StudyIcon;
+        title: string;
+        highlight?: string;
+        countLabel?: string;
+        tags?: string[];
+        text?: string;
+      }[];
     };
   };
   /**
@@ -498,7 +557,14 @@ export type HomeContent = {
     themes: { id: 'tout' | FaqTheme; label: string }[];
     footText: string;
     contact: Link;
-    items: { id: string; theme: FaqTheme; question: string; answer: string }[];
+    /** `link` : passage de la réponse transformé en lien (le texte doit y figurer mot pour mot). */
+    items: {
+      id: string;
+      theme: FaqTheme;
+      question: string;
+      answer: string;
+      link?: { text: string; href: string };
+    }[];
   };
 };
 
@@ -1467,16 +1533,27 @@ const fr: HomeContent = {
       },
     ],
   },
+  quoteOfMonth: {
+    eyebrow: 'La citation du mois',
+    quote:
+      'L’obstacle à l’action fait avancer l’action. Ce qui barre la route fait faire du chemin.',
+    author: 'Marc Aurèle',
+    source: 'Pensées',
+    comment:
+      'Toute difficulté porte en elle sa leçon. Encore faut-il prendre le temps de la discerner : elle n’attend qu’un regard attentif pour devenir un chemin.',
+    commentLabel: 'Le regard d’OPEM',
+  },
   ai: {
     eyebrow: 'Intelligence artificielle appliquée',
     title: 'L’IA entre par la porte de l’organisation.',
     text: 'Avant de parler d’outils, nous regardons comment votre organisation fonctionne réellement. L’intelligence artificielle n’y entre que là où elle allège ou fiabilise le travail : rapports, procédures, analyse des risques, tableaux de bord. Vos données sensibles restent sous votre contrôle.',
+    highlight: { title: 'IA', text: 'intelligence artificielle' },
     cta: {
       label: 'Passer la porte',
       href: '/ia-appliquee',
       ariaLabel: 'Découvrir nos solutions et notre démarche en intelligence artificielle',
     },
-    illustration: '/images/ia/porte-claire.webp',
+    illustration: '/images/ia/porte-reseau.webp',
     stepsLabel: 'Notre démarche en trois temps',
     steps: [
       { label: 'Diagnostic', text: 'Une carte des usages prioritaires, chiffrée' },
@@ -1500,6 +1577,7 @@ const fr: HomeContent = {
         dateLabel: '17 nov. 2026',
         href: '/eclairages/signaux-d-une-organisation-qui-s-essouffle',
         tone: 'blue',
+        image: '/images/eclairages/organisation.webp',
       },
       {
         id: 'formation',
@@ -1510,6 +1588,7 @@ const fr: HomeContent = {
         dateLabel: '17 nov. 2026',
         href: '/eclairages/plan-de-formation-annuel',
         tone: 'green',
+        image: '/images/eclairages/formation.webp',
       },
       {
         id: 'ia',
@@ -1520,6 +1599,7 @@ const fr: HomeContent = {
         dateLabel: '17 nov. 2026',
         href: '/eclairages/integrer-l-ia',
         tone: 'amber',
+        image: '/images/eclairages/ia-organisation.webp',
       },
     ],
     question: {
@@ -1702,7 +1782,25 @@ const fr: HomeContent = {
     },
     range: 'du {start} au {end}',
     newBadge: 'Nouveau',
-    photo: { src: '', alt: '' },
+    photos: [
+      {
+        src: '/images/agenda/session-opem-2.webp',
+        alt: 'Une formation OPEM en communication interpersonnelle : la formatrice face aux participants',
+      },
+      {
+        src: '/images/agenda/session-opem-3.webp',
+        alt: 'Des participants à une session OPEM, assis côte à côte',
+      },
+      {
+        src: '/images/agenda/session-opem.webp',
+        alt: 'Une session de formation OPEM : les participants autour de tables en U',
+      },
+    ],
+    photoControls: {
+      pause: 'Arrêter le défilement des photos',
+      play: 'Reprendre le défilement des photos',
+      show: 'Photo {n} sur {total}',
+    },
     items: [
       {
         id: 'diagnostic-d-organisation',
@@ -1760,41 +1858,36 @@ const fr: HomeContent = {
   testimonials: {
     eyebrow: 'Ils nous ont confié leurs projets',
     title: 'Leurs mots, nos meilleures références.',
+    layout: 'portraits',
     caseStudy: {
       eyebrow: 'Étude de cas | Accompagnement des organisations',
       title: 'Un audit approuvé à l’unanimité, puis tout le plan de formation confié à OPEM',
-      summary:
-        'Une entreprise publique économique nous confie l’audit de son organisation. Son conseil d’administration approuve le rapport à l’unanimité. Deux ans plus tard, elle nous confie tout son plan de formation annuel.',
       link: {
         label: 'Lire l’étude de cas',
         href: '/missions/etudes-de-cas/audit-organisationnel-et-plan-de-formation',
       },
+      illustration: '/images/temoignages/confiance.webp',
       steps: [
         {
           id: 'audit',
           year: '2021',
           label: 'L’audit',
-          headline: 'Organisation et fonctionnement passés au crible',
           text: 'Une entreprise publique économique confie à OPEM l’audit organisationnel et fonctionnel de sa structure.',
-          tone: 'plain',
+          emphasis: 'l’audit organisationnel et fonctionnel',
         },
         {
           id: 'verdict',
           year: '2021',
-          since: 'La même année',
           label: 'Le verdict',
-          headline: 'À l’unanimité',
-          text: 'Le conseil d’administration approuve le rapport et félicite l’équipe pour son professionnalisme.',
-          tone: 'blue',
+          text: 'Son conseil d’administration approuve le rapport à l’unanimité et félicite l’équipe pour son professionnalisme.',
+          emphasis: 'à l’unanimité',
         },
         {
           id: 'confiance',
           year: '2023',
-          since: 'Deux ans plus tard',
           label: 'La confiance',
-          headline: '100 %',
-          text: 'de son plan de formation annuel, confié à OPEM.',
-          tone: 'green',
+          text: 'Deux ans plus tard, elle confie à OPEM 100 % de son plan de formation annuel.',
+          emphasis: '100 %',
         },
       ],
     },
@@ -1804,6 +1897,9 @@ const fr: HomeContent = {
       quote:
         'Nous avons particulièrement apprécié la qualité des services d’OPEM, son écoute active et la rigueur d’un partenaire de haut niveau. Je recommande à toute entreprise en quête de performance de solliciter les compétences du cabinet.',
       author: 'Direction générale d’une entreprise publique, 2020',
+      illustration: '/images/temoignages/recommandation.webp',
+      company: { name: 'ALDIPH', logo: '/images/temoignages/aldiph.webp' },
+      person: { name: 'Smail Trifi', role: 'Président-directeur général, ALDIPH' },
     },
     quotes: [
       {
@@ -1812,6 +1908,7 @@ const fr: HomeContent = {
         quote:
           'Conduire de front trois normes, ISO 9001, ISO 14001 et ISO 45001, a exigé une méthode rigoureuse. OPEM nous l’a apportée. Notre système de management intégré a été mis en place dans le respect des délais et des exigences de qualité convenus.',
         author: 'Direction d’une entreprise industrielle, 2025',
+        illustration: '/images/temoignages/certification.webp',
       },
       {
         id: 'formation',
@@ -1838,14 +1935,25 @@ const fr: HomeContent = {
       },
       partners: [
         {
+          icon: 'globe',
           title: 'Nations unies',
-          text: 'Programme des Nations unies pour le développement (PNUD)',
+          highlight: 'PNUD',
+          text: 'Programme des Nations unies pour le développement',
         },
         {
+          icon: 'cooperation',
           title: 'Coopération allemande',
-          text: 'Cinq programmes : PME, économie circulaire, entrepreneuriat féminin, employabilité, gouvernance locale',
+          countLabel: 'programmes',
+          tags: [
+            'PME',
+            'Économie circulaire',
+            'Entrepreneuriat féminin',
+            'Employabilité',
+            'Gouvernance locale',
+          ],
         },
         {
+          icon: 'network',
           title: 'ONG internationales',
           text: 'Études et évaluations finales de projets de développement',
         },
@@ -1906,7 +2014,8 @@ const fr: HomeContent = {
         theme: 'methode',
         question: 'Comment se déroule une première collaboration avec OPEM ?',
         answer:
-          'En quatre temps : écouter, construire, conduire, mesurer. Nous commençons par comprendre votre demande et les besoins qu’elle ne dit pas encore. Vous recevez une proposition bâtie sur cet échange, avec sa démarche, ses intervenants et son calendrier. Pendant l’intervention, vous êtes informé de chaque avancée. À la clôture, un bilan chiffré mesure les résultats au regard des objectifs fixés ensemble.',
+          'En quatre temps : écouter, construire, conduire, mesurer. À chaque étape, un engagement précis vous est garanti ; vous les découvrirez dans notre page Le cabinet.',
+        link: { text: 'notre page Le cabinet', href: '/le-cabinet#travailler-avec-opem' },
       },
       {
         id: 'sur-mesure',
@@ -1934,7 +2043,7 @@ const fr: HomeContent = {
         theme: 'resultats',
         question: 'Quels sont, en moyenne, les délais et le coût d’une intervention ?',
         answer:
-          'Une formation dure en général de 3 à 5 jours, un diagnostic de 2 à 6 mois et un accompagnement complet de 3 à 12 mois. Le coût se mesure à l’ampleur de votre besoin. Nous le chiffrons avec précision dans une proposition remise dans les 3 jours qui suivent notre premier échange. Vous connaissez le calendrier et le budget avant même de vous engager.',
+          'Une formation dure en général de 3 à 5 jours, un diagnostic de 2 à 6 mois et un accompagnement complet de 3 à 12 mois. Le coût se mesure à l’ampleur de votre besoin. Nous le chiffrons avec précision dans une proposition dédiée. Vous connaissez le calendrier et le budget avant même de vous engager.',
       },
     ],
   },
@@ -2796,16 +2905,26 @@ const ar: HomeContent = {
       },
     ],
   },
+  quoteOfMonth: {
+    eyebrow: 'اقتباس الشهر',
+    quote: 'ما يعيق الفعل يدفع الفعل إلى الأمام. وما يعترض الطريق يجعلنا نقطع شوطًا.',
+    author: 'ماركوس أوريليوس',
+    source: 'التأملات',
+    comment:
+      'كل صعوبة تحمل في طيّاتها درسها. غير أنه لا بد من التمهّل لتبيّنه: فهي لا تنتظر سوى نظرة متأنّية لتصبح طريقًا.',
+    commentLabel: 'نظرة OPEM',
+  },
   ai: {
     eyebrow: 'الذكاء الاصطناعي التطبيقي',
     title: 'الذكاء الاصطناعي يدخل من باب التنظيم.',
     text: 'قبل الحديث عن الأدوات، ننظر في الطريقة التي تعمل بها مؤسستكم فعلًا. لا يدخلها الذكاء الاصطناعي إلا حيث يخفّف العمل أو يجعله أكثر موثوقية: التقارير، الإجراءات، تحليل المخاطر، لوحات القيادة. وتبقى معطياتكم الحساسة تحت سيطرتكم.',
+    highlight: { title: 'الذكاء الاصطناعي', text: 'الذكاء الاصطناعي' },
     cta: {
       label: 'اعبروا الباب',
       href: '/ia-appliquee',
       ariaLabel: 'اكتشفوا حلولنا ومقاربتنا في الذكاء الاصطناعي',
     },
-    illustration: '/images/ia/porte-claire.webp',
+    illustration: '/images/ia/porte-reseau.webp',
     stepsLabel: 'مقاربتنا في ثلاث مراحل',
     steps: [
       { label: 'التشخيص', text: 'خريطة مرقّمة للاستعمالات ذات الأولوية' },
@@ -2829,6 +2948,7 @@ const ar: HomeContent = {
         dateLabel: '17 نوفمبر 2026',
         href: '/eclairages/signaux-d-une-organisation-qui-s-essouffle',
         tone: 'blue',
+        image: '/images/eclairages/organisation.webp',
       },
       {
         id: 'formation',
@@ -2839,6 +2959,7 @@ const ar: HomeContent = {
         dateLabel: '17 نوفمبر 2026',
         href: '/eclairages/plan-de-formation-annuel',
         tone: 'green',
+        image: '/images/eclairages/formation.webp',
       },
       {
         id: 'ia',
@@ -2849,6 +2970,7 @@ const ar: HomeContent = {
         dateLabel: '17 نوفمبر 2026',
         href: '/eclairages/integrer-l-ia',
         tone: 'amber',
+        image: '/images/eclairages/ia-organisation.webp',
       },
     ],
     question: { text: 'سؤال حول هذه المواضيع؟', link: { label: 'اطرحوه علينا', href: '/contact' } },
@@ -3025,7 +3147,25 @@ const ar: HomeContent = {
     },
     range: 'من {start} إلى {end}',
     newBadge: 'جديد',
-    photo: { src: '', alt: '' },
+    photos: [
+      {
+        src: '/images/agenda/session-opem-2.webp',
+        alt: 'تكوين لـ OPEM في التواصل بين الأشخاص: المكوِّنة أمام المشاركين',
+      },
+      {
+        src: '/images/agenda/session-opem-3.webp',
+        alt: 'مشاركون في دورة لـ OPEM جالسون جنبًا إلى جنب',
+      },
+      {
+        src: '/images/agenda/session-opem.webp',
+        alt: 'دورة تكوينية لـ OPEM: المشاركون حول طاولات على شكل حرف U',
+      },
+    ],
+    photoControls: {
+      pause: 'إيقاف تمرير الصور',
+      play: 'استئناف تمرير الصور',
+      show: 'الصورة {n} من {total}',
+    },
     items: [
       {
         id: 'diagnostic-d-organisation',
@@ -3083,41 +3223,36 @@ const ar: HomeContent = {
   testimonials: {
     eyebrow: 'وضعوا مشاريعهم بين أيدينا',
     title: 'كلماتهم، خير مراجعنا.',
+    layout: 'illustrations',
     caseStudy: {
       eyebrow: 'دراسة حالة | مرافقة المؤسسات',
       title: 'تدقيق صودق عليه بالإجماع، ثم خطة التكوين بأكملها أُسندت إلى OPEM',
-      summary:
-        'تُسند إلينا مؤسسة عمومية اقتصادية تدقيق تنظيمها. ويصادق مجلس إدارتها على التقرير بالإجماع. وبعد سنتين، تُسند إلينا خطة تكوينها السنوية بأكملها.',
       link: {
         label: 'اقرأوا دراسة الحالة',
         href: '/missions/etudes-de-cas/audit-organisationnel-et-plan-de-formation',
       },
+      illustration: '/images/temoignages/confiance.webp',
       steps: [
         {
           id: 'audit',
           year: '2021',
           label: 'التدقيق',
-          headline: 'التنظيم والتسيير تحت المجهر',
           text: 'تُسند مؤسسة عمومية اقتصادية إلى OPEM التدقيق التنظيمي والوظيفي لهيكلها.',
-          tone: 'plain',
+          emphasis: 'التدقيق التنظيمي والوظيفي',
         },
         {
           id: 'verdict',
           year: '2021',
-          since: 'في السنة نفسها',
           label: 'القرار',
-          headline: 'بالإجماع',
-          text: 'يصادق مجلس الإدارة على التقرير ويهنّئ الفريق على احترافيته.',
-          tone: 'blue',
+          text: 'يصادق مجلس إدارتها على التقرير بالإجماع، ويهنّئ الفريق على احترافيته.',
+          emphasis: 'بالإجماع',
         },
         {
           id: 'confiance',
           year: '2023',
-          since: 'بعد سنتين',
           label: 'الثقة',
-          headline: '100 %',
-          text: 'من خطتها السنوية للتكوين أُسندت إلى OPEM.',
-          tone: 'green',
+          text: 'بعد سنتين، تُسند إلى OPEM خطتها السنوية للتكوين بنسبة 100 %.',
+          emphasis: '100 %',
         },
       ],
     },
@@ -3127,6 +3262,9 @@ const ar: HomeContent = {
       quote:
         'لقد قدّرنا بوجه خاص جودة خدمات OPEM وحسن إصغائها وصرامة شريك رفيع المستوى. وأوصي كل مؤسسة تنشد الأداء بالاستعانة بكفاءات المكتب.',
       author: 'المديرية العامة لمؤسسة عمومية، 2020',
+      illustration: '/images/temoignages/recommandation.webp',
+      company: { name: 'ALDIPH', logo: '/images/temoignages/aldiph.webp' },
+      person: { name: 'Smail Trifi', role: 'الرئيس المدير العام، ALDIPH' },
     },
     quotes: [
       {
@@ -3135,6 +3273,7 @@ const ar: HomeContent = {
         quote:
           'إن قيادة ثلاثة معايير في آن واحد، ISO 9001 و ISO 14001 و ISO 45001، تطلّبت منهجية صارمة. وقد وفّرتها لنا OPEM. ووُضع نظام الإدارة المدمج لدينا في احترام للآجال ولمتطلبات الجودة المتفق عليها.',
         author: 'مديرية مؤسسة صناعية، 2025',
+        illustration: '/images/temoignages/certification.webp',
       },
       {
         id: 'formation',
@@ -3160,12 +3299,29 @@ const ar: HomeContent = {
         ],
       },
       partners: [
-        { title: 'الأمم المتحدة', text: 'برنامج الأمم المتحدة الإنمائي (PNUD)' },
         {
-          title: 'التعاون الألماني',
-          text: 'خمسة برامج: المؤسسات الصغيرة والمتوسطة، الاقتصاد الدائري، المقاولاتية النسوية، قابلية التشغيل، الحوكمة المحلية',
+          icon: 'globe',
+          title: 'الأمم المتحدة',
+          highlight: 'PNUD',
+          text: 'برنامج الأمم المتحدة الإنمائي',
         },
-        { title: 'منظمات غير حكومية دولية', text: 'دراسات وتقييمات نهائية لمشاريع تنموية' },
+        {
+          icon: 'cooperation',
+          title: 'التعاون الألماني',
+          countLabel: 'برامج',
+          tags: [
+            'المؤسسات الصغيرة والمتوسطة',
+            'الاقتصاد الدائري',
+            'المقاولاتية النسوية',
+            'قابلية التشغيل',
+            'الحوكمة المحلية',
+          ],
+        },
+        {
+          icon: 'network',
+          title: 'منظمات غير حكومية دولية',
+          text: 'دراسات وتقييمات نهائية لمشاريع تنموية',
+        },
       ],
     },
   },
@@ -3222,7 +3378,8 @@ const ar: HomeContent = {
         theme: 'methode',
         question: 'كيف يجري أول تعاون مع OPEM؟',
         answer:
-          'في أربع مراحل: الإصغاء، والبناء، والقيادة، والقياس. نبدأ بفهم طلبكم والحاجات التي لم يعبّر عنها بعد. ثم تتلقون عرضًا مبنيًا على هذا التبادل، يتضمن المقاربة والمتدخلين والرزنامة. وأثناء التدخل، نُطلعكم على كل تقدّم. وعند الاختتام، تقيس حصيلة مرقّمة النتائج مقارنة بالأهداف المحدَّدة معًا.',
+          'في أربع مراحل: الإصغاء، والبناء، والقيادة، والقياس. وفي كل مرحلة، نضمن لكم التزامًا محدَّدًا؛ ستكتشفونها في صفحتنا «المكتب».',
+        link: { text: 'صفحتنا «المكتب»', href: '/le-cabinet#travailler-avec-opem' },
       },
       {
         id: 'sur-mesure',
@@ -3250,7 +3407,7 @@ const ar: HomeContent = {
         theme: 'resultats',
         question: 'ما هي، في المتوسط، آجال التدخل وتكلفته؟',
         answer:
-          'يدوم التكوين عمومًا من 3 إلى 5 أيام، والتشخيص من شهرين إلى 6 أشهر، والمرافقة الكاملة من 3 إلى 12 شهرًا. وتُقاس التكلفة بحجم حاجتكم. ونحددها بدقة في عرض يُسلَّم خلال الأيام الثلاثة التي تلي أول لقاء بيننا. وهكذا تعرفون الرزنامة والميزانية قبل أن تلتزموا.',
+          'يدوم التكوين عمومًا من 3 إلى 5 أيام، والتشخيص من شهرين إلى 6 أشهر، والمرافقة الكاملة من 3 إلى 12 شهرًا. وتُقاس التكلفة بحجم حاجتكم. ونحددها بدقة في عرض مخصَّص. وهكذا تعرفون الرزنامة والميزانية قبل أن تلتزموا.',
       },
     ],
   },

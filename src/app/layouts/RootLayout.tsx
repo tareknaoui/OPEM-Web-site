@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Outlet, useNavigation } from 'react-router';
+import { Outlet, ScrollRestoration, useNavigation } from 'react-router';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import { useLanguage } from '@/i18n/useLanguage';
@@ -32,6 +32,10 @@ export function RootLayout() {
       </main>
 
       <Footer />
+
+      {/* Changement de page : haut de la nouvelle page, ou la section visée par l'ancre
+          (« /le-cabinet#… ») ; position retrouvée avec Précédent / Suivant. */}
+      <ScrollRestoration />
 
       {LiveEditor && (
         <Suspense fallback={null}>

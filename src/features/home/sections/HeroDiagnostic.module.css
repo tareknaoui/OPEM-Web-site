@@ -182,8 +182,8 @@
 }
 
 .cta:hover {
-  border-color: var(--opem-amber);
-  background: var(--opem-amber);
+  border-color: var(--opem-blue-10);
+  background: var(--opem-blue-10);
   color: var(--opem-anthracite);
 }
 

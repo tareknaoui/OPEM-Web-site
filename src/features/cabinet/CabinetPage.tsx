@@ -1,123 +1,97 @@
-import { CheckIcon } from '@/components/icons';
+import type { MouseEvent } from 'react';
+import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
-import { ProvisionalNote } from '@/features/home/sections/SectionHeader';
 import { cabinetContent } from './content';
-import { Manifesto } from './sections/Manifesto';
-import { Method } from './sections/Method';
+import { History } from './sections/History';
+import { useActiveSection } from './useActiveSection';
 import styles from './CabinetPage.module.css';
 
-const pad = (n: number) => String(n).padStart(2, '0');
+const HERO_PHOTO = '/images/cabinet/equipe';
 
 /**
- * Page « Le cabinet ». Rien de ce que montre déjà l'accueil (chiffres, domaines), et chaque
- * idée à un seul endroit. Six temps, fonds alternés (le bleu OPEM du pied de page ne touche
- * jamais le bleu nuit) :
- * en-tête bleu nuit (titre, présentation) ;
- * manifeste sur blanc (les mots s'allument au défilement, citation) ;
- * démarche en 3 niveaux sur bleu très clair (titre et compteur fixes, filet qui se remplit) ;
- * six valeurs sur blanc (filets qui se tracent) ; équipe sur bleu très clair ;
- * garanties de la formation sur blanc (agrément en ambre sur bleu nuit, dispositif qualité).
+ * Clic sur une rubrique : la page descend en douceur jusqu'à son titre (d'un coup en
+ * mouvement réduit) ; l'adresse prend l'ancre sans créer de navigation (le routeur l'aurait
+ * interceptée et laissé la page en place).
+ */
+function goToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  event.preventDefault();
+  target.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+  window.history.replaceState(window.history.state, '', `#${id}`);
+}
+
+/**
+ * Page « Le cabinet », reconstruite en neuf blocs à ancres (01 Ouverture … 09 Deux portes),
+ * ajoutés au fur et à mesure. En tête, façon « About BCG » : une grande photo, la barre des
+ * rubriques posée dessus (collée sous le menu au défilement, la rubrique en cours en vert, un
+ * clic y descend), le titre et la présentation sur un panneau bleu nuit qui chevauche le bas
+ * de la photo (ouverture provisoire, en attendant le bloc 01). Puis 02 Notre histoire.
  * Textes : ./content.ts
  */
 export default function CabinetPage() {
   const { lang } = useLanguage();
   const content = cabinetContent[lang];
-  const { hero, about, method, values, team, pledges } = content;
+  const { hero, history } = content;
+
+  // Barre des rubriques : une entrée par bloc déjà construit, vers son titre.
+  const toc = [{ id: 'notre-histoire', label: history.eyebrow }];
+  const active = useActiveSection(toc.map((entry) => entry.id));
 
   return (
-    <>
+    <div className={styles.page}>
       <title>{content.title}</title>
 
-      {/* ---------- En-tête ---------- */}
-      <section className={cx(styles.hero, 'on-dark')} aria-labelledby="cabinet-title">
-        <div className={cx('container', styles.heroInner)}>
-          <p className={styles.kicker}>{hero.eyebrow}</p>
-          <h1 id="cabinet-title" className={styles.headline}>
-            {hero.headline[0]} <span className={styles.accent}>{hero.headline[1]}</span>
-          </h1>
-          <p className={styles.intro}>{hero.intro}</p>
-        </div>
-      </section>
-
-      <Manifesto about={about} />
-      <Method method={method} />
-
-      {/* ---------- Valeurs ---------- */}
-      <section className="section" aria-labelledby="values-title">
+      <div className={styles.subnavRail}>
         <div className="container">
-          <div className={styles.head} data-reveal>
-            <p className="eyebrow">{values.eyebrow}</p>
-            <h2 id="values-title" className="h2">
-              {values.title}
-            </h2>
-            <p className={cx('lead', styles.valuesIntro)}>{values.intro}</p>
-          </div>
-          <ul className={styles.valueList} data-reveal-stagger>
-            {values.items.map((value, index) => (
-              <li key={value.title} className={styles.valueItem}>
-                <span className={styles.valueNumber} aria-hidden="true">
-                  {pad(index + 1)}
-                </span>
-                <div>
-                  <h3 className={styles.valueTitle}>{value.title}</h3>
-                  <p className={styles.valueText}>{value.text}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <ProvisionalNote show={values.provisional}>{values.note}</ProvisionalNote>
+          <nav className={styles.subnav} aria-label={hero.toc}>
+            <span className={styles.subnavLabel} aria-hidden="true">
+              {hero.eyebrow} :
+            </span>
+            <ol className={styles.subnavList}>
+              {toc.map((entry) => (
+                <li key={entry.id}>
+                  <a
+                    className={styles.subnavLink}
+                    href={`#${entry.id}`}
+                    onClick={(event) => goToSection(event, entry.id)}
+                    aria-current={active === entry.id ? 'location' : undefined}
+                  >
+                    {entry.label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
         </div>
-      </section>
+      </div>
 
-      {/* ---------- Équipe ---------- */}
-      <section className={cx('section on-surface', styles.team)} aria-labelledby="team-title">
-        <div className="container grid-12">
-          <div className={styles.teamHead} data-reveal>
-            <p className="eyebrow">{team.eyebrow}</p>
-            <h2 id="team-title" className="h2">
-              {team.title}
-            </h2>
-            <p className={cx('lead', styles.teamText)}>{team.text}</p>
-          </div>
-          <p className={styles.director} data-reveal>
-            <span className={styles.directorLabel}>{team.lead.label}</span>
-            <span className={styles.directorName}>{team.lead.name}</span>
-            <span className={styles.directorRole}>{team.lead.role}</span>
-          </p>
+      {/* ---------- En-tête : grande photo, panneau bleu nuit qui la chevauche ---------- */}
+      <section className={styles.hero} aria-labelledby="cabinet-title">
+        <div className={styles.photo}>
+          <img
+            src={`${HERO_PHOTO}.webp`}
+            srcSet={`${HERO_PHOTO}-700.webp 700w, ${HERO_PHOTO}-1200.webp 1200w, ${HERO_PHOTO}.webp 2400w`}
+            sizes="100vw"
+            width={2400}
+            height={1350}
+            alt=""
+            fetchPriority="high"
+          />
         </div>
-      </section>
-
-      {/* ---------- Garanties de la formation ---------- */}
-      <section className="section" aria-labelledby="pledges-title">
         <div className="container">
-          <div className={styles.head} data-reveal>
-            <p className="eyebrow">{pledges.eyebrow}</p>
-            <h2 id="pledges-title" className="h2">
-              {pledges.title}
-            </h2>
+          <div className={cx(styles.panel, 'on-dark')}>
+            <p className={styles.eyebrow}>{hero.eyebrow}</p>
+            <h1 id="cabinet-title" className={styles.headline}>
+              {hero.headline[0]} <span className={styles.headlineLine}>{hero.headline[1]}</span>
+            </h1>
+            <p className={styles.intro}>{hero.intro}</p>
           </div>
-          <div className={styles.pledgeGrid} data-reveal-stagger>
-            <div className={cx(styles.approval, 'on-dark')}>
-              <span className={styles.approvalLabel}>{pledges.approval.label}</span>
-              <span className={styles.approvalNumber}>{pledges.approval.title}</span>
-              <p className={styles.approvalText}>{pledges.approval.text}</p>
-            </div>
-            <div className={styles.quality}>
-              <h3 className={styles.qualityTitle}>{pledges.qualityTitle}</h3>
-              <ul className={styles.qualityList}>
-                {pledges.quality.map((item) => (
-                  <li key={item}>
-                    <CheckIcon size={20} className={styles.check} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <ProvisionalNote show={pledges.provisional}>{pledges.note}</ProvisionalNote>
         </div>
       </section>
-    </>
+
+      <History history={history} />
+    </div>
   );
 }

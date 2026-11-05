@@ -4,6 +4,7 @@ import { ArrowRightIcon } from '@/components/icons';
 import { useLanguage } from '@/i18n/useLanguage';
 import type { HomeContent } from '../content';
 import { ProvisionalNote } from './SectionHeader';
+import { SessionPhotos } from './SessionPhotos';
 import styles from './UpcomingSessions.module.css';
 import { upcomingSessions } from './sessionDates';
 
@@ -141,10 +142,10 @@ export function UpcomingSessions({ trainings }: { trainings: HomeContent['traini
                 </Link>
               </li>
             ))}
-            {/* Photo réelle d'une session OPEM, toujours dans la dernière case. */}
-            <li className={styles.photo} aria-hidden={trainings.photo.src ? undefined : true}>
-              {trainings.photo.src ? (
-                <img src={trainings.photo.src} alt={trainings.photo.alt} loading="lazy" />
+            {/* Photos réelles de sessions OPEM, toujours dans la dernière case. */}
+            <li className={styles.photo} aria-hidden={trainings.photos.length ? undefined : true}>
+              {trainings.photos.length ? (
+                <SessionPhotos photos={trainings.photos} controls={trainings.photoControls} />
               ) : (
                 <PhotoPlaceholder />
               )}

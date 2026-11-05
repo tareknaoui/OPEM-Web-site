@@ -55,6 +55,54 @@ function parseItems(data: unknown, depth: number): MenuItem[] {
   });
 }
 
+export type WordPressQuote = {
+  quote: string;
+  author: string;
+  source?: string;
+  comment?: string;
+};
+
+const MAX_QUOTE_LENGTH = 300;
+const MAX_AUTHOR_LENGTH = 80;
+const MAX_COMMENT_LENGTH = 400;
+
+/**
+ * Lit la citation du mois saisie dans WordPress (Réglages > Citation du mois), exposée par le
+ * plugin wordpress/opem-quote-api.php. Réponse revalidée : texte brut, longueurs bornées.
+ * Sans citation ni auteur (champs vides, réponse inattendue) : null, le site garde sa citation.
+ */
+export async function fetchWordPressQuote(
+  lang: Lang,
+  signal?: AbortSignal,
+): Promise<WordPressQuote | null> {
+  if (!env.wpApiUrl) return null;
+  const data = await http<unknown>(`/opem/v1/quote?lang=${lang}`, {
+    baseUrl: env.wpApiUrl,
+    credentials: 'omit',
+    signal,
+  });
+  return parseQuote(data);
+}
+
+export function parseQuote(data: unknown): WordPressQuote | null {
+  if (typeof data !== 'object' || data === null) return null;
+  const fields = data as Record<string, unknown>;
+  const text = (key: string, max: number) => {
+    const value = fields[key];
+    return typeof value === 'string' && value.trim() !== '' ? value.trim().slice(0, max) : undefined;
+  };
+
+  const quote = text('quote', MAX_QUOTE_LENGTH);
+  const author = text('author', MAX_AUTHOR_LENGTH);
+  if (!quote || !author) return null;
+  return {
+    quote,
+    author,
+    source: text('source', MAX_AUTHOR_LENGTH),
+    comment: text('comment', MAX_COMMENT_LENGTH),
+  };
+}
+
 /**
  * - « # » ou vide : entrée non cliquable (parent de sous-menu) ;
  * - lien vers ce site ou vers WordPress : converti en chemin interne (« /expertises ») ;

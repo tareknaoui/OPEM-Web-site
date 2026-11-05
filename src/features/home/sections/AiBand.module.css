@@ -1,13 +1,18 @@
-/* Bandeau « Intelligence artificielle appliquée », sur blanc : il se détache du bleu nuit de
-   « Nos domaines », juste au-dessus, et du bleu très clair des sessions, juste en dessous.
-   Texte anthracite, titres et bouton bleu OPEM, pas d'ambre. Pas de dégradé. */
+/* Bandeau « Intelligence artificielle appliquée ». Même bleu nuit que « Nos domaines », dont
+   le sépare la citation du mois (le bleu OPEM ne touche jamais le bleu nuit) : textes blancs et
+   bleu 30 %, jamais de vert. Pas de dégradé : les reflets sont des blancs translucides. */
 
 .section {
   padding-block: var(--section-space);
-  background: var(--opem-white);
-  color: var(--opem-anthracite);
+  background: var(--opem-night);
+  color: var(--opem-white);
 }
 
+.section :focus-visible {
+  outline-color: var(--opem-white);
+}
+
+/* Pas de panneau : tout se pose sur le bleu nuit. */
 .band {
   display: grid;
   gap: clamp(2rem, 1.5rem + 2vw, 3.5rem) var(--grid-gap);
@@ -16,17 +21,35 @@
 
 /* ---------- Illustration ---------- */
 
-/* L'illustration, bleu nuit sur fond blanc, se fond dans le blanc du bloc, sans cadre. Taille
-   contenue : elle accompagne le titre sans l'écraser. */
+/* Bords estompés (masque, rien de visible) : l'image se fond dans le bleu nuit de la section.
+   Taille contenue : elle accompagne le titre sans l'écraser. */
 .visual {
   justify-self: center;
   width: min(100%, 34rem);
+  mask-image:
+    linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
+    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  mask-composite: intersect;
 }
 
 .image {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* La porte s'ouvre au défilement (--open de 0 à 1, posée par AiBand.tsx) : d'abord la porte et
+   le cerveau seuls, puis la lumière et les réseaux qui en sortent et gagnent toute l'image,
+   pendant qu'elle recule légèrement. Sans script : l'image entière (--open vaut 1). */
+.visual .image {
+  --reach: calc(var(--open, 1) * 105%);
+  mask-image: radial-gradient(
+    circle farthest-corner at 51% 45%,
+    #000 calc(var(--reach) + 8%),
+    transparent calc(var(--reach) + 30%)
+  );
+  scale: calc(1.08 - var(--open, 1) * 0.08);
+  transform-origin: 51% 45%;
 }
 
 /* ---------- Texte ---------- */
@@ -36,7 +59,7 @@
   align-items: center;
   gap: var(--space-2);
   margin: 0 0 var(--space-4);
-  color: var(--color-primary);
+  color: var(--opem-blue-30);
   font-family: var(--font-heading);
   font-size: var(--eyebrow-size);
   font-weight: 600;
@@ -50,31 +73,10 @@
   letter-spacing: 0;
 }
 
-.spark {
-  flex-shrink: 0;
-  /* Pas d'ambre sur blanc : l'étincelle en bleu OPEM. */
-  color: var(--color-primary);
-  fill: currentColor;
-  animation: twinkle 2.8s ease-in-out infinite;
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 1;
-    scale: 1;
-  }
-
-  50% {
-    opacity: 0.45;
-    scale: 0.8;
-  }
-}
-
 .title {
   max-width: 20ch;
   margin: 0;
-  color: var(--color-primary);
+  color: var(--opem-white);
   font-family: var(--font-heading);
   font-size: clamp(2rem, 1.3rem + 2.4vw, 3.5rem);
   font-weight: 600;
@@ -89,10 +91,22 @@
   letter-spacing: 0;
 }
 
+/* « IA » du titre en ambre (sur bleu nuit) : écho du nœud ambre au cœur de l'illustration. */
+.titleHighlight {
+  color: var(--opem-amber);
+  font-weight: inherit;
+}
+
+/* « intelligence artificielle » dans le texte : en blanc, plus appuyé que le reste. */
+.textHighlight {
+  color: var(--opem-white);
+  font-weight: 700;
+}
+
 .text {
   max-width: 34rem;
   margin: var(--space-6) 0 var(--space-8);
-  color: var(--opem-anthracite);
+  color: var(--opem-blue-30);
   font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   line-height: 1.65;
 }
@@ -103,7 +117,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--opem-gray-light);
+  border: 1px solid rgb(255 255 255 / 0.35);
   border-radius: 0.75rem;
   list-style: none;
 }
@@ -118,26 +132,38 @@
 }
 
 .step + .step {
-  border-top: 1px solid var(--opem-gray-light);
+  border-top: 1px solid rgb(255 255 255 / 0.25);
 }
 
 .step:hover {
-  background: var(--opem-blue-10);
+  background: rgb(255 255 255 / 0.07);
 }
 
-/* « Passer la porte » : bouton bleu OPEM (btn-primary), sans ambre. */
+/* « Découvrir l'approche » : bouton blanc qui passe en ambre au survol (demande du client),
+   texte anthracite dans les deux cas (charte : jamais de bleu sur l'ambre). */
 .cta {
-  transition: background-color 200ms;
+  border-color: var(--opem-white);
+  background: var(--opem-white);
+  color: var(--opem-anthracite);
+  transition:
+    background-color 200ms,
+    border-color 200ms;
 }
 
-/* Filet bleu OPEM qui parcourt les trois temps l'un après l'autre. */
+.cta:hover {
+  border-color: var(--opem-blue-10);
+  background: var(--opem-blue-10);
+  color: var(--opem-anthracite);
+}
+
+/* Filet ambre qui parcourt les trois temps l'un après l'autre (repère sur bleu nuit). */
 .step::before {
   content: '';
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
   width: 3px;
-  background: var(--color-primary);
+  background: var(--opem-amber);
   opacity: 0;
   animation: flow 4.5s ease-in-out infinite;
 }
@@ -167,7 +193,7 @@
   grid-row: span 2;
   min-width: 1.5rem;
   padding-top: 0.2em;
-  color: var(--color-primary);
+  color: var(--opem-amber);
   font-family: var(--font-heading);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -175,7 +201,7 @@
 }
 
 .label {
-  color: var(--opem-night);
+  color: var(--opem-white);
   font-family: var(--font-heading);
   font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
   font-weight: 600;
@@ -187,12 +213,16 @@
 }
 
 .stepText {
-  color: var(--opem-anthracite);
+  color: var(--opem-blue-30);
   line-height: 1.5;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spark,
+  .visual .image {
+    mask-image: none;
+    scale: none;
+  }
+
   .step::before {
     animation: none;
   }
@@ -226,7 +256,7 @@
 
   .step + .step {
     border-top: 0;
-    border-inline-start: 1px solid var(--opem-gray-light);
+    border-inline-start: 1px solid rgb(255 255 255 / 0.25);
   }
 
   /* Le filet lumineux passe en haut de chaque temps. */

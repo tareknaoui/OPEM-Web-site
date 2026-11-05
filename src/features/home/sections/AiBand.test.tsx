@@ -16,6 +16,13 @@ describe('Bandeau « Intelligence artificielle appliquée »', () => {
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
       'L’IA entre par la porte de l’organisation.',
     );
+    // « IA » mis en évidence dans le titre, « intelligence artificielle » dans le texte.
+    expect(screen.getByRole('heading', { level: 2 }).querySelector('strong')).toHaveTextContent(
+      /^IA$/,
+    );
+    expect(
+      screen.getByText('intelligence artificielle', { selector: 'p strong' }),
+    ).toBeInTheDocument();
     // « Passer la porte » à l'écran ; nom lu par les lecteurs d'écran : l'étiquette invisible.
     const cta = screen.getByRole('link', {
       name: 'Découvrir nos solutions et notre démarche en intelligence artificielle',
@@ -29,7 +36,7 @@ describe('Bandeau « Intelligence artificielle appliquée »', () => {
       '03AccompagnementUn outil maîtrisé, qui libère temps et ressources',
     ]);
     // Illustration décorative : la porte ouverte sur l'organisation.
-    expect(document.querySelector('img')).toHaveAttribute('src', '/images/ia/porte-claire.webp');
+    expect(document.querySelector('img')).toHaveAttribute('src', '/images/ia/porte-reseau.webp');
     expect(document.querySelector('img')).toHaveAttribute('alt', '');
   });
 

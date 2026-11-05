@@ -12,6 +12,21 @@ type Theme = HomeContent['faq']['themes'][number]['id'];
 
 const formatNumber = (index: number) => String(index + 1).padStart(2, '0');
 
+/** Texte de la réponse ; le passage `link.text`, s'il y figure, devient un lien. */
+function Answer({ item }: { item: HomeContent['faq']['items'][number] }) {
+  const at = item.link ? item.answer.indexOf(item.link.text) : -1;
+  if (!item.link || at < 0) return item.answer;
+  return (
+    <>
+      {item.answer.slice(0, at)}
+      <Link to={item.link.href} className={styles.answerLink}>
+        {item.link.text}
+      </Link>
+      {item.answer.slice(at + item.link.text.length)}
+    </>
+  );
+}
+
 /**
  * Questions fréquentes, dernière section de l'accueil (maquette validée par OPEM) : sur bleu
  * nuit, des filtres par thème, la liste numérotée des questions et, à côté, la réponse choisie
@@ -86,7 +101,9 @@ export function Faq({ faq }: FaqProps) {
                 {formatNumber(activeIndex)}
               </p>
               <h3 className={styles.panelTitle}>{active.question}</h3>
-              <p className={styles.answer}>{active.answer}</p>
+              <p className={styles.answer}>
+                <Answer item={active} />
+              </p>
               <div className={styles.foot}>
                 <p>{faq.footText}</p>
                 <Link to={faq.contact.href} className={`btn ${styles.contact}`}>

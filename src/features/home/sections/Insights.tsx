@@ -10,7 +10,8 @@ type InsightsProps = {
 
 /**
  * « Éclairages », maquette validée par OPEM : titre et lien vers tous les éclairages, trois
- * articles en cartes (filet de couleur en haut), une invitation à poser une question, puis un
+ * articles en cartes (photo du thème en tête, filet de couleur dessous ; la photo s'avance
+ * légèrement au survol), une invitation à poser une question, puis un
  * encadré bleu nuit « Actualité » (formations du mois avec leurs thèmes, nouvelles du cabinet).
  */
 export function Insights({ insights }: InsightsProps) {
@@ -39,6 +40,19 @@ export function Insights({ insights }: InsightsProps) {
           <ul className={styles.articles} data-reveal-stagger>
             {insights.articles.map((article) => (
               <li key={article.id} className={styles.article} data-tone={article.tone}>
+                <div className={styles.media}>
+                  <img
+                    className={styles.photo}
+                    src={article.image}
+                    srcSet={`${article.image.replace(/\.webp$/, '-700.webp')} 700w, ${article.image} 1200w`}
+                    sizes="(min-width: 64em) 24rem, (min-width: 48em) 45vw, 90vw"
+                    width={1200}
+                    height={800}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
                 <p className={styles.label}>
                   <span className={styles.kind}>{insights.articleLabel}</span>
                   <span className={styles.category}> | {article.category}</span>

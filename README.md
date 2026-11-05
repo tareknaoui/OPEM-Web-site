@@ -102,6 +102,7 @@ src/
 
 public/                      fichiers servis tels quels (logo, images, vidéo, _headers)
 wordpress/opem-menu-api.php  plugin qui expose le menu WordPress en JSON
+wordpress/opem-quote-api.php plugin « Citation du mois » (Réglages > Citation du mois), en JSON
 vercel.json                  réécriture SPA, en-têtes de sécurité et de cache (production)
 ```
 
@@ -322,6 +323,9 @@ Lue sur tous les écrans (image fixe en mouvement réduit). Adresse dans
 - `domaines/` : photos 4:3 encore utilisées par les publications d'exemple (`formations.jpg` :
   Pexels 18999540).
 - `actualites/` : illustrations des publications d'exemple.
+- `eclairages/` : photo 3:2 de chaque éclairage (+ version `-700.webp`) : Pexels 357514
+  (organisation : classeurs), 249360 (formation : prise de notes), 8386440 (IA : main robotique
+  et réseau de neurones).
 - Toutes provisoires (Pexels / Unsplash, licences gratuites).
 
 ### Remplacer un média sous le même nom
@@ -341,6 +345,15 @@ protocoles des liens).
 4. Si WordPress est sur un autre domaine : l'ajouter à `connect-src` dans la CSP (§ 11).
 
 Sans WordPress (ou s'il ne répond pas), le menu intégré `layouts/navbar/menu.ts` s'affiche.
+
+### Citation du mois
+
+Se change chaque mois dans **WordPress > Réglages > Citation du mois** (citation, auteur,
+source, commentaire, en FR et en AR), sans toucher au code. Plugin `wordpress/opem-quote-api.php`
+à copier dans `wp-content/mu-plugins/` ; même `VITE_WP_API_URL` que le menu. `lib/wordpress.ts`
+revalide la réponse (texte brut, longueurs) ; `features/home/useQuoteOfMonth.ts` remplace la
+citation de `content.ts` (`quoteOfMonth`), qui reste affichée si WordPress est absent ou si
+la citation ou l'auteur y sont vides.
 
 - **Libellé court** dans la barre : Options de l'écran > « Attribut de titre ».
 - **Méga-menu** : dès qu'une entrée a une « Description » (Options de l'écran > « Description »).

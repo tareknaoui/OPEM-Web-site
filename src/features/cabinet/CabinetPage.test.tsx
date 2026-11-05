@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { LanguageSwitcher } from '@/app/layouts/navbar/LanguageSwitcher';
@@ -21,47 +21,47 @@ function renderCabinet() {
 }
 
 describe('Page « Le cabinet »', () => {
-  it('présente le cabinet, sa démarche, ses valeurs, son équipe et ses garanties', () => {
+  it('ouvre sur la photo et le titre, puis « Notre histoire »', () => {
     renderCabinet();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Conseil, études et formation, au service de votre performance.',
     );
-    const titles = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
-    expect(titles).toEqual([
-      'Qui nous sommes',
-      'Trois niveaux, de l’expertise à la mise en œuvre.',
-      'Six valeurs qui guident chaque mission.',
-      'Une direction engagée, un réseau au-delà de nos frontières.',
-      'Une formation agréée et suivie de près.',
+    expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
+      'Ce qui nous a fait naître.',
     ]);
-    expect(screen.getByText('Animer jusqu’à la décision')).toBeInTheDocument();
-    expect(screen.getByText('Houda Bourahla')).toBeInTheDocument();
   });
 
-  it('ne répète pas l’accueil : ni chiffres ni liste des domaines', () => {
+  it('bloc 02 : textes mot pour mot et frise des trois repères', () => {
     renderCabinet();
-    expect(screen.queryByRole('list', { name: 'OPEM en quelques chiffres' })).toBeNull();
-    expect(screen.queryByRole('link', { name: 'Études stratégiques' })).toBeNull();
-  });
-
-  it('garde le manifeste entier pour les lecteurs d’écran', () => {
-    renderCabinet();
-    // Manifeste découpé mot à mot : le paragraphe garde sa phrase entière.
-    const statement = screen.getByText(
-      (_, element) => element?.tagName === 'P' && /^Chaque organisation/.test(element.textContent),
+    expect(screen.getByText('Notre histoire', { selector: 'p' })).toBeInTheDocument();
+    expect(screen.getByText(/^À l’origine d’OPEM, une conviction/)).toHaveTextContent(
+      /en pleine mutation\.$/,
     );
-    expect(statement).toHaveTextContent(/construisons avec vos équipes, pas à leur place\.$/);
+    expect(
+      screen
+        .getAllByRole('listitem')
+        .filter((item) => item.querySelector('time'))
+        .map((item) => item.textContent),
+    ).toEqual([
+      '2019Création d’OPEMCinq domaines d’expertise',
+      '2025Communication institutionnelleSixième domaine',
+      '2026Intelligence artificielleAppliquée aux organisations',
+    ]);
   });
 
-  it('signale les contenus à faire valider par OPEM', () => {
+  it('la barre des rubriques mène aux blocs construits', () => {
     renderCabinet();
-    expect(screen.getByText(/textes d’explication proposés, à valider/)).toBeInTheDocument();
-    expect(screen.getByText(/Informations du catalogue 2021/)).toBeInTheDocument();
+    const nav = screen.getByRole('navigation', { name: 'Sur cette page' });
+    expect(within(nav).getByRole('link', { name: 'Notre histoire' })).toHaveAttribute(
+      'href',
+      '#notre-histoire',
+    );
   });
 
   it('passe en arabe', () => {
     renderCabinet();
     fireEvent.click(screen.getByRole('button', { name: 'عربي' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('في خدمة أدائكم.');
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('ما الذي أوجدنا.');
   });
 });

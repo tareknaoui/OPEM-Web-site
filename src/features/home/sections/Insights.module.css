@@ -91,22 +91,40 @@
 }
 
 .article {
+  --tone: var(--opem-blue);
+
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: hidden;
   padding: 1.75rem;
   border: 1px solid var(--opem-gray-light);
-  border-top: 5px solid var(--opem-blue);
   border-radius: 6px;
   background: var(--opem-white);
 }
 
 .article[data-tone='green'] {
-  border-top-color: var(--opem-green);
+  --tone: var(--opem-green);
 }
 
 .article[data-tone='amber'] {
-  border-top-color: var(--opem-amber);
+  --tone: var(--opem-amber);
+}
+
+/* Photo du thème en tête de carte, bord à bord, posée sur le filet de couleur de l'article. */
+.media {
+  overflow: hidden;
+  margin: -1.75rem -1.75rem 0.5rem;
+  border-bottom: 5px solid var(--tone);
+  aspect-ratio: 3 / 2;
+  background: var(--opem-blue-10);
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .label {
@@ -319,6 +337,14 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .photo {
+    transition: scale 700ms var(--ease-reveal);
+  }
+
+  .article:hover .photo {
+    scale: 1.04;
+  }
+
   .read,
   .questionLink,
   .newsLink,

@@ -1,6 +1,7 @@
 /* Polices auto-hébergées (pas d'appel à Google Fonts : plus rapide et compatible CSP).
    Seuls les graisses et alphabets utilisés sont chargés. */
 @import '@fontsource/poppins/latin-500.css';
+@import '@fontsource/poppins/latin-500-italic.css';
 @import '@fontsource/poppins/latin-600.css';
 @import '@fontsource/poppins/latin-700.css';
 @import '@fontsource/poppins/latin-800.css';
@@ -46,6 +47,8 @@
   --color-on-nav: var(--opem-white);
   --color-on-nav-muted: var(--opem-blue-30);
   --color-dark-accent: var(--opem-amber);
+  /* Filet sur bleu nuit : bleu 30 % adouci (pas une treizième couleur). */
+  --color-on-dark-rule: color-mix(in srgb, var(--opem-blue-30) 25%, transparent);
 
   --font-heading: 'Poppins', system-ui, sans-serif;
   --font-menu: 'Poppins', system-ui, sans-serif;
@@ -58,6 +61,10 @@
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
   --radius: 0.25rem;
 
   /* Grille : 12 colonnes, 1 920 px au plus (marges comprises) ; marges latérales de 5 % de

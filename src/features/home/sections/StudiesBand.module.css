@@ -1,0 +1,388 @@
+/* « Études et évaluations » : bande bleu nuit, fond de points discrets façon plan d'architecte
+   (comme les lignes de construction des illustrations). Cartes en blanc translucide, filets
+   blancs ; ambre réservé à l'étiquette et aux grands nombres (sur bleu nuit). Bouton blanc. */
+
+.band {
+  padding-block: clamp(4rem, 3rem + 3vw, 6rem);
+  background-color: var(--opem-night);
+  background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1.5px);
+  background-size: 1.375rem 1.375rem;
+  color: var(--opem-white);
+}
+
+.band :focus-visible {
+  outline: 3px solid var(--opem-amber);
+  outline-offset: 2px;
+}
+
+.layout {
+  display: grid;
+  gap: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  max-width: 75rem;
+  margin-inline: auto;
+}
+
+/* ---------- Introduction ---------- */
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.125rem;
+  max-width: 34rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--opem-amber);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.625rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.text {
+  margin: 0;
+  color: var(--opem-blue-30);
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.6;
+}
+
+.cta {
+  margin-top: 0.5rem;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  font-size: 0.9375rem;
+}
+
+.cta:hover {
+  background: var(--opem-blue-10);
+}
+
+/* ---------- Cartes ---------- */
+
+.cards {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--opem-night) 95%, var(--opem-white));
+}
+
+/* Pictogramme dans une pastille à filet. */
+.pictogram {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0.25rem;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 50%;
+  color: var(--opem-blue-30);
+}
+
+.pictogram svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.pictogram :is(path, circle) {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Grand sigle (PNUD) et grands nombres : ambre sur bleu nuit. */
+.highlight,
+.number {
+  color: var(--opem-amber);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.highlight {
+  margin: 0.25rem 0 0;
+  font-size: clamp(2.5rem, 2rem + 1.5vw, 3.25rem);
+}
+
+.count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.count .number {
+  font-size: clamp(2.5rem, 2rem + 1.5vw, 3.25rem);
+}
+
+.cardText {
+  margin: 0;
+  color: var(--opem-blue-30);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Les programmes de la coopération allemande, en pastilles. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0.125rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tags li {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 999px;
+  color: var(--opem-white);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* ---------- Grande carte : les ministères ---------- */
+
+.ministries {
+  display: grid;
+  gap: 1.25rem 2.5rem;
+}
+
+.ministriesHead {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.ministriesHead .pictogram {
+  margin: 0;
+}
+
+.figure {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.figure .number {
+  font-size: clamp(3.5rem, 2.75rem + 2.5vw, 5rem);
+}
+
+.figure .cardTitle {
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+}
+
+.ministryList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ministryList li {
+  padding-block: 0.75rem;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  color: var(--opem-white);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+
+/* ---------- Tablette : trois cartes côte à côte, ministères sur toute la largeur ---------- */
+
+@media (min-width: 48em) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ministries {
+    grid-column: 1 / -1;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .ministriesHead {
+    padding-inline-end: 2.5rem;
+    border-inline-end: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  .ministryList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+
+  .ministryList li:nth-child(-n + 2) {
+    border-top: 0;
+  }
+}
+
+/* ---------- Ordinateur : introduction sur deux colonnes (titre | texte et bouton), puis les
+   cartes sur toute la largeur ---------- */
+
+@media (min-width: 64em) {
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 1rem clamp(3rem, 1rem + 4vw, 5.5rem);
+    max-width: none;
+  }
+
+  .eyebrow {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .title {
+    grid-row: 2 / span 2;
+    grid-column: 1;
+    align-self: start;
+  }
+
+  .text {
+    grid-row: 2;
+    grid-column: 2;
+  }
+
+  .cta {
+    grid-row: 3;
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* Grand écran : les quatre ministères côte à côte, séparés par des filets verticaux. */
+@media (min-width: 75em) {
+  .ministryList {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ministryList li {
+    padding: 0.25rem 1.5rem;
+    border-top: 0;
+    border-inline-start: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  .ministryList li:first-child {
+    border-inline-start: 0;
+  }
+}
+
+/* ---------- Mouvement : cartes au survol, pictogrammes qui se tracent ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    transition:
+      translate 400ms var(--ease-reveal),
+      border-color 300ms,
+      background-color 300ms;
+  }
+
+  .card:hover {
+    translate: 0 -4px;
+    border-color: rgb(255 255 255 / 0.34);
+    background: color-mix(in srgb, var(--opem-night) 91%, var(--opem-white));
+  }
+
+  .pictogram {
+    transition:
+      color 300ms,
+      border-color 300ms;
+  }
+
+  .card:hover .pictogram {
+    border-color: rgb(255 255 255 / 0.5);
+    color: var(--opem-white);
+  }
+
+  .cards:not([data-visible]) .pictogram :is(path, circle) {
+    stroke-dashoffset: 1;
+  }
+
+  .cards[data-visible] .pictogram :is(path, circle) {
+    animation: draw 1600ms var(--ease-reveal) both;
+    animation-delay: calc(var(--i, 0) * 160ms + 250ms);
+  }
+
+  .card:nth-child(2) {
+    --i: 1;
+  }
+
+  .card:nth-child(3) {
+    --i: 2;
+  }
+
+  .card:nth-child(4) {
+    --i: 3;
+  }
+
+  .cta {
+    transition: background-color 200ms;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Arabe : Cairo, sans capitales espacées ---------- */
+
+.eyebrow:lang(ar),
+.title:lang(ar),
+.cardTitle:lang(ar),
+.count:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title:lang(ar) {
+  line-height: 1.4;
+}
+
+.eyebrow:lang(ar) {
+  font-size: 1rem;
+}

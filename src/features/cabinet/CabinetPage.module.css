@@ -1,386 +1,216 @@
-/* Page « Le cabinet » : en-tête, valeurs, équipe et garanties (manifeste, démarche et métiers
-   dans ./sections). Fonds alternés : bleu nuit, blanc, bleu très clair, bleu nuit, blanc,
-   bleu très clair, blanc (le bleu OPEM du pied de page ne touche jamais le bleu nuit).
-   Sur bleu nuit : blanc et bleu 30 %, l'ambre en repères et en grands chiffres ;
-   sur blanc : titres bleu OPEM, étiquettes vert foncé, puces vert OPEM. Pas de dégradé. */
+/* Page « Le cabinet » : barre des rubriques et en-tête (les blocs ont leurs styles dans
+   ./sections). Couleurs : les tokens de la charte (src/styles/global.css). Pas de dégradé,
+   pas de texte sur la photo. */
+
+/* Toute la page : la barre des rubriques y reste collée sous le menu au défilement. Les titres
+   visés s'arrêtent sous le menu et sous cette barre. */
+.page h2[id] {
+  scroll-margin-top: calc(var(--header-height-compact) + 6rem);
+}
 
 /* ==========================================================================
-   En-tête
+   Barre des rubriques (façon « About BCG ») : pastilles blanches posées sur la photo, puis
+   collées sous le menu pendant tout le défilement ; la rubrique en cours en vert clair.
+   ========================================================================== */
+
+/* Rail de hauteur nulle : la barre se superpose à la photo sans pousser la page. */
+.subnavRail {
+  position: sticky;
+  top: calc(var(--header-height-compact) - 0.5rem);
+  z-index: 20;
+  height: 0;
+}
+
+.subnav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  position: relative;
+  top: 1.25rem; /* décalage, pas de marge : une marge traverserait le rail et pousserait la page */
+  padding: 0.375rem;
+  overflow-x: auto;
+  border: 1px solid rgb(17 54 91 / 0.08);
+  border-radius: 0.875rem;
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 0.75rem 2rem -1rem rgb(17 54 91 / 0.45);
+  scrollbar-width: none;
+  backdrop-filter: blur(10px);
+}
+
+.subnav::-webkit-scrollbar {
+  display: none;
+}
+
+.subnavLabel {
+  flex-shrink: 0;
+  padding-inline: 0.75rem 0.25rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.subnavList {
+  display: flex;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subnavLink {
+  display: block;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+  color: var(--opem-anthracite);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.subnavLink:hover {
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+}
+
+.subnavLink[aria-current] {
+  background: rgb(77 164 52 / 0.16);
+  color: var(--opem-green-dark);
+}
+
+.subnavLink:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 1px;
+}
+
+.subnavLabel:lang(ar),
+.subnavLink:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+
+/* ==========================================================================
+   En-tête : grande photo pleine largeur ; le titre et la présentation sur un panneau bleu
+   nuit qui chevauche le bas de la photo (jamais de texte sur la photo elle-même).
    ========================================================================== */
 
 .hero {
+  padding-bottom: clamp(3rem, 2rem + 3vw, 5rem);
+}
+
+.photo {
+  height: clamp(22rem, 64vh, 42rem);
+  overflow: hidden;
+  background: var(--opem-blue-10);
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+.panel {
+  position: relative;
+  max-width: 62rem;
+  margin-top: clamp(-11rem, -12vw, -4rem);
+  padding: clamp(1.75rem, 1rem + 3vw, 3.25rem);
+  border-radius: 0.25rem;
   background: var(--opem-night);
   color: var(--color-on-nav);
 }
 
-.heroInner {
-  padding-block: clamp(3rem, 2rem + 5vw, 7rem) clamp(3.5rem, 2.5rem + 5vw, 7.5rem);
-}
-
-.kicker {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin: 0 0 clamp(1.5rem, 1rem + 1vw, 2.25rem);
-  color: var(--opem-blue-30);
+.eyebrow {
+  margin: 0 0 var(--space-4);
+  color: var(--opem-amber);
   font-family: var(--font-heading);
   font-size: var(--eyebrow-size);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.kicker::before {
-  content: '';
-  flex-shrink: 0;
-  width: 2.5rem;
-  height: 2px;
-  background: var(--opem-amber);
-}
-
 .headline {
-  max-width: 20ch;
+  min-width: 0;
   margin: 0;
   color: var(--color-on-nav);
   font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 1.25rem + 4.4vw, 5.5rem);
+  font-size: clamp(1.875rem, 1.1rem + 2.3vw, 3rem);
   font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
-/* Seconde partie du titre sur sa propre ligne, plus claire. */
-.accent {
+/* La seconde partie du titre sur sa propre ligne, plus claire. */
+.headlineLine {
   display: block;
   color: var(--opem-blue-30);
 }
 
 .intro {
-  max-width: 38rem;
-  margin: clamp(1.5rem, 1rem + 1vw, 2.25rem) 0 0;
+  max-width: 42rem;
+  margin: var(--space-6) 0 0;
   color: var(--opem-blue-30);
   font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.65;
+  text-wrap: pretty;
 }
 
-.kicker:lang(ar),
+.eyebrow:lang(ar),
 .headline:lang(ar) {
   font-family: var(--font-arabic);
   letter-spacing: 0;
-}
-
-.kicker:lang(ar) {
-  font-size: var(--eyebrow-size);
 }
 
 .headline:lang(ar) {
   line-height: 1.3;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .heroInner > * {
-    animation: rise 900ms var(--ease-reveal) both;
+@media (max-width: 47.99em) {
+  .subnavLabel {
+    display: none;
   }
 
-  .headline {
-    animation-delay: 100ms;
+  .photo {
+    height: 20rem;
   }
 
-  .intro {
-    animation-delay: 250ms;
+  /* Mobile : le panneau sous la photo, bord à bord avec le conteneur. */
+  .panel {
+    margin-top: -3rem;
   }
 }
 
-@keyframes rise {
+@media (prefers-reduced-motion: no-preference) {
+  .panel {
+    animation: settle 800ms var(--ease-reveal) both;
+    animation-delay: 150ms;
+  }
+
+  .subnavLink {
+    transition:
+      background-color 200ms,
+      color 200ms;
+  }
+}
+
+@keyframes settle {
   from {
     opacity: 0;
     translate: 0 1rem;
-  }
-}
-
-/* ==========================================================================
-   En-têtes de section (valeurs, garanties)
-   ========================================================================== */
-
-.head {
-  max-width: 48rem;
-  margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
-}
-
-.valuesIntro {
-  max-width: 40rem;
-  margin: var(--space-4) 0 0;
-}
-
-/* ==========================================================================
-   Valeurs, sur blanc : deux colonnes de lignes (numéro | titre et phrase) ; à l'arrivée,
-   le filet de chaque ligne se trace, gris puis un court trait bleu OPEM à son début.
-   ========================================================================== */
-
-.valueList {
-  display: grid;
-  column-gap: var(--grid-gap);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.valueItem {
-  position: relative;
-  display: grid;
-  grid-template-columns: clamp(3rem, 2.5rem + 2vw, 4.5rem) 1fr;
-  gap: var(--space-4);
-  padding-block: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
-  border-top: 1px solid var(--opem-gray-light);
-}
-
-.valueItem::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  inset-inline-start: 0;
-  width: 3rem;
-  height: 3px;
-  background: var(--color-primary);
-  transform-origin: left;
-}
-
-.valueItem:lang(ar)::before {
-  transform-origin: right;
-}
-
-.valueNumber {
-  color: var(--opem-blue-50);
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.valueTitle {
-  margin: 0;
-  color: var(--color-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.625rem);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
-
-.valueTitle:lang(ar) {
-  font-family: var(--font-arabic);
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-
-.valueText {
-  max-width: 30rem;
-  margin: var(--space-2) 0 0;
-  color: var(--opem-gray);
-  font-size: 1.0625rem;
-  line-height: 1.6;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  [data-reveal-stagger] > .valueItem::before {
-    scale: 0 1;
-    transition: scale 1000ms var(--ease-reveal);
-    transition-delay: calc(200ms + var(--i, 0) * 120ms);
-  }
-
-  [data-visible] > .valueItem::before {
-    scale: 1 1;
-  }
-}
-
-@media (min-width: 48em) {
-  .valueList {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* ==========================================================================
-   Équipe, sur bleu très clair : texte à gauche, la direction à droite.
-   ========================================================================== */
-
-.team {
-  background: var(--opem-blue-10);
-}
-
-.teamText {
-  max-width: 36rem;
-}
-
-/* La direction : nom en grand, sous un filet bleu OPEM. */
-.director {
-  display: grid;
-  align-content: start;
-  gap: 0.25rem;
-  margin: var(--space-6) 0 0;
-  padding-top: var(--space-6);
-  border-top: 3px solid var(--color-primary);
-}
-
-.directorLabel {
-  color: var(--color-label);
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.directorName {
-  margin-top: var(--space-2);
-  color: var(--color-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-.directorRole {
-  color: var(--opem-gray);
-  font-size: 1.0625rem;
-}
-
-.directorLabel:lang(ar),
-.directorName:lang(ar) {
-  font-family: var(--font-arabic);
-  letter-spacing: 0;
-}
-
-.directorLabel:lang(ar) {
-  font-size: 0.9375rem;
-}
-
-@media (min-width: 64em) {
-  .teamHead {
-    grid-column: 1 / span 7;
-  }
-
-  .director {
-    grid-column: 9 / -1;
-    align-self: end;
-    margin-top: 0;
-  }
-}
-
-/* ==========================================================================
-   Garanties, sur blanc : l'agrément en grand chiffre ambre sur une carte bleu nuit | le
-   dispositif qualité de chaque session sur bleu très clair.
-   ========================================================================== */
-
-.pledgeGrid {
-  display: grid;
-  gap: var(--grid-gap);
-}
-
-.approval,
-.quality {
-  padding: clamp(1.75rem, 1rem + 2.5vw, 3.25rem);
-  border-radius: 0.5rem;
-}
-
-.approval {
-  position: relative;
-  display: grid;
-  align-content: start;
-  gap: var(--space-2);
-  overflow: hidden;
-  background: var(--opem-night);
-  color: var(--color-on-nav);
-}
-
-.quality {
-  background: var(--opem-blue-10);
-}
-
-.approvalLabel,
-.qualityTitle {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.approvalLabel {
-  color: var(--opem-blue-30);
-}
-
-.qualityTitle {
-  color: var(--color-primary);
-}
-
-/* Le numéro d'agrément : grand chiffre ambre, comme le permet la charte sur bleu nuit. */
-.approvalNumber {
-  color: var(--opem-amber);
-  font-family: var(--font-heading);
-  font-size: clamp(3.5rem, 2rem + 5vw, 6.5rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
-}
-
-.approvalText {
-  max-width: 24rem;
-  margin: var(--space-4) 0 0;
-  padding-top: var(--space-4);
-  border-top: 1px solid rgb(178 202 222 / 0.25);
-  color: var(--opem-blue-30);
-  font-size: 1.0625rem;
-  line-height: 1.6;
-}
-
-.qualityList {
-  display: grid;
-  margin: var(--space-6) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.qualityList > li {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding-block: var(--space-4);
-  border-top: 1px solid rgb(0 77 145 / 0.15);
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.check {
-  flex-shrink: 0;
-  margin-top: 0.1em;
-  color: var(--opem-green-dark);
-}
-
-.approvalLabel:lang(ar),
-.qualityTitle:lang(ar),
-.approvalNumber:lang(ar),
-.qualityList > li:lang(ar) {
-  font-family: var(--font-arabic);
-  letter-spacing: 0;
-}
-
-.approvalLabel:lang(ar),
-.qualityTitle:lang(ar) {
-  font-size: 0.9375rem;
-}
-
-@media (min-width: 64em) {
-  .pledgeGrid {
-    grid-template-columns: 5fr 7fr;
   }
 }

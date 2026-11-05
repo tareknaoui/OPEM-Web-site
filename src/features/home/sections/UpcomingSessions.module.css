@@ -317,6 +317,7 @@
 /* ---------- Photo d'une session, dernière case ---------- */
 
 .photo {
+  position: relative;
   grid-row: span 6;
   min-height: 16rem;
   overflow: hidden;
@@ -325,11 +326,77 @@
   scroll-snap-align: start;
 }
 
-.photo img {
+/* Diaporama : les photos superposées, la photo active au premier plan (fondu). */
+.slides {
+  position: absolute;
+  inset: 0;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.slide[data-active] {
+  opacity: 1;
+}
+
+/* Pause et pastilles, en bas de la photo, sur une capsule bleu nuit translucide. */
+.slideControls {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 999px;
+  background: rgb(17 54 91 / 0.72);
+}
+
+.slidePause,
+.dot {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--opem-white);
+  cursor: pointer;
+}
+
+/* La pastille : un petit rond au centre d'une zone cliquable de 28 px. */
+.dot::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1.5px solid var(--opem-white);
+  border-radius: 50%;
+}
+
+.dot[aria-current]::before {
+  background: var(--opem-white);
+}
+
+.slidePause:focus-visible,
+.dot:focus-visible {
+  outline: 2px solid var(--opem-white);
+  outline-offset: -2px;
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: none;
+  }
 }
 
 /* En attendant la photo : salle de formation esquissée, traits bleu 30 %. */

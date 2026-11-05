@@ -97,8 +97,8 @@
 }
 
 .theme[aria-pressed='true'] {
-  border-color: var(--opem-amber);
-  background: var(--opem-amber);
+  border-color: var(--opem-white);
+  background: var(--opem-white);
   color: var(--opem-night);
 }
 
@@ -193,6 +193,19 @@
   margin: 0;
   font-size: 1.1875rem;
   line-height: 1.65;
+}
+
+/* Lien dans une réponse (panneau blanc) : bleu OPEM souligné. */
+.answerLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.answerLink:hover {
+  text-decoration-thickness: 2px;
 }
 
 .foot {

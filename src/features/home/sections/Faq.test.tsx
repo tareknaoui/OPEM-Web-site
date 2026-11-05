@@ -51,6 +51,18 @@ describe('Section « Questions fréquentes »', () => {
     expect(screen.getByText(answer(7))).toBeInTheDocument();
   });
 
+  it('question 6 : renvoie à la page Le cabinet ; question 10 : sans délai de remise', () => {
+    renderSection();
+    fireEvent.click(screen.getByRole('button', { name: /première collaboration/ }));
+    expect(screen.getByRole('link', { name: 'notre page Le cabinet' })).toHaveAttribute(
+      'href',
+      '/le-cabinet#travailler-avec-opem',
+    );
+    fireEvent.click(screen.getByRole('button', { name: /délais et le coût/ }));
+    expect(screen.getByText(answer(9))).toHaveTextContent('dans une proposition dédiée.');
+    expect(screen.queryByText(/3 jours qui suivent/)).not.toBeInTheDocument();
+  });
+
   it('propose de poser une autre question', () => {
     renderSection();
     expect(screen.getByRole('link', { name: /Posez-la-nous/ })).toHaveAttribute('href', '/contact');

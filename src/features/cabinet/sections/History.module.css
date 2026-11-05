@@ -1,0 +1,315 @@
+/* 02 « Notre histoire » : fond blanc, mise en page sobre (titre, texte, frise). Frise dessinée
+   sur ordinateur (scène isométrique : piliers qui montent, cubes-domaines, réseau de l'IA),
+   liste verticale ailleurs. Pas d'ambre (fond blanc), pas de dégradé. */
+
+.section {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+/* ---------- En-tête : surtitre, titre | texte ---------- */
+
+.head {
+  display: grid;
+  gap: var(--space-4) clamp(2rem, 1rem + 4vw, 5rem);
+  margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--color-label);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.title {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.text {
+  max-width: 40rem;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+@media (min-width: 64em) {
+  .head {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+  }
+
+  .eyebrow {
+    grid-column: 1 / -1;
+  }
+
+  .text {
+    padding-top: 0.5rem;
+  }
+}
+
+/* ---------- Frise, téléphone : repères empilés le long d'un filet vertical ---------- */
+
+.timeline {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 2rem;
+  list-style: none;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  inset-inline-start: 0.4375rem;
+  width: 2px;
+  background: var(--opem-blue-30);
+}
+
+.milestone {
+  position: relative;
+  display: grid;
+  gap: 0.125rem;
+  padding-bottom: 1.75rem;
+}
+
+.milestone:last-child {
+  padding-bottom: 0;
+}
+
+/* Le point du repère sur le filet (vert : le repère en cours). */
+.milestone::before {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  inset-inline-start: -2rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--opem-blue);
+  border-radius: 50%;
+  background: var(--opem-white);
+}
+
+.milestone[data-current]::before {
+  border-color: var(--opem-green);
+  background: var(--opem-green);
+}
+
+.year {
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.label {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.detail {
+  color: var(--opem-gray);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.label:lang(ar),
+.year:lang(ar),
+.eyebrow:lang(ar),
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+/* ---------- Frise dessinée (ordinateur) ---------- */
+
+.artFrame {
+  display: none;
+}
+
+@media (min-width: 64em) {
+  .artFrame {
+    display: block;
+  }
+
+  .art {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* La liste reste lue par les lecteurs d'écran, sous le dessin. */
+  .timeline {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Croix discrètes, comme les repères de construction des illustrations du site. */
+.artGuides {
+  fill: none;
+  stroke: var(--opem-gray-light);
+  stroke-width: 1;
+}
+
+/* Ligne de sol, en pointillé, sous les piliers. */
+.artGround {
+  stroke: var(--opem-blue-30);
+  stroke-width: 1.25;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+
+/* Piliers : volumes bleu nuit (face gauche plus sombre), dessus bleu très clair, filets blancs
+   comme des étages ; une ombre pâle au sol. */
+.artShadow {
+  fill: var(--opem-blue-10);
+}
+
+.artLeft,
+.artRight,
+.artTop {
+  stroke-linejoin: round;
+}
+
+.artLeft {
+  fill: var(--opem-night);
+  stroke: var(--opem-night);
+  stroke-width: 1;
+}
+
+.artRight {
+  fill: #1d4b78;
+  stroke: #1d4b78;
+  stroke-width: 1;
+}
+
+.artFloor {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.22);
+  stroke-width: 1;
+}
+
+.artTop {
+  fill: var(--opem-blue-10);
+  stroke: var(--opem-night);
+  stroke-width: 1.5;
+}
+
+/* Cubes-domaines : bleu nuit à arêtes blanches ; le nouveau (2025) et le cœur de l'IA (2026)
+   en vert. */
+.artCube,
+.artCubeNew,
+.artCubeCore {
+  stroke-linejoin: round;
+  stroke-width: 1;
+}
+
+.artCube {
+  --face-left: var(--opem-night);
+  --face-right: #1d4b78;
+  --face-top: #3c6a96;
+}
+
+.artCubeNew,
+.artCubeCore {
+  --face-left: #367624;
+  --face-right: #4da434;
+  --face-top: #7cc464;
+}
+
+.cubeLeft {
+  fill: var(--face-left);
+  stroke: rgb(255 255 255 / 0.55);
+}
+
+.cubeRight {
+  fill: var(--face-right);
+  stroke: rgb(255 255 255 / 0.55);
+}
+
+.cubeTop {
+  fill: var(--face-top);
+  stroke: rgb(255 255 255 / 0.75);
+}
+
+/* Le réseau de l'IA, sur le dessus du dernier pilier. */
+.artLink {
+  stroke: var(--opem-green);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* Textes du dessin, centrés sur chaque pilier. */
+.artText text {
+  text-anchor: middle;
+}
+
+.artTitle {
+  fill: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.artYear,
+.artYearNow {
+  fill: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.artYearNow {
+  fill: var(--opem-green-dark);
+}
+
+.artDetail {
+  fill: var(--opem-gray);
+  font-family: inherit;
+  font-size: 17px;
+}
+
+.artTitle:lang(ar),
+.artYear:lang(ar),
+.artYearNow:lang(ar),
+.artDetail:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}

@@ -1,39 +1,68 @@
+import { useRef } from 'react';
 import { Link } from 'react-router';
-import { ArrowRightIcon, Icon } from '@/components/icons';
+import { ArrowRightIcon } from '@/components/icons';
+import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
+import { useScrollProgress } from '@/hooks/useScrollProgress';
 import type { HomeContent } from '../content';
 import styles from './AiBand.module.css';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** Entoure la première occurrence de `word` dans `text` d'un <strong> (texte inchangé sinon). */
+function Highlight({ text, word, className }: { text: string; word: string; className?: string }) {
+  const at = word ? text.indexOf(word) : -1;
+  if (at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <strong className={className}>{word}</strong>
+      {text.slice(at + word.length)}
+    </>
+  );
+}
+
 /**
- * Bandeau « Intelligence artificielle appliquée », juste sous les domaines, sur blanc (il se
- * détache du bleu nuit des domaines et du bleu très clair des sessions). À gauche l'étiquette
- * (étoile qui scintille), le grand titre, le texte et le bouton « Passer la porte », vers la page
- * IA appliquée ; à droite l'illustration de la porte, sur blanc, sans cadre ; dessous, les trois
- * temps dans un cadre à filets, parcourus l'un après l'autre par un filet bleu. Animations
- * coupées en mouvement réduit.
+ * Bandeau « Intelligence artificielle appliquée », juste sous les domaines, dans le même bleu
+ * nuit, séparé d'eux par un filet. À gauche l'étiquette, le grand titre (« IA » en ambre, écho
+ * du nœud ambre de l'illustration), le texte (« intelligence artificielle » en blanc) et le bouton blanc « Passer la porte », vers la page IA appliquée ; à droite
+ * l'illustration de la porte, qui se fond dans le fond (même bleu, bords estompés) et « s'ouvre »
+ * au défilement : la lumière et les réseaux sortent de la porte ; dessous, les
+ * trois temps dans un cadre à filets, parcourus l'un après l'autre par un filet lumineux.
+ * Animations coupées en mouvement réduit.
  */
 export function AiBand({ ai }: { ai: HomeContent['ai'] }) {
+  // La porte « s'ouvre » au défilement : de la porte seule à toute l'image (variable --open,
+  // de 0 à 1, écrite sans re-rendu). Mouvement réduit : l'image entière d'emblée.
+  const visualRef = useRef<HTMLDivElement>(null);
+  useScrollProgress(
+    visualRef,
+    (progress, element) => {
+      element.style.setProperty('--open', prefersReducedMotion() ? '1' : progress.toFixed(3));
+    },
+    { start: 0.95, end: 0.55 },
+  );
+
   return (
     <section className={styles.section} aria-labelledby="ai-title">
       <div className="container">
         <div className={styles.band}>
           <div className={styles.intro}>
             <p className={styles.eyebrow} data-reveal>
-              <Icon size={18} className={styles.spark}>
-                <path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7Z" />
-              </Icon>
               {ai.eyebrow}
             </p>
             <h2 id="ai-title" className={styles.title} data-reveal="title">
-              {ai.title}
+              <Highlight
+                text={ai.title}
+                word={ai.highlight.title}
+                className={styles.titleHighlight}
+              />
             </h2>
             <p className={styles.text} data-reveal>
-              {ai.text}
+              <Highlight text={ai.text} word={ai.highlight.text} className={styles.textHighlight} />
             </p>
             <Link
               to={ai.cta.href}
-              className={`btn btn-primary ${styles.cta}`}
+              className={`btn ${styles.cta}`}
               aria-label={ai.cta.ariaLabel}
               data-reveal
             >
@@ -42,7 +71,7 @@ export function AiBand({ ai }: { ai: HomeContent['ai'] }) {
             </Link>
           </div>
 
-          <div className={styles.visual}>
+          <div ref={visualRef} className={styles.visual}>
             <img
               className={styles.image}
               src={ai.illustration}

@@ -23,7 +23,10 @@
 
 /* ---------- Bandeau d'appel ---------- */
 
+/* Bande « Un projet, une question ? » (bleu OPEM), séparée du pied de page bleu nuit par un
+   filet ambre : le bleu OPEM ne touche jamais le bleu nuit. */
 .cta {
+  border-bottom: 3px solid var(--opem-amber);
   background: var(--color-primary);
   color: var(--color-on-primary);
 }
