@@ -34,8 +34,12 @@ describe('Page « Le cabinet »', () => {
   it('bloc 02 : textes mot pour mot et frise des trois repères', () => {
     renderCabinet();
     expect(screen.getByText('Notre histoire', { selector: 'p' })).toBeInTheDocument();
-    expect(screen.getByText(/^À l’origine d’OPEM, une conviction/)).toHaveTextContent(
-      /en pleine mutation\.$/,
+    // Le texte, en trois actes, se lit d'un seul tenant (mot pour mot).
+    const story = screen.getByText(
+      (_, node) => node?.tagName === 'P' && /^À l’origine/.test(node.textContent ?? ''),
+    );
+    expect(story.textContent).toMatch(
+      /^À l’origine d’OPEM, une conviction\s: l’Algérie mérite .+ ses ambitions\. Le chemin .+ de ses clients\. Avec l’intelligence artificielle, il ouvre .+ en pleine mutation\.$/,
     );
     expect(
       screen

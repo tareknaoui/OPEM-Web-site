@@ -25,7 +25,11 @@ export type CabinetContent = {
   history: {
     eyebrow: string;
     title: string;
-    text: string;
+    /**
+     * Trois actes, un par repère de la frise (posés chacun au-dessus de son pilier) ; mis bout à
+     * bout, le texte d'OPEM mot pour mot. Mots clés : *bleu*, [[vert]] (le vert des cubes neufs).
+     */
+    text: [string, string, string];
     milestones: { year: string; title: string; text: string }[];
   };
 };
@@ -42,7 +46,11 @@ const fr: CabinetContent = {
   history: {
     eyebrow: 'Notre histoire',
     title: 'Ce qui nous a fait naître.',
-    text: 'À l’origine d’OPEM, une conviction : l’Algérie mérite des organisations dignes de son histoire et de ses ambitions. Le chemin n’a pas toujours été aisé ; rien, pourtant, n’a ébranlé cette conviction. Parti de cinq domaines, le cabinet en compte aujourd’hui six, chacun ajouté à la demande de ses clients. Avec l’intelligence artificielle, il ouvre un nouveau chapitre : préparer les organisations aux enjeux d’une société moderne, en pleine mutation.',
+    text: [
+      'À l’origine d’OPEM, une *conviction* : l’Algérie mérite des organisations dignes de son histoire et de ses ambitions.',
+      'Le chemin n’a pas toujours été aisé ; rien, pourtant, n’a ébranlé cette conviction. Parti de *cinq domaines*, le cabinet en compte aujourd’hui [[six]], chacun ajouté à la demande de ses clients.',
+      'Avec l’[[intelligence artificielle]], il ouvre un nouveau chapitre : préparer les organisations aux enjeux d’une société moderne, en pleine mutation.',
+    ],
     milestones: [
       { year: '2019', title: 'Création d’OPEM', text: 'Cinq domaines d’expertise' },
       { year: '2025', title: 'Communication institutionnelle', text: 'Sixième domaine' },
@@ -63,7 +71,11 @@ const ar: CabinetContent = {
   history: {
     eyebrow: 'تاريخنا',
     title: 'ما الذي أوجدنا.',
-    text: 'في أصل OPEM قناعة: الجزائر تستحق مؤسسات تليق بتاريخها وطموحاتها. لم يكن الطريق دائمًا يسيرًا؛ ومع ذلك، لم يزعزع شيء هذه القناعة. انطلق المكتب من خمسة مجالات، ويضمّ اليوم ستة، أُضيف كلٌّ منها بطلب من عملائه. ومع الذكاء الاصطناعي، يفتح فصلًا جديدًا: إعداد المؤسسات لرهانات مجتمع حديث في تحوّل عميق.',
+    text: [
+      'في أصل OPEM *قناعة*: الجزائر تستحق مؤسسات تليق بتاريخها وطموحاتها.',
+      'لم يكن الطريق دائمًا يسيرًا؛ ومع ذلك، لم يزعزع شيء هذه القناعة. انطلق المكتب من *خمسة مجالات*، ويضمّ اليوم [[ستة]]، أُضيف كلٌّ منها بطلب من عملائه.',
+      'ومع [[الذكاء الاصطناعي]]، يفتح فصلًا جديدًا: إعداد المؤسسات لرهانات مجتمع حديث في تحوّل عميق.',
+    ],
     milestones: [
       { year: '2019', title: 'تأسيس OPEM', text: 'خمسة مجالات خبرة' },
       { year: '2025', title: 'الاتصال المؤسساتي', text: 'المجال السادس' },

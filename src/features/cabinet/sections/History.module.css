@@ -1,18 +1,18 @@
-/* 02 « Notre histoire » : fond blanc, mise en page sobre (titre, texte, frise). Frise dessinée
-   sur ordinateur (scène isométrique : piliers qui montent, cubes-domaines, réseau de l'IA),
-   liste verticale ailleurs. Pas d'ambre (fond blanc), pas de dégradé. */
+/* 02 « Notre histoire » : fond blanc, mise en page sobre (titre, puis le récit). Ordinateur : le
+   texte en trois actes posés sur la frise dessinée (scène isométrique : piliers qui montent,
+   cubes-domaines, réseau de l'IA) ; liste verticale ailleurs. Pas d'ambre (fond blanc), pas de dégradé. */
 
 .section {
   padding-block: var(--section-space);
   background: var(--opem-white);
 }
 
-/* ---------- En-tête : surtitre, titre | texte ---------- */
+/* ---------- En-tête : surtitre, titre ---------- */
 
 .head {
   display: grid;
-  gap: var(--space-4) clamp(2rem, 1rem + 4vw, 5rem);
-  margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  gap: var(--space-4);
+  margin-bottom: clamp(1.75rem, 1rem + 2vw, 2.75rem);
 }
 
 .eyebrow {
@@ -46,27 +46,57 @@
   text-wrap: balance;
 }
 
+/* ---------- Le récit : le texte en trois actes, puis la frise ---------- */
+
 .text {
   max-width: 40rem;
-  margin: 0;
+  margin: 0 0 clamp(2.5rem, 1.5rem + 3vw, 3.5rem);
   color: var(--color-text);
   font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.7;
   text-wrap: pretty;
 }
 
+/* Mots clés : la conviction et les cinq domaines en bleu ; le sixième domaine et l'IA dans le
+   vert des cubes neufs de la frise. */
+.keyBlue,
+.keyGreen {
+  font-weight: 600;
+}
+
+.keyBlue {
+  color: var(--opem-blue);
+}
+
+.keyGreen {
+  color: var(--opem-green-dark);
+}
+
 @media (min-width: 64em) {
-  .head {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    align-items: start;
+  /* Haut du récit quand il est figé : sous le menu et la barre des rubriques (lu par le script). */
+  .story {
+    scroll-margin-top: calc(var(--header-height-compact) + 5rem);
+    background: var(--opem-white);
   }
 
-  .eyebrow {
-    grid-column: 1 / -1;
-  }
-
+  /* Un acte par tiers, chacun au-dessus de son pilier, alignés par le bas sur le fil qui y
+     descend. */
   .text {
-    padding-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+    gap: 0 clamp(1.5rem, 3vw, 3rem);
+    max-width: none;
+    margin-bottom: 0;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  .act {
+    display: block;
+    width: 100%;
+    max-width: 21rem;
+    justify-self: center;
   }
 }
 
@@ -176,6 +206,19 @@
     clip-path: inset(50%);
     white-space: nowrap;
   }
+}
+
+/* Fil de construction, de l'acte au titre du pilier : trait fin, terminé par un point. */
+.artLeader {
+  stroke: var(--opem-blue-30);
+  stroke-width: 1.25;
+  stroke-dasharray: 1;
+}
+
+.artLeaderDot {
+  fill: var(--opem-white);
+  stroke: var(--opem-blue);
+  stroke-width: 1.5;
 }
 
 /* Croix discrètes, comme les repères de construction des illustrations du site. */
