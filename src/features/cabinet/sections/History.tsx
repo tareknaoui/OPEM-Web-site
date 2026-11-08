@@ -24,7 +24,12 @@ export function History({ history }: { history: CabinetContent['history'] }) {
           </h2>
         </div>
 
-        <HistoryArt text={history.text} milestones={history.milestones} rtl={lang === 'ar'} />
+        <HistoryArt
+          text={history.text}
+          milestones={history.milestones}
+          rtl={lang === 'ar'}
+          alt={history.alt}
+        />
 
         <ol className={styles.timeline}>
           {history.milestones.map((milestone, index) => (

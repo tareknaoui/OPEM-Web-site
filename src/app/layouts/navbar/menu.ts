@@ -36,9 +36,8 @@ const entries: Entry[] = [
   { id: 'le-cabinet', href: '/le-cabinet', label: { fr: 'Le cabinet', ar: 'المكتب' } },
   {
     id: 'expertises',
-    href: '/expertises',
+    href: '/nos-expertises',
     label: { fr: 'Nos expertises', ar: 'خبراتنا' },
-    shortLabel: { fr: 'Expertises', ar: 'خبراتنا' },
     description: {
       fr: 'Du diagnostic à la certification, des missions menées avec méthode.',
       ar: 'من التشخيص إلى الإشهاد، مهام ننجزها بمنهجية.',
@@ -102,7 +101,6 @@ const entries: Entry[] = [
     id: 'formation',
     href: '/formation',
     label: { fr: 'Formation qualifiante', ar: 'التكوين التأهيلي' },
-    shortLabel: { fr: 'Formation', ar: 'التكوين' },
     description: {
       fr: 'Des formations qualifiantes, en entreprise ou en session.',
       ar: 'تكوينات تأهيلية، داخل المؤسسة أو في دورات.',

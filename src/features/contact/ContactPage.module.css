@@ -1,0 +1,223 @@
+/* Page « Contact » : en-tête comme les pages de formulaire ; deux portes sur bleu 10 % ; les
+   coordonnées sur un panneau bleu nuit (filet ambre, seule touche d'ambre de la page) à côté
+   de la carte. Pas de dégradé, pas de texte sur la carte. */
+
+.head {
+  composes: head from '../forms/Forms.module.css';
+}
+
+.eyebrow {
+  composes: eyebrow from '../forms/Forms.module.css';
+}
+
+.title {
+  composes: title from '../forms/Forms.module.css';
+}
+
+.intro {
+  composes: intro from '../forms/Forms.module.css';
+}
+
+/* ---------- Les deux formulaires ---------- */
+
+.doors {
+  display: grid;
+  gap: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.door {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: clamp(1.5rem, 1rem + 1.6vw, 2.5rem);
+  border-radius: 6px;
+  background: var(--opem-blue-10);
+}
+
+.doorIcon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  background: var(--opem-white);
+  color: var(--opem-blue);
+}
+
+.doorTitle {
+  margin: 0.25rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.doorText {
+  margin: 0 0 0.5rem;
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.cta {
+  margin-top: auto;
+}
+
+@media (min-width: 48em) {
+  .doors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Coordonnées et carte ---------- */
+
+.where {
+  display: grid;
+  gap: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+@media (min-width: 64em) {
+  .where {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: stretch;
+  }
+}
+
+.details {
+  padding: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+  border-radius: 6px;
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.detailsTitle {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Le filet ambre sous le titre. */
+.detailsTitle::after {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-top: 1rem;
+  border-radius: 2px;
+  background: var(--opem-amber);
+}
+
+.list {
+  display: grid;
+  margin: clamp(1.25rem, 1rem + 1vw, 2rem) 0 0;
+}
+
+.item {
+  display: grid;
+  gap: 0.375rem;
+  padding-block: 1.125rem;
+  border-top: 1px solid var(--color-on-dark-rule);
+}
+
+.item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.item dt {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.item dd {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.item address {
+  font-style: normal;
+}
+
+.item dd > a {
+  color: var(--opem-white);
+  text-decoration: none;
+  text-underline-offset: 0.25em;
+  overflow-wrap: anywhere;
+}
+
+.item dd > a:hover,
+.item dd > a:focus-visible {
+  text-decoration: underline;
+}
+
+.details :focus-visible {
+  outline-color: var(--opem-white);
+}
+
+.directions.directions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--opem-blue-30);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.directions:hover {
+  color: var(--opem-white);
+}
+
+.item dt:lang(ar),
+.item dd:lang(ar),
+.detailsTitle:lang(ar),
+.doorTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+/* La carte : à la hauteur du panneau sur ordinateur, couleurs un peu adoucies. */
+.map {
+  display: grid;
+  grid-template-rows: minmax(20rem, 1fr);
+  margin: 0;
+}
+
+.map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 20rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--opem-blue-10);
+  filter: saturate(0.8);
+}
+
+@media (min-width: 64em) {
+  .map {
+    grid-template-rows: minmax(26rem, 1fr);
+  }
+}

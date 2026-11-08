@@ -69,7 +69,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(screen.getByText(/Un seul suffit à la freiner/, { selector: 'p' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Découvrir nos expertises/ })).toHaveAttribute(
       'href',
-      '/expertises',
+      '/nos-expertises',
     );
     // Le métier d'abord : les chiffres clés sous le titre (valeur finale lue d'emblée).
     const keyFigures = within(screen.getByRole('list', { name: 'OPEM en quelques chiffres' }));

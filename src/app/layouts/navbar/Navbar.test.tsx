@@ -27,7 +27,9 @@ describe('Navbar', () => {
       .filter((li) => li.parentElement?.parentElement?.tagName === 'NAV');
     expect(topLevel).toHaveLength(MAX_TOP_LEVEL_ITEMS - 1);
     const labels = topLevel.map((li) => li.querySelector('a, button')?.textContent?.trim());
-    expect(labels.indexOf('IA appliquée')).toBe(labels.indexOf('Formation') + 1);
+    // Intitulés complets, les mêmes qu'au pied de page.
+    expect(labels).toContain('Nos expertises');
+    expect(labels.indexOf('IA appliquée')).toBe(labels.indexOf('Formation qualifiante') + 1);
     expect(within(desktopNav()).queryByRole('link', { name: 'Accueil' })).not.toBeInTheDocument();
   });
 
@@ -39,9 +41,9 @@ describe('Navbar', () => {
     expect(within(dialog).getByRole('link', { name: 'Nos expertises' })).toBeInTheDocument();
   });
 
-  it('marque la rubrique de la page courante comme active, avec son libellé court', () => {
+  it('marque la rubrique de la page courante comme active', () => {
     renderNavbar('/formation/catalogue-et-sessions');
-    const link = within(desktopNav()).getByRole('link', { name: 'Formation' });
+    const link = within(desktopNav()).getByRole('link', { name: 'Formation qualifiante' });
     expect(link).toHaveAttribute('aria-current', 'page');
     expect(link).toHaveAttribute('href', '/formation');
   });

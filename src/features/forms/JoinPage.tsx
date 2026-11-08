@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { MailIcon } from '@/components/icons';
 import { useLanguage } from '@/i18n/useLanguage';
 import { formsContent, type FormsContent } from './content';
 import { countries, DEFAULT_COUNTRY, dialOf } from './countries';
@@ -44,6 +45,8 @@ type Values = {
   specialities: string[];
   /** Le texte de chaque « Autre à préciser », par domaine (et pour « Autre domaine »). */
   specialityOther: Record<string, string>;
+  /** Secteurs d'intervention (SEC-01…), facultatifs. */
+  sectors: string[];
   consent: boolean;
   presentation: boolean;
   website: string;
@@ -59,6 +62,7 @@ const EMPTY: Values = {
   domainOther: '',
   specialities: [],
   specialityOther: {},
+  sectors: [],
   consent: false,
   presentation: false,
   website: '',
@@ -67,6 +71,7 @@ const EMPTY: Values = {
 type Errors = Record<string, string>;
 
 const DOMAINS = referentiel.domains;
+const SECTOR_CATEGORIES = referentiel.sectorCategories;
 
 /** Les spécialités retenues : seulement celles des domaines encore cochés. */
 function visibleChoices(values: Values) {
@@ -139,7 +144,8 @@ function serverMessage(field: string, code: string, t: FormsContent): string {
  * Page « Rejoindre notre réseau d'experts », ouverte par « Rejoindre notre réseau » (bloc 09 de
  * la page « Le cabinet », menu Contact, pied de page). Sept champs et trois cases à cocher. À
  * chaque domaine coché, ses spécialités apparaissent (référentiel OPEM, ./referentiel.json) ;
- * le serveur enregistre l'identifiant SPE de chaque spécialité cochée. La candidature part sur
+ * le serveur enregistre l'identifiant SPE de chaque spécialité cochée. Les secteurs
+ * d'intervention (tableau « Secteurs d'activités » du cahier) sont facultatifs. La candidature part sur
  * expert@opem-dz.com, CV et documents joints (serveur : wordpress/opem-forms-api.php).
  */
 export default function JoinPage() {
@@ -173,7 +179,7 @@ export default function JoinPage() {
     setValues(next);
     revalidate(next);
   };
-  const toggle = (key: 'domains' | 'specialities', id: string, on: boolean) =>
+  const toggle = (key: 'domains' | 'specialities' | 'sectors', id: string, on: boolean) =>
     update(key, on ? [...values[key], id] : values[key].filter((item) => item !== id));
   const setOther = (domain: string, text: string) =>
     update('specialityOther', { ...values.specialityOther, [domain]: text });
@@ -235,6 +241,7 @@ export default function JoinPage() {
     others.forEach((domain) =>
       data.append(`specialityOther[${domain}]`, values.specialityOther[domain]?.trim() ?? ''),
     );
+    values.sectors.forEach((id) => data.append('sectors[]', id));
     if (cv) data.append('cv', cv);
     documents.forEach((file) => data.append('documents[]', file));
     data.append('consent', values.consent ? '1' : '');
@@ -268,6 +275,22 @@ export default function JoinPage() {
     remove: j.removeFile,
     none: j.noFile,
   };
+  // À côté du formulaire : expert@opem-dz.com, solution de secours pour les fichiers.
+  const [asideBefore, asideEmail, asideAfter] = j.aside;
+  const aside = (
+    <>
+      <span className={styles.asideIcon} aria-hidden="true">
+        <MailIcon size={22} />
+      </span>
+      <p>
+        {asideBefore}
+        <a href={`mailto:${asideEmail}`} dir="ltr">
+          {asideEmail}
+        </a>
+        {asideAfter}
+      </p>
+    </>
+  );
   const checkedDomains = DOMAINS.filter((domain) => values.domains.includes(domain.id));
   const otherDomainName = values.domainOther.trim() || j.otherDomain;
 
@@ -277,6 +300,7 @@ export default function JoinPage() {
       title={j.title}
       intro={j.intro}
       legal={t.common.legal}
+      aside={aside}
       thanks={thanks}
     >
       <form ref={formRef} className={styles.form} onSubmit={onSubmit} noValidate>
@@ -457,6 +481,36 @@ export default function JoinPage() {
           {errors.specialities && (
             <ErrorText id="specialities-error">{errors.specialities}</ErrorText>
           )}
+        </fieldset>
+
+        {/* Secteurs d'intervention : facultatif, les secteurs regroupés par catégorie. */}
+        <fieldset className={styles.fieldset} aria-describedby="sectors-help">
+          <legend className={styles.label}>{j.sectors}</legend>
+          <p id="sectors-help" className={styles.help}>
+            {j.sectorsHelp}
+          </p>
+          <div className={styles.groups}>
+            {SECTOR_CATEGORIES.map((category) => (
+              <fieldset key={category.id} className={styles.group}>
+                <legend>{category[lang]}</legend>
+                <div className={`${styles.choices} ${styles.grid3}`}>
+                  {category.sectors.map((sector) => (
+                    <label key={sector.id} className={styles.choice}>
+                      <input
+                        type="checkbox"
+                        name="sectors[]"
+                        value={sector.id}
+                        checked={values.sectors.includes(sector.id)}
+                        onChange={(event) => toggle('sectors', sector.id, event.target.checked)}
+                        className={styles.checkbox}
+                      />
+                      <span>{sector[lang]}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
+          </div>
         </fieldset>
 
         <FileField

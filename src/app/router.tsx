@@ -23,8 +23,26 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: 'nos-expertises',
+        lazy: async () => ({
+          Component: (await import('@/features/expertises/ExpertisesPage')).default,
+        }),
+      },
+      {
+        path: 'expertises/etudes-strategiques',
+        lazy: async () => ({
+          Component: (await import('@/features/etudes/EtudesPage')).default,
+        }),
+      },
+      {
         path: 'ia-appliquee',
         lazy: async () => ({ Component: (await import('@/features/ia/IaPage')).default }),
+      },
+      {
+        path: 'eclairages',
+        lazy: async () => ({
+          Component: (await import('@/features/eclairages/EclairagesPage')).default,
+        }),
       },
       {
         path: 'about',

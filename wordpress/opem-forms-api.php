@@ -26,6 +26,7 @@
  * Points d’accès (multipart/form-data) :
  *   POST /wp-json/opem/v1/rendez-vous   demande de rendez-vous → OPEM_FORMS_TO_CONTACT
  *   POST /wp-json/opem/v1/candidature   candidature, CV et documents → OPEM_FORMS_TO_EXPERT
+ *   POST /wp-json/opem/v1/inscription   inscription aux éclairages (page Éclairages) → liste de diffusion
  * Désinscription de la liste de diffusion : https://<wordpress>/?opem_desinscription=<jeton>
  * Administration : Outils > Formulaires OPEM (liste de diffusion, export CSV, état des réglages).
  *
@@ -51,7 +52,7 @@ foreach (
     }
 }
 
-const OPEM_FORMS_DB_VERSION    = '1';
+const OPEM_FORMS_DB_VERSION    = '2'; // 2 : secteurs d’intervention des candidatures
 const OPEM_FORMS_RATE_MAX      = 5;   // envois réussis par heure et par adresse IP
 const OPEM_FORMS_MIN_MS        = 3000; // un formulaire rempli en moins de 3 s : un robot
 const OPEM_FORMS_MESSAGE_MAX   = 1000;
@@ -135,6 +136,7 @@ function opem_forms_install(): void
   domains longtext NOT NULL,
   specialities longtext NOT NULL,
   others longtext NOT NULL,
+  sectors longtext NOT NULL,
   files longtext NOT NULL,
   lang varchar(5) NOT NULL DEFAULT 'fr',
   PRIMARY KEY  (id),
@@ -160,6 +162,11 @@ add_action('rest_api_init', function () {
         'methods'             => WP_REST_Server::CREATABLE,
         'permission_callback' => '__return_true',
         'callback'            => 'opem_forms_application',
+    ]);
+    register_rest_route('opem/v1', '/inscription', [
+        'methods'             => WP_REST_Server::CREATABLE,
+        'permission_callback' => '__return_true',
+        'callback'            => 'opem_forms_newsletter',
     ]);
 });
 
@@ -399,11 +406,11 @@ function opem_forms_subscribe(string $email, string $name, string $lang, string 
     $now      = current_time('mysql');
     $existing = $wpdb->get_var($wpdb->prepare("SELECT id FROM $table WHERE email = %s", $email));
     if ($existing) {
-        $wpdb->update(
-            $table,
-            ['name' => $name, 'lang' => $lang, 'source' => $source, 'consented_at' => $now, 'unsubscribed_at' => null],
-            ['id' => (int) $existing]
-        );
+        $fields = ['lang' => $lang, 'source' => $source, 'consented_at' => $now, 'unsubscribed_at' => null];
+        if ($name !== '') {
+            $fields['name'] = $name; // une inscription sans nom (page Éclairages) garde le nom connu
+        }
+        $wpdb->update($table, $fields, ['id' => (int) $existing]);
         return;
     }
     $wpdb->insert($table, [
@@ -414,6 +421,26 @@ function opem_forms_subscribe(string $email, string $name, string $lang, string 
         'consented_at' => $now,
         'token'        => bin2hex(random_bytes(16)),
     ]);
+}
+
+/** Inscription seule (page Éclairages) : l'adresse et l'accord, rien d'autre. */
+function opem_forms_newsletter(WP_REST_Request $request): WP_REST_Response
+{
+    $guard = opem_forms_guard($request);
+    if ($guard) {
+        return $guard;
+    }
+    $errors = [];
+    $email  = opem_forms_email($request, $errors);
+    if (!opem_forms_checked($request, 'consent')) {
+        $errors['consent'] = 'required';
+    }
+    if ($errors) {
+        return opem_forms_invalid($errors);
+    }
+    opem_forms_subscribe($email, '', opem_forms_lang($request), 'eclairages');
+    opem_forms_rate_hit();
+    return new WP_REST_Response(['ok' => true], 200);
 }
 
 function opem_forms_unsubscribe_url(string $token): string
@@ -528,6 +555,18 @@ function opem_forms_application(WP_REST_Request $request): WP_REST_Response
         $errors['specialities'] = 'required';
     }
 
+    // Secteurs d'intervention (facultatif) : seulement ceux de la liste ; on garde l'identifiant SEC.
+    $sectorRef = function_exists('opem_forms_secteurs') ? opem_forms_secteurs() : [];
+    $sectorRaw = array_filter((array) $request->get_param('sectors'), 'is_string');
+    $sectors   = [];
+    foreach ($sectorRef as $category) {
+        foreach ($category['sectors'] as $id => $label) {
+            if (in_array($id, $sectorRaw, true)) {
+                $sectors[] = ['id' => $id, 'label' => $label, 'category' => $category['label']];
+            }
+        }
+    }
+
     // 07 CV et 08 autres documents.
     $files     = $request->get_file_params();
     $cv        = opem_forms_uploads($files, 'cv');
@@ -596,6 +635,7 @@ function opem_forms_application(WP_REST_Request $request): WP_REST_Response
         'domains'         => wp_json_encode(['ids' => $domains, 'other' => $domainOther]),
         'specialities'    => wp_json_encode($picked),
         'others'          => wp_json_encode($others),
+        'sectors'         => wp_json_encode($sectors),
         'files'           => wp_json_encode($stored),
         'lang'            => $lang,
     ]);
@@ -635,6 +675,20 @@ function opem_forms_application(WP_REST_Request $request): WP_REST_Response
             $lines[] = $title;
             array_push($lines, ...$items);
         }
+    }
+
+    $lines[] = '';
+    $lines[] = 'Secteurs d’intervention :';
+    if (!$sectors) {
+        $lines[] = '- Non renseignés';
+    }
+    $category = null;
+    foreach ($sectors as $sector) {
+        if ($sector['category'] !== $category) {
+            $category = $sector['category'];
+            $lines[]  = $category;
+        }
+        $lines[] = '  - ' . $sector['label'] . ' (' . $sector['id'] . ')';
     }
 
     // Pièces jointes si le total le permet ; sinon, des liens réservés aux administrateurs.

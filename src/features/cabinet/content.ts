@@ -8,16 +8,20 @@ import type { Lang } from '@/i18n/language';
  * Textes d'OPEM repris mot pour mot (français) ; arabe traduit, à faire relire.
  */
 export type CabinetContent = {
+  /**
+   * Titre de l'onglet et de Google, mot pour mot, sans le nom du site ajouté à la suite. La
+   * description et les réglages des réseaux sociaux sont dans vite.seo.ts (PAGE_META).
+   */
   title: string;
   /**
-   * 01 Ouverture : provisoire (photo, titre et présentation de la version précédente) en
-   * attendant le texte du bloc 01.
+   * 01 Ouverture : la photo (texte alternatif), le titre et le texte d'ouverture du cahier.
    */
   hero: {
     eyebrow: string;
-    /** Deux parties : la seconde, plus claire, sur sa propre ligne. */
+    /** Deux parties : le nom complet et le sigle en bleu OPEM, la suite en bleu nuit. */
     headline: [string, string];
     intro: string;
+    alt: string;
     /** Nom de la barre des rubriques (lecteurs d'écran). */
     toc: string;
   };
@@ -25,6 +29,8 @@ export type CabinetContent = {
   history: {
     eyebrow: string;
     title: string;
+    /** Texte alternatif de la frise dessinée. */
+    alt: string;
     /**
      * Trois actes, un par repère de la frise (posés chacun au-dessus de son pilier) ; mis bout à
      * bout, le texte d'OPEM mot pour mot. Mots clés : *bleu*, [[vert]] (le vert des cubes neufs).
@@ -100,17 +106,19 @@ export type CabinetContent = {
 };
 
 const fr: CabinetContent = {
-  title: 'Le cabinet · OPEM',
+  title: 'OPEM, cabinet de consulting et de formation à Alger',
   hero: {
     eyebrow: 'Le cabinet',
-    headline: ['Conseil, études et formation,', 'au service de votre performance.'],
+    headline: ['Optimum Performance Management (OPEM) :', 'notre nom est notre promesse.'],
     intro:
-      'Basé à Alger, OPEM (Optimum Performance Management) accompagne les organisations, publiques comme privées, dans un environnement complexe et exigeant. Organisé par domaines d’expertise, il a fait un choix résolument différent de celui des grands cabinets : rester au plus près de chacun de vos enjeux.',
+      'Fondé en 2019, OPEM s’est donné un nom qui oblige. Depuis, chaque mission est conduite à sa hauteur, sans rien y céder. Organisations publiques et privées, programmes de coopération internationale : une même exigence nous anime en conseil comme en formation.',
+    alt: 'Un formateur d’OPEM anime une session devant les participants',
     toc: 'Sur cette page',
   },
   history: {
     eyebrow: 'Notre histoire',
     title: 'Ce qui nous a fait naître.',
+    alt: 'Frise des étapes d’OPEM : création en 2019, sixième domaine en 2025, intelligence artificielle en 2026',
     text: [
       'À l’origine d’OPEM, une *conviction* : l’Algérie mérite des organisations dignes de son histoire et de ses ambitions.',
       'Le chemin n’a pas toujours été aisé ; rien, pourtant, n’a ébranlé cette conviction. Parti de *cinq domaines*, le cabinet en compte aujourd’hui [[six]], chacun ajouté à la demande de ses clients.',
@@ -205,7 +213,7 @@ const fr: CabinetContent = {
   network: {
     eyebrow: 'Notre réseau d’experts',
     title: 'Une équipe se compose, elle ne s’improvise pas.',
-    alt: 'Le vivier d’experts, l’équipe composée pour une mission et l’expert recherché au-delà des frontières',
+    alt: 'Constellation d’experts reliés entre eux autour d’une équipe, au-delà des frontières',
     legends: { pool: 'Notre vivier', team: 'Votre équipe', beyond: 'Au-delà des frontières' },
     traits: [
       { title: 'Leur parcours', text: 'Avant de conseiller, ils ont dirigé, audité, construit.' },
@@ -273,17 +281,19 @@ const fr: CabinetContent = {
 };
 
 const ar: CabinetContent = {
-  title: 'المكتب · OPEM',
+  title: 'OPEM، مكتب استشارة وتكوين بالجزائر العاصمة',
   hero: {
     eyebrow: 'المكتب',
-    headline: ['استشارة ودراسات وتكوين،', 'في خدمة أدائكم.'],
+    headline: ['Optimum Performance Management (OPEM):', 'اسمنا هو وعدنا.'],
     intro:
-      'يقع مقرّ OPEM (Optimum Performance Management) في الجزائر العاصمة، وترافق المؤسسات، العمومية والخاصة، في محيط معقّد وصعب. وبتنظيمه حسب مجالات الخبرة، اختار المكتب نهجًا مختلفًا تمامًا عن المكاتب الكبرى: البقاء على مقربة من كل رهان من رهاناتكم.',
+      'تأسّس OPEM سنة 2019، واختار لنفسه اسمًا يُلزمه. ومنذ ذلك الحين، تُنجَز كل مهمة على قدر هذا الاسم، دون أي تنازل. مؤسسات عمومية وخاصة، وبرامج تعاون دولي: الصرامة نفسها تحرّكنا في الاستشارة كما في التكوين.',
+    alt: 'مكوّن من OPEM ينشّط دورة أمام المشاركين',
     toc: 'في هذه الصفحة',
   },
   history: {
     eyebrow: 'تاريخنا',
     title: 'ما الذي أوجدنا.',
+    alt: 'خط زمني لمراحل OPEM: التأسيس سنة 2019، المجال السادس سنة 2025، الذكاء الاصطناعي سنة 2026',
     text: [
       'في أصل OPEM *قناعة*: الجزائر تستحق مؤسسات تليق بتاريخها وطموحاتها.',
       'لم يكن الطريق دائمًا يسيرًا؛ ومع ذلك، لم يزعزع شيء هذه القناعة. انطلق المكتب من *خمسة مجالات*، ويضمّ اليوم [[ستة]]، أُضيف كلٌّ منها بطلب من عملائه.',
@@ -378,7 +388,7 @@ const ar: CabinetContent = {
   network: {
     eyebrow: 'شبكة خبرائنا',
     title: 'الفريق يُشكَّل، ولا يُرتجَل.',
-    alt: 'رصيد الخبراء، والفريق المشكَّل لمهمة، والخبير الذي نبحث عنه فيما وراء الحدود',
+    alt: 'كوكبة من الخبراء المترابطين حول فريق، فيما وراء الحدود',
     legends: { pool: 'رصيد خبرائنا', team: 'فريقكم', beyond: 'ما وراء الحدود' },
     traits: [
       { title: 'مساراتهم', text: 'قبل أن يقدّموا المشورة، أداروا ودقّقوا وبنوا.' },

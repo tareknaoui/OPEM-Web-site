@@ -24,9 +24,25 @@ function renderCabinet() {
 describe('Page « Le cabinet »', () => {
   it('ouvre sur la photo et le titre, puis « Notre histoire »', () => {
     renderCabinet();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Conseil, études et formation, au service de votre performance.',
+    // Bloc 01 : le titre et le texte d'ouverture mot pour mot, la photo décrite, le titre de
+    // l'onglet sans le nom du site ajouté à la suite.
+    expect(screen.getByRole('heading', { level: 1 }).textContent?.replace(/\s/g, ' ')).toBe(
+      'Optimum Performance Management (OPEM) : notre nom est notre promesse.',
     );
+    expect(screen.getByText(/^Fondé en 2019/).textContent?.replace(/\s/g, ' ')).toBe(
+      'Fondé en 2019, OPEM s’est donné un nom qui oblige. Depuis, chaque mission est conduite à sa hauteur, sans rien y céder. Organisations publiques et privées, programmes de coopération internationale : une même exigence nous anime en conseil comme en formation.',
+    );
+    expect(
+      screen.getByRole('img', {
+        name: 'Un formateur d’OPEM anime une session devant les participants',
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', {
+        name: 'Frise des étapes d’OPEM : création en 2019, sixième domaine en 2025, intelligence artificielle en 2026',
+      }),
+    ).toBeInTheDocument();
+    expect(document.title).toBe('OPEM, cabinet de consulting et de formation à Alger');
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'Ce qui nous a fait naître.',
       'Ce que le terrain nous apprend.',
@@ -126,7 +142,7 @@ describe('Page « Le cabinet »', () => {
     });
     expect(
       within(section).getByRole('img', {
-        name: 'Le vivier d’experts, l’équipe composée pour une mission et l’expert recherché au-delà des frontières',
+        name: 'Constellation d’experts reliés entre eux autour d’une équipe, au-delà des frontières',
       }),
     ).toBeInTheDocument();
     expect(
@@ -250,7 +266,7 @@ describe('Page « Le cabinet »', () => {
   it('passe en arabe', () => {
     renderCabinet();
     fireEvent.click(screen.getByRole('button', { name: 'عربي' }));
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('في خدمة أدائكم.');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('اسمنا هو وعدنا.');
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'ما الذي أوجدنا.',
       'ما يعلّمنا إيّاه الميدان.',

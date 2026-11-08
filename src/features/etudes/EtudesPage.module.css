@@ -1,0 +1,161 @@
+/* Page « Études stratégiques ». Bloc 01 sur bleu 10 % (seule l'accueil s'ouvre sur bleu nuit) :
+   surtitre vert foncé, titre bleu nuit, texte anthracite en Calibri (Carlito à défaut) ; le
+   visuel sur un panneau bleu nuit aux angles arrondis, seul endroit où paraît l'ambre. */
+
+.page {
+  --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------- 01 Ouverture ---------- */
+
+.opening {
+  padding-block: clamp(3rem, 2rem + 4vw, 6rem);
+  background: var(--opem-blue-10);
+}
+
+.split {
+  display: grid;
+  gap: clamp(2rem, 1rem + 3vw, 4rem);
+}
+
+@media (min-width: 64em) {
+  .split {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    align-items: center;
+  }
+}
+
+.text {
+  min-width: 0;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.title {
+  max-width: 22ch;
+  margin: 1rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2.125rem, 1.3rem + 2.8vw, 3.625rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* Le texte : 60 à 75 caractères par ligne. */
+.body {
+  max-width: 64ch;
+  margin: 1.5rem 0 0;
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  line-height: 1.65;
+}
+
+.eyebrow:lang(ar),
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title:lang(ar) {
+  line-height: 1.35;
+}
+
+.body:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}
+
+/* ---------- Le nuage de points, sur bleu nuit ---------- */
+
+.panel {
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--opem-night);
+}
+
+.cloud {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.dot {
+  fill: var(--opem-blue-30);
+  transform-box: fill-box;
+}
+
+/* Chaque point fait sa part du chemin vers le point ambre, lentement, à son rythme. */
+.cloud[data-moving] .dot {
+  animation: gather 5.5s cubic-bezier(0.45, 0, 0.2, 1) var(--delay, 0s) both;
+}
+
+@keyframes gather {
+  to {
+    translate: var(--dx) var(--dy);
+  }
+}
+
+.target {
+  fill: var(--opem-amber);
+}
+
+.halo {
+  fill: none;
+  stroke: var(--opem-amber);
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Une fois le nuage resserré, un anneau ambre bat doucement autour du point. */
+.cloud[data-moving] .halo {
+  animation: pulse 3.2s ease-out 5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+    scale: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 1.6;
+  }
+}
+
+/* Moins d'animations : image fixe, nuage déjà resserré autour du point ambre. */
+@media (prefers-reduced-motion: reduce) {
+  .cloud .dot,
+  .cloud[data-moving] .dot {
+    animation: none;
+    translate: var(--dx) var(--dy);
+  }
+
+  .cloud[data-moving] .halo {
+    animation: none;
+    opacity: 0.4;
+  }
+}

@@ -606,7 +606,7 @@ const fr: HomeContent = {
     intro:
       'Des décisions éclairées. Des processus structurés. Des exigences maîtrisées. Des compétences développées. Un leadership affirmé. Une communication qui fait la différence.',
     tagline: 'Sept leviers font votre performance. Un seul suffit à la freiner.',
-    cta: { label: 'Découvrir nos expertises', href: '/expertises' },
+    cta: { label: 'Découvrir nos expertises', href: '/nos-expertises' },
     pause: 'Mettre la vidéo en pause',
     play: 'Relancer la vidéo',
   },
@@ -1450,7 +1450,7 @@ const fr: HomeContent = {
     eyebrow: 'Nos expertises',
     title: 'Six domaines, un seul fil conducteur : votre performance.',
     discover: 'Découvrir ce domaine',
-    all: { label: 'Toutes nos expertises', href: '/expertises' },
+    all: { label: 'Toutes nos expertises', href: '/nos-expertises' },
     items: [
       {
         id: 'etudes-strategiques',
@@ -1700,7 +1700,7 @@ const fr: HomeContent = {
         id: 'entreprise',
         title: 'Une entreprise',
         text: 'PME, groupes industriels, entreprises du BTPH : gagnez en organisation, en qualité et en compétences.',
-        link: { label: 'Solutions pour les entreprises', href: '/expertises' },
+        link: { label: 'Solutions pour les entreprises', href: '/nos-expertises' },
         image: '/images/vous-etes-entreprise.svg',
       },
       {
@@ -2059,7 +2059,7 @@ const ar: HomeContent = {
     intro:
       'قرارات مستنيرة. مسارات منظّمة. متطلبات متحكَّم فيها. كفاءات مطوَّرة. قيادة راسخة. اتصال يصنع الفرق.',
     tagline: 'سبعة روافع تصنع أداءكم، وواحد منها يكفي لكبحه.',
-    cta: { label: 'اكتشفوا خبراتنا', href: '/expertises' },
+    cta: { label: 'اكتشفوا خبراتنا', href: '/nos-expertises' },
     pause: 'إيقاف الفيديو مؤقتًا',
     play: 'استئناف الفيديو',
   },
@@ -2822,7 +2822,7 @@ const ar: HomeContent = {
     eyebrow: 'خبراتنا',
     title: 'ستة مجالات، وخيط ناظم واحد: أداؤكم.',
     discover: 'اكتشفوا هذا المجال',
-    all: { label: 'كل خبراتنا', href: '/expertises' },
+    all: { label: 'كل خبراتنا', href: '/nos-expertises' },
     items: [
       {
         id: 'etudes-strategiques',
@@ -3068,7 +3068,7 @@ const ar: HomeContent = {
         id: 'entreprise',
         title: 'مؤسسة اقتصادية',
         text: 'مؤسسات صغيرة ومتوسطة، مجمعات صناعية، مؤسسات البناء: طوّروا تنظيمكم وجودتكم وكفاءاتكم.',
-        link: { label: 'حلول للمؤسسات', href: '/expertises' },
+        link: { label: 'حلول للمؤسسات', href: '/nos-expertises' },
         image: '/images/vous-etes-entreprise.svg',
       },
       {

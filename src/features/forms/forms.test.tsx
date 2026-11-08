@@ -62,6 +62,21 @@ describe('contrôles', () => {
     expect(new Set(ids).size).toBe(111);
     expect(ids.every((id) => /^SPE-\d{4}$/.test(id))).toBe(true);
   });
+
+  it('secteurs : 6 catégories, 41 secteurs aux identifiants uniques', () => {
+    const categories = referentiel.sectorCategories;
+    const ids = categories.flatMap((c) => c.sectors.map((s) => s.id));
+    expect(categories.map((c) => c.fr)).toEqual([
+      'Administration',
+      'BTPH',
+      'Environnement et énergies renouvelables',
+      'Industrie',
+      'Médias et divertissement',
+      'Services',
+    ]);
+    expect(ids).toHaveLength(41);
+    expect(new Set(ids).size).toBe(41);
+  });
 });
 
 describe('Formulaire 1 : demande de rendez-vous', () => {
@@ -222,7 +237,12 @@ describe('Formulaire 2 : rejoindre notre réseau d’experts', () => {
       ),
     ).toBeInTheDocument();
     fireEvent.change(documents, { target: { files: [file('diplome.pdf', 11 * MB)] } });
-    expect(screen.getByText('Ce fichier dépasse la taille autorisée.')).toBeInTheDocument();
+    // Le message renvoie vers l'adresse de secours.
+    expect(
+      screen.getByText(
+        'Ce fichier dépasse la taille autorisée. Vous pouvez aussi nous l’envoyer à expert@opem-dz.com.',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('envoi : identifiants SPE, CV et documents, deux cases obligatoires', async () => {
@@ -233,6 +253,9 @@ describe('Formulaire 2 : rejoindre notre réseau d’experts', () => {
     fireEvent.click(screen.getByLabelText('Consultant et formateur'));
     fireEvent.click(screen.getByLabelText('07 Qualité et systèmes de management'));
     fireEvent.click(screen.getByLabelText('Métrologie'));
+    // Secteurs d'intervention : facultatifs, envoyés par identifiant.
+    fireEvent.click(screen.getByLabelText('Hydraulique'));
+    fireEvent.click(screen.getByLabelText('Banque'));
     fireEvent.change(screen.getByLabelText(/Curriculum vitæ/), {
       target: { files: [file('cv.pdf')] },
     });
@@ -260,6 +283,7 @@ describe('Formulaire 2 : rejoindre notre réseau d’experts', () => {
     expect(url).toBe('https://wp.example/wp-json/opem/v1/candidature');
     expect(data.getAll('domains[]')).toEqual(['D07']);
     expect(data.getAll('specialities[]')).toEqual(['SPE-0035']);
+    expect(data.getAll('sectors[]')).toEqual(['SEC-10', 'SEC-31']);
     expect(data.get('role')).toBe('consultant-formateur');
     expect((data.get('cv') as File).name).toBe('cv.pdf');
     expect(data.getAll('documents[]')).toHaveLength(2);

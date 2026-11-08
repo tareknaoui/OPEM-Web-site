@@ -17,13 +17,13 @@ const linkOf = (item: MenuItem): FooterLink[] =>
   item.href ? [{ id: item.id, label: item.label, href: item.href }] : [];
 
 /** Rubrique du menu dont les sous-pages forment la colonne « Nos expertises ». */
-const EXPERTISES_HREF = '/expertises';
+const EXPERTISES_HREF = '/nos-expertises';
 
 /**
  * Deux colonnes seulement, construites à partir du menu principal (donc modifiables dans
- * WordPress) : « Nos expertises » (les sous-pages de la rubrique Expertises) et « Le site »
- * (les autres rubriques, sans l'accueil : le logo y mène déjà, puis « Rejoindre notre
- * réseau »). Les emplacements vides
+ * WordPress) : « Nos expertises » (les sous-pages de la rubrique) et « Le site » (toutes les
+ * rubriques, sans l'accueil : le logo y mène déjà, puis « Rejoindre notre réseau »). Les
+ * emplacements vides
  * (sans lien) sont ignorés.
  */
 function buildColumns(
@@ -32,7 +32,9 @@ function buildColumns(
   contactLabel: string,
 ) {
   const expertises = items.find((item) => item.href === EXPERTISES_HREF);
-  const site = items.filter((item) => item !== expertises && item.href !== '/').flatMap(linkOf);
+  // « Le site » reprend les rubriques du menu avec leurs intitulés complets (« Nos expertises »,
+  // « Formation qualifiante »…), « Nos expertises » compris : mêmes libellés aux deux endroits.
+  const site = items.filter((item) => item.href !== '/').flatMap(linkOf);
   // Lien « Contact » ajouté seulement si le menu n'a pas déjà sa rubrique Contact.
   if (!items.some((item) => item.href === CALLBACK_HREF)) {
     site.push({ id: 'contact', label: contactLabel, href: CALLBACK_HREF });

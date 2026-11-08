@@ -696,5 +696,254 @@
         }
       ]
     }
+  ],
+  "sectorCategories": [
+    {
+      "id": "ADM",
+      "fr": "Administration",
+      "ar": "الإدارة",
+      "sectors": [
+        {
+          "id": "SEC-01",
+          "fr": "Défense",
+          "ar": "الدفاع"
+        },
+        {
+          "id": "SEC-02",
+          "fr": "Sûreté",
+          "ar": "الأمن الوطني"
+        },
+        {
+          "id": "SEC-03",
+          "fr": "Administration territoriale",
+          "ar": "الإدارة الإقليمية"
+        },
+        {
+          "id": "SEC-04",
+          "fr": "Enseignement",
+          "ar": "التعليم"
+        },
+        {
+          "id": "SEC-05",
+          "fr": "Fiscalité",
+          "ar": "الجباية"
+        },
+        {
+          "id": "SEC-06",
+          "fr": "Justice",
+          "ar": "العدالة"
+        },
+        {
+          "id": "SEC-07",
+          "fr": "Parafiscalité",
+          "ar": "شبه الجباية"
+        },
+        {
+          "id": "SEC-08",
+          "fr": "Sécurité",
+          "ar": "الأمن"
+        }
+      ]
+    },
+    {
+      "id": "BTPH",
+      "fr": "BTPH",
+      "ar": "البناء والأشغال العمومية والري",
+      "sectors": [
+        {
+          "id": "SEC-09",
+          "fr": "Bâtiment",
+          "ar": "البناء"
+        },
+        {
+          "id": "SEC-10",
+          "fr": "Hydraulique",
+          "ar": "الري"
+        },
+        {
+          "id": "SEC-11",
+          "fr": "Travaux Publics",
+          "ar": "الأشغال العمومية"
+        }
+      ]
+    },
+    {
+      "id": "ENV",
+      "fr": "Environnement et énergies renouvelables",
+      "ar": "البيئة والطاقات المتجددة",
+      "sectors": [
+        {
+          "id": "SEC-12",
+          "fr": "Gestion des déchets",
+          "ar": "تسيير النفايات"
+        },
+        {
+          "id": "SEC-13",
+          "fr": "Protection de l’environnement",
+          "ar": "حماية البيئة"
+        },
+        {
+          "id": "SEC-14",
+          "fr": "Énergies renouvelables",
+          "ar": "الطاقات المتجددة"
+        }
+      ]
+    },
+    {
+      "id": "IND",
+      "fr": "Industrie",
+      "ar": "الصناعة",
+      "sectors": [
+        {
+          "id": "SEC-15",
+          "fr": "Agriculture",
+          "ar": "الفلاحة"
+        },
+        {
+          "id": "SEC-16",
+          "fr": "Agroalimentaire",
+          "ar": "الصناعات الغذائية"
+        },
+        {
+          "id": "SEC-17",
+          "fr": "Chimie Pharmacie",
+          "ar": "الكيمياء والصيدلة"
+        },
+        {
+          "id": "SEC-18",
+          "fr": "Construction automobile",
+          "ar": "صناعة السيارات"
+        },
+        {
+          "id": "SEC-19",
+          "fr": "Electronique",
+          "ar": "الإلكترونيات"
+        },
+        {
+          "id": "SEC-20",
+          "fr": "Energie et mines",
+          "ar": "الطاقة والمناجم"
+        },
+        {
+          "id": "SEC-21",
+          "fr": "Mécanique",
+          "ar": "الميكانيك"
+        },
+        {
+          "id": "SEC-22",
+          "fr": "Métallurgie",
+          "ar": "الصناعات المعدنية"
+        },
+        {
+          "id": "SEC-23",
+          "fr": "Plasturgie",
+          "ar": "صناعة البلاستيك"
+        },
+        {
+          "id": "SEC-24",
+          "fr": "Textile",
+          "ar": "النسيج"
+        }
+      ]
+    },
+    {
+      "id": "MED",
+      "fr": "Médias et divertissement",
+      "ar": "الإعلام والترفيه",
+      "sectors": [
+        {
+          "id": "SEC-25",
+          "fr": "Audiovisuel",
+          "ar": "السمعي البصري"
+        },
+        {
+          "id": "SEC-26",
+          "fr": "Cinéma",
+          "ar": "السينما"
+        },
+        {
+          "id": "SEC-27",
+          "fr": "Edition / Presse",
+          "ar": "النشر / الصحافة"
+        },
+        {
+          "id": "SEC-28",
+          "fr": "Radio",
+          "ar": "الإذاعة"
+        },
+        {
+          "id": "SEC-29",
+          "fr": "Spectacle",
+          "ar": "العروض الفنية"
+        }
+      ]
+    },
+    {
+      "id": "SRV",
+      "fr": "Services",
+      "ar": "الخدمات",
+      "sectors": [
+        {
+          "id": "SEC-30",
+          "fr": "Assurance",
+          "ar": "التأمين"
+        },
+        {
+          "id": "SEC-31",
+          "fr": "Banque",
+          "ar": "البنوك"
+        },
+        {
+          "id": "SEC-32",
+          "fr": "Bureautique",
+          "ar": "المكتبية"
+        },
+        {
+          "id": "SEC-33",
+          "fr": "Conseils / Etudes",
+          "ar": "الاستشارات / الدراسات"
+        },
+        {
+          "id": "SEC-34",
+          "fr": "Distribution / Commerce",
+          "ar": "التوزيع / التجارة"
+        },
+        {
+          "id": "SEC-35",
+          "fr": "Hôtellerie / Restauration / Tourisme",
+          "ar": "الفندقة / الإطعام / السياحة"
+        },
+        {
+          "id": "SEC-36",
+          "fr": "Immobilier",
+          "ar": "العقار"
+        },
+        {
+          "id": "SEC-37",
+          "fr": "Informatique / Télécoms",
+          "ar": "الإعلام الآلي / الاتصالات"
+        },
+        {
+          "id": "SEC-38",
+          "fr": "Ressources humaines",
+          "ar": "الموارد البشرية"
+        },
+        {
+          "id": "SEC-39",
+          "fr": "Santé",
+          "ar": "الصحة"
+        },
+        {
+          "id": "SEC-40",
+          "fr": "Soutien multiforme",
+          "ar": "الدعم المتعدد الأشكال"
+        },
+        {
+          "id": "SEC-41",
+          "fr": "Transport / Logistique",
+          "ar": "النقل / اللوجستيك"
+        }
+      ]
+    }
   ]
 }

@@ -228,3 +228,81 @@ function opem_forms_referentiel(): array
         ],
     ];
 }
+
+/** Secteurs d’intervention, par catégorie (identifiant SEC => intitulé français). */
+function opem_forms_secteurs(): array
+{
+    return [
+        'ADM' => [
+            'label'   => 'Administration',
+            'sectors' => [
+                'SEC-01' => 'Défense',
+                'SEC-02' => 'Sûreté',
+                'SEC-03' => 'Administration territoriale',
+                'SEC-04' => 'Enseignement',
+                'SEC-05' => 'Fiscalité',
+                'SEC-06' => 'Justice',
+                'SEC-07' => 'Parafiscalité',
+                'SEC-08' => 'Sécurité',
+            ],
+        ],
+        'BTPH' => [
+            'label'   => 'BTPH',
+            'sectors' => [
+                'SEC-09' => 'Bâtiment',
+                'SEC-10' => 'Hydraulique',
+                'SEC-11' => 'Travaux Publics',
+            ],
+        ],
+        'ENV' => [
+            'label'   => 'Environnement et énergies renouvelables',
+            'sectors' => [
+                'SEC-12' => 'Gestion des déchets',
+                'SEC-13' => 'Protection de l’environnement',
+                'SEC-14' => 'Énergies renouvelables',
+            ],
+        ],
+        'IND' => [
+            'label'   => 'Industrie',
+            'sectors' => [
+                'SEC-15' => 'Agriculture',
+                'SEC-16' => 'Agroalimentaire',
+                'SEC-17' => 'Chimie Pharmacie',
+                'SEC-18' => 'Construction automobile',
+                'SEC-19' => 'Electronique',
+                'SEC-20' => 'Energie et mines',
+                'SEC-21' => 'Mécanique',
+                'SEC-22' => 'Métallurgie',
+                'SEC-23' => 'Plasturgie',
+                'SEC-24' => 'Textile',
+            ],
+        ],
+        'MED' => [
+            'label'   => 'Médias et divertissement',
+            'sectors' => [
+                'SEC-25' => 'Audiovisuel',
+                'SEC-26' => 'Cinéma',
+                'SEC-27' => 'Edition / Presse',
+                'SEC-28' => 'Radio',
+                'SEC-29' => 'Spectacle',
+            ],
+        ],
+        'SRV' => [
+            'label'   => 'Services',
+            'sectors' => [
+                'SEC-30' => 'Assurance',
+                'SEC-31' => 'Banque',
+                'SEC-32' => 'Bureautique',
+                'SEC-33' => 'Conseils / Etudes',
+                'SEC-34' => 'Distribution / Commerce',
+                'SEC-35' => 'Hôtellerie / Restauration / Tourisme',
+                'SEC-36' => 'Immobilier',
+                'SEC-37' => 'Informatique / Télécoms',
+                'SEC-38' => 'Ressources humaines',
+                'SEC-39' => 'Santé',
+                'SEC-40' => 'Soutien multiforme',
+                'SEC-41' => 'Transport / Logistique',
+            ],
+        ],
+    ];
+}

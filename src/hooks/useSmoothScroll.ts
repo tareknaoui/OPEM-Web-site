@@ -9,6 +9,23 @@ import { useEffect } from 'react';
  * - Menus en fenêtre (<dialog>) : défilement natif à l'intérieur, page figée derrière.
  * - Zones marquées data-lenis-prevent(-horizontal) : laissées au navigateur (rail de cartes).
  */
+let current: Lenis | null = null;
+
+/**
+ * Descend en douceur jusqu'à un élément, en laissant au-dessus la marge prévue par son
+ * scroll-margin-top (le menu reste visible à l'arrivée). Passe par Lenis quand il est actif ;
+ * sinon, défilement du navigateur (instantané si moins d'animations est demandé).
+ */
+export function scrollToElement(target: HTMLElement) {
+  const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+  if (current) {
+    current.scrollTo(target, { offset: -margin, duration: 1.1 });
+    return;
+  }
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+
 export function useSmoothScroll() {
   useEffect(() => {
     if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -19,6 +36,10 @@ export function useSmoothScroll() {
       lerp: 0.1,
       prevent: (node) => node.nodeName === 'DIALOG',
     });
-    return () => lenis.destroy();
+    current = lenis;
+    return () => {
+      current = null;
+      lenis.destroy();
+    };
   }, []);
 }

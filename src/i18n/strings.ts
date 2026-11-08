@@ -44,7 +44,7 @@ export const strings = {
     homeLink: 'OPEM، العودة إلى الصفحة الرئيسية',
     mainNav: 'التنقل الرئيسي',
     callback: 'اطلب مكالمة',
-    quote: 'اطلب عرض سعر',
+    quote: 'لنتحدث عن مشروعكم',
     openMenu: 'فتح القائمة',
     closeMenu: 'إغلاق القائمة',
     seeAll: 'عرض الكل',

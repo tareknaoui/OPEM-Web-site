@@ -80,6 +80,8 @@ export type FormsContent = {
     specialitiesEmpty: string;
     otherSpeciality: string;
     otherSpecialityField: (domain: string) => string;
+    sectors: string;
+    sectorsHelp: string;
     cv: string;
     cvHelp: string;
     documents: string;
@@ -89,6 +91,8 @@ export type FormsContent = {
     replaceFile: string;
     removeFile: (name: string) => string;
     noFile: string;
+    /** À côté du formulaire : l'adresse de secours, pour les fichiers trop lourds ou nombreux. */
+    aside: [string, string, string];
     fileErrors: {
       cvFormat: string;
       format: string;
@@ -206,6 +210,9 @@ const fr: FormsContent = {
     specialitiesEmpty: `Cochez d’abord vos domaines d’expertise${nb}: leurs spécialités s’afficheront ici.`,
     otherSpeciality: 'Autre à préciser',
     otherSpecialityField: (domain) => `Précisez votre spécialité (${domain})`,
+    sectors: 'Secteurs d’intervention',
+    sectorsHelp:
+      'Les secteurs d’activité dans lesquels vous êtes déjà intervenu. Plusieurs choix possibles.',
     cv: 'Curriculum vitæ',
     cvHelp: 'PDF ou Word, 5 Mo au plus',
     documents: 'Autres documents',
@@ -215,13 +222,19 @@ const fr: FormsContent = {
     replaceFile: 'Remplacer le fichier',
     removeFile: (name) => `Retirer ${name}`,
     noFile: 'Aucun fichier choisi',
+    aside: [
+      `Fichiers trop lourds ou trop nombreux${nb}? Vous pouvez aussi nous les envoyer à `,
+      'expert@opem-dz.com',
+      '.',
+    ],
     fileErrors: {
       cvFormat: 'Ce format n’est pas accepté. Envoyez un fichier PDF ou Word.',
       format:
         'Ce format n’est pas accepté. Envoyez un fichier PDF, Word, Excel, JPG ou PNG. Pour une photo prise sur iPhone, enregistrez-la d’abord en JPG.',
-      size: 'Ce fichier dépasse la taille autorisée.',
+      size: 'Ce fichier dépasse la taille autorisée. Vous pouvez aussi nous l’envoyer à expert@opem-dz.com.',
       cvRequired: 'Joignez votre CV.',
-      tooMany: 'Cinq fichiers au plus.',
+      tooMany:
+        'Cinq fichiers au plus. Vous pouvez aussi nous envoyer les autres à expert@opem-dz.com.',
     },
     consentTitle: 'Consentement',
     consent:
@@ -336,6 +349,8 @@ const ar: FormsContent = {
     specialitiesEmpty: 'حدّدوا أولًا مجالات خبرتكم: ستظهر تخصصاتها هنا.',
     otherSpeciality: 'تخصص آخر يُرجى توضيحه',
     otherSpecialityField: (domain) => `وضّحوا تخصصكم (${domain})`,
+    sectors: 'قطاعات التدخل',
+    sectorsHelp: 'قطاعات النشاط التي سبق أن تدخلتم فيها. يمكن اختيار أكثر من قطاع.',
     cv: 'السيرة الذاتية',
     cvHelp: 'PDF أو Word، 5 ميغابايت على الأكثر',
     documents: 'وثائق أخرى',
@@ -346,13 +361,18 @@ const ar: FormsContent = {
     replaceFile: 'استبدل الملف',
     removeFile: (name) => `احذف ${name}`,
     noFile: 'لم يتم اختيار أي ملف',
+    aside: [
+      'ملفات ثقيلة جدًا أو كثيرة؟ يمكنكم أيضًا إرسالها إلينا على ',
+      'expert@opem-dz.com',
+      '.',
+    ],
     fileErrors: {
       cvFormat: 'هذه الصيغة غير مقبولة. أرسلوا ملف PDF أو Word.',
       format:
         'هذه الصيغة غير مقبولة. أرسلوا ملف PDF أو Word أو Excel أو JPG أو PNG. للصور الملتقطة بهاتف iPhone، احفظوها أولًا بصيغة JPG.',
-      size: 'هذا الملف يتجاوز الحجم المسموح به.',
+      size: 'هذا الملف يتجاوز الحجم المسموح به. يمكنكم أيضًا إرساله إلينا على expert@opem-dz.com.',
       cvRequired: 'أرفقوا سيرتكم الذاتية.',
-      tooMany: 'خمسة ملفات على الأكثر.',
+      tooMany: 'خمسة ملفات على الأكثر. يمكنكم إرسال الباقي إلينا على expert@opem-dz.com.',
     },
     consentTitle: 'الموافقة',
     consent:

@@ -655,3 +655,21 @@
     top: calc(var(--header-height-compact) + 2rem);
   }
 }
+
+/* Secteurs d'intervention : intitulés courts, trois colonnes quand la place le permet. */
+.grid3 {
+  display: grid;
+  gap: 0 1.5rem;
+}
+
+@media (min-width: 36em) {
+  .grid3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .grid3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

@@ -1,7 +1,6 @@
 import { useEffect, useRef, type MouseEvent } from 'react';
 import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
 import { useLanguage } from '@/i18n/useLanguage';
-import { cx } from '@/lib/cx';
 import { cabinetContent } from './content';
 import { Doors } from './sections/Doors';
 import { Guarantees } from './sections/Guarantees';
@@ -34,8 +33,8 @@ function goToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
  * Page « Le cabinet », reconstruite en neuf blocs à ancres (01 Ouverture … 09 Deux portes),
  * ajoutés au fur et à mesure. En tête, façon « About BCG » : une grande photo, la barre des
  * rubriques posée dessus (collée sous le menu au défilement, la rubrique en cours en vert, un
- * clic y descend), le titre et la présentation sur un panneau bleu nuit qui chevauche le bas
- * de la photo (ouverture provisoire, en attendant le bloc 01). Puis 02 Notre histoire et
+ * clic y descend), le titre et le texte d'ouverture sur un panneau blanc qui chevauche le bas
+ * de la photo (le titre en bleu OPEM puis bleu nuit, d'où le fond clair). Puis 02 Notre histoire et
  * 03 Notre regard, 04 Travailler avec OPEM, 05 Nos valeurs, 06 Nos engagements,
  * 07 Notre réseau d'experts, 08 Nos garanties, 09 Deux portes.
  * Textes : ./content.ts
@@ -119,7 +118,7 @@ export default function CabinetPage() {
         </div>
       </div>
 
-      {/* ---------- En-tête : grande photo, panneau bleu nuit qui la chevauche ---------- */}
+      {/* ---------- 01 Ouverture : grande photo, panneau blanc qui la chevauche ---------- */}
       <section className={styles.hero} aria-labelledby="cabinet-title">
         <div className={styles.photo} data-parallax>
           <img
@@ -128,12 +127,12 @@ export default function CabinetPage() {
             sizes="100vw"
             width={2400}
             height={1310}
-            alt=""
+            alt={hero.alt}
             fetchPriority="high"
           />
         </div>
         <div className="container">
-          <div className={cx(styles.panel, 'on-dark')}>
+          <div className={styles.panel}>
             <p className={styles.eyebrow}>{hero.eyebrow}</p>
             <h1 id="cabinet-title" className={styles.headline} data-motion="title">
               {hero.headline[0]} <span className={styles.headlineLine}>{hero.headline[1]}</span>

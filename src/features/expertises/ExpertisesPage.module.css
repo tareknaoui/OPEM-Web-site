@@ -1,0 +1,778 @@
+/* Page « Nos expertises » : fonds alternés bleu 10 % / blanc (01 bleu 10 %, 02 blanc, 03 bleu
+   10 %, 04 blanc, 05 bleu 10 % juste avant le pied de page) ; jamais deux fonds sombres de
+   suite. Surtitres vert foncé, titres bleu OPEM, textes anthracite en Calibri (Carlito à
+   défaut). Ambre seulement dans le plan de tracé, sur bleu nuit. Pas de dégradé. */
+
+.page {
+  --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --anchor-gap: calc(var(--header-height-compact) + 1.5rem);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.title {
+  margin: 0.875rem 0 0;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.lead,
+.body,
+.cardText,
+.reference,
+.closing,
+.note,
+.figureLabel,
+.verdictCondition {
+  font-family: var(--font-text);
+}
+
+.lead {
+  max-width: 62ch;
+  margin: 1.25rem 0 0;
+  color: var(--opem-anthracite);
+  font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  line-height: 1.6;
+}
+
+.body {
+  max-width: 68ch;
+  margin: 1.5rem 0 0;
+  color: var(--opem-anthracite);
+  font-size: 1.1875rem;
+  line-height: 1.65;
+}
+
+/* ---------- 01 Ouverture : typographie seule ---------- */
+
+.opening {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  background: var(--opem-blue-10);
+}
+
+/* Le grand point d'interrogation en filigrane (décoratif, masqué aux lecteurs d'écran). */
+.question {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: clamp(-3rem, -2vw, 0rem);
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(18rem, 12rem + 22vw, 36rem);
+  font-weight: 700;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+  translate: 0 -50%;
+}
+
+.openingInner {
+  position: relative;
+}
+
+.openingTitle {
+  max-width: 26ch;
+  margin: 1rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.2rem + 2.8vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.openingTitleEnd {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--opem-blue);
+}
+
+/* Les six enjeux : un grand index sur deux colonnes (01 à 03, puis 04 à 06). */
+.issues {
+  display: grid;
+  max-width: 68rem;
+  margin: clamp(2rem, 1.5rem + 2vw, 3.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .issues {
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+}
+
+.issue {
+  display: grid;
+  grid-template-columns: 2rem 2.75rem minmax(0, 1fr) auto;
+  gap: 0.875rem;
+  align-items: center;
+  min-height: 4.25rem;
+  padding-block: 0.875rem;
+  border-bottom: 1px solid rgb(17 54 91 / 0.2);
+  color: var(--opem-night);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.issues li:first-child .issue {
+  border-top: 1px solid rgb(17 54 91 / 0.2);
+}
+
+@media (min-width: 48em) {
+  .issues li:nth-child(4) .issue {
+    border-top: 1px solid rgb(17 54 91 / 0.2);
+  }
+}
+
+.issue:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.issueNumber {
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.issueIcon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--opem-white);
+  color: var(--opem-blue);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.issue:hover .issueIcon,
+.issue:focus-visible .issueIcon {
+  background: var(--opem-blue);
+  color: var(--opem-white);
+}
+
+.issueText {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1rem + 0.9vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.issueArrow {
+  color: var(--opem-blue);
+  opacity: 0.35;
+  transition:
+    opacity 200ms ease,
+    translate 200ms ease;
+}
+
+.issue:hover,
+.issue:focus-visible {
+  color: var(--opem-blue);
+}
+
+.issue:hover .issueArrow,
+.issue:focus-visible .issueArrow {
+  opacity: 1;
+  translate: calc(4px * var(--dir)) 0;
+}
+
+.closing {
+  margin: 1.5rem 0 0;
+  color: var(--opem-gray);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Téléphone : le point d'interrogation, plus petit et plus pâle, ne gêne pas la lecture. */
+@media (max-width: 47.99em) {
+  .question {
+    inset-block-start: 1.5rem;
+    font-size: 15rem;
+    opacity: 0.7;
+    translate: none;
+  }
+}
+
+/* ---------- 02 Six domaines : illustrations isométriques ---------- */
+
+.domains {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.head {
+  max-width: 52rem;
+  margin-bottom: clamp(2.5rem, 1.75rem + 2.5vw, 4rem);
+}
+
+.cards {
+  display: grid;
+  gap: clamp(1.25rem, 0.75rem + 1.5vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--opem-gray-light);
+  border-radius: 8px;
+  background: var(--opem-white);
+  scroll-margin-top: var(--anchor-gap);
+  transition: box-shadow 300ms ease;
+}
+
+.card:hover {
+  box-shadow: 0 1.5rem 3rem -2rem rgb(17 54 91 / 0.45);
+}
+
+.card:focus {
+  outline: none;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 4px;
+}
+
+/* À l'arrivée depuis un enjeu du bloc 01 : la carte se signale un instant. */
+.card[data-arrived] {
+  animation: arrived 1.6s ease-out;
+}
+
+@keyframes arrived {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px var(--opem-green);
+  }
+
+  100% {
+    box-shadow: 0 0 0 3px transparent;
+  }
+}
+
+.cardArt {
+  overflow: hidden;
+  aspect-ratio: 800 / 446;
+  background: var(--opem-night);
+}
+
+/* Ordinateur : l'illustration occupe la moitié de la rangée, à gauche puis à droite. */
+@media (min-width: 64em) {
+  .card {
+    display: grid;
+    grid-template-columns: minmax(0, 11fr) minmax(0, 10fr);
+  }
+
+  .card:nth-child(even) .cardArt {
+    order: 2;
+  }
+
+  .cardArt {
+    aspect-ratio: auto;
+    min-height: 26rem;
+  }
+
+  .cardBody {
+    justify-content: center;
+  }
+}
+
+.cardArt img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 700ms var(--ease-reveal, ease-out);
+}
+
+.card:hover .cardArt img {
+  scale: 1.03;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: clamp(1.5rem, 1rem + 1.6vw, 2.5rem);
+}
+
+.cardNumber {
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.cardTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.cardText {
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* La typologie en étiquettes : les deux premières en relief (bleu nuit), les autres au trait. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag,
+.tagStrong {
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  font-family: var(--font-text);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+.tag {
+  border: 1px solid var(--opem-gray-light);
+  color: var(--opem-anthracite);
+}
+
+.tagStrong {
+  border: 1px solid var(--opem-night);
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.tagStrong strong {
+  font-weight: 600;
+}
+
+.reference {
+  margin: 0;
+  padding-inline-start: 0.875rem;
+  border-inline-start: 3px solid var(--opem-green);
+  color: var(--opem-gray);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cardLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+/* ---------- Blocs 03 à 05 : texte à gauche, visuel à droite (dessous sur tablette) ---------- */
+
+.split {
+  display: grid;
+  gap: clamp(2rem, 1rem + 3vw, 4rem);
+}
+
+@media (min-width: 64em) {
+  .split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+  }
+}
+
+.splitText {
+  min-width: 0;
+}
+
+/* ---------- 03 Les expertises à l'œuvre ensemble : schéma ---------- */
+
+.together {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+/* Les chiffres : du vrai texte, côte à côte même sur téléphone. */
+.figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem clamp(2rem, 1rem + 3vw, 3.5rem);
+  margin: 1.75rem 0 0;
+}
+
+.figure {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.figureValue {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.figureLabel {
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-size: 1.0625rem;
+}
+
+.tracePanel {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--opem-night);
+}
+
+.trace {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.traceGrid {
+  stroke: rgb(178 202 222 / 0.08);
+  stroke-width: 1;
+}
+
+.traceContour {
+  fill: none;
+  stroke: rgb(178 202 222 / 0.14);
+  stroke-width: 1.2;
+}
+
+.traceRoad {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.05);
+  stroke-width: 44;
+}
+
+.traceEdge {
+  fill: none;
+  stroke: rgb(178 202 222 / 0.45);
+  stroke-width: 1.2;
+}
+
+/* Le filet ambre de chaque voie avance lentement, sans fin. */
+.traceLine {
+  fill: none;
+  stroke: var(--opem-amber);
+  stroke-width: 2.4;
+  stroke-dasharray: 10 12;
+  stroke-linecap: round;
+  animation: run 2.4s linear infinite;
+}
+
+@keyframes run {
+  to {
+    stroke-dashoffset: -44;
+  }
+}
+
+.traceLabel {
+  fill: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.traceLabel:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 21px;
+  letter-spacing: 0;
+}
+
+.traceCaption {
+  padding: 0 clamp(1.25rem, 1rem + 1vw, 2rem) clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.traceCaption span {
+  display: block;
+  color: var(--opem-white);
+}
+
+.traceCaption span + span {
+  color: var(--opem-blue-30);
+  font-weight: 500;
+}
+
+/* ---------- 04 IA appliquée : typographie seule ---------- */
+
+.ai {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.aiLink {
+  margin-top: 1.75rem;
+}
+
+.greenArrow {
+  color: var(--opem-green);
+}
+
+.verdicts {
+  display: grid;
+  border-top: 1px solid var(--opem-gray-light);
+}
+
+.verdict {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0;
+  padding-block: clamp(1.125rem, 0.875rem + 1vw, 1.75rem);
+  border-bottom: 1px solid var(--opem-gray-light);
+}
+
+.verdictWord {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.verdict[data-verdict='0'] .verdictWord {
+  color: var(--opem-green-dark);
+}
+
+.verdict[data-verdict='1'] .verdictWord {
+  color: var(--opem-blue);
+}
+
+.verdict[data-verdict='2'] .verdictWord {
+  color: var(--opem-night);
+}
+
+.verdictCondition {
+  color: var(--opem-gray);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+/* ---------- 05 Parlons de votre besoin : tracé au trait ---------- */
+
+.talk {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+/* Ordinateur : le titre sur deux lignes, coupé après « aujourd'hui » (taille réglée pour que
+   chaque ligne tienne dans sa colonne). */
+@media (min-width: 64em) {
+  .talk .split {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+
+  .talk .title {
+    font-size: clamp(2.25rem, 1.2rem + 1.7vw, 2.875rem);
+  }
+
+  .titleLine {
+    display: block;
+    white-space: nowrap;
+  }
+}
+
+.talkButton {
+  min-height: 3rem;
+  margin-top: 1.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.note {
+  margin: 0.875rem 0 0;
+  color: var(--opem-gray);
+  font-size: 1rem;
+}
+
+.thread {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  justify-self: center;
+  overflow: visible;
+}
+
+.threadPath,
+.threadArrow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.threadPath {
+  stroke: var(--opem-night);
+  stroke-width: 3;
+  transition: stroke-dashoffset 2.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.threadArrow {
+  stroke: var(--opem-blue);
+  stroke-width: 3.2;
+  transition: stroke-dashoffset 0.8s ease-out 2.5s;
+}
+
+.threadStep {
+  fill: var(--opem-green);
+  transform-box: fill-box;
+  transform-origin: center;
+  scale: 0;
+  transition: scale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s;
+}
+
+.threadMarks {
+  fill: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.6s ease 2.6s;
+}
+
+.threadMarks:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 18px;
+}
+
+.thread[data-drawn] .threadPath,
+.thread[data-drawn] .threadArrow {
+  stroke-dashoffset: 0;
+}
+
+.thread[data-drawn] .threadStep {
+  scale: 1;
+}
+
+.thread[data-drawn] .threadMarks {
+  opacity: 1;
+}
+
+/* Téléphone : boutons sur toute la largeur. */
+@media (max-width: 39.99em) {
+  .aiLink,
+  .talkButton {
+    width: 100%;
+  }
+}
+
+/* Moins d'animations : tout est en place d'emblée, rien ne bouge. */
+@media (prefers-reduced-motion: reduce) {
+  .traceLine {
+    animation: none;
+  }
+
+  .threadPath,
+  .threadArrow,
+  .threadStep,
+  .threadMarks,
+  .card[data-arrived] {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ---------- Arabe ---------- */
+
+.eyebrow:lang(ar),
+.title:lang(ar),
+.openingTitle:lang(ar),
+.issueText:lang(ar),
+.issueNumber:lang(ar),
+.cardTitle:lang(ar),
+.cardLink:lang(ar),
+.traceCaption:lang(ar),
+.verdictWord:lang(ar),
+.figureValue:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.lead:lang(ar),
+.body:lang(ar),
+.cardText:lang(ar),
+.tag:lang(ar),
+.tagStrong:lang(ar),
+.reference:lang(ar),
+.closing:lang(ar),
+.note:lang(ar),
+.figureLabel:lang(ar),
+.verdictCondition:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.8;
+}
+
+.openingTitle:lang(ar),
+.title:lang(ar) {
+  line-height: 1.35;
+}

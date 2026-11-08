@@ -1,10 +1,11 @@
 // Génère wordpress/opem-forms-referentiel.php à partir de src/features/forms/referentiel.json :
-// les 20 domaines et leurs spécialités (identifiants SPE, intitulés français), pour que le
-// serveur vérifie les choix reçus et écrive le message à OPEM. Une seule source : le JSON.
+// les 20 domaines et leurs spécialités (identifiants SPE, intitulés français), et les secteurs
+// d'intervention par catégorie (identifiants SEC), pour que le serveur vérifie les choix reçus
+// et écrive le message à OPEM. Une seule source : le JSON.
 // Lancer après toute modification du référentiel : node scripts/gen-referentiel-wp.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const { version, domains } = JSON.parse(
+const { version, domains, sectorCategories } = JSON.parse(
   readFileSync('src/features/forms/referentiel.json', 'utf8'),
 );
 
@@ -14,6 +15,15 @@ const body = domains
   .map(
     (domain) =>
       `        ${php(domain.id)} => [\n            'label'        => ${php(domain.fr)},\n            'specialities' => [\n${domain.specialities
+        .map((s) => `                ${php(s.id)} => ${php(s.fr)},`)
+        .join('\n')}\n            ],\n        ],`,
+  )
+  .join('\n');
+
+const sectors = sectorCategories
+  .map(
+    (category) =>
+      `        ${php(category.id)} => [\n            'label'   => ${php(category.fr)},\n            'sectors' => [\n${category.sectors
         .map((s) => `                ${php(s.id)} => ${php(s.fr)},`)
         .join('\n')}\n            ],\n        ],`,
   )
@@ -39,7 +49,18 @@ function opem_forms_referentiel(): array
 ${body}
     ];
 }
+
+/** Secteurs d’intervention, par catégorie (identifiant SEC => intitulé français). */
+function opem_forms_secteurs(): array
+{
+    return [
+${sectors}
+    ];
+}
 `;
 
 writeFileSync('wordpress/opem-forms-referentiel.php', file);
-console.log('écrit wordpress/opem-forms-referentiel.php :', domains.length, 'domaines');
+const sectorCount = sectorCategories.reduce((n, category) => n + category.sectors.length, 0);
+console.log(
+  `écrit wordpress/opem-forms-referentiel.php : ${domains.length} domaines, ${sectorCount} secteurs`,
+);

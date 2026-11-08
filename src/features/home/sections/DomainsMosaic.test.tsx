@@ -39,7 +39,7 @@ describe('« Nos expertises » (domaines)', () => {
     );
     expect(screen.getByRole('link', { name: /Toutes nos expertises/ })).toHaveAttribute(
       'href',
-      '/expertises',
+      '/nos-expertises',
     );
   });
 

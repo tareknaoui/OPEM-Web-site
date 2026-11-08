@@ -118,10 +118,12 @@ export function HistoryArt({
   text,
   milestones,
   rtl,
+  alt,
 }: {
   text: CabinetContent['history']['text'];
   milestones: CabinetContent['history']['milestones'];
   rtl: boolean;
+  alt: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -223,7 +225,8 @@ export function HistoryArt({
           <svg
             className={styles.art}
             viewBox={`0 ${VIEW.y} ${W} ${VIEW.h}`}
-            aria-hidden="true"
+            role="img"
+            aria-label={alt}
             focusable="false"
           >
             <g className={styles.artGuides}>

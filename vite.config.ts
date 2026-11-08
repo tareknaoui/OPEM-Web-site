@@ -23,6 +23,8 @@ const contentSecurityPolicy = [
   "img-src 'self' data:",
   "font-src 'self'",
   "connect-src 'self'",
+  // Carte de la page Contact (Google Maps intégré).
+  'frame-src https://www.google.com https://maps.google.com',
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
