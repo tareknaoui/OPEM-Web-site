@@ -101,8 +101,26 @@ describe('Page « Nos expertises »', () => {
     expect(within(section).getByText('+150')).toBeInTheDocument();
     expect(within(section).queryAllByRole('link')).toHaveLength(0);
     expect(
-      within(section).getByRole('img', { name: /Plan de tracé de quatre voies/ }),
+      within(section).getByRole('img', { name: /Quatre photos qui se relaient/ }),
     ).toBeVisible();
+    // Le fil du relais : les quatre métiers, tous allumés sans animation.
+    const steps = within(section).getAllByRole('listitem');
+    expect(steps.map((step) => step.textContent)).toEqual([
+      'Accompagnement des organisations',
+      'Formation qualifiante',
+      'Communication institutionnelle',
+      'Certification et accréditation',
+    ]);
+    expect(steps.every((step) => step.hasAttribute('data-active'))).toBe(true);
+  });
+
+  it('bloc 04 : le banc d’essai, trois verdicts posés d’emblée sans animation', () => {
+    renderPage();
+    const bench = screen.getByRole('img', { name: /^Banc d’essai/ });
+    expect(bench.querySelectorAll('[data-row][data-passed]')).toHaveLength(3);
+    expect(bench).toHaveTextContent('Oui.');
+    expect(bench).toHaveTextContent('Pas encore.');
+    expect(bench).toHaveTextContent('Non.');
   });
 
   it('bloc 04 : lien vers l’IA appliquée, étiquette qui commence par le libellé visible', () => {

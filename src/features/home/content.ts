@@ -1784,15 +1784,15 @@ const fr: HomeContent = {
     newBadge: 'Nouveau',
     photos: [
       {
-        src: '/images/agenda/session-opem-2.webp',
+        src: '/images/sessions/communication-interpersonnelle.webp',
         alt: 'Une formation OPEM en communication interpersonnelle : la formatrice face aux participants',
       },
       {
-        src: '/images/agenda/session-opem-3.webp',
+        src: '/images/sessions/participants-rang.webp',
         alt: 'Des participants à une session OPEM, assis côte à côte',
       },
       {
-        src: '/images/agenda/session-opem.webp',
+        src: '/images/sessions/disposition-en-u.webp',
         alt: 'Une session de formation OPEM : les participants autour de tables en U',
       },
     ],
@@ -3149,15 +3149,15 @@ const ar: HomeContent = {
     newBadge: 'جديد',
     photos: [
       {
-        src: '/images/agenda/session-opem-2.webp',
+        src: '/images/sessions/communication-interpersonnelle.webp',
         alt: 'تكوين لـ OPEM في التواصل بين الأشخاص: المكوِّنة أمام المشاركين',
       },
       {
-        src: '/images/agenda/session-opem-3.webp',
+        src: '/images/sessions/participants-rang.webp',
         alt: 'مشاركون في دورة لـ OPEM جالسون جنبًا إلى جنب',
       },
       {
-        src: '/images/agenda/session-opem.webp',
+        src: '/images/sessions/disposition-en-u.webp',
         alt: 'دورة تكوينية لـ OPEM: المشاركون حول طاولات على شكل حرف U',
       },
     ],

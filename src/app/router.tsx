@@ -39,6 +39,12 @@ export const router = createBrowserRouter([
         lazy: async () => ({ Component: (await import('@/features/ia/IaPage')).default }),
       },
       {
+        path: 'actualites',
+        lazy: async () => ({
+          Component: (await import('@/features/actualites/ActualitesPage')).default,
+        }),
+      },
+      {
         path: 'eclairages',
         lazy: async () => ({
           Component: (await import('@/features/eclairages/EclairagesPage')).default,

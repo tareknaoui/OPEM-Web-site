@@ -30,6 +30,7 @@ const PAGES = [
   '/expertises/etudes-strategiques',
   '/ia-appliquee',
   '/eclairages',
+  '/actualites',
   '/contact',
   '/contact/demande-de-rendez-vous',
   '/contact/rejoindre-notre-reseau',

@@ -4,7 +4,7 @@ import { MegaphoneIcon } from '@phosphor-icons/react/dist/csr/Megaphone';
 import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
 import { StrategyIcon } from '@phosphor-icons/react/dist/csr/Strategy';
 import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
-import { useId, type MouseEvent } from 'react';
+import { useId, useRef, type MouseEvent } from 'react';
 import { Link } from 'react-router';
 import { QUOTE_HREF } from '@/app/layouts/navbar/menu';
 import { ArrowRightIcon } from '@/components/icons';
@@ -13,8 +13,9 @@ import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { DOMAIN_IDS, expertisesContent } from './content';
 import styles from './ExpertisesPage.module.css';
+import { Relay } from './Relay';
 import { ThreadArt } from './ThreadArt';
-import { TraceArt } from './TraceArt';
+import { VerdictBench } from './VerdictBench';
 
 /** Une icône au trait par enjeu (décision, transformation, compétences, prise de poste,
  *  certification, savoir-faire), dans l'ordre des domaines. */
@@ -35,8 +36,10 @@ const ISSUE_ICONS = [
  *    carte du bloc 02.
  * 02 Six domaines, blanc : une rangée par domaine, sa grande illustration isométrique (celles
  *    de l'accueil) d'un côté puis de l'autre ; la typologie en étiquettes.
- * 03 Les expertises à l'œuvre ensemble, bleu 10 % : un schéma, le plan de tracé.
- * 04 IA appliquée, blanc : typographie seule, trois verdicts.
+ * 03 Les métiers se relaient, bleu 10 % : vraies photos, les quatre métiers d'un même client
+ *    se passent le témoin dans un cadre (section figée sur ordinateur), fil du relais dessous.
+ * 04 IA appliquée, blanc : le banc d'essai animé, trois usages passent l'examen et reçoivent
+ *    leur verdict (icônes sur panneau bleu nuit).
  * 05 Parlons de votre besoin, bleu 10 % : un tracé au trait, juste avant le pied de page.
  * Un seul titre principal (H1, bloc 01) ; les autres blocs en H2. Textes : ./content.ts.
  */
@@ -45,6 +48,7 @@ export default function ExpertisesPage() {
   const t = expertisesContent[lang];
   const ids = useId();
   const { opening, domains, together, ai, talk } = t;
+  const togetherRef = useRef<HTMLElement>(null);
 
   // Un enjeu mène à la carte de son domaine, en douceur, le menu restant visible à l'arrivée.
   const goTo = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -166,7 +170,7 @@ export default function ExpertisesPage() {
       </section>
 
       {/* ---------- 03 Les expertises à l'œuvre ensemble ---------- */}
-      <section className={styles.together} aria-labelledby={`${ids}-together`}>
+      <section ref={togetherRef} className={styles.together} aria-labelledby={`${ids}-together`}>
         <div className={cx('container', styles.split)}>
           <div className={styles.splitText} data-reveal>
             <p className={styles.eyebrow}>{together.eyebrow}</p>
@@ -176,19 +180,21 @@ export default function ExpertisesPage() {
             <dl className={styles.figures}>
               {together.figures.map((figure) => (
                 <div key={figure.label} className={styles.figure}>
-                  <dt className={styles.figureValue}>{figure.value}</dt>
+                  <dt className={styles.figureValue} data-count={figure.value}>
+                    {figure.value}
+                  </dt>
                   <dd className={styles.figureLabel}>{figure.label}</dd>
                 </div>
               ))}
             </dl>
             <p className={styles.body}>{together.text}</p>
           </div>
-          <figure className={styles.tracePanel}>
-            <TraceArt lanes={together.lanes} alt={together.alt} rtl={lang === 'ar'} />
-            <figcaption className={styles.traceCaption}>
-              <span>{together.caption[0]}</span> <span>{together.caption[1]}</span>
-            </figcaption>
-          </figure>
+          <Relay
+            lanes={together.lanes}
+            alt={together.alt}
+            rtl={lang === 'ar'}
+            sectionRef={togetherRef}
+          />
         </div>
       </section>
 
@@ -210,14 +216,7 @@ export default function ExpertisesPage() {
               <ArrowRightIcon size={18} className={cx('arrow', styles.greenArrow)} />
             </Link>
           </div>
-          <div className={styles.verdicts} role="img" aria-label={ai.alt}>
-            {ai.verdicts.map((verdict, index) => (
-              <p key={verdict.word} className={styles.verdict} data-verdict={index}>
-                <span className={styles.verdictWord}>{verdict.word}</span>
-                <span className={styles.verdictCondition}>{verdict.condition}</span>
-              </p>
-            ))}
-          </div>
+          <VerdictBench verdicts={ai.verdicts} alt={ai.alt} rtl={lang === 'ar'} />
         </div>
       </section>
 

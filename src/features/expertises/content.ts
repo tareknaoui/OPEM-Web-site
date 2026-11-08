@@ -39,7 +39,6 @@ export type ExpertisesContent = {
     figures: { value: string; label: string }[];
     text: string;
     lanes: string[];
-    caption: [string, string];
     alt: string;
   };
   ai: {
@@ -248,9 +247,8 @@ const FR: ExpertisesContent = {
       'Communication institutionnelle',
       'Certification et accréditation',
     ],
-    caption: ['Quatre voies, un même tracé.', 'Elles se poursuivent.'],
     alt: fr(
-      'Plan de tracé de quatre voies parallèles portant les quatre métiers d’OPEM : accompagnement des organisations, formation qualifiante, communication institutionnelle, certification et accréditation. Les voies se poursuivent au-delà du cadre.',
+      'Quatre photos qui se relaient dans un même cadre, une par métier d’OPEM au service d’un même client : accompagnement des organisations, formation qualifiante, communication institutionnelle, certification et accréditation',
     ),
   },
   ai: {
@@ -274,7 +272,9 @@ const FR: ExpertisesContent = {
       },
       { word: 'Non.', condition: 'quand le bénéfice ne justifie pas l’investissement' },
     ],
-    alt: fr('Trois verdicts possibles d’un examen d’usage : oui, pas encore, non'),
+    alt: fr(
+      'Banc d’essai : trois usages de l’intelligence artificielle franchissent l’examen et reçoivent chacun leur verdict : oui, pas encore, non',
+    ),
   },
   talk: {
     eyebrow: 'Premier échange',
@@ -388,8 +388,7 @@ const AR: ExpertisesContent = {
     ],
     text: 'عهدت إلينا مؤسسة عمومية اقتصادية في قطاع البناء والأشغال العمومية والري بإنجاز كتالوجاتها المؤسساتية، وتكوين فرقها، وتعزيز كفاءاتهم في نظام إدارتها المدمج. وتمتد هذه الثقة إلى الدراسات التنظيمية وإلى وضع التسيير التقديري للوظائف والكفاءات.',
     lanes: ['مرافقة المؤسسات', 'التكوين التأهيلي', 'الاتصال المؤسساتي', 'الإشهاد والاعتماد'],
-    caption: ['أربعة مسارات، خط واحد.', 'وهي تتواصل.'],
-    alt: 'مخطط لأربعة مسارات متوازية تحمل مهن OPEM الأربع: مرافقة المؤسسات، التكوين التأهيلي، الاتصال المؤسساتي، الإشهاد والاعتماد. تتواصل المسارات خارج الإطار.',
+    alt: 'أربع صور تتعاقب في إطار واحد، صورة لكل مهنة من مهن OPEM في خدمة عميل واحد: مرافقة المؤسسات، التكوين التأهيلي، الاتصال المؤسساتي، الإشهاد والاعتماد',
   },
   ai: {
     eyebrow: 'الذكاء الاصطناعي التطبيقي',
@@ -405,7 +404,7 @@ const AR: ExpertisesContent = {
       { word: 'ليس بعد.', condition: 'حين يجب أولًا ترتيب معطياتكم أو عملياتكم' },
       { word: 'لا.', condition: 'حين لا تبرّر الفائدة الاستثمار' },
     ],
-    alt: 'ثلاثة أحكام ممكنة لفحص استعمال ما: نعم، ليس بعد، لا',
+    alt: 'منصة اختبار: ثلاثة استعمالات للذكاء الاصطناعي تجتاز الفحص وينال كل منها حكمه: نعم، ليس بعد، لا',
   },
   talk: {
     eyebrow: 'أول تواصل',

@@ -45,8 +45,7 @@
 .reference,
 .closing,
 .note,
-.figureLabel,
-.verdictCondition {
+.figureLabel {
   font-family: var(--font-text);
 }
 
@@ -443,11 +442,22 @@
   min-width: 0;
 }
 
-/* ---------- 03 Les expertises à l'œuvre ensemble : schéma ---------- */
+/* ---------- 03 Les métiers se relaient : photos en relais (Relay.module.css) ---------- */
 
 .together {
   padding-block: var(--section-space);
   background: var(--opem-blue-10);
+}
+
+/* Écran assez grand (PANEL_QUERY de useCabinetMotion) : la section occupe tout l'écran sous le
+   menu et s'y fige le temps du relais. */
+@media (min-width: 64em) and (min-height: 34em) {
+  .together {
+    display: grid;
+    align-content: center;
+    min-height: 100svh;
+    padding-block: calc(var(--header-height-compact) + 2rem) 2rem;
+  }
 }
 
 /* Les chiffres : du vrai texte, côte à côte même sur téléphone. */
@@ -478,91 +488,7 @@
   font-size: 1.0625rem;
 }
 
-.tracePanel {
-  margin: 0;
-  overflow: hidden;
-  border-radius: 16px;
-  background: var(--opem-night);
-}
-
-.trace {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.traceGrid {
-  stroke: rgb(178 202 222 / 0.08);
-  stroke-width: 1;
-}
-
-.traceContour {
-  fill: none;
-  stroke: rgb(178 202 222 / 0.14);
-  stroke-width: 1.2;
-}
-
-.traceRoad {
-  fill: none;
-  stroke: rgb(255 255 255 / 0.05);
-  stroke-width: 44;
-}
-
-.traceEdge {
-  fill: none;
-  stroke: rgb(178 202 222 / 0.45);
-  stroke-width: 1.2;
-}
-
-/* Le filet ambre de chaque voie avance lentement, sans fin. */
-.traceLine {
-  fill: none;
-  stroke: var(--opem-amber);
-  stroke-width: 2.4;
-  stroke-dasharray: 10 12;
-  stroke-linecap: round;
-  animation: run 2.4s linear infinite;
-}
-
-@keyframes run {
-  to {
-    stroke-dashoffset: -44;
-  }
-}
-
-.traceLabel {
-  fill: var(--opem-white);
-  font-family: var(--font-heading);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-.traceLabel:lang(ar) {
-  font-family: var(--font-arabic);
-  font-size: 21px;
-  letter-spacing: 0;
-}
-
-.traceCaption {
-  padding: 0 clamp(1.25rem, 1rem + 1vw, 2rem) clamp(1.25rem, 1rem + 1vw, 1.75rem);
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.traceCaption span {
-  display: block;
-  color: var(--opem-white);
-}
-
-.traceCaption span + span {
-  color: var(--opem-blue-30);
-  font-weight: 500;
-}
-
-/* ---------- 04 IA appliquée : typographie seule ---------- */
+/* ---------- 04 IA appliquée : le banc d'essai (VerdictBench.module.css) ---------- */
 
 .ai {
   padding-block: var(--section-space);
@@ -575,45 +501,6 @@
 
 .greenArrow {
   color: var(--opem-green);
-}
-
-.verdicts {
-  display: grid;
-  border-top: 1px solid var(--opem-gray-light);
-}
-
-.verdict {
-  display: grid;
-  gap: 0.375rem;
-  margin: 0;
-  padding-block: clamp(1.125rem, 0.875rem + 1vw, 1.75rem);
-  border-bottom: 1px solid var(--opem-gray-light);
-}
-
-.verdictWord {
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.035em;
-}
-
-.verdict[data-verdict='0'] .verdictWord {
-  color: var(--opem-green-dark);
-}
-
-.verdict[data-verdict='1'] .verdictWord {
-  color: var(--opem-blue);
-}
-
-.verdict[data-verdict='2'] .verdictWord {
-  color: var(--opem-night);
-}
-
-.verdictCondition {
-  color: var(--opem-gray);
-  font-size: 1.125rem;
-  line-height: 1.5;
 }
 
 /* ---------- 05 Parlons de votre besoin : tracé au trait ---------- */
@@ -728,10 +615,6 @@
 
 /* Moins d'animations : tout est en place d'emblée, rien ne bouge. */
 @media (prefers-reduced-motion: reduce) {
-  .traceLine {
-    animation: none;
-  }
-
   .threadPath,
   .threadArrow,
   .threadStep,
@@ -751,8 +634,6 @@
 .issueNumber:lang(ar),
 .cardTitle:lang(ar),
 .cardLink:lang(ar),
-.traceCaption:lang(ar),
-.verdictWord:lang(ar),
 .figureValue:lang(ar) {
   font-family: var(--font-arabic);
   letter-spacing: 0;
@@ -766,8 +647,7 @@
 .reference:lang(ar),
 .closing:lang(ar),
 .note:lang(ar),
-.figureLabel:lang(ar),
-.verdictCondition:lang(ar) {
+.figureLabel:lang(ar) {
   font-family: var(--font-arabic);
   line-height: 1.8;
 }
