@@ -5,7 +5,7 @@ import { company } from '@/config/company';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
-import { CALLBACK_HREF, type MenuItem } from '../navbar/menu';
+import { CALLBACK_HREF, JOIN_HREF, type MenuItem } from '../navbar/menu';
 import { useMenu } from '../navbar/useMenu';
 import styles from './Footer.module.css';
 import { legalLinks } from './legalLinks';
@@ -22,12 +22,13 @@ const EXPERTISES_HREF = '/expertises';
 /**
  * Deux colonnes seulement, construites à partir du menu principal (donc modifiables dans
  * WordPress) : « Nos expertises » (les sous-pages de la rubrique Expertises) et « Le site »
- * (les autres rubriques, sans l'accueil : le logo y mène déjà). Les emplacements vides
+ * (les autres rubriques, sans l'accueil : le logo y mène déjà, puis « Rejoindre notre
+ * réseau »). Les emplacements vides
  * (sans lien) sont ignorés.
  */
 function buildColumns(
   items: MenuItem[],
-  titles: { expertises: string; site: string },
+  titles: { expertises: string; site: string; join: string },
   contactLabel: string,
 ) {
   const expertises = items.find((item) => item.href === EXPERTISES_HREF);
@@ -36,6 +37,8 @@ function buildColumns(
   if (!items.some((item) => item.href === CALLBACK_HREF)) {
     site.push({ id: 'contact', label: contactLabel, href: CALLBACK_HREF });
   }
+  // « Rejoindre notre réseau » : la page de candidature des experts, toujours au pied de page.
+  site.push({ id: 'rejoindre-notre-reseau', label: titles.join, href: JOIN_HREF });
 
   const columns: FooterColumn[] = [];
   const expertiseLinks = expertises?.children.flatMap(linkOf) ?? [];

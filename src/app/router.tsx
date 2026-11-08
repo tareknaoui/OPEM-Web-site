@@ -37,6 +37,18 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: 'contact/demande-de-rendez-vous',
+        lazy: async () => ({
+          Component: (await import('@/features/forms/AppointmentPage')).default,
+        }),
+      },
+      {
+        path: 'contact/rejoindre-notre-reseau',
+        lazy: async () => ({
+          Component: (await import('@/features/forms/JoinPage')).default,
+        }),
+      },
+      {
         path: '*',
         lazy: async () => ({
           Component: (await import('@/features/not-found/NotFoundPage')).default,

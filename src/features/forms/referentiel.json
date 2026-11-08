@@ -1,0 +1,700 @@
+{
+  "version": "2026-10-02",
+  "domains": [
+    {
+      "id": "D01",
+      "fr": "01 Stratégie, gouvernance et management",
+      "ar": "01 الاستراتيجية والحوكمة والتسيير",
+      "specialities": [
+        {
+          "id": "SPE-0001",
+          "fr": "Diagnostic stratégique",
+          "ar": "التشخيص الاستراتيجي"
+        },
+        {
+          "id": "SPE-0002",
+          "fr": "Planification stratégique",
+          "ar": "التخطيط الاستراتيجي"
+        },
+        {
+          "id": "SPE-0003",
+          "fr": "Gouvernance",
+          "ar": "الحوكمة"
+        },
+        {
+          "id": "SPE-0004",
+          "fr": "Leadership",
+          "ar": "القيادة"
+        },
+        {
+          "id": "SPE-0005",
+          "fr": "Management d’équipe",
+          "ar": "تسيير الفرق"
+        },
+        {
+          "id": "SPE-0006",
+          "fr": "Conduite du changement",
+          "ar": "قيادة التغيير"
+        },
+        {
+          "id": "SPE-0115",
+          "fr": "Gestion des risques et contrôle interne",
+          "ar": "تسيير المخاطر والرقابة الداخلية"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "fr": "02 Organisation et gestion de projets",
+      "ar": "02 التنظيم وتسيير المشاريع",
+      "specialities": [
+        {
+          "id": "SPE-0007",
+          "fr": "Organisation et structures",
+          "ar": "التنظيم والهياكل"
+        },
+        {
+          "id": "SPE-0008",
+          "fr": "Gestion des processus",
+          "ar": "تسيير العمليات"
+        },
+        {
+          "id": "SPE-0009",
+          "fr": "Gestion de projet",
+          "ar": "تسيير المشاريع"
+        },
+        {
+          "id": "SPE-0010",
+          "fr": "Gestion de programmes et de portefeuilles",
+          "ar": "تسيير البرامج والمحافظ"
+        },
+        {
+          "id": "SPE-0012",
+          "fr": "Maîtrise d’ouvrage",
+          "ar": "صاحب المشروع"
+        }
+      ]
+    },
+    {
+      "id": "D03",
+      "fr": "03 Ressources humaines",
+      "ar": "03 الموارد البشرية",
+      "specialities": [
+        {
+          "id": "SPE-0013",
+          "fr": "Recrutement",
+          "ar": "التوظيف"
+        },
+        {
+          "id": "SPE-0014",
+          "fr": "Gestion des emplois et compétences",
+          "ar": "تسيير الوظائف والكفاءات"
+        },
+        {
+          "id": "SPE-0015",
+          "fr": "Rémunération",
+          "ar": "الأجور"
+        },
+        {
+          "id": "SPE-0016",
+          "fr": "Paie",
+          "ar": "كشوف الرواتب"
+        },
+        {
+          "id": "SPE-0017",
+          "fr": "Relations sociales",
+          "ar": "العلاقات الاجتماعية"
+        },
+        {
+          "id": "SPE-0018",
+          "fr": "Gestion des talents",
+          "ar": "تسيير المواهب"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "fr": "04 Ingénierie des dispositifs de formation professionnelle",
+      "ar": "04 هندسة أجهزة التكوين المهني",
+      "specialities": [
+        {
+          "id": "SPE-0111",
+          "fr": "Ingénierie de dispositifs et de plans de formation",
+          "ar": "هندسة أجهزة ومخططات التكوين"
+        },
+        {
+          "id": "SPE-0112",
+          "fr": "Référentiels de métiers, d’activités et de compétences",
+          "ar": "مرجعيات المهن والأنشطة والكفاءات"
+        },
+        {
+          "id": "SPE-0113",
+          "fr": "Approche par compétences et ingénierie de certification",
+          "ar": "المقاربة بالكفاءات وهندسة الإشهاد"
+        },
+        {
+          "id": "SPE-0114",
+          "fr": "Pilotage et évaluation d’un dispositif de formation",
+          "ar": "قيادة وتقييم جهاز التكوين"
+        }
+      ]
+    },
+    {
+      "id": "D05",
+      "fr": "05 Finance, comptabilité et contrôle",
+      "ar": "05 المالية والمحاسبة والرقابة",
+      "specialities": [
+        {
+          "id": "SPE-0019",
+          "fr": "Comptabilité",
+          "ar": "المحاسبة"
+        },
+        {
+          "id": "SPE-0020",
+          "fr": "Analyse financière",
+          "ar": "التحليل المالي"
+        },
+        {
+          "id": "SPE-0021",
+          "fr": "Trésorerie",
+          "ar": "الخزينة"
+        },
+        {
+          "id": "SPE-0022",
+          "fr": "Contrôle de gestion",
+          "ar": "مراقبة التسيير"
+        },
+        {
+          "id": "SPE-0023",
+          "fr": "Fiscalité",
+          "ar": "الجباية"
+        },
+        {
+          "id": "SPE-0024",
+          "fr": "Audit et révision des comptes",
+          "ar": "التدقيق ومراجعة الحسابات"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "fr": "06 Droit et conformité",
+      "ar": "06 القانون والامتثال",
+      "specialities": [
+        {
+          "id": "SPE-0025",
+          "fr": "Droit des affaires",
+          "ar": "قانون الأعمال"
+        },
+        {
+          "id": "SPE-0026",
+          "fr": "Droit social",
+          "ar": "القانون الاجتماعي"
+        },
+        {
+          "id": "SPE-0027",
+          "fr": "Contrats",
+          "ar": "العقود"
+        },
+        {
+          "id": "SPE-0028",
+          "fr": "Marchés publics",
+          "ar": "الصفقات العمومية"
+        },
+        {
+          "id": "SPE-0029",
+          "fr": "Conformité réglementaire",
+          "ar": "الامتثال التنظيمي"
+        },
+        {
+          "id": "SPE-0030",
+          "fr": "Prévention de la corruption",
+          "ar": "الوقاية من الفساد"
+        }
+      ]
+    },
+    {
+      "id": "D07",
+      "fr": "07 Qualité et systèmes de management",
+      "ar": "07 الجودة وأنظمة الإدارة",
+      "specialities": [
+        {
+          "id": "SPE-0031",
+          "fr": "Management qualité",
+          "ar": "إدارة الجودة"
+        },
+        {
+          "id": "SPE-0033",
+          "fr": "Systèmes de management intégrés",
+          "ar": "أنظمة الإدارة المدمجة"
+        },
+        {
+          "id": "SPE-0034",
+          "fr": "Amélioration continue",
+          "ar": "التحسين المستمر"
+        },
+        {
+          "id": "SPE-0035",
+          "fr": "Métrologie",
+          "ar": "علم القياس"
+        },
+        {
+          "id": "SPE-0036",
+          "fr": "Gestion documentaire",
+          "ar": "التسيير الوثائقي"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "fr": "08 HSE et sécurité industrielle",
+      "ar": "08 الصحة والسلامة والبيئة والأمن الصناعي",
+      "specialities": [
+        {
+          "id": "SPE-0037",
+          "fr": "Santé et sécurité au travail",
+          "ar": "الصحة والسلامة المهنية"
+        },
+        {
+          "id": "SPE-0038",
+          "fr": "Hygiène industrielle",
+          "ar": "النظافة الصناعية"
+        },
+        {
+          "id": "SPE-0039",
+          "fr": "Sécurité des procédés",
+          "ar": "سلامة العمليات"
+        },
+        {
+          "id": "SPE-0040",
+          "fr": "Prévention incendie",
+          "ar": "الوقاية من الحرائق"
+        },
+        {
+          "id": "SPE-0041",
+          "fr": "Analyse des accidents",
+          "ar": "تحليل الحوادث"
+        },
+        {
+          "id": "SPE-0042",
+          "fr": "Environnement : management et conformité environnementale",
+          "ar": "البيئة: الإدارة والامتثال البيئي"
+        }
+      ]
+    },
+    {
+      "id": "D09",
+      "fr": "09 Développement durable et transition énergétique",
+      "ar": "09 التنمية المستدامة والانتقال الطاقوي",
+      "specialities": [
+        {
+          "id": "SPE-0043",
+          "fr": "RSE et stratégie de durabilité",
+          "ar": "المسؤولية الاجتماعية واستراتيجية الاستدامة"
+        },
+        {
+          "id": "SPE-0045",
+          "fr": "Climat et carbone",
+          "ar": "المناخ والكربون"
+        },
+        {
+          "id": "SPE-0046",
+          "fr": "Économie circulaire",
+          "ar": "الاقتصاد الدائري"
+        },
+        {
+          "id": "SPE-0047",
+          "fr": "Efficacité énergétique",
+          "ar": "النجاعة الطاقوية"
+        },
+        {
+          "id": "SPE-0048",
+          "fr": "Énergies renouvelables",
+          "ar": "الطاقات المتجددة"
+        }
+      ]
+    },
+    {
+      "id": "D10",
+      "fr": "10 Commercial, marketing et relation client",
+      "ar": "10 التجارة والتسويق والعلاقة مع الزبائن",
+      "specialities": [
+        {
+          "id": "SPE-0049",
+          "fr": "Stratégie commerciale",
+          "ar": "الاستراتيجية التجارية"
+        },
+        {
+          "id": "SPE-0050",
+          "fr": "Vente",
+          "ar": "البيع"
+        },
+        {
+          "id": "SPE-0051",
+          "fr": "Négociation commerciale",
+          "ar": "التفاوض التجاري"
+        },
+        {
+          "id": "SPE-0052",
+          "fr": "Marketing",
+          "ar": "التسويق"
+        },
+        {
+          "id": "SPE-0053",
+          "fr": "Relation client",
+          "ar": "العلاقة مع الزبائن"
+        },
+        {
+          "id": "SPE-0054",
+          "fr": "Marketing numérique",
+          "ar": "التسويق الرقمي"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "fr": "11 Communication professionnelle",
+      "ar": "11 الاتصال المهني",
+      "specialities": [
+        {
+          "id": "SPE-0055",
+          "fr": "Communication institutionnelle",
+          "ar": "الاتصال المؤسساتي"
+        },
+        {
+          "id": "SPE-0056",
+          "fr": "Communication interne",
+          "ar": "الاتصال الداخلي"
+        },
+        {
+          "id": "SPE-0057",
+          "fr": "Communication de crise",
+          "ar": "الاتصال في الأزمات"
+        },
+        {
+          "id": "SPE-0058",
+          "fr": "Prise de parole",
+          "ar": "فن الإلقاء"
+        },
+        {
+          "id": "SPE-0059",
+          "fr": "Rédaction professionnelle",
+          "ar": "التحرير المهني"
+        },
+        {
+          "id": "SPE-0060",
+          "fr": "Communication interculturelle",
+          "ar": "الاتصال بين الثقافات"
+        }
+      ]
+    },
+    {
+      "id": "D12",
+      "fr": "12 Achats, logistique et chaîne d’approvisionnement",
+      "ar": "12 المشتريات واللوجستيك وسلسلة الإمداد",
+      "specialities": [
+        {
+          "id": "SPE-0061",
+          "fr": "Achats",
+          "ar": "المشتريات"
+        },
+        {
+          "id": "SPE-0062",
+          "fr": "Approvisionnement",
+          "ar": "التموين"
+        },
+        {
+          "id": "SPE-0063",
+          "fr": "Gestion des stocks",
+          "ar": "تسيير المخزون"
+        },
+        {
+          "id": "SPE-0064",
+          "fr": "Entreposage",
+          "ar": "التخزين"
+        },
+        {
+          "id": "SPE-0065",
+          "fr": "Transport et distribution physique",
+          "ar": "النقل والتوزيع المادي"
+        },
+        {
+          "id": "SPE-0066",
+          "fr": "Opérations d’import-export",
+          "ar": "عمليات الاستيراد والتصدير"
+        },
+        {
+          "id": "SPE-0116",
+          "fr": "Moyens généraux, parc et patrimoine",
+          "ar": "الوسائل العامة والحظيرة والممتلكات"
+        }
+      ]
+    },
+    {
+      "id": "D13",
+      "fr": "13 Systèmes d’information, numérique, données et IA",
+      "ar": "13 أنظمة المعلومات والرقمنة والبيانات والذكاء الاصطناعي",
+      "specialities": [
+        {
+          "id": "SPE-0067",
+          "fr": "Gouvernance SI",
+          "ar": "حوكمة أنظمة المعلومات"
+        },
+        {
+          "id": "SPE-0068",
+          "fr": "Infrastructure et réseaux",
+          "ar": "البنية التحتية والشبكات"
+        },
+        {
+          "id": "SPE-0069",
+          "fr": "Développement logiciel",
+          "ar": "تطوير البرمجيات"
+        },
+        {
+          "id": "SPE-0070",
+          "fr": "Bases de données",
+          "ar": "قواعد البيانات"
+        },
+        {
+          "id": "SPE-0071",
+          "fr": "Analyse de données et BI",
+          "ar": "تحليل البيانات وذكاء الأعمال"
+        },
+        {
+          "id": "SPE-0072",
+          "fr": "Intelligence artificielle",
+          "ar": "الذكاء الاصطناعي"
+        },
+        {
+          "id": "SPE-0073",
+          "fr": "Bureautique",
+          "ar": "البرمجيات المكتبية"
+        }
+      ]
+    },
+    {
+      "id": "D14",
+      "fr": "14 Cybersécurité",
+      "ar": "14 الأمن السيبراني",
+      "specialities": [
+        {
+          "id": "SPE-0074",
+          "fr": "Gouvernance cybersécurité",
+          "ar": "حوكمة الأمن السيبراني"
+        },
+        {
+          "id": "SPE-0075",
+          "fr": "Management de la sécurité de l’information",
+          "ar": "إدارة أمن المعلومات"
+        },
+        {
+          "id": "SPE-0076",
+          "fr": "Risques cyber",
+          "ar": "المخاطر السيبرانية"
+        },
+        {
+          "id": "SPE-0077",
+          "fr": "Sécurité réseau",
+          "ar": "أمن الشبكات"
+        },
+        {
+          "id": "SPE-0078",
+          "fr": "Réponse aux incidents",
+          "ar": "الاستجابة للحوادث"
+        }
+      ]
+    },
+    {
+      "id": "D15",
+      "fr": "15 Industrie : production, maintenance et génie électromécanique",
+      "ar": "15 الصناعة: الإنتاج والصيانة والهندسة الكهروميكانيكية",
+      "specialities": [
+        {
+          "id": "SPE-0084",
+          "fr": "Production et performance industrielle",
+          "ar": "الإنتاج والأداء الصناعي"
+        },
+        {
+          "id": "SPE-0085",
+          "fr": "Maintenance industrielle",
+          "ar": "الصيانة الصناعية"
+        },
+        {
+          "id": "SPE-0081",
+          "fr": "Mécanique et conception mécanique",
+          "ar": "الميكانيك والتصميم الميكانيكي"
+        },
+        {
+          "id": "SPE-0082",
+          "fr": "Électricité industrielle",
+          "ar": "الكهرباء الصناعية"
+        },
+        {
+          "id": "SPE-0083",
+          "fr": "Automatismes et instrumentation",
+          "ar": "الآليات والأجهزة"
+        },
+        {
+          "id": "SPE-0086",
+          "fr": "Dessin technique et conception assistée",
+          "ar": "الرسم التقني والتصميم بمساعدة الحاسوب"
+        }
+      ]
+    },
+    {
+      "id": "D16",
+      "fr": "16 Pédagogie et développement des compétences",
+      "ar": "16 البيداغوجيا وتنمية الكفاءات",
+      "specialities": [
+        {
+          "id": "SPE-0087",
+          "fr": "Ingénierie pédagogique",
+          "ar": "الهندسة البيداغوجية"
+        },
+        {
+          "id": "SPE-0088",
+          "fr": "Conception de programmes",
+          "ar": "تصميم البرامج"
+        },
+        {
+          "id": "SPE-0090",
+          "fr": "Formation de formateurs et techniques d’animation",
+          "ar": "تكوين المكوّنين وتقنيات التنشيط"
+        },
+        {
+          "id": "SPE-0091",
+          "fr": "Évaluation des acquis",
+          "ar": "تقييم المكتسبات"
+        },
+        {
+          "id": "SPE-0092",
+          "fr": "Formation à distance",
+          "ar": "التكوين عن بعد"
+        },
+        {
+          "id": "SPE-0093",
+          "fr": "Didactique des langues",
+          "ar": "تعليمية اللغات"
+        }
+      ]
+    },
+    {
+      "id": "D17",
+      "fr": "17 BTPH, génie civil et infrastructures",
+      "ar": "17 البناء والأشغال العمومية والري، الهندسة المدنية والمنشآت القاعدية",
+      "specialities": [
+        {
+          "id": "SPE-0080",
+          "fr": "Génie civil, structures et géotechnique",
+          "ar": "الهندسة المدنية والهياكل والجيوتقنية"
+        },
+        {
+          "id": "SPE-0094",
+          "fr": "Conduite et organisation de chantier",
+          "ar": "قيادة الورشات وتنظيمها"
+        },
+        {
+          "id": "SPE-0095",
+          "fr": "Planification et ordonnancement des travaux",
+          "ar": "تخطيط الأشغال وجدولتها"
+        },
+        {
+          "id": "SPE-0096",
+          "fr": "Métré, études de prix et économie de la construction",
+          "ar": "القياسات ودراسة الأسعار واقتصاد البناء"
+        },
+        {
+          "id": "SPE-0097",
+          "fr": "Maîtrise d’œuvre, contrôle technique et qualité des ouvrages",
+          "ar": "الإشراف على الإنجاز والرقابة التقنية وجودة المنشآت"
+        },
+        {
+          "id": "SPE-0098",
+          "fr": "Infrastructures : routes, VRD, hydraulique et topographie",
+          "ar": "المنشآت القاعدية: الطرق والشبكات المختلفة والري والطبوغرافيا"
+        }
+      ]
+    },
+    {
+      "id": "D18",
+      "fr": "18 Entrepreneuriat et appui aux TPE et PME",
+      "ar": "18 المقاولاتية ودعم المؤسسات الصغيرة والمتوسطة",
+      "specialities": [
+        {
+          "id": "SPE-0099",
+          "fr": "Accompagnement à la création d’entreprise",
+          "ar": "مرافقة إنشاء المؤسسات"
+        },
+        {
+          "id": "SPE-0100",
+          "fr": "Modèle économique et plan d’affaires",
+          "ar": "النموذج الاقتصادي ومخطط الأعمال"
+        },
+        {
+          "id": "SPE-0101",
+          "fr": "Structuration et croissance des TPE et PME",
+          "ar": "هيكلة ونمو المؤسسات الصغيرة والمتوسطة"
+        },
+        {
+          "id": "SPE-0102",
+          "fr": "Dispositifs d’appui, financement et incubation",
+          "ar": "أجهزة الدعم والتمويل والاحتضان"
+        }
+      ]
+    },
+    {
+      "id": "D19",
+      "fr": "19 Développement territorial et gouvernance locale",
+      "ar": "19 التنمية الإقليمية والحوكمة المحلية",
+      "specialities": [
+        {
+          "id": "SPE-0103",
+          "fr": "Organisation et fonctionnement des collectivités locales",
+          "ar": "تنظيم الجماعات المحلية وسيرها"
+        },
+        {
+          "id": "SPE-0104",
+          "fr": "Services publics locaux et relation à l’usager",
+          "ar": "المرافق العمومية المحلية والعلاقة مع المرتفق"
+        },
+        {
+          "id": "SPE-0105",
+          "fr": "Finances et budget des collectivités",
+          "ar": "مالية وميزانية الجماعات المحلية"
+        },
+        {
+          "id": "SPE-0106",
+          "fr": "Planification et développement local",
+          "ar": "التخطيط والتنمية المحلية"
+        }
+      ]
+    },
+    {
+      "id": "D20",
+      "fr": "20 Suivi-évaluation de projets et de politiques publiques",
+      "ar": "20 متابعة وتقييم المشاريع والسياسات العمومية",
+      "specialities": [
+        {
+          "id": "SPE-0107",
+          "fr": "Cadre logique et conception de projets",
+          "ar": "الإطار المنطقي وتصميم المشاريع"
+        },
+        {
+          "id": "SPE-0108",
+          "fr": "Indicateurs et systèmes de suivi",
+          "ar": "المؤشرات وأنظمة المتابعة"
+        },
+        {
+          "id": "SPE-0109",
+          "fr": "Évaluation de projets et de politiques publiques",
+          "ar": "تقييم المشاريع والسياسات العمومية"
+        },
+        {
+          "id": "SPE-0110",
+          "fr": "Redevabilité et rapportage aux bailleurs",
+          "ar": "المساءلة وإعداد التقارير للممولين"
+        }
+      ]
+    }
+  ]
+}

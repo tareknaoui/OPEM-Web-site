@@ -16,7 +16,14 @@ const DEFAULT_SITE_URL = 'https://sas-fawn-delta.vercel.app';
  * Pages publiées, dans le plan du site. N'y mettre que les pages réellement construites
  * (une adresse qui mène à « Page introuvable » nuit au référencement).
  */
-const PAGES = ['/', '/le-cabinet', '/ia-appliquee', '/contact'];
+const PAGES = [
+  '/',
+  '/le-cabinet',
+  '/ia-appliquee',
+  '/contact',
+  '/contact/demande-de-rendez-vous',
+  '/contact/rejoindre-notre-reseau',
+];
 
 export function seo(): Plugin {
   const siteUrl = (process.env.SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, '');
