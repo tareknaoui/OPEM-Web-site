@@ -75,7 +75,7 @@
 @media (min-width: 64em) {
   /* Haut du récit quand il est figé : sous le menu et la barre des rubriques (lu par le script). */
   .story {
-    scroll-margin-top: calc(var(--header-height-compact) + 5rem);
+    scroll-margin-top: calc(var(--header-height-compact) + 1.25rem);
     background: var(--opem-white);
   }
 

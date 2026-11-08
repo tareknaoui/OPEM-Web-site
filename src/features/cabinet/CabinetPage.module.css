@@ -2,10 +2,10 @@
    ./sections). Couleurs : les tokens de la charte (src/styles/global.css). Pas de dégradé,
    pas de texte sur la photo. */
 
-/* Toute la page : la barre des rubriques y reste collée sous le menu au défilement. Les titres
-   visés s'arrêtent sous le menu et sous cette barre. */
+/* Toute la page : la barre des rubriques se range quand on descend (elle revient quand on
+   remonte) ; les titres visés s'arrêtent juste sous le menu. */
 .page h2[id] {
-  scroll-margin-top: calc(var(--header-height-compact) + 6rem);
+  scroll-margin-top: calc(var(--header-height-compact) + 2rem);
 }
 
 /* ==========================================================================
@@ -37,6 +37,16 @@
   box-shadow: 0 0.75rem 2rem -1rem rgb(17 54 91 / 0.45);
   scrollbar-width: none;
   backdrop-filter: blur(10px);
+  transition:
+    translate 400ms var(--ease-reveal),
+    opacity 250ms ease;
+}
+
+/* En descendant, la barre se range au-dessus de l'écran pour laisser toute la place au contenu. */
+.subnavRail[data-hidden] .subnav {
+  translate: 0 -160%;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .subnav::-webkit-scrollbar {
@@ -119,7 +129,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 35%;
+  object-position: 50% 45%;
 }
 
 .panel {
@@ -212,5 +222,17 @@
   from {
     opacity: 0;
     translate: 0 1rem;
+  }
+}
+
+/* Sections figées (data-panel) : sur un écran où elles tiennent, chacune occupe tout l'écran,
+   sous le menu et la barre des rubriques ; elle y reste le temps que son contenu apparaisse
+   (useCabinetMotion, PANEL_QUERY). */
+@media (min-width: 64em) and (min-height: 34em) {
+  .page section[data-panel] {
+    display: grid;
+    align-content: center;
+    min-height: 100svh;
+    padding-block: calc(var(--header-height-compact) + 2rem) 2rem;
   }
 }

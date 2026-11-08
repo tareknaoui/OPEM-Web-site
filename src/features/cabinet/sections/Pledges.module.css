@@ -1,0 +1,105 @@
+/* 06 « Nos engagements » : le seul bloc foncé de la page. Fond bleu nuit, titre et paragraphe en
+   blanc (12,3:1), surtitre en bleu 30 %, destinataires en ambre (6,6:1 sur le bleu nuit) : l'ambre
+   seulement sur le foncé. Pas d'image, pas de dégradé. */
+
+.section {
+  padding-block: calc(var(--section-space) * 1.15);
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.inner {
+  display: grid;
+  justify-items: start;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0 0 var(--space-4);
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-amber);
+}
+
+.title {
+  margin: 0 0 clamp(1.75rem, 1rem + 2.5vw, 3rem);
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* Le paragraphe, d'un seul tenant, en grand. */
+.text {
+  max-width: 54rem;
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 0.95rem + 1.2vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.recipient {
+  color: var(--opem-amber);
+  font-weight: 700;
+}
+
+/* Filet ambre de conclusion. */
+.rule {
+  width: 3.5rem;
+  height: 2px;
+  margin-top: clamp(1.75rem, 1rem + 2vw, 2.75rem);
+  background: var(--opem-amber);
+}
+
+.eyebrow:lang(ar),
+.title:lang(ar),
+.text:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.recipient:lang(ar) {
+  font-weight: 600;
+}
+
+/* Ordinateur et tablette : le serment, centré. */
+@media (min-width: 48em) {
+  .inner {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .text {
+    text-wrap: balance;
+  }
+}
+
+/* Écran assez haut : le bloc occupe tout l'écran, sous le menu et la barre des rubriques (il y
+   reste figé le temps du serment). */
+@media (min-height: 36em) {
+  .section {
+    display: grid;
+    align-content: center;
+    min-height: 100svh;
+    padding-block: calc(var(--header-height-compact) + 2rem) 2rem;
+  }
+}

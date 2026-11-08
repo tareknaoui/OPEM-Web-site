@@ -19,7 +19,7 @@ export function History({ history }: { history: CabinetContent['history'] }) {
       <div className="container">
         <div className={styles.head}>
           <p className={styles.eyebrow}>{history.eyebrow}</p>
-          <h2 id="notre-histoire" className={styles.title}>
+          <h2 id="notre-histoire" className={styles.title} data-motion="title">
             {history.title}
           </h2>
         </div>

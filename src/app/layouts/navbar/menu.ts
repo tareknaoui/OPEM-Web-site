@@ -7,8 +7,11 @@ export type { MenuItem };
 export const MAX_TOP_LEVEL_ITEMS = 9;
 
 /** Cible des boutons « Demander un devis » et « Être rappelé ». */
-export const QUOTE_HREF = '/contact';
+/** Page « Demande de rendez-vous » (bouton « Parlons de votre projet », bloc 09 du cabinet). */
+export const QUOTE_HREF = '/contact/demande-de-rendez-vous';
 export const CALLBACK_HREF = '/contact';
+/** Page « Rejoindre notre réseau » (menu Contact, porte « Vous êtes expert » du cabinet). */
+export const JOIN_HREF = '/contact/rejoindre-notre-reseau';
 
 /** Doit correspondre au point de rupture desktop de Navbar.module.css. */
 export const DESKTOP_QUERY = '(min-width: 80em)';
@@ -228,7 +231,7 @@ const entries: Entry[] = [
     children: [
       {
         id: 'demande-de-rendez-vous',
-        href: '/contact/demande-de-rendez-vous',
+        href: QUOTE_HREF,
         label: { fr: 'Demande de rendez-vous', ar: 'طلب موعد' },
         description: {
           fr: 'Échanger avec un consultant OPEM.',
@@ -237,7 +240,7 @@ const entries: Entry[] = [
       },
       {
         id: 'rejoindre-notre-reseau',
-        href: '/contact/rejoindre-notre-reseau',
+        href: JOIN_HREF,
         label: { fr: 'Rejoindre notre réseau', ar: 'انضموا إلى شبكتنا' },
         description: {
           fr: 'Consultants et formateurs : proposez votre candidature.',

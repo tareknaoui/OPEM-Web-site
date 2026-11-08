@@ -1,0 +1,222 @@
+/* 07 « Notre réseau d'experts » : fond blanc, la carte du réseau (terres en points gris,
+   l'Algérie teintée de bleu, l'équipe bleu OPEM, un arc vers un seul point ambre cerné de bleu
+   nuit), puis cinq traits. Pas de dégradé. */
+
+.section {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+/* ---------- En-tête : surtitre, titre (mêmes styles que le bloc 02) ---------- */
+
+.head {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.eyebrow {
+  composes: eyebrow from './History.module.css';
+}
+
+.title {
+  composes: title from './History.module.css';
+}
+
+/* ---------- La constellation ---------- */
+
+/* La carte : jamais plus haute que l'écran sous le menu et la barre des rubriques (elle s'y
+   fige le temps de sa scène ; scroll-margin-top donne au script le haut où la figer). */
+.figure {
+  margin-bottom: clamp(2rem, 1.25rem + 2.5vw, 3.5rem);
+  scroll-margin-top: calc(var(--header-height-compact) + 1.25rem);
+  background: var(--opem-white);
+}
+
+.wide {
+  width: min(100%, calc((100svh - 7rem) * 97 / 56));
+  margin-inline: auto;
+}
+
+.narrow {
+  width: min(100%, calc((100svh - 6.5rem) * 47 / 63));
+  margin-inline: auto;
+}
+
+.wide,
+.narrow {
+  position: relative;
+}
+
+.wide {
+  display: none;
+}
+
+@media (min-width: 40em) {
+  .wide {
+    display: block;
+  }
+
+  .narrow {
+    display: none;
+  }
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Les terres : un point par case (un trait de longueur nulle, bouts ronds). */
+.land,
+.home {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.land {
+  stroke: var(--opem-gray-light);
+  stroke-width: 0.36;
+}
+
+/* L'Algérie, teintée de bleu : le terrain de l'équipe. */
+.home {
+  stroke: var(--opem-blue-50);
+  stroke-width: 0.44;
+}
+
+.arc {
+  fill: none;
+  stroke: var(--opem-blue);
+  stroke-linecap: round;
+}
+
+/* Le masque qui découvre l'arc, du départ à l'arrivée. */
+.arcMask {
+  fill: none;
+  stroke: #fff;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.links {
+  stroke: var(--opem-blue);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.member {
+  fill: var(--opem-blue);
+  stroke: var(--opem-white);
+}
+
+/* Le seul point ambre du bloc, cerné de bleu nuit. */
+.beyond {
+  fill: var(--opem-amber);
+  stroke: var(--opem-night);
+}
+
+/* Légendes, en texte (taille lisible quelle que soit la largeur de la carte), sur une étiquette
+   blanche qui les détache des points. */
+.legend {
+  position: absolute;
+  translate: 0 -50%;
+  padding: 0.3rem 0.625rem;
+  border: 1px solid rgb(17 54 91 / 0.1);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.92);
+  box-shadow: 0 6px 18px -12px rgb(17 54 91 / 0.4);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.legend[data-align='center'] {
+  translate: -50% -50%;
+}
+
+.legend[data-align='end'] {
+  translate: -100% -50%;
+}
+
+.legend[data-tone='pool'] {
+  color: var(--opem-gray);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.legend:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.legend[data-tone='pool']:lang(ar) {
+  font-size: 0.875rem;
+}
+
+/* ---------- Les cinq traits ---------- */
+
+.traits {
+  display: grid;
+  gap: 1.5rem clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trait {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding-top: 1rem;
+  border-top: 2px solid var(--opem-blue-10);
+}
+
+/* L'icône du trait, duotone bleu OPEM. */
+.traitIcon {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--opem-blue);
+  line-height: 0;
+}
+
+.traitTitle {
+  margin: 0;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.traitText {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.traitTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+@media (min-width: 40em) {
+  .traits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .traits {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}

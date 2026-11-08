@@ -3,6 +3,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Fragment, useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
 import type { CabinetContent } from '../content';
+import { iso, pts } from '../iso';
+import { fitToScreen } from '../useCabinetMotion';
 import styles from './History.module.css';
 
 /*
@@ -15,14 +17,10 @@ const W = 1200;
 const VIEW = { y: 40, h: 460 };
 const S = 30; // pixels par unité
 const C = Math.cos(Math.PI / 6);
-const ORIGIN = { x: 600, y: 330 };
-
-type Point = { x: number; y: number };
-const P = (x: number, y: number, z: number): Point => ({
-  x: ORIGIN.x + (x - y) * C * S,
-  y: ORIGIN.y + (x + y) * 0.5 * S - z * S,
-});
-const pts = (list: Point[]) => list.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+const { P, box: cuboid } = iso({ x: 600, y: 330 }, S);
+/** Boîte à base carrée (côté a, hauteur h). */
+const box = (x0: number, y0: number, z0: number, a: number, h: number) =>
+  cuboid(x0, y0, z0, a, a, h);
 
 const SIDE = 4; // côté du pilier
 const CUBE = 0.6; // côté d'un cube-domaine
@@ -34,16 +32,6 @@ const STAGES = [
   { u: THIRD, h: 4.6, domains: 6 },
 ] as const;
 const LAST = STAGES.length - 1;
-
-/** Boîte isométrique : ses trois faces visibles (dessus, face gauche +y, face droite +x). */
-function box(x0: number, y0: number, z0: number, a: number, h: number) {
-  const [x1, y1, z1] = [x0 + a, y0 + a, z0 + h];
-  return {
-    top: pts([P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)]),
-    left: pts([P(x0, y1, z0), P(x1, y1, z0), P(x1, y1, z1), P(x0, y1, z1)]),
-    right: pts([P(x1, y0, z0), P(x1, y1, z0), P(x1, y1, z1), P(x1, y0, z1)]),
-  };
-}
 
 const SCENE = STAGES.map((stage, index) => {
   const cx = stage.u;
@@ -146,15 +134,20 @@ export function HistoryArt({
     const media = gsap.matchMedia(story);
     media.add(
       {
-        // Assez haut pour tenir à l'écran : le récit est figé le temps de sa construction.
-        pin: '(min-width: 64em) and (min-height: 48em)',
-        // Écran bas : pas de blocage, la construction suit simplement le défilement.
-        flow: '(min-width: 64em) and (max-height: 47.99em)',
+        // Le récit est figé le temps de sa construction (réduit au besoin pour tenir à l'écran).
+        pin: '(min-width: 64em) and (min-height: 34em)',
+        // Écran très bas : pas de blocage, la construction suit simplement le défilement.
+        flow: '(min-width: 64em) and (max-height: 33.99em)',
       },
       (context) => {
         const pin = Boolean(context.conditions?.pin);
-        // Haut du récit figé : sous le menu et la barre des rubriques (scroll-margin-top du CSS).
+        // Haut du récit figé : juste sous le menu (scroll-margin-top du CSS).
         const top = () => parseFloat(getComputedStyle(story).scrollMarginTop) || 0;
+        const content = story.firstElementChild;
+        const unfit =
+          pin && content instanceof HTMLElement
+            ? fitToScreen(content, () => window.innerHeight - top() - 16)
+            : undefined;
         const timeline = gsap.timeline({
           defaults: { ease: 'power3.out' },
           scrollTrigger: pin
@@ -181,7 +174,7 @@ export function HistoryArt({
             .from(
               story.querySelector(`[data-act="${index}"]`),
               {
-                opacity: 0.14,
+                opacity: 0.3,
                 duration: 0.9,
                 ease: 'none',
               },
@@ -201,6 +194,7 @@ export function HistoryArt({
         });
         // Pause sur le récit complet, le temps de le relire.
         timeline.to({}, { duration: 2 });
+        return unfit;
       },
     );
 
@@ -212,133 +206,136 @@ export function HistoryArt({
 
   return (
     <div ref={ref} className={styles.story}>
-      <p className={styles.text}>
-        {text.map((act, index) => (
-          <Fragment key={index}>
-            {index > 0 && ' '}
-            <span className={styles.act} data-act={index}>
-              <Act text={act} />
-            </span>
-          </Fragment>
-        ))}
-      </p>
+      {/* Le contenu du récit, réduit au besoin pour tenir à l'écran quand il est figé. */}
+      <div>
+        <p className={styles.text}>
+          {text.map((act, index) => (
+            <Fragment key={index}>
+              {index > 0 && ' '}
+              <span className={styles.act} data-act={index}>
+                <Act text={act} />
+              </span>
+            </Fragment>
+          ))}
+        </p>
 
-      <div className={styles.artFrame}>
-        <svg
-          className={styles.art}
-          viewBox={`0 ${VIEW.y} ${W} ${VIEW.h}`}
-          aria-hidden="true"
-          focusable="false"
-        >
-          <g className={styles.artGuides}>
-            {CROSSES.map(([x, y]) => (
-              <path key={`${x}-${y}`} d={`M${mx(x) - 5} ${y}h10M${mx(x)} ${y - 5}v10`} />
-            ))}
-          </g>
+        <div className={styles.artFrame}>
+          <svg
+            className={styles.art}
+            viewBox={`0 ${VIEW.y} ${W} ${VIEW.h}`}
+            aria-hidden="true"
+            focusable="false"
+          >
+            <g className={styles.artGuides}>
+              {CROSSES.map(([x, y]) => (
+                <path key={`${x}-${y}`} d={`M${mx(x) - 5} ${y}h10M${mx(x)} ${y - 5}v10`} />
+              ))}
+            </g>
 
-          <g transform={rtl ? `translate(${W} 0) scale(-1 1)` : undefined}>
-            <line
-              className={styles.artGround}
-              x1={GROUND.from.x}
-              y1={GROUND.from.y}
-              x2={GROUND.to.x}
-              y2={GROUND.to.y}
-              data-part="ground"
-            />
+            <g transform={rtl ? `translate(${W} 0) scale(-1 1)` : undefined}>
+              <line
+                className={styles.artGround}
+                x1={GROUND.from.x}
+                y1={GROUND.from.y}
+                x2={GROUND.to.x}
+                y2={GROUND.to.y}
+                data-part="ground"
+              />
 
-            {SCENE.map((stage) => (
-              <g key={stage.index} data-stage={stage.index}>
-                <g data-part="pillar">
-                  <polygon className={styles.artShadow} points={stage.shadow} />
-                  <polygon className={styles.artLeft} points={stage.pillar.left} />
-                  <polygon className={styles.artRight} points={stage.pillar.right} />
-                  {stage.floors.map((floor) => (
-                    <polyline key={floor} className={styles.artFloor} points={floor} />
+              {SCENE.map((stage) => (
+                <g key={stage.index} data-stage={stage.index}>
+                  <g data-part="pillar">
+                    <polygon className={styles.artShadow} points={stage.shadow} />
+                    <polygon className={styles.artLeft} points={stage.pillar.left} />
+                    <polygon className={styles.artRight} points={stage.pillar.right} />
+                    {stage.floors.map((floor) => (
+                      <polyline key={floor} className={styles.artFloor} points={floor} />
+                    ))}
+                    <polygon className={styles.artTop} points={stage.pillar.top} />
+                  </g>
+
+                  {/* Réseau de l'IA, tracé sur le dessus, sous les cubes. */}
+                  {stage.core &&
+                    stage.cubes.map((cube) => (
+                      <line
+                        key={`link-${cube.i}`}
+                        className={styles.artLink}
+                        x1={stage.center.x}
+                        y1={stage.center.y}
+                        x2={cube.foot.x}
+                        y2={cube.foot.y}
+                        pathLength={1}
+                        data-part="link"
+                      />
+                    ))}
+
+                  {stage.cubes.map((cube) => (
+                    <g
+                      key={cube.i}
+                      className={cube.isNew ? styles.artCubeNew : styles.artCube}
+                      data-part={cube.isNew ? 'new' : 'cube'}
+                    >
+                      <polygon className={styles.cubeLeft} points={cube.faces.left} />
+                      <polygon className={styles.cubeRight} points={cube.faces.right} />
+                      <polygon className={styles.cubeTop} points={cube.faces.top} />
+                    </g>
                   ))}
-                  <polygon className={styles.artTop} points={stage.pillar.top} />
+
+                  {stage.core && (
+                    <g className={styles.artCubeCore} data-part="core">
+                      <polygon className={styles.cubeLeft} points={stage.core.left} />
+                      <polygon className={styles.cubeRight} points={stage.core.right} />
+                      <polygon className={styles.cubeTop} points={stage.core.top} />
+                    </g>
+                  )}
                 </g>
+              ))}
+            </g>
 
-                {/* Réseau de l'IA, tracé sur le dessus, sous les cubes. */}
-                {stage.core &&
-                  stage.cubes.map((cube) => (
-                    <line
-                      key={`link-${cube.i}`}
-                      className={styles.artLink}
-                      x1={stage.center.x}
-                      y1={stage.center.y}
-                      x2={cube.foot.x}
-                      y2={cube.foot.y}
-                      pathLength={1}
-                      data-part="link"
-                    />
-                  ))}
-
-                {stage.cubes.map((cube) => (
-                  <g
-                    key={cube.i}
-                    className={cube.isNew ? styles.artCubeNew : styles.artCube}
-                    data-part={cube.isNew ? 'new' : 'cube'}
-                  >
-                    <polygon className={styles.cubeLeft} points={cube.faces.left} />
-                    <polygon className={styles.cubeRight} points={cube.faces.right} />
-                    <polygon className={styles.cubeTop} points={cube.faces.top} />
-                  </g>
-                ))}
-
-                {stage.core && (
-                  <g className={styles.artCubeCore} data-part="core">
-                    <polygon className={styles.cubeLeft} points={stage.core.left} />
-                    <polygon className={styles.cubeRight} points={stage.core.right} />
-                    <polygon className={styles.cubeTop} points={stage.core.top} />
-                  </g>
-                )}
-              </g>
-            ))}
-          </g>
-
-          {/* Fils de construction (de l'acte au pilier) et textes, toujours à l'endroit : titre
+            {/* Fils de construction (de l'acte au pilier) et textes, toujours à l'endroit : titre
               au-dessus du pilier, année et précision dessous. */}
-          {SCENE.map((stage) => {
-            const milestone = milestones[stage.index];
-            if (!milestone) return null;
-            const x = mx(stage.labelX);
-            const leaderEnd = stage.topY - 64;
-            return (
-              <g key={milestone.year} data-stage={stage.index} className={styles.artText}>
-                <line
-                  className={styles.artLeader}
-                  x1={x}
-                  y1={VIEW.y}
-                  x2={x}
-                  y2={leaderEnd}
-                  pathLength={1}
-                  data-part="leader"
-                />
-                <circle
-                  className={styles.artLeaderDot}
-                  cx={x}
-                  cy={leaderEnd}
-                  r={3.5}
-                  data-part="text"
-                />
-                <text className={styles.artTitle} x={x} y={stage.topY - 34} data-part="text">
-                  {milestone.title}
-                </text>
-                <text
-                  className={stage.index === LAST ? styles.artYearNow : styles.artYear}
-                  x={x}
-                  y={stage.baseY + 62}
-                  data-part="text"
-                >
-                  {milestone.year}
-                </text>
-                <text className={styles.artDetail} x={x} y={stage.baseY + 90} data-part="text">
-                  {milestone.text}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+            {SCENE.map((stage) => {
+              const milestone = milestones[stage.index];
+              if (!milestone) return null;
+              const x = mx(stage.labelX);
+              const leaderEnd = stage.topY - 64;
+              return (
+                <g key={milestone.year} data-stage={stage.index} className={styles.artText}>
+                  <line
+                    className={styles.artLeader}
+                    x1={x}
+                    y1={VIEW.y}
+                    x2={x}
+                    y2={leaderEnd}
+                    pathLength={1}
+                    data-part="leader"
+                  />
+                  <circle
+                    className={styles.artLeaderDot}
+                    cx={x}
+                    cy={leaderEnd}
+                    r={3.5}
+                    data-part="text"
+                  />
+                  <text className={styles.artTitle} x={x} y={stage.topY - 34} data-part="text">
+                    {milestone.title}
+                  </text>
+                  <text
+                    className={stage.index === LAST ? styles.artYearNow : styles.artYear}
+                    x={x}
+                    y={stage.baseY + 62}
+                    data-part="text"
+                  >
+                    {milestone.year}
+                  </text>
+                  <text className={styles.artDetail} x={x} y={stage.baseY + 90} data-part="text">
+                    {milestone.text}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
       </div>
     </div>
   );
