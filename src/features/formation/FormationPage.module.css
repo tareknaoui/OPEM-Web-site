@@ -1,0 +1,652 @@
+/* Page « Formation qualifiante » : simple et engageante. En-tête sur bleu 10 % avec une grande
+   photo, agenda sur blanc, deux formats sur bleu 10 %, témoignage et photos sur blanc (le bandeau
+   bleu OPEM du pied de page suit du blanc). Pas d'ambre (fonds clairs), pas de dégradé, pas de
+   texte sur les photos. */
+
+.page {
+  --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --muted: #5b6770;
+  --rule: #dfe5ea;
+}
+
+/* ---------- Typographie commune ---------- */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  flex: none;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.title {
+  max-width: 17ch;
+  margin: 1.25rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2.375rem, 1.4rem + 3vw, 3.875rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.lead,
+.sectionLead {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.lead {
+  margin-top: 1.5rem;
+}
+
+.head {
+  display: grid;
+  gap: 0.875rem;
+  max-width: 54rem;
+  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.eyebrow:lang(ar),
+.title:lang(ar),
+.sectionTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title:lang(ar),
+.sectionTitle:lang(ar) {
+  line-height: 1.35;
+}
+
+.lead:lang(ar),
+.sectionLead:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}
+
+/* ---------- 01 En-tête ---------- */
+
+.header {
+  padding-block: clamp(3rem, 2rem + 4vw, 6rem);
+  background: var(--opem-blue-10);
+}
+
+.headerGrid {
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+@media (min-width: 64em) {
+  .headerGrid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    align-items: center;
+  }
+}
+
+.headerText {
+  min-width: 0;
+}
+
+/* Deux actions : la principale en bleu nuit, l'autre bordée. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 2rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary {
+  border: 1.5px solid var(--opem-night);
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.primary:hover {
+  border-color: var(--opem-blue);
+  background: var(--opem-blue);
+}
+
+.secondary {
+  border: 1.5px solid var(--opem-night);
+  color: var(--opem-night);
+}
+
+.secondary:hover {
+  background: var(--opem-white);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.primary:lang(ar),
+.secondary:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* Les preuves : le chiffre, puis l'agrément, sous un filet. */
+.proofs {
+  display: grid;
+  gap: 1rem;
+  max-width: 40rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(17 54 91 / 0.14);
+}
+
+@media (min-width: 40em) {
+  .proofs {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.proof {
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+}
+
+.proofValue {
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.proofLabel {
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: 1rem;
+}
+
+.approval {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-text);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.proofLabel:lang(ar),
+.approval:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.headerPhoto {
+  overflow: hidden;
+  border-radius: 16px;
+  aspect-ratio: 4 / 3;
+  background: var(--opem-white);
+}
+
+.headerPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- 02 Les prochaines sessions ---------- */
+
+.sessions {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+  scroll-margin-top: calc(var(--header-height-compact) + 1rem);
+}
+
+.sessions:focus {
+  outline: none;
+}
+
+.agenda {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+}
+
+/* Une session : la grande date, le contenu, « S'inscrire » ; une ligne qui s'éclaire au survol. */
+.session {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.75rem clamp(1.25rem, 1rem + 2vw, 3rem);
+  align-items: start;
+  padding-block: clamp(1.5rem, 1.1rem + 1vw, 2.25rem);
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: calc(var(--header-height-compact) + 2rem);
+  transition: background-color 0.25s ease;
+}
+
+@media (min-width: 48em) {
+  .session {
+    grid-template-columns: 6rem minmax(0, 1fr) auto;
+    align-items: center;
+    padding-inline: 1rem;
+  }
+}
+
+.session:hover {
+  background: var(--opem-blue-10);
+}
+
+.date {
+  display: grid;
+  justify-items: start;
+  line-height: 1;
+}
+
+.day {
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 2rem + 1.6vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.month {
+  margin-top: 0.25rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sessionBody {
+  display: grid;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.new {
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: var(--opem-green-dark);
+  color: var(--opem-white);
+  letter-spacing: 0.06em;
+}
+
+.sessionTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.promise {
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.625rem;
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+}
+
+/* « S'inscrire » : sous le contenu sur téléphone, à droite au-delà. */
+.register {
+  grid-column: 2;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border: 1.5px solid var(--opem-night);
+  border-radius: 999px;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+@media (min-width: 48em) {
+  .register {
+    grid-column: auto;
+  }
+}
+
+.register:hover,
+.session:hover .register {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.register:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.month:lang(ar),
+.topic:lang(ar),
+.sessionTitle:lang(ar),
+.meta:lang(ar),
+.register:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.promise:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.8;
+}
+
+.empty {
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-size: 1.0625rem;
+}
+
+.note {
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- 03 Deux façons de vous former ---------- */
+
+.formats {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.formatList {
+  display: grid;
+  gap: clamp(2.5rem, 2rem + 2vw, 3.5rem) clamp(1.5rem, 1rem + 2vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .formatList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.format {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.formatPhoto {
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  border-radius: 14px;
+  aspect-ratio: 16 / 10;
+  background: var(--opem-white);
+}
+
+.formatPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.format:hover .formatPhoto img {
+  scale: 1.04;
+}
+
+.formatTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.875rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.formatText {
+  max-width: 50ch;
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Les points forts : une coche verte devant chacun. */
+.points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.points li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.points li::before {
+  content: '';
+  flex: none;
+  width: 0.5rem;
+  height: 0.8rem;
+  margin-top: -0.2rem;
+  border: solid var(--opem-green);
+  border-width: 0 2px 2px 0;
+  rotate: 45deg;
+}
+
+.formatTitle:lang(ar),
+.points li:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.formatText:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}
+
+/* ---------- 04 Ce qu'ils en disent ---------- */
+
+.voices {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.voicesGrid {
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+@media (min-width: 64em) {
+  .voicesGrid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: center;
+  }
+}
+
+.quote {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.voicesTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* La citation : un filet vert à gauche (à droite en arabe), en grand. */
+.quoteText {
+  margin: 0;
+  padding-inline-start: 1.5rem;
+  border-inline-start: 3px solid var(--opem-green);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.quoteText p {
+  margin: 0;
+}
+
+.quoteAuthor {
+  padding-inline-start: 1.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.voicesTitle:lang(ar),
+.quoteText:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+/* Trois photos de sessions : une grande, deux petites empilées. */
+.photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40em) {
+  .photos {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .photo:first-child {
+    grid-row: span 2;
+  }
+}
+
+.photo {
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 4 / 3;
+  background: var(--opem-blue-10);
+}
+
+.photo:first-child {
+  grid-column: span 2;
+}
+
+@media (min-width: 40em) {
+  .photo {
+    aspect-ratio: auto;
+    min-height: 10rem;
+  }
+
+  .photo:first-child {
+    grid-column: auto;
+  }
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

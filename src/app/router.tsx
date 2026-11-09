@@ -39,6 +39,22 @@ export const router = createBrowserRouter([
         lazy: async () => ({ Component: (await import('@/features/ia/IaPage')).default }),
       },
       {
+        // « Formation qualifiante » et ses rubriques (catalogue et sessions, fiches formation) :
+        // une seule page, qui descend jusqu'à l'agenda (ou jusqu'à la session d'une fiche).
+        path: 'formation/*',
+        lazy: async () => ({
+          Component: (await import('@/features/formation/FormationPage')).default,
+        }),
+      },
+      {
+        // « Missions et réalisations » et ses deux rubriques : une seule page, qui descend
+        // jusqu'au bloc de la rubrique demandée (y compris les liens vers une étude de cas).
+        path: 'missions/*',
+        lazy: async () => ({
+          Component: (await import('@/features/missions/MissionsPage')).default,
+        }),
+      },
+      {
         path: 'actualites',
         lazy: async () => ({
           Component: (await import('@/features/actualites/ActualitesPage')).default,
