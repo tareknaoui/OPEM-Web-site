@@ -1,6 +1,6 @@
-/* 07 « Notre réseau d'experts » : fond blanc, la carte du réseau (terres en points gris,
-   l'Algérie teintée de bleu, l'équipe bleu OPEM, un arc vers un seul point ambre cerné de bleu
-   nuit), puis cinq traits. Pas de dégradé. */
+/* 07 « Notre réseau d'experts » : fond blanc, la constellation sur un panneau bleu nuit (le
+   vivier en étoiles, l'équipe allumée et reliée, un trait vers une seule étoile ambre au-delà de
+   la frontière), puis cinq traits. Pas de dégradé. */
 
 .section {
   padding-block: var(--section-space);
@@ -25,21 +25,23 @@
 
 /* ---------- La constellation ---------- */
 
-/* La carte : jamais plus haute que l'écran sous le menu et la barre des rubriques (elle s'y
-   fige le temps de sa scène ; scroll-margin-top donne au script le haut où la figer). */
+/* Le panneau bleu nuit : jamais plus haut que l'écran sous le menu et la barre des rubriques
+   (il s'y fige le temps de sa scène ; scroll-margin-top donne au script le haut où le figer). */
 .figure {
   margin-bottom: clamp(2rem, 1.25rem + 2.5vw, 3.5rem);
   scroll-margin-top: calc(var(--header-height-compact) + 1.25rem);
-  background: var(--opem-white);
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--opem-night);
 }
 
 .wide {
-  width: min(100%, calc((100svh - 7rem) * 97 / 56));
+  width: min(100%, calc((100svh - 7rem) * 160 / 84));
   margin-inline: auto;
 }
 
 .narrow {
-  width: min(100%, calc((100svh - 6.5rem) * 47 / 63));
+  width: min(100%, calc((100svh - 6.5rem) * 90 / 128));
   margin-inline: auto;
 }
 
@@ -66,34 +68,77 @@
   display: block;
   width: 100%;
   height: auto;
-  overflow: visible;
 }
 
-/* Les terres : un point par case (un trait de longueur nulle, bouts ronds). */
-.land,
-.home {
+/* Le ciel au-dehors : pâle, bleuté. Le vivier, dans la frontière : blanc. */
+.sky {
+  fill: var(--opem-blue-30);
+}
+
+.vivier {
+  fill: var(--opem-white);
+}
+
+/* Quelques étoiles scintillent, chacune à son rythme (--t) et à son heure (--d). */
+.twinkle {
+  animation: twinkle var(--t, 4s) ease-in-out var(--d, 0s) infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    fill-opacity: 0.2;
+  }
+}
+
+/* L'étoile filante : un court trait qui file le long de sa trajectoire, toutes les 11 s. */
+.shooting {
   fill: none;
+  stroke: var(--opem-white);
   stroke-linecap: round;
+  stroke-dasharray: 0.16 1.2;
+  stroke-dashoffset: 0.16;
+  opacity: 0;
+  animation: shoot 11s ease-in 4s infinite;
 }
 
-.land {
-  stroke: var(--opem-gray-light);
-  stroke-width: 0.36;
+@keyframes shoot {
+  0% {
+    stroke-dashoffset: 0.16;
+    opacity: 0;
+  }
+
+  1% {
+    opacity: 0.9;
+  }
+
+  7% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
 }
 
-/* L'Algérie, teintée de bleu : le terrain de l'équipe. */
-.home {
-  stroke: var(--opem-blue-50);
-  stroke-width: 0.44;
+/* La frontière, en pointillé. */
+.frontier {
+  fill: none;
+  stroke: var(--opem-blue-30);
+  stroke-linecap: round;
+  stroke-opacity: 0.55;
 }
 
+/* Le trait vers l'au-delà. */
 .arc {
   fill: none;
-  stroke: var(--opem-blue);
+  stroke: var(--opem-white);
   stroke-linecap: round;
+  stroke-opacity: 0.9;
 }
 
-/* Le masque qui découvre l'arc, du départ à l'arrivée. */
+/* Le masque qui découvre le trait, du départ à l'arrivée. */
 .arcMask {
   fill: none;
   stroke: #fff;
@@ -102,33 +147,69 @@
 }
 
 .links {
-  stroke: var(--opem-blue);
+  stroke: var(--opem-blue-30);
+  stroke-linecap: round;
+  stroke-opacity: 0.85;
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
 }
 
-.member {
-  fill: var(--opem-blue);
-  stroke: var(--opem-white);
+/* Un membre de l'équipe : halo plein et translucide, anneau, cœur blanc. */
+.halo {
+  fill: var(--opem-blue-30);
+  fill-opacity: 0.14;
 }
 
-/* Le seul point ambre du bloc, cerné de bleu nuit. */
+.ring {
+  fill: none;
+  stroke: var(--opem-blue-30);
+  stroke-opacity: 0.55;
+}
+
+.core {
+  fill: var(--opem-white);
+}
+
+/* L'étoile au-delà des frontières : la seule touche d'ambre du bloc, qui bat doucement. */
+.beyondHalo {
+  fill: var(--opem-amber);
+  fill-opacity: 0.12;
+}
+
+.beyondPulse {
+  fill: none;
+  stroke: var(--opem-amber);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 2.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.8;
+    scale: 0.6;
+  }
+
+  to {
+    opacity: 0;
+    scale: 1.9;
+  }
+}
+
 .beyond {
   fill: var(--opem-amber);
-  stroke: var(--opem-night);
 }
 
-/* Légendes, en texte (taille lisible quelle que soit la largeur de la carte), sur une étiquette
-   blanche qui les détache des points. */
+/* Légendes, en texte (taille lisible quelle que soit la largeur), sur une étiquette bleu nuit
+   qui les détache des étoiles. */
 .legend {
   position: absolute;
   translate: 0 -50%;
-  padding: 0.3rem 0.625rem;
-  border: 1px solid rgb(17 54 91 / 0.1);
+  padding: 0.3rem 0.75rem;
+  border: 1px solid rgb(178 202 222 / 0.28);
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.92);
-  box-shadow: 0 6px 18px -12px rgb(17 54 91 / 0.4);
-  color: var(--opem-night);
+  background: rgb(17 54 91 / 0.88);
+  color: var(--opem-white);
   font-family: var(--font-heading);
   font-size: 0.875rem;
   font-weight: 600;
@@ -146,11 +227,19 @@
 }
 
 .legend[data-tone='pool'] {
-  color: var(--opem-gray);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  color: var(--opem-blue-30);
   font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.legend[data-tone='beyond'] {
+  border-color: rgb(242 178 48 / 0.45);
+  color: var(--opem-amber);
 }
 
 .legend:lang(ar) {
@@ -160,6 +249,18 @@
 
 .legend[data-tone='pool']:lang(ar) {
   font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twinkle,
+  .beyondPulse,
+  .shooting {
+    animation: none;
+  }
+
+  .beyondPulse {
+    opacity: 0.5;
+  }
 }
 
 /* ---------- Les cinq traits ---------- */

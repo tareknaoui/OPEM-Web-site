@@ -9,7 +9,6 @@ import { CalendarCheckIcon } from '@phosphor-icons/react/dist/csr/CalendarCheck'
 import { CertificateIcon } from '@phosphor-icons/react/dist/csr/Certificate';
 import { ChalkboardTeacherIcon } from '@phosphor-icons/react/dist/csr/ChalkboardTeacher';
 import { CompassIcon } from '@phosphor-icons/react/dist/csr/Compass';
-import { DiamondIcon } from '@phosphor-icons/react/dist/csr/Diamond';
 import { EarIcon } from '@phosphor-icons/react/dist/csr/Ear';
 import { FileTextIcon } from '@phosphor-icons/react/dist/csr/FileText';
 import { GaugeIcon } from '@phosphor-icons/react/dist/csr/Gauge';
@@ -18,6 +17,7 @@ import { HandHeartIcon } from '@phosphor-icons/react/dist/csr/HandHeart';
 import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/csr/IdentificationBadge';
 import { LightningIcon } from '@phosphor-icons/react/dist/csr/Lightning';
 import { LockKeyIcon } from '@phosphor-icons/react/dist/csr/LockKey';
+import { MagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/MagnifyingGlass';
 import { PathIcon } from '@phosphor-icons/react/dist/csr/Path';
 import { PencilRulerIcon } from '@phosphor-icons/react/dist/csr/PencilRuler';
 import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
@@ -29,9 +29,12 @@ import { UsersThreeIcon } from '@phosphor-icons/react/dist/csr/UsersThree';
 /** 04 : écouter, construire, conduire, mesurer. */
 export const STEP_ICONS = [EarIcon, PencilRulerIcon, CompassIcon, TargetIcon];
 
-/** 05 : excellence, professionnalisme, délais, confidentialité, réactivité, engagement citoyen. */
+/**
+ * 05 : excellence (la loupe : le diable se cache dans les détails), professionnalisme, délais,
+ * confidentialité, réactivité, engagement citoyen.
+ */
 export const VALUE_ICONS = [
-  DiamondIcon,
+  MagnifyingGlassIcon,
   BriefcaseIcon,
   CalendarCheckIcon,
   LockKeyIcon,

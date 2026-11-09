@@ -5,7 +5,7 @@ import styles from './Network.module.css';
 
 /**
  * 07 « Notre réseau d'experts », sur blanc (après le bleu nuit du bloc 06) : surtitre et titre,
- * la carte du réseau sur toute la largeur (NetworkArt), puis les cinq traits, intitulés en bleu
+ * la constellation du réseau sur toute la largeur (NetworkArt), puis les cinq traits, intitulés en bleu
  * OPEM : côte à côte sur ordinateur, deux par deux sur tablette, empilés sur téléphone.
  */
 export function Network({ network }: { network: CabinetContent['network'] }) {

@@ -1,6 +1,6 @@
 /* 08 « Nos garanties » : fond bleu 10 % (après le bloc 07 sur blanc). Le bandeau photo d'une
    vraie session OPEM ; un panneau blanc en chevauche le bas et porte les six garanties. Pas de
-   texte sur la photo, pas de dégradé. Filet ambre sur la première garantie, bleu 30 % ailleurs. */
+   texte sur la photo, pas de dégradé, pas d'ambre (fond clair). Un filet bleu 30 % par garantie. */
 
 .section {
   padding-block: var(--section-space);
@@ -60,9 +60,8 @@
   align-content: start;
 }
 
-/* Les filets au-dessus de chaque garantie : ambre pour la première, bleu 30 % ensuite. */
-.rule,
-.ruleFirst {
+/* Le filet au-dessus de chaque garantie, bleu 30 %, le même pour toutes : les six se valent. */
+.rule {
   display: block;
   height: 3px;
   border-radius: 2px;
@@ -70,12 +69,7 @@
   transform-origin: left center;
 }
 
-.ruleFirst {
-  background: var(--opem-amber);
-}
-
-[dir='rtl'] .rule,
-[dir='rtl'] .ruleFirst {
+[dir='rtl'] .rule {
   transform-origin: right center;
 }
 

@@ -11,8 +11,8 @@ const PHOTO = '/images/cabinet/garanties-session';
 /**
  * 08 « Nos garanties », sur bleu 10 % (après le bloc 07 sur blanc) : surtitre et titre, puis le
  * bandeau photo, une vraie session OPEM (album du cabinet). Sous la photo, un panneau blanc en
- * chevauche le bas et porte les six garanties : jamais de texte sur la photo. Un filet ambre
- * au-dessus de la première garantie, des filets bleu 30 % au-dessus des autres.
+ * chevauche le bas et porte les six garanties : jamais de texte sur la photo. Un même filet
+ * bleu 30 % au-dessus de chaque garantie.
  * Ordinateur : trois colonnes ; tablette : deux ; téléphone : une (photo recadrée en 4:3).
  * Au défilement : la photo se découvre comme un rideau et glisse en légère parallaxe (moteur de
  * la page) ; les filets se tracent et les garanties se posent une à une, une seule fois.
@@ -76,11 +76,7 @@ export function Guarantees({ guarantees }: { guarantees: CabinetContent['guarant
             const Icon = GUARANTEE_ICONS[index];
             return (
               <li key={item.title} className={styles.item}>
-                <span
-                  className={index === 0 ? styles.ruleFirst : styles.rule}
-                  aria-hidden="true"
-                  data-rule
-                />
+                <span className={styles.rule} aria-hidden="true" data-rule />
                 <div className={styles.body} data-guarantee>
                   <h3 className={styles.itemTitle}>
                     {Icon && (
