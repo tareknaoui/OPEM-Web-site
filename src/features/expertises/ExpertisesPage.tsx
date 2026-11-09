@@ -34,7 +34,7 @@ const ISSUE_ICONS = [
  * 01 Ouverture, bleu 10 % : typographie, les six enjeux en grand index avec chacun son icône
  *    au trait, un point d'interrogation en filigrane ; chaque enjeu descend en douceur vers sa
  *    carte du bloc 02.
- * 02 Six domaines, blanc : une rangée par domaine, sa grande illustration isométrique (celles
+ * 02 Six domaines, blanc : une rangée par domaine, sa grande photo (autres que les illustrations
  *    de l'accueil) d'un côté puis de l'autre ; la typologie en étiquettes.
  * 03 Les métiers se relaient, bleu 10 % : vraies photos, les quatre métiers d'un même client
  *    se passent le témoin dans un cadre (section figée sur ordinateur), fil du relais dessous.
@@ -124,12 +124,12 @@ export default function ExpertisesPage() {
               >
                 <div className={styles.cardArt}>
                   <img
-                    src={`${domain.illustration}-800.webp`}
-                    srcSet={`${domain.illustration}-800.webp 800w, ${domain.illustration}.webp 1376w`}
+                    src={`${domain.photo.src}-800.webp`}
+                    srcSet={`${domain.photo.src}-800.webp 800w, ${domain.photo.src}.webp 1376w`}
                     sizes="(min-width: 64em) 46vw, 92vw"
                     width={800}
-                    height={446}
-                    alt=""
+                    height={600}
+                    alt={domain.photo.alt}
                     loading="lazy"
                     decoding="async"
                   />

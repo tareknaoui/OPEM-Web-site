@@ -19,7 +19,8 @@ export type Domain = {
   typology: { strong: string[]; rest: string[] };
   reference: string;
   link: { label: string; href: string };
-  illustration: string;
+  /** La photo du domaine (sans extension : « -800.webp » et « .webp ») et sa description. */
+  photo: { src: string; alt: string };
 };
 
 export type ExpertisesContent = {
@@ -60,7 +61,11 @@ export type ExpertisesContent = {
   };
 };
 
-const ILLUSTRATIONS = '/images/domaines/illustrations';
+/*
+ * Les photos des six domaines : à dessein différentes des illustrations de l'accueil (demande
+ * d'OPEM). Photos libres (Pexels, Unsplash), recadrées en 4:3 dans public/images/expertises.
+ */
+const PHOTOS = '/images/expertises/domaine';
 
 /** Identifiants des six cartes du bloc 02 (cibles des enjeux du bloc 01), dans l'ordre. */
 export const DOMAIN_IDS = [
@@ -89,13 +94,13 @@ const PICTURES = [
   'communication',
 ];
 
-type DomainText = Omit<Domain, 'id' | 'illustration' | 'link'> & { linkLabel: string };
-const withMeta = (items: DomainText[]): Domain[] =>
+type DomainText = Omit<Domain, 'id' | 'photo' | 'link'> & { linkLabel: string };
+const withMeta = (items: DomainText[], alts: readonly string[]): Domain[] =>
   items.map(({ linkLabel, ...item }, index) => ({
     ...item,
     id: DOMAIN_IDS[index] ?? '',
     link: { label: linkLabel, href: HREFS[index] ?? '/' },
-    illustration: `${ILLUSTRATIONS}/${PICTURES[index]}`,
+    photo: { src: `${PHOTOS}-${PICTURES[index]}`, alt: alts[index] ?? '' },
   }));
 
 const FR: ExpertisesContent = {
@@ -123,115 +128,125 @@ const FR: ExpertisesContent = {
     lead: fr(
       'Éclairer vos décisions, transformer votre organisation, transmettre vos compétences, questionner vos certitudes, certifier vos pratiques, valoriser votre image : six enjeux, chacun confié au métier qui s’y consacre.',
     ),
-    items: withMeta([
-      {
-        title: 'Études stratégiques',
-        text: fr(
-          'Une décision engage l’avenir ; elle mérite mieux qu’une intuition. Nos études en établissent les faits, en chiffrent le coût et en mesurent les chances de réussite, pour que vous décidiez en connaissance de cause.',
-        ),
-        typology: {
-          strong: [
-            'Études de marché et d’opportunité',
-            'analyses économiques, sectorielles et de filières',
-          ],
-          rest: [
-            'études d’impact',
-            'études environnementales',
-            'évaluations de projets et de dispositifs.',
-          ],
+    items: withMeta(
+      [
+        {
+          title: 'Études stratégiques',
+          text: fr(
+            'Une décision engage l’avenir ; elle mérite mieux qu’une intuition. Nos études en établissent les faits, en chiffrent le coût et en mesurent les chances de réussite, pour que vous décidiez en connaissance de cause.',
+          ),
+          typology: {
+            strong: [
+              'Études de marché et d’opportunité',
+              'analyses économiques, sectorielles et de filières',
+            ],
+            rest: [
+              'études d’impact',
+              'études environnementales',
+              'évaluations de projets et de dispositifs.',
+            ],
+          },
+          reference: fr(
+            'Parmi nos références : pour la GIZ, au profit du ministère de l’Industrie, une étude sur la mortalité des entreprises, afin de repérer précocement celles en difficulté ; au profit du ministère de la Formation et de l’Enseignement professionnels, un diagnostic des dispositifs de formation à l’entrepreneuriat.',
+          ),
+          linkLabel: 'Découvrir ce domaine',
         },
-        reference: fr(
-          'Parmi nos références : pour la GIZ, au profit du ministère de l’Industrie, une étude sur la mortalité des entreprises, afin de repérer précocement celles en difficulté ; au profit du ministère de la Formation et de l’Enseignement professionnels, un diagnostic des dispositifs de formation à l’entrepreneuriat.',
-        ),
-        linkLabel: 'Découvrir ce domaine',
-      },
-      {
-        title: 'Accompagnement des organisations',
-        text: 'Une organisation se transforme par chantiers successifs. Notre accompagnement les hiérarchise, les conçoit, les déploie et conduit le changement, pour que vous progressiez sans fragiliser l’existant.',
-        typology: {
-          strong: ['Diagnostic d’entreprise', 'accompagnement du changement'],
-          rest: [
-            'gouvernance et pilotage',
-            'investissements et partenariats',
-            'conformité et protection des données.',
-          ],
+        {
+          title: 'Accompagnement des organisations',
+          text: 'Une organisation se transforme par chantiers successifs. Notre accompagnement les hiérarchise, les conçoit, les déploie et conduit le changement, pour que vous progressiez sans fragiliser l’existant.',
+          typology: {
+            strong: ['Diagnostic d’entreprise', 'accompagnement du changement'],
+            rest: [
+              'gouvernance et pilotage',
+              'investissements et partenariats',
+              'conformité et protection des données.',
+            ],
+          },
+          reference: fr(
+            'Parmi nos références : pour une agence publique, la révision de la structure organisationnelle et des postes ; pour une entreprise publique économique, la conception et le déploiement de la gestion prévisionnelle des emplois et des compétences ; pour des entreprises privées, diagnostic, tableaux de bord et automatisation.',
+          ),
+          linkLabel: 'Découvrir ce domaine',
         },
-        reference: fr(
-          'Parmi nos références : pour une agence publique, la révision de la structure organisationnelle et des postes ; pour une entreprise publique économique, la conception et le déploiement de la gestion prévisionnelle des emplois et des compétences ; pour des entreprises privées, diagnostic, tableaux de bord et automatisation.',
-        ),
-        linkLabel: 'Découvrir ce domaine',
-      },
-      {
-        title: 'Formation qualifiante',
-        text: 'Une compétence se construit, puis s’éprouve au travail. Nos formations, sur mesure ou en session ouverte, en posent les bases, en guident la pratique et en mesurent les acquis, pour que vous en tiriez un bénéfice durable.',
-        typology: {
-          strong: ['Programmes intra-entreprise sur mesure', 'sessions inter-entreprises'],
-          rest: [
-            'management et gestion',
-            'projets et marchés publics',
-            'numérique et intelligence artificielle.',
-          ],
+        {
+          title: 'Formation qualifiante',
+          text: 'Une compétence se construit, puis s’éprouve au travail. Nos formations, sur mesure ou en session ouverte, en posent les bases, en guident la pratique et en mesurent les acquis, pour que vous en tiriez un bénéfice durable.',
+          typology: {
+            strong: ['Programmes intra-entreprise sur mesure', 'sessions inter-entreprises'],
+            rest: [
+              'management et gestion',
+              'projets et marchés publics',
+              'numérique et intelligence artificielle.',
+            ],
+          },
+          reference: fr(
+            `Gage de sérieux : établissement privé de formation professionnelle agréé par le ministère de la Formation et de l’Enseignement professionnels, par décision n°${N}539 du 24${N}décembre 2019.`,
+          ),
+          linkLabel: 'Voir le catalogue et les sessions',
         },
-        reference: fr(
-          `Gage de sérieux : établissement privé de formation professionnelle agréé par le ministère de la Formation et de l’Enseignement professionnels, par décision n°${N}539 du 24${N}décembre 2019.`,
-        ),
-        linkLabel: 'Voir le catalogue et les sessions',
-      },
-      {
-        title: 'Coaching professionnel',
-        text: 'Plus on dirige, moins on est contredit. Notre coaching questionne vos certitudes, vous contredit avec égards et vous accompagne jusqu’à l’action, pour que vous préserviez votre lucidité, même sous pression.',
-        typology: {
-          strong: ['Coaching de dirigeants', 'accompagnement des prises de poste'],
-          rest: [
-            'coaching de managers',
-            'cohésion et dynamique d’équipe',
-            'transitions de carrière.',
-          ],
+        {
+          title: 'Coaching professionnel',
+          text: 'Plus on dirige, moins on est contredit. Notre coaching questionne vos certitudes, vous contredit avec égards et vous accompagne jusqu’à l’action, pour que vous préserviez votre lucidité, même sous pression.',
+          typology: {
+            strong: ['Coaching de dirigeants', 'accompagnement des prises de poste'],
+            rest: [
+              'coaching de managers',
+              'cohésion et dynamique d’équipe',
+              'transitions de carrière.',
+            ],
+          },
+          reference: fr(
+            'Un interlocuteur de confiance, libre de tout intérêt autre que votre réussite : exigeant à votre égard, attentif à vos contraintes.',
+          ),
+          linkLabel: 'Découvrir ce domaine',
         },
-        reference: fr(
-          'Un interlocuteur de confiance, libre de tout intérêt autre que votre réussite : exigeant à votre égard, attentif à vos contraintes.',
-        ),
-        linkLabel: 'Découvrir ce domaine',
-      },
-      {
-        title: 'Certification et accréditation',
-        text: fr(
-          'Un certificat rassure ; une pratique convainc. Nos experts traduisent la norme en gestes de travail, préparent vos audits et vous mènent jusqu’à la certification, pour que vous méritiez durablement la confiance.',
-        ),
-        typology: {
-          strong: ['Normes ISO', 'préparation aux audits'],
-          rest: [
-            'levée des non-conformités',
-            'marquage CE',
-            'certification Halal',
-            'référentiel accueil',
-            'marquage TEDJ.',
-          ],
+        {
+          title: 'Certification et accréditation',
+          text: fr(
+            'Un certificat rassure ; une pratique convainc. Nos experts traduisent la norme en gestes de travail, préparent vos audits et vous mènent jusqu’à la certification, pour que vous méritiez durablement la confiance.',
+          ),
+          typology: {
+            strong: ['Normes ISO', 'préparation aux audits'],
+            rest: [
+              'levée des non-conformités',
+              'marquage CE',
+              'certification Halal',
+              'référentiel accueil',
+              'marquage TEDJ.',
+            ],
+          },
+          reference: fr(
+            `Parmi nos références : l’accompagnement d’une entreprise industrielle privée sur son système de management intégré (ISO${N}9001, 14001 et 45001) ; la levée des non-conformités du système d’une entreprise publique.`,
+          ),
+          linkLabel: 'Découvrir ce domaine',
         },
-        reference: fr(
-          `Parmi nos références : l’accompagnement d’une entreprise industrielle privée sur son système de management intégré (ISO${N}9001, 14001 et 45001) ; la levée des non-conformités du système d’une entreprise publique.`,
-        ),
-        linkLabel: 'Découvrir ce domaine',
-      },
-      {
-        title: 'Communication institutionnelle',
-        text: 'Soigner son image, c’est respecter ses clients. Nos équipes racontent votre histoire, conçoivent vos supports et les diffusent, pour que vous soyez reconnus à la hauteur de votre travail.',
-        typology: {
-          strong: ['Catalogues de présentation et de savoir-faire', 'sites web'],
-          rest: [
-            'contenus vidéo',
-            'rédaction',
-            'direction artistique',
-            'conception graphique',
-            'impression.',
-          ],
+        {
+          title: 'Communication institutionnelle',
+          text: 'Soigner son image, c’est respecter ses clients. Nos équipes racontent votre histoire, conçoivent vos supports et les diffusent, pour que vous soyez reconnus à la hauteur de votre travail.',
+          typology: {
+            strong: ['Catalogues de présentation et de savoir-faire', 'sites web'],
+            rest: [
+              'contenus vidéo',
+              'rédaction',
+              'direction artistique',
+              'conception graphique',
+              'impression.',
+            ],
+          },
+          reference: fr(
+            'Parmi nos références : les catalogues institutionnels de la SAPTA et de la SNTP, entièrement rédigés, conçus et imprimés par nos soins. Notre signature s’y lit.',
+          ),
+          linkLabel: 'Découvrir ce domaine',
         },
-        reference: fr(
-          'Parmi nos références : les catalogues institutionnels de la SAPTA et de la SNTP, entièrement rédigés, conçus et imprimés par nos soins. Notre signature s’y lit.',
-        ),
-        linkLabel: 'Découvrir ce domaine',
-      },
-    ]),
+      ],
+      [
+        'Un cadre étudie des graphiques imprimés, des rapports étalés sur la table',
+        'Un consultant anime une séance de travail devant un tableau, l’équipe autour de la table',
+        'Un formateur présente devant un écran ; les participants suivent, ordinateurs ouverts',
+        'Un entretien en tête-à-tête autour d’un bureau, près d’une fenêtre',
+        'Une ingénieure en casque et tenue de travail consulte un document dans un atelier industriel',
+        'Une équipe de création passe en revue nuanciers et supports imprimés',
+      ],
+    ),
   },
   together: {
     eyebrow: 'Les métiers se relaient',
@@ -311,73 +326,89 @@ const AR: ExpertisesContent = {
     eyebrow: 'خبراتنا',
     title: 'ست مهن، ومطلب واحد',
     lead: 'إنارة قراراتكم، تحويل مؤسستكم، نقل كفاءاتكم، مساءلة يقينياتكم، إشهاد ممارساتكم، تثمين صورتكم: ستة رهانات، كلٌّ منها موكول إلى المهنة المتفرغة له.',
-    items: withMeta([
-      {
-        title: 'الدراسات الاستراتيجية',
-        text: 'القرار يرهن المستقبل؛ وهو يستحق أكثر من حدس. دراساتنا تثبت وقائعه، وتقدّر كلفته، وتقيس حظوظ نجاحه، لكي تقرروا عن بيّنة.',
-        typology: {
-          strong: ['دراسات السوق والفرص', 'التحليلات الاقتصادية والقطاعية وتحليل الشُّعب'],
-          rest: ['دراسات الأثر', 'الدراسات البيئية', 'تقييم المشاريع والأجهزة.'],
+    items: withMeta(
+      [
+        {
+          title: 'الدراسات الاستراتيجية',
+          text: 'القرار يرهن المستقبل؛ وهو يستحق أكثر من حدس. دراساتنا تثبت وقائعه، وتقدّر كلفته، وتقيس حظوظ نجاحه، لكي تقرروا عن بيّنة.',
+          typology: {
+            strong: ['دراسات السوق والفرص', 'التحليلات الاقتصادية والقطاعية وتحليل الشُّعب'],
+            rest: ['دراسات الأثر', 'الدراسات البيئية', 'تقييم المشاريع والأجهزة.'],
+          },
+          reference:
+            'من مراجعنا: لصالح الوكالة الألمانية للتعاون الدولي (GIZ)، ولفائدة وزارة الصناعة، دراسة حول اندثار المؤسسات قصد الكشف المبكر عن المتعثرة منها؛ ولفائدة وزارة التكوين والتعليم المهنيين، تشخيص أجهزة التكوين في المقاولاتية.',
+          linkLabel: 'اكتشفوا هذا المجال',
         },
-        reference:
-          'من مراجعنا: لصالح الوكالة الألمانية للتعاون الدولي (GIZ)، ولفائدة وزارة الصناعة، دراسة حول اندثار المؤسسات قصد الكشف المبكر عن المتعثرة منها؛ ولفائدة وزارة التكوين والتعليم المهنيين، تشخيص أجهزة التكوين في المقاولاتية.',
-        linkLabel: 'اكتشفوا هذا المجال',
-      },
-      {
-        title: 'مرافقة المؤسسات',
-        text: 'تتحول المؤسسة عبر ورشات متتالية. مرافقتنا ترتّبها حسب الأولوية، وتصممها، وتنشرها، وتقود التغيير، لكي تتقدموا دون الإخلال بالقائم.',
-        typology: {
-          strong: ['تشخيص المؤسسة', 'مرافقة التغيير'],
-          rest: ['الحوكمة والقيادة', 'الاستثمارات والشراكات', 'الامتثال وحماية المعطيات.'],
+        {
+          title: 'مرافقة المؤسسات',
+          text: 'تتحول المؤسسة عبر ورشات متتالية. مرافقتنا ترتّبها حسب الأولوية، وتصممها، وتنشرها، وتقود التغيير، لكي تتقدموا دون الإخلال بالقائم.',
+          typology: {
+            strong: ['تشخيص المؤسسة', 'مرافقة التغيير'],
+            rest: ['الحوكمة والقيادة', 'الاستثمارات والشراكات', 'الامتثال وحماية المعطيات.'],
+          },
+          reference:
+            'من مراجعنا: لوكالة عمومية، مراجعة الهيكل التنظيمي والمناصب؛ لمؤسسة عمومية اقتصادية، تصميم ونشر التسيير التقديري للوظائف والكفاءات؛ لمؤسسات خاصة، التشخيص ولوحات القيادة والأتمتة.',
+          linkLabel: 'اكتشفوا هذا المجال',
         },
-        reference:
-          'من مراجعنا: لوكالة عمومية، مراجعة الهيكل التنظيمي والمناصب؛ لمؤسسة عمومية اقتصادية، تصميم ونشر التسيير التقديري للوظائف والكفاءات؛ لمؤسسات خاصة، التشخيص ولوحات القيادة والأتمتة.',
-        linkLabel: 'اكتشفوا هذا المجال',
-      },
-      {
-        title: 'التكوين التأهيلي',
-        text: 'الكفاءة تُبنى، ثم تُختبر في العمل. تكويناتنا، حسب الطلب أو في دورات مفتوحة، تضع أسسها، وتوجّه ممارستها، وتقيس مكتسباتها، لكي تجنوا منها فائدة دائمة.',
-        typology: {
-          strong: ['برامج داخل المؤسسة حسب الطلب', 'دورات بين المؤسسات'],
-          rest: ['الإدارة والتسيير', 'المشاريع والصفقات العمومية', 'الرقمنة والذكاء الاصطناعي.'],
+        {
+          title: 'التكوين التأهيلي',
+          text: 'الكفاءة تُبنى، ثم تُختبر في العمل. تكويناتنا، حسب الطلب أو في دورات مفتوحة، تضع أسسها، وتوجّه ممارستها، وتقيس مكتسباتها، لكي تجنوا منها فائدة دائمة.',
+          typology: {
+            strong: ['برامج داخل المؤسسة حسب الطلب', 'دورات بين المؤسسات'],
+            rest: ['الإدارة والتسيير', 'المشاريع والصفقات العمومية', 'الرقمنة والذكاء الاصطناعي.'],
+          },
+          reference:
+            'ضمان للجدية: مؤسسة خاصة للتكوين المهني معتمدة من وزارة التكوين والتعليم المهنيين، بموجب المقرر رقم 539 المؤرخ في 24 ديسمبر 2019.',
+          linkLabel: 'اطّلعوا على الدليل والدورات',
         },
-        reference:
-          'ضمان للجدية: مؤسسة خاصة للتكوين المهني معتمدة من وزارة التكوين والتعليم المهنيين، بموجب المقرر رقم 539 المؤرخ في 24 ديسمبر 2019.',
-        linkLabel: 'اطّلعوا على الدليل والدورات',
-      },
-      {
-        title: 'الكوتشينغ المهني',
-        text: 'كلما ارتفع موقع القيادة، قلّ من يعارضك. كوتشينغنا يُسائل يقينياتكم، ويعارضكم باحترام، ويرافقكم حتى الفعل، لكي تحافظوا على صفاء رؤيتكم، حتى تحت الضغط.',
-        typology: {
-          strong: ['كوتشينغ المسيّرين', 'مرافقة تولّي المناصب'],
-          rest: ['كوتشينغ المديرين', 'تماسك الفرق وديناميكيتها', 'التحولات المهنية.'],
+        {
+          title: 'الكوتشينغ المهني',
+          text: 'كلما ارتفع موقع القيادة، قلّ من يعارضك. كوتشينغنا يُسائل يقينياتكم، ويعارضكم باحترام، ويرافقكم حتى الفعل، لكي تحافظوا على صفاء رؤيتكم، حتى تحت الضغط.',
+          typology: {
+            strong: ['كوتشينغ المسيّرين', 'مرافقة تولّي المناصب'],
+            rest: ['كوتشينغ المديرين', 'تماسك الفرق وديناميكيتها', 'التحولات المهنية.'],
+          },
+          reference: 'محاور موثوق، متحرر من أي مصلحة غير نجاحكم: صارم معكم، منتبه لقيودكم.',
+          linkLabel: 'اكتشفوا هذا المجال',
         },
-        reference: 'محاور موثوق، متحرر من أي مصلحة غير نجاحكم: صارم معكم، منتبه لقيودكم.',
-        linkLabel: 'اكتشفوا هذا المجال',
-      },
-      {
-        title: 'الإشهاد والاعتماد',
-        text: 'الشهادة تطمئن؛ والممارسة تقنع. يترجم خبراؤنا المعيار إلى حركات عمل، ويحضّرون تدقيقاتكم، ويقودونكم حتى الإشهاد، لكي تستحقوا الثقة على الدوام.',
-        typology: {
-          strong: ['معايير ISO', 'التحضير للتدقيقات'],
-          rest: ['رفع حالات عدم المطابقة', 'وسم CE', 'إشهاد حلال', 'مرجعية الاستقبال', 'وسم TEDJ.'],
+        {
+          title: 'الإشهاد والاعتماد',
+          text: 'الشهادة تطمئن؛ والممارسة تقنع. يترجم خبراؤنا المعيار إلى حركات عمل، ويحضّرون تدقيقاتكم، ويقودونكم حتى الإشهاد، لكي تستحقوا الثقة على الدوام.',
+          typology: {
+            strong: ['معايير ISO', 'التحضير للتدقيقات'],
+            rest: [
+              'رفع حالات عدم المطابقة',
+              'وسم CE',
+              'إشهاد حلال',
+              'مرجعية الاستقبال',
+              'وسم TEDJ.',
+            ],
+          },
+          reference:
+            'من مراجعنا: مرافقة مؤسسة صناعية خاصة في نظام إدارتها المدمج (ISO 9001 و14001 و45001)؛ رفع حالات عدم المطابقة في نظام مؤسسة عمومية.',
+          linkLabel: 'اكتشفوا هذا المجال',
         },
-        reference:
-          'من مراجعنا: مرافقة مؤسسة صناعية خاصة في نظام إدارتها المدمج (ISO 9001 و14001 و45001)؛ رفع حالات عدم المطابقة في نظام مؤسسة عمومية.',
-        linkLabel: 'اكتشفوا هذا المجال',
-      },
-      {
-        title: 'الاتصال المؤسساتي',
-        text: 'العناية بالصورة احترامٌ للزبائن. فرقنا تروي قصتكم، وتصمم دعائمكم، وتنشرها، لكي يُعترف بكم على قدر عملكم.',
-        typology: {
-          strong: ['كتالوجات التقديم والمهارات', 'المواقع الإلكترونية'],
-          rest: ['المحتوى المرئي', 'التحرير', 'الإدارة الفنية', 'التصميم الغرافيكي', 'الطباعة.'],
+        {
+          title: 'الاتصال المؤسساتي',
+          text: 'العناية بالصورة احترامٌ للزبائن. فرقنا تروي قصتكم، وتصمم دعائمكم، وتنشرها، لكي يُعترف بكم على قدر عملكم.',
+          typology: {
+            strong: ['كتالوجات التقديم والمهارات', 'المواقع الإلكترونية'],
+            rest: ['المحتوى المرئي', 'التحرير', 'الإدارة الفنية', 'التصميم الغرافيكي', 'الطباعة.'],
+          },
+          reference:
+            'من مراجعنا: الكتالوجات المؤسساتية لـ SAPTA وSNTP، المحرّرة والمصمّمة والمطبوعة بالكامل من طرفنا. توقيعنا يُقرأ فيها.',
+          linkLabel: 'اكتشفوا هذا المجال',
         },
-        reference:
-          'من مراجعنا: الكتالوجات المؤسساتية لـ SAPTA وSNTP، المحرّرة والمصمّمة والمطبوعة بالكامل من طرفنا. توقيعنا يُقرأ فيها.',
-        linkLabel: 'اكتشفوا هذا المجال',
-      },
-    ]),
+      ],
+      [
+        'إطار يدرس رسومًا بيانية مطبوعة، والتقارير مبسوطة على الطاولة',
+        'مستشار يدير جلسة عمل أمام سبورة، والفريق حول الطاولة',
+        'مكوّن يقدّم أمام شاشة؛ والمشاركون يتابعون وحواسيبهم مفتوحة',
+        'لقاء فردي حول مكتب، بالقرب من نافذة',
+        'مهندسة بخوذة وبزّة عمل تراجع وثيقة في ورشة صناعية',
+        'فريق إبداعي يراجع لوحات الألوان والمطبوعات',
+      ],
+    ),
   },
   together: {
     eyebrow: 'المهن تتكامل',

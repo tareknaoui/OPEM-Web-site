@@ -229,7 +229,7 @@
   }
 }
 
-/* ---------- 02 Six domaines : illustrations isométriques ---------- */
+/* ---------- 02 Six domaines : une photo par domaine ---------- */
 
 .domains {
   padding-block: var(--section-space);
@@ -291,11 +291,11 @@
 
 .cardArt {
   overflow: hidden;
-  aspect-ratio: 800 / 446;
-  background: var(--opem-night);
+  aspect-ratio: 4 / 3;
+  background: var(--opem-blue-10);
 }
 
-/* Ordinateur : l'illustration occupe la moitié de la rangée, à gauche puis à droite. */
+/* Ordinateur : la photo occupe la moitié de la rangée, à gauche puis à droite. */
 @media (min-width: 64em) {
   .card {
     display: grid;
