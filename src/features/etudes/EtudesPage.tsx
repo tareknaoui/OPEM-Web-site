@@ -1,4 +1,5 @@
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
+import { ContactBand } from '@/features/contact/ContactBand';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { env } from '@/lib/env';
@@ -165,6 +166,9 @@ export default function EtudesPage() {
           ))}
         </div>
       </section>
+
+      {/* ---------- Premier échange ---------- */}
+      <ContactBand />
     </div>
   );
 }

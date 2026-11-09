@@ -41,6 +41,7 @@ describe('Page « Formation qualifiante »', () => {
       'Les prochaines sessions',
       'Dans vos locaux ou avec d’autres organisations.',
       'Une formation se juge à ce qu’elle change.',
+      'Ce qui attend aujourd’hui coûte davantage demain.',
     ]);
     expect(screen.getByText(/décision n°\s539 du 24\sdécembre 2019/)).toBeInTheDocument();
   });

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, type MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router';
 import { ArrowRightIcon } from '@/components/icons';
 import { useCabinetMotion } from '@/features/cabinet/useCabinetMotion';
+import { ContactBand } from '@/features/contact/ContactBand';
 import { homeContent } from '@/features/home/content';
 import { scrollToElement } from '@/hooks/useSmoothScroll';
 import { useLanguage } from '@/i18n/useLanguage';
@@ -261,6 +262,9 @@ export default function FormationPage() {
           </div>
         </section>
       )}
+
+      {/* ---------- 05 Premier échange ---------- */}
+      <ContactBand />
     </div>
   );
 }

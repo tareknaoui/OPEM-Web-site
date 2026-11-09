@@ -40,6 +40,13 @@ describe('Pages des domaines d’expertise', () => {
       screen.getByRole('heading', { name: 'Quatre temps, quatre engagements.' }),
     ).toBeInTheDocument();
     screen.getAllByRole('img').forEach((img) => expect(img.getAttribute('alt')).toBeTruthy());
+    // Pour nous contacter : en haut de page, puis le bloc « Premier échange » au pied.
+    const quotes = screen.getAllByRole('link', { name: /Parlons de votre projet/ });
+    expect(quotes).toHaveLength(2);
+    quotes.forEach((link) =>
+      expect(link).toHaveAttribute('href', '/contact/demande-de-rendez-vous'),
+    );
+    expect(screen.getByRole('link', { name: /Appeler le/ })).toBeInTheDocument();
   });
 
   it('accompagnement : ses missions et l’ancre de la sous-rubrique « Diagnostic d’entreprise »', () => {

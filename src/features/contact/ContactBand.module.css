@@ -1,0 +1,207 @@
+/* « Premier échange » : bloc de contact au pied des pages d'expertise (bleu 10 %, jamais sombre :
+   le pied de page bleu nuit le suit). */
+
+.band {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  align-items: center;
+}
+
+@media (min-width: 64em) {
+  .grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  flex: none;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.title {
+  margin: 1rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+@media (min-width: 48em) {
+  .line {
+    display: block;
+  }
+}
+
+.body {
+  max-width: 58ch;
+  margin: 1.25rem 0 0;
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  margin-top: 1.75rem;
+  padding: 0.9rem 1.6rem;
+  border: 1.5px solid var(--opem-night);
+  border-radius: 999px;
+  background: var(--opem-night);
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.button:hover {
+  border-color: var(--opem-blue);
+  background: var(--opem-blue);
+}
+
+.button:focus-visible,
+.channel:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.note {
+  margin: 0.875rem 0 0;
+  color: var(--opem-gray);
+  font-family: var(--font-text);
+  font-size: 1rem;
+}
+
+/* Les coordonnées : une carte blanche, deux lignes cliquables. */
+.card {
+  padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  border-radius: 16px;
+  background: var(--opem-white);
+  box-shadow: 0 1px 2px rgb(17 54 91 / 6%);
+}
+
+.cardTitle {
+  margin: 0 0 0.75rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.channels {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.channels li + li {
+  border-top: 1px solid var(--opem-blue-30);
+}
+
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 1rem;
+  border-radius: 8px;
+  color: var(--opem-night);
+  text-decoration: none;
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--opem-blue-10);
+  color: var(--opem-blue);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.channel:hover .icon {
+  background: var(--opem-blue);
+  color: var(--opem-white);
+}
+
+.channelText {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.channelLabel {
+  color: var(--opem-gray);
+  font-family: var(--font-text);
+  font-size: 0.875rem;
+}
+
+/* Numéro et courriel en caractères latins (dir="ltr") : calés du côté du texte, même en arabe. */
+.channelValue {
+  justify-self: start;
+  overflow-wrap: anywhere;
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 600;
+}
+
+.channel:hover .channelValue {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* Arabe : la police arabe, sans espacement des lettres. */
+.eyebrow:lang(ar),
+.title:lang(ar),
+.button:lang(ar),
+.cardTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title:lang(ar) {
+  line-height: 1.35;
+}
+
+.body:lang(ar),
+.note:lang(ar),
+.channelLabel:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}

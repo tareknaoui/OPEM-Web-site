@@ -114,7 +114,7 @@ export const DOMAIN_PHOTOS: Record<
 /** Les mots communs aux pages des domaines. */
 export type DomainLabels = {
   breadcrumb: { label: string; href: string };
-  contact: { label: string; href: string };
+  contact: { label: string };
   cases: { label: string; href: string };
   services: { eyebrow: string; title: string };
   method: { eyebrow: string };
@@ -124,7 +124,7 @@ export type DomainLabels = {
 export const domainLabels: Record<Lang, DomainLabels> = {
   fr: {
     breadcrumb: { label: 'Nos expertises', href: '/nos-expertises' },
-    contact: { label: 'Parlons de votre projet', href: '/contact' },
+    contact: { label: 'Parlons de votre projet' },
     cases: { label: 'Voir nos études de cas', href: '/missions' },
     services: { eyebrow: 'Ce que nous faisons', title: 'Nos prestations' },
     method: { eyebrow: 'Notre démarche' },
@@ -136,7 +136,7 @@ export const domainLabels: Record<Lang, DomainLabels> = {
   },
   ar: {
     breadcrumb: { label: 'خبراتنا', href: '/nos-expertises' },
-    contact: { label: 'لنتحدث عن مشروعكم', href: '/contact' },
+    contact: { label: 'لنتحدث عن مشروعكم' },
     cases: { label: 'اطّلعوا على دراسات الحالة', href: '/missions' },
     services: { eyebrow: 'ما نقوم به', title: 'خدماتنا' },
     method: { eyebrow: 'منهجيتنا' },

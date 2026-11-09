@@ -1,9 +1,11 @@
 import { useEffect, useId, useRef } from 'react';
 import { Link, useLocation, useParams } from 'react-router';
 import { ArrowRightIcon } from '@/components/icons';
+import { QUOTE_HREF } from '@/app/layouts/navbar/menu';
 import { cabinetContent } from '@/features/cabinet/content';
 import { STEP_ICONS } from '@/features/cabinet/icons';
 import { useCabinetMotion } from '@/features/cabinet/useCabinetMotion';
+import { ContactBand } from '@/features/contact/ContactBand';
 import { expertisesContent } from '@/features/expertises/content';
 import { missionsContent } from '@/features/missions/content';
 import NotFoundPage from '@/features/not-found/NotFoundPage';
@@ -49,6 +51,7 @@ const splitText = (text: string): [string, string] => {
  * 03 Notre démarche, bleu 10 % : les quatre temps de « Le cabinet ».
  * 04 Références, blanc : la référence du domaine en grand, puis ses missions (celles de
  *    « Missions et réalisations ») ; sans mission (coaching), l'engagement seul.
+ * 05 Premier échange, bleu 10 % : le bouton de rendez-vous, le téléphone et le courriel.
  * Une sous-rubrique du menu (/…/diagnostic-d-entreprise) mène à sa prestation.
  */
 export default function DomainPage() {
@@ -107,7 +110,7 @@ export default function DomainPage() {
             </h1>
             {rest && <p className={styles.lead}>{rest}</p>}
             <div className={styles.actions}>
-              <Link to={t.contact.href} className={styles.primary}>
+              <Link to={QUOTE_HREF} className={styles.primary}>
                 {t.contact.label}
                 <ArrowRightIcon size={18} className="arrow" />
               </Link>
@@ -258,6 +261,9 @@ export default function DomainPage() {
           )}
         </div>
       </section>
+
+      {/* ---------- 05 Premier échange ---------- */}
+      <ContactBand />
     </div>
   );
 }
