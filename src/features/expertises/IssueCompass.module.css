@@ -1,0 +1,216 @@
+/* Les six métiers en cercle (bloc 01 de « Nos expertises ») : un cadre carré, l'orbite et les
+   rayons en SVG, les métiers et le centre en HTML par-dessus. */
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 34rem;
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Arabe : le cercle se lit en miroir, comme la page. */
+.stage:dir(rtl) .lines {
+  scale: -1 1;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--opem-blue-30);
+  stroke-width: 0.25;
+}
+
+.ringInner {
+  fill: var(--opem-white);
+  stroke: var(--opem-blue-30);
+  stroke-width: 0.25;
+}
+
+.spoke {
+  stroke: var(--opem-blue-30);
+  stroke-width: 0.25;
+  stroke-dasharray: 0.8 1.2;
+}
+
+/* Le trait du métier choisi : il se dessine du centre vers le métier. */
+.beam {
+  fill: none;
+  stroke: var(--opem-blue);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 450ms var(--ease-reveal, ease-out);
+}
+
+.beamOn {
+  stroke-dashoffset: 0;
+}
+
+.orbiter {
+  fill: var(--opem-green);
+  transform-origin: 50px 50px;
+  animation: orbit 28s linear infinite;
+}
+
+@keyframes orbit {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* Un métier : un disque blanc, son icône au trait. */
+.node {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 17%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--opem-white);
+  box-shadow: 0 2px 10px rgb(17 54 91 / 8%);
+  color: var(--opem-blue);
+  translate: -50% -50%;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    opacity 300ms ease,
+    scale 300ms var(--ease-reveal, ease-out);
+}
+
+.node:dir(rtl) {
+  translate: 50% -50%;
+}
+
+.node svg {
+  width: 42%;
+  height: 42%;
+}
+
+/* Le métier choisi : fond bleu, icône blanche, un halo qui s'élargit. */
+.nodeOn {
+  background: var(--opem-blue);
+  color: var(--opem-white);
+  scale: 1.18;
+}
+
+.nodeOn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--opem-blue);
+  border-radius: 50%;
+  animation: halo 1.6s ease-out infinite;
+}
+
+@keyframes halo {
+  from {
+    opacity: 0.6;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    scale: 1.6;
+  }
+}
+
+/* Les autres s'estompent (icône pâle), sans transparence : l'orbite ne se voit pas au travers. */
+.nodeDim {
+  box-shadow: none;
+  color: var(--opem-blue-30);
+}
+
+/* Le centre : au repos le titre du bloc des domaines, puis le métier choisi. */
+.center {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 42%;
+  aspect-ratio: 1;
+  text-align: center;
+  translate: -50% -50%;
+}
+
+.centerContent {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  padding: 0 0.5rem;
+  animation: appear 380ms var(--ease-reveal, ease-out);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+}
+
+.centerNumber {
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.centerTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 0.6rem + 0.7vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.centerLead {
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.centerIdle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 0.7rem + 0.7vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.centerNumber:lang(ar),
+.centerTitle:lang(ar),
+.centerIdle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
+.centerLead:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbiter,
+  .nodeOn::after,
+  .centerContent {
+    animation: none;
+  }
+
+  .beam {
+    transition: none;
+  }
+}

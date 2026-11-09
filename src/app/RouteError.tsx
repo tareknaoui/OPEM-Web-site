@@ -1,10 +1,21 @@
+import { useEffect, useState } from 'react';
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
 import { env } from '@/lib/env';
+import { canReload, isStaleChunkError, reloadOnce } from '@/lib/staleChunk';
 
 // Affichée si une page plante. Le détail technique n'est montré qu'en
 // développement, pour ne pas divulguer d'informations internes en production.
 export function RouteError() {
   const error = useRouteError();
+  // Ancienne version du site encore ouverte après une mise en ligne : on recharge la page
+  // demandée (une fois) au lieu d'afficher une erreur.
+  const [reloading] = useState(() => isStaleChunkError(error) && canReload());
+
+  useEffect(() => {
+    if (reloading) reloadOnce();
+  }, [reloading]);
+
+  if (reloading) return null;
 
   const message = isRouteErrorResponse(error)
     ? `${error.status} ${error.statusText}`

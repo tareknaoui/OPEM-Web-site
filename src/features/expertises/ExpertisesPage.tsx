@@ -4,7 +4,7 @@ import { MegaphoneIcon } from '@phosphor-icons/react/dist/csr/Megaphone';
 import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
 import { StrategyIcon } from '@phosphor-icons/react/dist/csr/Strategy';
 import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
-import { useId, useRef, type MouseEvent } from 'react';
+import { useId, useRef, useState, type FocusEvent, type MouseEvent } from 'react';
 import { Link } from 'react-router';
 import { QUOTE_HREF } from '@/app/layouts/navbar/menu';
 import { ArrowRightIcon } from '@/components/icons';
@@ -13,6 +13,7 @@ import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { DOMAIN_IDS, expertisesContent } from './content';
 import styles from './ExpertisesPage.module.css';
+import { IssueCompass } from './IssueCompass';
 import { Relay } from './Relay';
 import { ThreadArt } from './ThreadArt';
 import { VerdictBench } from './VerdictBench';
@@ -32,8 +33,8 @@ const ISSUE_ICONS = [
  * Page « Nos expertises » (/nos-expertises), page unique à ancres, en cinq blocs dont le type de
  * visuel change à chaque fois (deux voisins ne se ressemblent jamais) :
  * 01 Ouverture, bleu 10 % : typographie, les six enjeux en grand index avec chacun son icône
- *    au trait, un point d'interrogation en filigrane ; chaque enjeu descend en douceur vers sa
- *    carte du bloc 02.
+ *    au trait ; chaque enjeu descend en douceur vers sa carte du bloc 02. À droite (ordinateur),
+ *    les six métiers en cercle : au survol d'un enjeu, son métier s'allume (IssueCompass).
  * 02 Six domaines, blanc : une rangée par domaine, sa grande photo (autres que les illustrations
  *    de l'accueil) d'un côté puis de l'autre ; la typologie en étiquettes.
  * 03 Les métiers se relaient, bleu 10 % : vraies photos, les quatre métiers d'un même client
@@ -49,6 +50,11 @@ export default function ExpertisesPage() {
   const ids = useId();
   const { opening, domains, together, ai, talk } = t;
   const togetherRef = useRef<HTMLElement>(null);
+  // L'enjeu survolé (ou atteint au clavier) : son métier s'allume dans l'illustration.
+  const [active, setActive] = useState<number | null>(null);
+  const leaveIssues = (event: FocusEvent<HTMLOListElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setActive(null);
+  };
 
   // Un enjeu mène à la carte de son domaine, en douceur, le menu restant visible à l'arrivée.
   const goTo = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -68,38 +74,56 @@ export default function ExpertisesPage() {
 
       {/* ---------- 01 Ouverture ---------- */}
       <section className={styles.opening} aria-labelledby={`${ids}-opening`}>
-        <span className={styles.question} aria-hidden="true">
-          ?
-        </span>
         <div className={cx('container', styles.openingInner)}>
-          <p className={styles.eyebrow}>{opening.eyebrow}</p>
-          {/* Le titre principal (H1) est la première phrase seule ; la seconde la prolonge à
+          <div className={styles.openingHead}>
+            <p className={styles.eyebrow}>{opening.eyebrow}</p>
+            {/* Le titre principal (H1) est la première phrase seule ; la seconde la prolonge à
               l'écran, du même corps, sans faire partie du titre. */}
-          <h1 id={`${ids}-opening`} className={styles.openingTitle}>
-            {opening.title[0]}
-          </h1>
-          <p className={cx(styles.openingTitle, styles.openingTitleEnd)}>{opening.title[1]}</p>
-          <ol className={styles.issues}>
-            {opening.issues.map((issue, index) => {
-              const id = DOMAIN_IDS[index] ?? '';
-              const Icon = ISSUE_ICONS[index];
-              return (
-                <li key={id}>
-                  <a href={`#${id}`} className={styles.issue} onClick={(event) => goTo(event, id)}>
-                    <span className={styles.issueNumber} aria-hidden="true">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className={styles.issueIcon} aria-hidden="true">
-                      {Icon && <Icon size={24} weight="duotone" />}
-                    </span>
-                    <span className={styles.issueText}>{issue}</span>
-                    <ArrowRightIcon size={20} className={cx('arrow', styles.issueArrow)} />
-                  </a>
-                </li>
-              );
-            })}
-          </ol>
-          <p className={styles.closing}>{opening.closing}</p>
+            <h1 id={`${ids}-opening`} className={styles.openingTitle}>
+              {opening.title[0]}
+            </h1>
+            <p className={cx(styles.openingTitle, styles.openingTitleEnd)}>{opening.title[1]}</p>
+          </div>
+          <div className={styles.openingList}>
+            <ol className={styles.issues} onMouseLeave={() => setActive(null)} onBlur={leaveIssues}>
+              {opening.issues.map((issue, index) => {
+                const id = DOMAIN_IDS[index] ?? '';
+                const Icon = ISSUE_ICONS[index];
+                return (
+                  <li key={id}>
+                    <a
+                      href={`#${id}`}
+                      className={styles.issue}
+                      onClick={(event) => goTo(event, id)}
+                      onMouseEnter={() => setActive(index)}
+                      onFocus={() => setActive(index)}
+                    >
+                      <span className={styles.issueNumber} aria-hidden="true">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className={styles.issueIcon} aria-hidden="true">
+                        {Icon && <Icon size={24} weight="duotone" />}
+                      </span>
+                      <span className={styles.issueText}>{issue}</span>
+                      <ArrowRightIcon size={20} className={cx('arrow', styles.issueArrow)} />
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+            <p className={styles.closing}>{opening.closing}</p>
+          </div>
+          <div className={styles.openingArt}>
+            <IssueCompass
+              items={domains.items.map((domain, index) => ({
+                title: domain.title,
+                lead: (domain.typology.strong[0] ?? '').replace(/\.$/, ''),
+                Icon: ISSUE_ICONS[index],
+              }))}
+              active={active}
+              idle={domains.title}
+            />
+          </div>
         </div>
       </section>
 
