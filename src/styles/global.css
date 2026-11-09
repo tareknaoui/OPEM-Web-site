@@ -67,10 +67,12 @@
   --space-20: 5rem;
   --radius: 0.25rem;
 
-  /* Grille : 12 colonnes, 1 920 px au plus (marges comprises) ; marges latérales de 5 % de
-     l'écran (16 à 80 px) : jusqu'aux écrans de bureau courants, le contenu va d'une marge
-     à l'autre (pas de grand vide à gauche du bandeau) ; au-delà, il se centre. */
-  --max-width: 120rem;
+  /* Grille : 12 colonnes ; marges latérales de 5 % de l'écran (16 à 80 px). Largeur de contenu
+     plafonnée à 90rem (1 440 px), comme les grands cabinets (McKinsey, BCG) : sur un écran de
+     15 pouces, le contenu va d'une marge à l'autre ; sur un 24 pouces et plus, il garde cette
+     largeur et se centre, au lieu de s'étirer. Les fonds de section restent bord à bord ; le
+     texte ne grossit pas. */
+  --max-width: calc(90rem + 2 * var(--gutter));
   --gutter: clamp(1rem, 5vw, 5rem);
   --grid-gap: clamp(1rem, 0.5rem + 1.5vw, 2rem);
   /* Espace entre sections : ~96 à 144 px sur ordinateur. */

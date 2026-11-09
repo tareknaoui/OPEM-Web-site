@@ -33,10 +33,14 @@ export type CabinetContent = {
     alt: string;
     /**
      * Trois actes, un par repère de la frise (posés chacun au-dessus de son pilier) ; mis bout à
-     * bout, le texte d'OPEM mot pour mot. Mots clés : *bleu*, [[vert]] (le vert des cubes neufs).
+     * bout, le texte d'OPEM mot pour mot. Mots clés : *bleu*, [[vert]] (le vert du sixième domaine).
      */
     text: [string, string, string];
     milestones: { year: string; title: string; text: string }[];
+    /** Les six domaines, dans l'ordre de « Nos expertises » ; le dernier, ajouté en 2025. */
+    domains: string[];
+    /** Le badge posé sur chaque domaine en 2026 (l'IA, un outil). */
+    aiTag: string;
   };
   /** 03 Notre regard : surtitre, titre, puis trois idées numérotées (titre et texte). */
   regard: {
@@ -118,17 +122,26 @@ const fr: CabinetContent = {
   history: {
     eyebrow: 'Notre histoire',
     title: 'Ce qui nous a fait naître.',
-    alt: 'Frise des étapes d’OPEM : création en 2019, sixième domaine en 2025, intelligence artificielle en 2026',
+    alt: 'Les cinq domaines d’OPEM en 2019 : études stratégiques, accompagnement des organisations, formation qualifiante, coaching professionnel, certification et accréditation ; un sixième en 2025, la communication institutionnelle ; en 2026, l’intelligence artificielle, un outil ajouté à chacun',
     text: [
       'À l’origine d’OPEM, une *conviction* : l’Algérie mérite des organisations dignes de son histoire et de ses ambitions.',
       'Le chemin n’a pas toujours été aisé ; rien, pourtant, n’a ébranlé cette conviction. Parti de *cinq domaines*, le cabinet en compte aujourd’hui [[six]], chacun ajouté à la demande de ses clients.',
-      'Avec l’[[intelligence artificielle]], il ouvre un nouveau chapitre : préparer les organisations aux enjeux d’une société moderne, en pleine mutation.',
+      'Avec l’intelligence artificielle, il ouvre un nouveau chapitre : préparer les organisations aux enjeux d’une société moderne, en pleine mutation.',
     ],
     milestones: [
       { year: '2019', title: 'Création d’OPEM', text: 'Cinq domaines d’expertise' },
       { year: '2025', title: 'Communication institutionnelle', text: 'Sixième domaine' },
       { year: '2026', title: 'Intelligence artificielle', text: 'Appliquée aux organisations' },
     ],
+    domains: [
+      'Études stratégiques',
+      'Accompagnement des organisations',
+      'Formation qualifiante',
+      'Coaching professionnel',
+      'Certification et accréditation',
+      'Communication institutionnelle',
+    ],
+    aiTag: 'IA',
   },
   regard: {
     eyebrow: 'Notre regard',
@@ -293,17 +306,26 @@ const ar: CabinetContent = {
   history: {
     eyebrow: 'تاريخنا',
     title: 'ما الذي أوجدنا.',
-    alt: 'خط زمني لمراحل OPEM: التأسيس سنة 2019، المجال السادس سنة 2025، الذكاء الاصطناعي سنة 2026',
+    alt: 'مجالات OPEM الخمسة سنة 2019: الدراسات الاستراتيجية، مرافقة المؤسسات، التكوين التأهيلي، الكوتشينغ المهني، الإشهاد والاعتماد؛ ثم مجال سادس سنة 2025، الاتصال المؤسساتي؛ وسنة 2026، الذكاء الاصطناعي أداةٌ أُضيفت إلى كلّ مجال',
     text: [
       'في أصل OPEM *قناعة*: الجزائر تستحق مؤسسات تليق بتاريخها وطموحاتها.',
       'لم يكن الطريق دائمًا يسيرًا؛ ومع ذلك، لم يزعزع شيء هذه القناعة. انطلق المكتب من *خمسة مجالات*، ويضمّ اليوم [[ستة]]، أُضيف كلٌّ منها بطلب من عملائه.',
-      'ومع [[الذكاء الاصطناعي]]، يفتح فصلًا جديدًا: إعداد المؤسسات لرهانات مجتمع حديث في تحوّل عميق.',
+      'ومع الذكاء الاصطناعي، يفتح فصلًا جديدًا: إعداد المؤسسات لرهانات مجتمع حديث في تحوّل عميق.',
     ],
     milestones: [
       { year: '2019', title: 'تأسيس OPEM', text: 'خمسة مجالات خبرة' },
       { year: '2025', title: 'الاتصال المؤسساتي', text: 'المجال السادس' },
       { year: '2026', title: 'الذكاء الاصطناعي', text: 'مطبَّق على المؤسسات' },
     ],
+    domains: [
+      'الدراسات الاستراتيجية',
+      'مرافقة المؤسسات',
+      'التكوين التأهيلي',
+      'الكوتشينغ المهني',
+      'الإشهاد والاعتماد',
+      'الاتصال المؤسساتي',
+    ],
+    aiTag: 'ذكاء اصطناعي',
   },
   regard: {
     eyebrow: 'نظرتنا',

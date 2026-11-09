@@ -1,90 +1,44 @@
+import { CompassIcon } from '@phosphor-icons/react/dist/csr/Compass';
+import { CpuIcon } from '@phosphor-icons/react/dist/csr/Cpu';
+import { GraduationCapIcon } from '@phosphor-icons/react/dist/csr/GraduationCap';
+import { MegaphoneIcon } from '@phosphor-icons/react/dist/csr/Megaphone';
+import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
+import { StrategyIcon } from '@phosphor-icons/react/dist/csr/Strategy';
+import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Fragment, useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
 import type { CabinetContent } from '../content';
-import { iso, pts } from '../iso';
 import { fitToScreen } from '../useCabinetMotion';
 import styles from './History.module.css';
 
 /*
- * Scène isométrique (même projection que les illustrations du site), viewBox 1200 × 460 (de
- * y = 40 à 500). Trois piliers posés sur une ligne de sol, de plus en plus hauts (2019, 2025,
- * 2026), centrés sur les tiers de la largeur pour tomber sous les trois actes du texte ; sur
- * chacun, un petit cube par domaine ; en 2026, les six reliés en réseau à un cube vert (l'IA).
+ * « Notre histoire » en trois temps, sur un tableau des domaines :
+ * - 2019 : les cinq domaines d'origine apparaissent un à un, chacun avec son icône (celles de
+ *   « Nos expertises ») et son nom, qui s'écrit ;
+ * - 2025 : à la place libre (en pointillé), le sixième domaine surgit, en vert le temps de son
+ *   arrivée ; en 2026, il reprend les couleurs des autres ;
+ * - 2026 : l'intelligence artificielle fait son apparition, comme un outil : une bande de
+ *   lumière balaie le tableau et pose un badge « IA » (une puce) sur chacun des six domaines.
+ *   Aucun domaine ne change de place ni de taille ; l'IA n'a ni case ni centre.
+ * Dessous, une frise droite et ferme : 2019, 2025, 2026, puis la suite en pointillé.
+ * Pas d'ambre (fond blanc), pas de dégradé.
  */
-const W = 1200;
-const VIEW = { y: 40, h: 460 };
-const S = 30; // pixels par unité
-const C = Math.cos(Math.PI / 6);
-const { P, box: cuboid } = iso({ x: 600, y: 330 }, S);
-/** Boîte à base carrée (côté a, hauteur h). */
-const box = (x0: number, y0: number, z0: number, a: number, h: number) =>
-  cuboid(x0, y0, z0, a, a, h);
 
-const SIDE = 4; // côté du pilier
-const CUBE = 0.6; // côté d'un cube-domaine
-const THIRD = W / 3 / (2 * C * S); // écart qui place les piliers au centre des tiers (x = 200, 600, 1000)
-/** Pilier : position le long de la diagonale (horizontale à l'écran), hauteur, nombre de domaines. */
-const STAGES = [
-  { u: -THIRD, h: 1.6, domains: 5 },
-  { u: 0, h: 3, domains: 6 },
-  { u: THIRD, h: 4.6, domains: 6 },
-] as const;
-const LAST = STAGES.length - 1;
+/** Icônes des six domaines, dans l'ordre de « Nos expertises » (mêmes icônes que cette page). */
+const DOMAIN_ICONS = [
+  StrategyIcon,
+  TreeStructureIcon,
+  GraduationCapIcon,
+  CompassIcon,
+  SealCheckIcon,
+  MegaphoneIcon,
+];
+/** Places des repères sur la frise (en % de sa longueur) : 2019, 2025, 2026. */
+const MARKS = [0, 72, 90];
 
-const SCENE = STAGES.map((stage, index) => {
-  const cx = stage.u;
-  const cy = -stage.u;
-  const x0 = cx - SIDE / 2;
-  const y0 = cy - SIDE / 2;
-  // Filets horizontaux sur les faces du pilier (un tous les 0,75), comme des étages.
-  const floors: string[] = [];
-  for (let z = 0.75; z < stage.h - 0.3; z += 0.75) {
-    floors.push(pts([P(x0, y0 + SIDE, z), P(x0 + SIDE, y0 + SIDE, z), P(x0 + SIDE, y0, z)]));
-  }
-  // Cubes-domaines en couronne sur le dessus, triés du plus lointain au plus proche.
-  const radius = 1.45;
-  const cubes = Array.from({ length: stage.domains }, (_, i) => {
-    const angle = -Math.PI / 4 - Math.PI / 2 + (i * 2 * Math.PI) / stage.domains;
-    const x = cx + radius * Math.cos(angle);
-    const y = cy + radius * Math.sin(angle);
-    return { i, x, y, depth: x + y };
-  }).sort((a, b) => a.depth - b.depth);
-  return {
-    index,
-    pillar: box(x0, y0, 0, SIDE, stage.h),
-    shadow: pts([
-      P(x0 - 0.5, y0 - 0.5, 0),
-      P(x0 + SIDE + 0.5, y0 - 0.5, 0),
-      P(x0 + SIDE + 0.5, y0 + SIDE + 0.5, 0),
-      P(x0 - 0.5, y0 + SIDE + 0.5, 0),
-    ]),
-    floors,
-    cubes: cubes.map((cube) => ({
-      ...cube,
-      faces: box(cube.x - CUBE / 2, cube.y - CUBE / 2, stage.h, CUBE, CUBE),
-      foot: P(cube.x, cube.y, stage.h),
-      isNew: index === 1 && cube.i === stage.domains - 1,
-    })),
-    core: index === LAST ? box(cx - 0.42, cy - 0.42, stage.h, 0.84, 1.05) : null,
-    center: P(cx, cy, stage.h),
-    // Repères des textes : sommet du dessus (titre), pied avant (année, précision).
-    labelX: P(cx, cy, 0).x,
-    topY: P(x0, y0, stage.h).y,
-    baseY: P(x0 + SIDE, y0 + SIDE, 0).y,
-  };
-});
-
-const GROUND = { from: P(-11.5, 11.5, 0), to: P(11.5, -11.5, 0) };
-const CROSSES = [
-  [70, 170],
-  [1130, 150],
-  [60, 440],
-  [1150, 430],
-] as const;
-
-/** Un acte du texte : *mot* en bleu, [[mot]] en vert (le vert des cubes neufs). */
+/** Un acte du texte : *mot* en bleu, [[mot]] en vert (le vert du sixième domaine). */
 function Act({ text }: { text: string }) {
   return text.split(/(\*[^*]+\*|\[\[[^\]]+\]\])/).map((part, i) => {
     if (part.startsWith('*')) {
@@ -105,239 +59,377 @@ function Act({ text }: { text: string }) {
   });
 }
 
+/** Le compteur d'années : un rouleau de chiffres par position (0 à 9). */
+function YearRoller({ years }: { years: string[] }) {
+  const first = years[0] ?? '';
+  return (
+    <div className={styles.roller} aria-hidden="true">
+      {first.split('').map((digit, position) => (
+        <span key={position} className={styles.rollerWindow}>
+          <span
+            className={styles.rollerStrip}
+            data-roll={position}
+            style={{ transform: `translateY(${-Number(digit) * 10}%)` }}
+          >
+            {Array.from({ length: 10 }, (_, n) => (
+              <span key={n}>{n}</span>
+            ))}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 /**
- * Le récit de « Notre histoire » : le texte d'OPEM en trois actes, puis la frise dessinée.
- * Ordinateur : chaque acte est posé au-dessus de son pilier, relié à lui par un fil de
- * construction ; au défilement (GSAP ScrollTrigger), le récit reste figé à l'écran et se
- * construit acte par acte : le fil descend, l'acte s'allume, le pilier monte avec son titre et
- * son année, les cubes-domaines s'y posent (le sixième, en 2025, en vert), puis le réseau de
- * l'IA (2026) se trace. Tablette et téléphone : le texte d'un seul tenant (la liste des repères
- * suit). Sans script ou en mouvement réduit : tout est affiché, immobile.
+ * Le récit : à gauche le compteur d'années, la légende du repère et le texte en trois actes ; à
+ * droite le tableau des domaines. Ordinateur : le récit reste figé à l'écran et se construit au
+ * défilement (GSAP ScrollTrigger, réduit au besoin pour tenir). Tablette et téléphone : le texte,
+ * puis le tableau, qui se joue de lui-même quand il arrive à l'écran. Sans script ou en
+ * mouvement réduit : l'état final, immobile.
  */
 export function HistoryArt({
   text,
   milestones,
+  domains,
+  aiTag,
   rtl,
   alt,
 }: {
   text: CabinetContent['history']['text'];
   milestones: CabinetContent['history']['milestones'];
+  domains: CabinetContent['history']['domains'];
+  aiTag: string;
   rtl: boolean;
   alt: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const years = milestones.map((m) => m.year).join(' ');
+  const added = domains.length - 1;
 
   useEffect(() => {
     const story = ref.current;
-    const svg = story?.querySelector('svg');
-    if (!story || !svg || prefersReducedMotion()) return;
+    const board = story?.querySelector<HTMLElement>('[data-board] > div');
+    if (!story || !board || prefersReducedMotion()) return;
     gsap.registerPlugin(ScrollTrigger);
+    const all = (attr: string) => gsap.utils.toArray<HTMLElement>(`[${attr}]`, story);
+    const acts = all('data-act');
+    const captions = all('data-caption');
+    const strips = all('data-roll');
+    const slots = all('data-slot');
+    const cards = all('data-card');
+    const names = all('data-name');
+    const badges = all('data-badge');
+    const marks = all('data-mark');
+    const fill = story.querySelector('[data-fill]');
+    const ahead = story.querySelector('[data-ahead]');
+    const scan = story.querySelector<HTMLElement>('[data-scan]');
+    const hole = story.querySelector('[data-hole]');
+    // Le sixième domaine : son cadre vert, sa pastille et son année, qui passent au vert en 2025
+    // puis reviennent aux couleurs des autres en 2026.
+    const frame = story.querySelector('[data-frame]');
+    const newCard = cards[cards.length - 1];
+    const newIcon = newCard?.querySelector('[data-icon]') ?? null;
+    const newYear = newCard?.querySelector('[data-year]') ?? null;
+    const token = (name: string) => getComputedStyle(story).getPropertyValue(name).trim();
+    const blue = {
+      icon: { backgroundColor: token('--opem-blue-10'), color: token('--opem-blue') },
+      year: { color: '#5b6770' },
+    };
+    const green = {
+      icon: { backgroundColor: '#e3f1dd', color: token('--opem-green-dark') },
+      year: { color: token('--opem-green-dark') },
+    };
+    const list = years.split(' ');
+    const dir = rtl ? -1 : 1;
+    // Le nom s'écrit dans le sens de la lecture.
+    const hidden = rtl ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)';
+    /** Largeur de chaque chiffre (0 à 9) de chaque bande, pour ajuster sa fenêtre. */
+    const widths = strips.map((strip) =>
+      Array.from(strip.children, (digit) => digit.getBoundingClientRect().width),
+    );
+
+    /** Le compteur passe à l'année du repère : chaque chiffre roule jusqu'au sien. */
+    const roll = (timeline: gsap.core.Timeline, index: number, position: number | string) => {
+      const year = list[index] ?? '';
+      strips.forEach((strip, i) => {
+        const digit = Number(year[i] ?? 0);
+        timeline.to(
+          strip,
+          { yPercent: -digit * 10, duration: 1.4, ease: 'power2.inOut' },
+          position,
+        );
+        timeline.to(
+          strip.parentElement,
+          { width: widths[i]?.[digit] ?? 'auto', duration: 1.4, ease: 'power2.inOut' },
+          position,
+        );
+      });
+    };
+    /** Le repère courant : sa légende s'affiche, son acte s'allume, les autres s'estompent. */
+    const focus = (timeline: gsap.core.Timeline, index: number, position: number | string) => {
+      captions.forEach((caption, i) =>
+        timeline.to(
+          caption,
+          {
+            autoAlpha: i === index ? 1 : 0,
+            y: i === index ? 0 : i < index ? -12 : 12,
+            duration: 0.6,
+          },
+          position,
+        ),
+      );
+      acts.forEach((act, i) =>
+        timeline.to(
+          act,
+          { opacity: i === index ? 1 : i < index ? 0.45 : 0.22, duration: 0.6 },
+          position,
+        ),
+      );
+    };
+    /** Un domaine apparaît, puis son nom s'écrit. */
+    const reveal = (
+      timeline: gsap.core.Timeline,
+      index: number,
+      position: number | string,
+      pop = false,
+    ) => {
+      const card = cards[index];
+      const name = names[index];
+      if (!card || !name) return;
+      timeline.from(
+        card,
+        pop
+          ? { opacity: 0, scale: 0.4, duration: 0.9, ease: 'back.out(1.8)' }
+          : { opacity: 0, y: 26, scale: 0.94, duration: 0.7, ease: 'power3.out' },
+        position,
+      );
+      timeline.fromTo(
+        name,
+        { clipPath: hidden },
+        { clipPath: 'inset(0 0% 0 0%)', duration: 0.7, ease: 'power2.inOut' },
+        '<+=0.3',
+      );
+    };
+
+    /**
+     * Le tableau, des cinq domaines à l'outil ; « story » : avec compteur et actes (ordinateur).
+     * « intro » montre les cinq domaines de 2019 dès que le tableau arrive à l'écran (pas de grand
+     * vide en attendant) ; « timeline » raconte 2025 et 2026 (sur ordinateur, au défilement).
+     */
+    const build = (intro: gsap.core.Timeline, timeline: gsap.core.Timeline, story: boolean) => {
+      strips.forEach((strip, i) => {
+        const digit = Number(list[0]?.[i] ?? 0);
+        gsap.set(strip, { yPercent: -digit * 10, y: 0 });
+        gsap.set(strip.parentElement, { width: widths[i]?.[digit] ?? 'auto' });
+      });
+      if (story) {
+        gsap.set(acts, { opacity: 0.22 });
+        gsap.set(captions, { autoAlpha: 0, y: 12 });
+        focus(intro, 0, 0);
+      }
+
+      // 2019 : le premier repère, puis les cinq domaines, un à un, et leurs noms.
+      intro.from(
+        marks[0] ?? [],
+        {
+          scale: 0,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'back.out(2)',
+        },
+        0,
+      );
+      for (let i = 0; i < added; i += 1) reveal(intro, i, 0.2 + i * 0.3);
+      intro.fromTo(hole ?? [], { opacity: 0 }, { opacity: 1, duration: 0.5 });
+
+      // 2019 → 2025 : la frise avance, droite ; le sixième domaine surgit à la place libre.
+      timeline.addLabel('road', intro === timeline ? '+=0.4' : 0.2);
+      if (story) focus(timeline, 1, 'road');
+      timeline.fromTo(
+        fill,
+        { scaleX: 0 },
+        { scaleX: MARKS[1]! / 100, duration: 2, ease: 'none' },
+        'road',
+      );
+      roll(timeline, 1, 'road+=0.5');
+      timeline.from(marks[1] ?? [], { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)' });
+      reveal(timeline, added, '-=0.1', true);
+      timeline.to(hole ?? [], { opacity: 0, duration: 0.3 }, '<');
+      // Le temps de son arrivée, le sixième domaine est en vert (cadre, pastille, année).
+      timeline
+        .fromTo(frame, { opacity: 0 }, { opacity: 1, duration: 0.4 }, '<')
+        .fromTo(newIcon, blue.icon, { ...green.icon, duration: 0.4 }, '<')
+        .fromTo(newYear, blue.year, { ...green.year, duration: 0.4 }, '<');
+
+      // 2026 : l'IA fait son apparition. La bande balaie le tableau et pose un badge sur chaque
+      // domaine au moment où elle le traverse. Le sixième domaine n'est plus nouveau : il
+      // reprend les couleurs des autres.
+      timeline.addLabel('tool', '+=1.1');
+      if (story) focus(timeline, 2, 'tool');
+      roll(timeline, 2, 'tool');
+      timeline
+        .to(frame, { opacity: 0, duration: 0.6 }, 'tool')
+        .to(newIcon, { ...blue.icon, duration: 0.6 }, 'tool')
+        .to(newYear, { ...blue.year, duration: 0.6 }, 'tool');
+      timeline
+        .to(fill, { scaleX: MARKS[2]! / 100, duration: 0.7, ease: 'none' }, 'tool')
+        .from(marks[2] ?? [], { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)' })
+        .addLabel('sweep');
+      const sweep = 2.2;
+      if (scan) {
+        timeline
+          .set(scan, { opacity: 1 }, 'sweep')
+          .fromTo(
+            scan,
+            { x: () => -dir * scan.offsetWidth },
+            { x: () => dir * board.clientWidth, duration: sweep, ease: 'power1.inOut' },
+            'sweep',
+          )
+          .set(scan, { opacity: 0 });
+      }
+      badges.forEach((badge, i) => {
+        const slot = slots[i];
+        const center = slot ? (slot.offsetLeft + slot.offsetWidth / 2) / board.clientWidth : 0;
+        const at = Math.min(1, Math.max(0, rtl ? 1 - center : center));
+        timeline.from(
+          badge,
+          { scale: 0, opacity: 0, duration: 0.45, ease: 'back.out(2.5)' },
+          `sweep+=${(at * sweep * 0.9).toFixed(2)}`,
+        );
+      });
+      timeline.from(ahead ?? [], { opacity: 0, duration: 0.6 }, `sweep+=${sweep}`);
+      if (story) timeline.to({}, { duration: 1.2 }); // un temps pour relire le récit complet
+    };
 
     const media = gsap.matchMedia(story);
     media.add(
       {
-        // Le récit est figé le temps de sa construction (réduit au besoin pour tenir à l'écran).
         pin: '(min-width: 64em) and (min-height: 34em)',
-        // Écran très bas : pas de blocage, la construction suit simplement le défilement.
         flow: '(min-width: 64em) and (max-height: 33.99em)',
+        small: '(max-width: 63.99em)',
       },
       (context) => {
-        const pin = Boolean(context.conditions?.pin);
-        // Haut du récit figé : juste sous le menu (scroll-margin-top du CSS).
+        const { pin, small } = context.conditions ?? {};
         const top = () => parseFloat(getComputedStyle(story).scrollMarginTop) || 0;
         const content = story.firstElementChild;
         const unfit =
           pin && content instanceof HTMLElement
             ? fitToScreen(content, () => window.innerHeight - top() - 16)
             : undefined;
-        const timeline = gsap.timeline({
+        // Les cinq domaines de 2019 se posent dès que le tableau entre à l'écran.
+        const intro = gsap.timeline({
           defaults: { ease: 'power3.out' },
-          scrollTrigger: pin
-            ? {
-                trigger: story,
-                start: () => `top ${top()}px`,
-                end: '+=1600',
-                scrub: 0.6,
-                pin: true,
-                anticipatePin: 1,
-              }
-            : { trigger: story, start: 'top 70%', end: 'bottom 45%', scrub: 0.6 },
+          scrollTrigger: { trigger: board, start: 'top 85%', once: true },
         });
-        timeline.from('[data-part="ground"]', { opacity: 0, duration: 0.6 });
-        SCENE.forEach(({ index }) => {
-          const q = (part: string) =>
-            svg.querySelectorAll(`[data-stage="${index}"] [data-part="${part}"]`);
-          timeline
-            .fromTo(
-              q('leader'),
-              { strokeDashoffset: 1 },
-              { strokeDashoffset: 0, duration: 0.5, ease: 'power1.inOut' },
-            )
-            .from(
-              story.querySelector(`[data-act="${index}"]`),
-              {
-                opacity: 0.3,
-                duration: 0.9,
-                ease: 'none',
-              },
-              '<',
-            )
-            .from(q('pillar'), { y: 46, opacity: 0, duration: 1 }, '-=0.3')
-            .from(q('text'), { opacity: 0, y: 10, duration: 0.6, stagger: 0.1 }, '-=0.5')
-            .from(q('cube'), { y: -26, opacity: 0, duration: 0.5, stagger: 0.08 }, '-=0.3')
-            .from(q('new'), { y: -40, opacity: 0, duration: 0.7, ease: 'bounce.out' })
-            .fromTo(
-              q('link'),
-              { strokeDashoffset: 1 },
-              { strokeDashoffset: 0, duration: 0.7, stagger: 0.05, ease: 'power1.inOut' },
-            )
-            .from(q('core'), { y: -34, opacity: 0, duration: 0.7, ease: 'back.out(2)' }, '-=0.3')
-            .to({}, { duration: 0.6 }); // un temps de lecture avant l'acte suivant
-        });
-        // Pause sur le récit complet, le temps de le relire.
-        timeline.to({}, { duration: 2 });
+        // Téléphone : tout s'enchaîne d'un trait ; ordinateur : 2025 et 2026 au défilement.
+        const timeline = small
+          ? intro
+          : gsap.timeline({
+              defaults: { ease: 'power3.out' },
+              scrollTrigger: pin
+                ? {
+                    trigger: story,
+                    start: () => `center ${top() + (window.innerHeight - top()) / 2}px`,
+                    end: '+=1600',
+                    scrub: 0.7,
+                    pin: true,
+                    anticipatePin: 1,
+                  }
+                : { trigger: story, start: 'top 60%', end: 'bottom 40%', scrub: 0.7 },
+            });
+        build(intro, timeline, !small);
         return unfit;
       },
     );
-
     return () => media.revert();
-  }, [rtl]);
+  }, [rtl, years, added]);
 
-  // Arabe : la scène se lit de droite à gauche (dessin en miroir, textes à l'endroit).
-  const mx = (x: number) => (rtl ? W - x : x);
+  const last = milestones.length - 1;
 
   return (
     <div ref={ref} className={styles.story}>
-      {/* Le contenu du récit, réduit au besoin pour tenir à l'écran quand il est figé. */}
-      <div>
-        <p className={styles.text}>
-          {text.map((act, index) => (
-            <Fragment key={index}>
-              {index > 0 && ' '}
-              <span className={styles.act} data-act={index}>
+      <div className={styles.storyGrid}>
+        <div className={styles.copy}>
+          <YearRoller years={years.split(' ')} />
+          <div className={styles.captions} aria-hidden="true">
+            {milestones.map((milestone, index) => (
+              <p
+                key={milestone.year}
+                className={styles.caption}
+                data-caption={index}
+                data-final={index === last || undefined}
+              >
+                <span className={styles.captionTitle}>{milestone.title}</span>
+                <span className={styles.captionText}>{milestone.text}</span>
+              </p>
+            ))}
+          </div>
+          <div className={styles.text}>
+            {text.map((act, index) => (
+              <p key={index} className={styles.act} data-act={index}>
                 <Act text={act} />
-              </span>
-            </Fragment>
-          ))}
-        </p>
+              </p>
+            ))}
+          </div>
+        </div>
 
-        <div className={styles.artFrame}>
-          <svg
-            className={styles.art}
-            viewBox={`0 ${VIEW.y} ${W} ${VIEW.h}`}
-            role="img"
-            aria-label={alt}
-            focusable="false"
-          >
-            <g className={styles.artGuides}>
-              {CROSSES.map(([x, y]) => (
-                <path key={`${x}-${y}`} d={`M${mx(x) - 5} ${y}h10M${mx(x)} ${y - 5}v10`} />
+        {/* Le tableau des domaines : une image pour les lecteurs d'écran (son texte la décrit). */}
+        <div className={styles.artFrame} role="img" aria-label={alt}>
+          <div className={styles.board} data-board aria-hidden="true">
+            <div className={styles.cardsWrap}>
+              <ul className={styles.cards}>
+                {domains.map((domain, index) => {
+                  const Icon = DOMAIN_ICONS[index] ?? StrategyIcon;
+                  const isNew = index === added;
+                  return (
+                    <li key={domain} className={styles.slot} data-slot>
+                      {/* La place libre du sixième domaine, en pointillé, jusqu'en 2025. */}
+                      {isNew && <span className={styles.hole} data-hole />}
+                      <div className={styles.card} data-card>
+                        {isNew && <span className={styles.newFrame} data-frame />}
+                        <span className={styles.cardIcon} data-icon>
+                          <Icon size={24} weight="duotone" />
+                        </span>
+                        <span className={styles.cardName} data-name>
+                          {domain}
+                        </span>
+                        <span className={styles.cardYear} data-year>
+                          {milestones[isNew ? 1 : 0]?.year}
+                        </span>
+                        {/* 2026 : l'IA, un outil posé sur chaque domaine. */}
+                        <span className={styles.aiBadge} data-badge>
+                          <CpuIcon size={14} weight="bold" />
+                          {aiTag}
+                        </span>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+              {/* La bande de 2026, qui balaie le tableau (invisible sans script). */}
+              <span className={styles.scan} data-scan />
+            </div>
+
+            {/* La frise : droite et ferme, 2019, 2025, 2026, puis la suite en pointillé. */}
+            <div className={styles.track}>
+              <span className={styles.trackLine} />
+              <span className={styles.trackFill} data-fill />
+              <span className={styles.trackAhead} data-ahead />
+              {milestones.map((milestone, index) => (
+                <span
+                  key={milestone.year}
+                  className={styles.trackMark}
+                  style={{ insetInlineStart: `${MARKS[index] ?? 0}%` }}
+                  data-mark
+                  data-new={index === 1 || undefined}
+                >
+                  <span className={styles.trackDot} />
+                  <span className={styles.trackYear}>{milestone.year}</span>
+                </span>
               ))}
-            </g>
-
-            <g transform={rtl ? `translate(${W} 0) scale(-1 1)` : undefined}>
-              <line
-                className={styles.artGround}
-                x1={GROUND.from.x}
-                y1={GROUND.from.y}
-                x2={GROUND.to.x}
-                y2={GROUND.to.y}
-                data-part="ground"
-              />
-
-              {SCENE.map((stage) => (
-                <g key={stage.index} data-stage={stage.index}>
-                  <g data-part="pillar">
-                    <polygon className={styles.artShadow} points={stage.shadow} />
-                    <polygon className={styles.artLeft} points={stage.pillar.left} />
-                    <polygon className={styles.artRight} points={stage.pillar.right} />
-                    {stage.floors.map((floor) => (
-                      <polyline key={floor} className={styles.artFloor} points={floor} />
-                    ))}
-                    <polygon className={styles.artTop} points={stage.pillar.top} />
-                  </g>
-
-                  {/* Réseau de l'IA, tracé sur le dessus, sous les cubes. */}
-                  {stage.core &&
-                    stage.cubes.map((cube) => (
-                      <line
-                        key={`link-${cube.i}`}
-                        className={styles.artLink}
-                        x1={stage.center.x}
-                        y1={stage.center.y}
-                        x2={cube.foot.x}
-                        y2={cube.foot.y}
-                        pathLength={1}
-                        data-part="link"
-                      />
-                    ))}
-
-                  {stage.cubes.map((cube) => (
-                    <g
-                      key={cube.i}
-                      className={cube.isNew ? styles.artCubeNew : styles.artCube}
-                      data-part={cube.isNew ? 'new' : 'cube'}
-                    >
-                      <polygon className={styles.cubeLeft} points={cube.faces.left} />
-                      <polygon className={styles.cubeRight} points={cube.faces.right} />
-                      <polygon className={styles.cubeTop} points={cube.faces.top} />
-                    </g>
-                  ))}
-
-                  {stage.core && (
-                    <g className={styles.artCubeCore} data-part="core">
-                      <polygon className={styles.cubeLeft} points={stage.core.left} />
-                      <polygon className={styles.cubeRight} points={stage.core.right} />
-                      <polygon className={styles.cubeTop} points={stage.core.top} />
-                    </g>
-                  )}
-                </g>
-              ))}
-            </g>
-
-            {/* Fils de construction (de l'acte au pilier) et textes, toujours à l'endroit : titre
-              au-dessus du pilier, année et précision dessous. */}
-            {SCENE.map((stage) => {
-              const milestone = milestones[stage.index];
-              if (!milestone) return null;
-              const x = mx(stage.labelX);
-              const leaderEnd = stage.topY - 64;
-              return (
-                <g key={milestone.year} data-stage={stage.index} className={styles.artText}>
-                  <line
-                    className={styles.artLeader}
-                    x1={x}
-                    y1={VIEW.y}
-                    x2={x}
-                    y2={leaderEnd}
-                    pathLength={1}
-                    data-part="leader"
-                  />
-                  <circle
-                    className={styles.artLeaderDot}
-                    cx={x}
-                    cy={leaderEnd}
-                    r={3.5}
-                    data-part="text"
-                  />
-                  <text className={styles.artTitle} x={x} y={stage.topY - 34} data-part="text">
-                    {milestone.title}
-                  </text>
-                  <text
-                    className={stage.index === LAST ? styles.artYearNow : styles.artYear}
-                    x={x}
-                    y={stage.baseY + 62}
-                    data-part="text"
-                  >
-                    {milestone.year}
-                  </text>
-                  <text className={styles.artDetail} x={x} y={stage.baseY + 90} data-part="text">
-                    {milestone.text}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -114,8 +114,9 @@
    nuit qui chevauche le bas de la photo (jamais de texte sur la photo elle-même).
    ========================================================================== */
 
+/* Sous l'ouverture, une marge courte : « Notre histoire », blanc lui aussi, suit de près. */
 .hero {
-  padding-bottom: clamp(3rem, 2rem + 3vw, 5rem);
+  padding-bottom: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
 }
 
 .photo {
@@ -137,6 +138,8 @@
   max-width: 72rem;
   margin-top: clamp(-11rem, -12vw, -4rem);
   padding: clamp(1.75rem, 1rem + 3vw, 3.25rem);
+  /* Le bas du cadre est blanc sur blanc : pas de marge invisible sous le texte. */
+  padding-bottom: 0;
   border-radius: 0.25rem;
   background: var(--opem-white);
   color: var(--opem-anthracite);

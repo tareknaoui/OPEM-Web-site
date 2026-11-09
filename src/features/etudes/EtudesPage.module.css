@@ -86,6 +86,363 @@
   line-height: 1.85;
 }
 
+/* ---------- 02 Votre situation ---------- */
+
+/* Fond blanc : les quatre familles, chacune en bandeau bleu nuit puis liste de ses études. */
+.situation {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.situationHead {
+  max-width: 60rem;
+  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+}
+
+.sectionTitle {
+  margin: 0.875rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+/* Les onglets : quatre colonnes sur ordinateur, deux sur tablette et téléphone. Un filet gris en
+   haut de chacun ; l'onglet choisi prend un liseré vert de 3 px et son titre passe en bleu nuit. */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  margin-bottom: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+}
+
+@media (min-width: 64em) {
+  .tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.375rem;
+  min-width: 0;
+  padding: 1.25rem 0 1.5rem;
+  border: 0;
+  border-top: 1px solid var(--opem-gray-light);
+  background: none;
+  color: var(--opem-anthracite);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Le liseré : pousse de gauche à droite (de droite à gauche en arabe) à chaque choix. */
+.tab::before {
+  content: '';
+  position: absolute;
+  inset: -2px 0 auto;
+  height: 3px;
+  background: var(--opem-green);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.tab:dir(rtl)::before {
+  transform-origin: right center;
+}
+
+.tab[aria-selected='true']::before {
+  transform: scaleX(1);
+}
+
+.tab:hover::before {
+  transform: scaleX(0.25);
+}
+
+.tab[aria-selected='true']:hover::before {
+  transform: scaleX(1);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 4px;
+}
+
+.tabNumber {
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.tabTitle {
+  color: #4a5661;
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.tab:hover .tabTitle,
+.tab[aria-selected='true'] .tabTitle {
+  color: var(--opem-night);
+}
+
+.tabCount {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  color: #5b6770;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tabNumber:lang(ar),
+.tabTitle:lang(ar),
+.tabCount:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+/* La famille choisie apparaît en douceur. */
+.family {
+  min-width: 0;
+  animation: appear 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .family {
+    animation: none;
+  }
+
+  .tab::before {
+    transition: none;
+  }
+}
+
+/* Le bandeau, comme la maquette C1 : bleu nuit, texte à gauche, image à droite (dessous sur
+   tablette et téléphone). */
+.familyBanner {
+  display: grid;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--opem-night);
+}
+
+@media (min-width: 64em) {
+  .familyBanner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+  }
+}
+
+.familyText {
+  min-width: 0;
+  padding: clamp(2rem, 1.25rem + 2.5vw, 4rem) clamp(1.5rem, 1rem + 2.5vw, 4rem) 0;
+}
+
+@media (min-width: 64em) {
+  .familyText {
+    padding-bottom: clamp(2rem, 1.25rem + 2.5vw, 4rem);
+    padding-inline-end: 0;
+  }
+}
+
+/* « Famille 01 » : blanc, capitales espacées, précédé d'un filet ambre. */
+.familyNumber {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.familyNumber::before {
+  content: '';
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-amber);
+}
+
+.familyTitle {
+  max-width: 14ch;
+  margin: 1.25rem 0 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(2.125rem, 1.4rem + 2.6vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.familyLead {
+  max-width: 46ch;
+  margin: 1.5rem 0 0;
+  color: var(--opem-blue-30);
+  font-family: var(--font-text);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.7;
+}
+
+.familyRule {
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-top: 2rem;
+  background: var(--opem-amber);
+}
+
+.familyArt {
+  min-width: 0;
+  padding: clamp(1rem, 0.5rem + 2vw, 2rem);
+}
+
+/* « Nos domaines d'intervention » : titre à gauche, nombre d'études à droite, filet dessous. */
+.domains {
+  padding-top: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+}
+
+.domainsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--opem-gray-light);
+}
+
+.domainsTitle {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  font-weight: 600;
+}
+
+.domainsCount {
+  margin: 0;
+  color: var(--opem-anthracite);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Les études, numérotées (01, 02…) : deux colonnes au-delà de 860 px. */
+.studies {
+  display: grid;
+  column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: study;
+}
+
+@media (min-width: 53.75em) {
+  .studies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.study {
+  position: relative;
+  padding-block: 1.375rem;
+  padding-inline-start: 2.5rem;
+  border-bottom: 1px solid #e6eaed;
+  counter-increment: study;
+}
+
+.study::before {
+  content: counter(study, decimal-leading-zero);
+  position: absolute;
+  inset-block-start: 1.5rem;
+  inset-inline-start: 0;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.studyLabel {
+  display: block;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Lecture : 60 à 75 caractères par ligne, pas plus. */
+.studyText {
+  display: block;
+  max-width: 68ch;
+  margin-top: 0.5rem;
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* Un mot à trait d'union reste entier. */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Les deux-points entre intitulé et description : lus, pas affichés. */
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sectionTitle:lang(ar),
+.familyNumber:lang(ar),
+.familyTitle:lang(ar),
+.domainsTitle:lang(ar),
+.domainsCount:lang(ar),
+.studyLabel:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.sectionTitle:lang(ar),
+.familyTitle:lang(ar) {
+  line-height: 1.35;
+}
+
+.familyLead:lang(ar),
+.studyText:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}
+
 /* ---------- Le nuage de points, sur bleu nuit ---------- */
 
 .panel {

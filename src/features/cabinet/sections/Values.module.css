@@ -273,6 +273,8 @@
   margin-top: auto;
   padding-top: var(--space-4);
   border-top: 1px solid rgb(17 54 91 / 0.12);
+  /* L'intitulé suit la phrase : plus grand quand l'écran est haut. */
+  font-size: clamp(0.8125rem, 0.25rem + 1.1svh, 1.0625rem);
 }
 
 /* L'icône est déjà en grand dans le coin. */
@@ -301,15 +303,33 @@
     padding-block: clamp(0.5rem, 3svh, 2.5rem);
   }
 
+  /* Le sommaire grandit avec la hauteur de l'écran : sur un grand écran (24 pouces), il garde
+     sa place face à la carte au lieu de rester en petit au pied de la colonne. */
   .section[data-stage] .index {
     display: grid;
     gap: 0;
-    max-width: 26rem;
+    max-width: 36rem;
     margin-top: auto;
   }
 
   .section[data-stage] .indexItem {
     display: grid;
+    grid-template-columns: 3px 2.25em minmax(0, 1fr);
+    gap: 1em;
+    font-size: clamp(0.875rem, 0.2rem + 1.45svh, 1.25rem);
+    letter-spacing: 0.07em;
+  }
+
+  .section[data-stage] .indexItem:lang(ar) {
+    font-size: clamp(1rem, 0.3rem + 1.6svh, 1.4375rem);
+  }
+
+  .section[data-stage] .indexItem > * {
+    padding-block: clamp(0.6rem, 0.15rem + 1.15svh, 1.25rem);
+  }
+
+  .section[data-stage] .indexItem > .segment {
+    padding: 0;
   }
 
   .section[data-stage] .indexNumber,

@@ -1,0 +1,160 @@
+/* Image de famille (bloc 02), sur bleu nuit : traits blancs, plans en bleu 30 % translucide,
+   un seul cube ambre. Aucun dégradé, aucun bleu OPEM (il ne touche jamais le bleu nuit). */
+
+.art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.plane {
+  fill: color-mix(in srgb, var(--opem-blue-30) 9%, transparent);
+  stroke: color-mix(in srgb, var(--opem-white) 55%, transparent);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.grid {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opem-blue-30) 16%, transparent);
+  stroke-width: 0.75;
+}
+
+.axis {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opem-white) 60%, transparent);
+  stroke-width: 1;
+}
+
+.wave {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opem-white) 45%, transparent);
+  stroke-width: 1;
+}
+
+.dots {
+  fill: color-mix(in srgb, var(--opem-white) 65%, transparent);
+}
+
+.node {
+  fill: var(--opem-white);
+}
+
+.hollow {
+  fill: var(--opem-night);
+  stroke: var(--opem-white);
+  stroke-width: 1.25;
+}
+
+.orbit {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opem-blue-30) 45%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+
+.ring {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opem-white) 40%, transparent);
+  stroke-width: 1;
+}
+
+.zone {
+  fill: none;
+  stroke: color-mix(in srgb, var(--opem-white) 55%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 6 6;
+}
+
+.link {
+  fill: none;
+  stroke: var(--opem-white);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+/* La trajectoire retenue, vers le cube ambre : la seule en trait plein ambre. */
+.trend {
+  fill: none;
+  stroke: var(--opem-amber);
+  stroke-width: 1.75;
+  stroke-dasharray: 7 5;
+}
+
+.dome {
+  fill: color-mix(in srgb, var(--opem-blue-30) 10%, transparent);
+  stroke: color-mix(in srgb, var(--opem-white) 70%, transparent);
+  stroke-width: 1.25;
+}
+
+.shadow {
+  fill: color-mix(in srgb, var(--opem-blue-30) 18%, transparent);
+}
+
+.halo {
+  fill: color-mix(in srgb, var(--opem-amber) 9%, transparent);
+}
+
+/* Les volumes : face supérieure claire, faces avant plus sombres. */
+.faceTop,
+.faceRight,
+.faceLeft {
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.glass .faceTop,
+.glass .faceRight,
+.glass .faceLeft {
+  stroke: color-mix(in srgb, var(--opem-white) 60%, transparent);
+}
+
+.glass .faceTop {
+  fill: color-mix(in srgb, var(--opem-blue-30) 26%, var(--opem-night));
+}
+
+.glass .faceRight {
+  fill: color-mix(in srgb, var(--opem-blue-30) 12%, var(--opem-night));
+}
+
+.glass .faceLeft {
+  fill: color-mix(in srgb, var(--opem-blue-30) 18%, var(--opem-night));
+}
+
+.solid .faceTop,
+.solid .faceRight,
+.solid .faceLeft {
+  stroke: var(--opem-night);
+}
+
+.solid .faceTop {
+  fill: var(--opem-white);
+}
+
+.solid .faceRight {
+  fill: var(--opem-blue-30);
+}
+
+.solid .faceLeft {
+  fill: color-mix(in srgb, var(--opem-blue-30) 80%, var(--opem-white));
+}
+
+.amber .faceTop,
+.amber .faceRight,
+.amber .faceLeft {
+  stroke: color-mix(in srgb, var(--opem-amber) 55%, var(--opem-white));
+}
+
+.amber .faceTop {
+  fill: color-mix(in srgb, var(--opem-amber) 70%, var(--opem-white));
+}
+
+.amber .faceRight {
+  fill: color-mix(in srgb, var(--opem-amber) 78%, var(--opem-night));
+}
+
+.amber .faceLeft {
+  fill: var(--opem-amber);
+}

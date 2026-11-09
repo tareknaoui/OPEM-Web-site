@@ -39,7 +39,7 @@ describe('Page « Le cabinet »', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('img', {
-        name: 'Frise des étapes d’OPEM : création en 2019, sixième domaine en 2025, intelligence artificielle en 2026',
+        name: 'Les cinq domaines d’OPEM en 2019 : études stratégiques, accompagnement des organisations, formation qualifiante, coaching professionnel, certification et accréditation ; un sixième en 2025, la communication institutionnelle ; en 2026, l’intelligence artificielle, un outil ajouté à chacun',
       }),
     ).toBeInTheDocument();
     expect(document.title).toBe('OPEM, cabinet de consulting et de formation à Alger');
@@ -58,11 +58,13 @@ describe('Page « Le cabinet »', () => {
   it('bloc 02 : textes mot pour mot et frise des trois repères', () => {
     renderCabinet();
     expect(screen.getByText('Notre histoire', { selector: 'p' })).toBeInTheDocument();
-    // Le texte, en trois actes, se lit d'un seul tenant (mot pour mot).
-    const story = screen.getByText(
+    // Le texte, en trois actes (un paragraphe chacun), se lit d'un seul tenant (mot pour mot).
+    const first = screen.getByText(
       (_, node) => node?.tagName === 'P' && /^À l’origine/.test(node.textContent ?? ''),
     );
-    expect(story.textContent).toMatch(
+    const acts = Array.from(first.parentElement?.children ?? [], (p) => p.textContent);
+    expect(acts).toHaveLength(3);
+    expect(acts.join(' ')).toMatch(
       /^À l’origine d’OPEM, une conviction\s: l’Algérie mérite .+ ses ambitions\. Le chemin .+ de ses clients\. Avec l’intelligence artificielle, il ouvre .+ en pleine mutation\.$/,
     );
     expect(
