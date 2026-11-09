@@ -14,7 +14,9 @@ describe('Bandeau des logos clients', () => {
     expect(logos.map((logo) => logo.getAttribute('alt'))).toEqual(
       clients.items.map((item) => item.name),
     );
-    expect(logos[0]).toHaveAttribute('src', '/images/clients/lafarge.webp');
+    expect(logos[0]).toHaveAttribute('src', '/images/clients/pnud.webp');
+    // Exactement les 42 logos de « LOGO CLIENTS.docx ».
+    expect(clients.items).toHaveLength(42);
     expect(section.querySelectorAll('ul[aria-hidden="true"] img[alt=""]')).toHaveLength(
       clients.items.length * 2,
     );

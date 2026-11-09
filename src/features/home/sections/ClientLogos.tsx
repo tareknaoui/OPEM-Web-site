@@ -27,7 +27,10 @@ export function ClientLogos({ clients }: { clients: HomeContent['clients'] }) {
           {clients.title}
         </h2>
         <div className={styles.marquee}>
-          <div className={styles.track}>
+          <div
+            className={styles.track}
+            style={{ '--duration': `${clients.items.length * 3}s` } as CSSProperties}
+          >
             {COPIES.map((copy) => (
               <ul key={copy} className={styles.list} aria-hidden={copy > 0 || undefined}>
                 {clients.items.map((item) => (

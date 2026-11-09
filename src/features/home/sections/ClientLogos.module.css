@@ -41,7 +41,9 @@
 .track {
   display: flex;
   width: max-content;
-  animation: scroll 45s linear infinite;
+  /* Durée proportionnelle au nombre de logos (--duration, posée par le composant) : la rangée
+     garde la même vitesse quelle que soit la liste. */
+  animation: scroll var(--duration, 45s) linear infinite;
 }
 
 /* Pause le temps de regarder un logo, ou de passer au clavier. */

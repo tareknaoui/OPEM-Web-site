@@ -569,30 +569,63 @@ export type HomeContent = {
 };
 
 /**
- * Logos des clients (fournis par OPEM, « LOGO CLIENTS.docx ») : nom, fichier et taille réelle du
- * fichier, pour équilibrer les logos larges et les logos carrés. Ordre : les plus connus d'abord.
+ * Logos des clients : exactement ceux de « LOGO CLIENTS.docx » fourni par OPEM, ni plus ni moins
+ * (la planche du haut, puis les logos posés dessous), dans l'ordre du document. Nom, fichier et
+ * taille réelle du fichier, pour équilibrer les logos larges et les logos carrés.
  */
 const CLIENT_LOGOS: ClientLogo[] = [
-  { name: 'Lafarge', logo: 'lafarge', width: 254, height: 90 },
+  {
+    name: 'Programme des Nations unies pour le développement (PNUD)',
+    logo: 'pnud',
+    width: 242,
+    height: 123,
+  },
+  { name: 'GIZ, coopération allemande', logo: 'giz', width: 151, height: 125 },
+  { name: 'Ministère de l’Industrie', logo: 'ministere-industrie', width: 147, height: 132 },
+  { name: 'Cowater International', logo: 'cowater', width: 345, height: 81 },
+  { name: 'Triangle Génération Humanitaire', logo: 'triangle', width: 125, height: 129 },
+  { name: 'Oxfam', logo: 'oxfam', width: 125, height: 138 },
+  { name: 'CAARAMA Assurance de personnes', logo: 'caarama', width: 170, height: 116 },
+  { name: 'ENAFOR', logo: 'enafor', width: 98, height: 140 },
+  { name: 'Mobilis', logo: 'mobilis', width: 291, height: 73 },
+  { name: 'COSIDER', logo: 'cosider', width: 266, height: 50 },
+  { name: 'ENROS', logo: 'enros', width: 149, height: 95 },
+  { name: 'CSEE Alger', logo: 'csee-alger', width: 255, height: 51 },
+  { name: 'Polycad', logo: 'polycad', width: 241, height: 82 },
+  { name: 'Société Nationale de Travaux Publics (SNTP)', logo: 'sntp', width: 126, height: 166 },
+  { name: 'B.E.R.E.G', logo: 'bereg', width: 157, height: 154 },
+  { name: 'Altro', logo: 'altro', width: 117, height: 120 },
+  { name: 'Matagri', logo: 'matagri', width: 121, height: 155 },
+  { name: 'SAETI', logo: 'saeti', width: 123, height: 128 },
+  { name: 'BNEDER', logo: 'bneder', width: 126, height: 125 },
+  { name: 'Aldiph', logo: 'aldiph', width: 208, height: 111 },
+  { name: 'Alfapipe', logo: 'alfapipe', width: 106, height: 129 },
+  { name: 'L.T.P. Est', logo: 'ltp-est', width: 79, height: 140 },
+  { name: 'EGSA Alger', logo: 'egsa-alger', width: 244, height: 95 },
+  { name: 'EGESAPMG', logo: 'egesapmg', width: 103, height: 181 },
+  { name: 'Sud Etanche', logo: 'sud-etanche', width: 260, height: 97 },
+  { name: 'Meditram', logo: 'meditram', width: 133, height: 135 },
+  { name: 'Med Agensea', logo: 'med-agensea', width: 223, height: 106 },
+  { name: 'SAPTA', logo: 'sapta', width: 189, height: 112 },
+  { name: 'Agrolog', logo: 'agrolog', width: 112, height: 52 },
   { name: 'Algérie Télécom Satellite (ATS)', logo: 'ats', width: 232, height: 144 },
-  { name: 'Radio Algérienne', logo: 'radio-algerienne', width: 222, height: 222 },
-  { name: 'Office National de l’Assainissement (ONA)', logo: 'ona', width: 150, height: 136 },
-  { name: 'CTTP', logo: 'cttp', width: 238, height: 226 },
+  { name: 'Batmetal', logo: 'batmetal', width: 210, height: 234 },
   {
     name: 'Centre National de l’Ingénierie de la Construction (CNIC)',
     logo: 'cnic',
     width: 234,
     height: 134,
   },
-  { name: 'Agrolog', logo: 'agrolog', width: 112, height: 52 },
-  { name: 'Frigomedit', logo: 'frigomedit', width: 192, height: 94 },
-  { name: 'Recibat', logo: 'recibat', width: 82, height: 110 },
-  { name: 'ETAC', logo: 'etac', width: 234, height: 58 },
-  { name: 'Batmetal', logo: 'batmetal', width: 210, height: 234 },
+  { name: 'CTTP', logo: 'cttp', width: 238, height: 226 },
+  { name: 'Lafarge', logo: 'lafarge', width: 254, height: 90 },
   { name: 'REELEC', logo: 'reelec', width: 208, height: 238 },
+  { name: 'Recibat', logo: 'recibat', width: 82, height: 110 },
+  { name: 'Office National de l’Assainissement (ONA)', logo: 'ona', width: 150, height: 136 },
+  { name: 'Integration, CESI Algérie', logo: 'integration', width: 114, height: 110 },
   { name: 'UMF', logo: 'umf', width: 232, height: 232 },
-  { name: 'Integration', logo: 'integration', width: 116, height: 72 },
-  { name: 'CESI Algérie', logo: 'cesi-algerie', width: 70, height: 32 },
+  { name: 'ETAC', logo: 'etac', width: 234, height: 58 },
+  { name: 'Radio Algérienne', logo: 'radio-algerienne', width: 222, height: 222 },
+  { name: 'Frigomedit', logo: 'frigomedit', width: 192, height: 94 },
 ];
 
 const fr: HomeContent = {
