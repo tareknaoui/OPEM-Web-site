@@ -570,7 +570,8 @@ export type HomeContent = {
 
 /**
  * Logos des clients : exactement ceux de « LOGO CLIENTS.docx » fourni par OPEM, ni plus ni moins
- * (la planche du haut, puis les logos posés dessous), dans l'ordre du document. Nom, fichier et
+ * (la planche du haut, puis les logos posés dessous), dans l’ordre du document ; sauf CESI
+ * Algérie, concurrent, retiré de l’image d’Integration où il figurait. Nom, fichier et
  * taille réelle du fichier, pour équilibrer les logos larges et les logos carrés.
  */
 const CLIENT_LOGOS: ClientLogo[] = [
@@ -621,7 +622,7 @@ const CLIENT_LOGOS: ClientLogo[] = [
   { name: 'REELEC', logo: 'reelec', width: 208, height: 238 },
   { name: 'Recibat', logo: 'recibat', width: 82, height: 110 },
   { name: 'Office National de l’Assainissement (ONA)', logo: 'ona', width: 150, height: 136 },
-  { name: 'Integration, CESI Algérie', logo: 'integration', width: 114, height: 110 },
+  { name: 'Integration', logo: 'integration', width: 116, height: 72 },
   { name: 'UMF', logo: 'umf', width: 232, height: 232 },
   { name: 'ETAC', logo: 'etac', width: 234, height: 58 },
   { name: 'Radio Algérienne', logo: 'radio-algerienne', width: 222, height: 222 },
