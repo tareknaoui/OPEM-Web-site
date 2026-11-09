@@ -35,6 +35,14 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        // Les autres domaines (accompagnement, coaching, communication, certification) et leurs
+        // sous-rubriques : une page commune ; un domaine inconnu affiche « page introuvable ».
+        path: 'expertises/:domain/*',
+        lazy: async () => ({
+          Component: (await import('@/features/domaines/DomainPage')).default,
+        }),
+      },
+      {
         path: 'ia-appliquee',
         lazy: async () => ({ Component: (await import('@/features/ia/IaPage')).default }),
       },
