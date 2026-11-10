@@ -85,18 +85,21 @@ export function ThreadArt({
           { opacity: 1, y: 0, duration: 0.4 },
           0.5,
         )
-        .from(
-          strands,
+        .addLabel('untangle', '+=1'); // un temps pour voir le fouillis avant qu'il se démêle
+      // Chaque fil part de son nœud (un tween par fil : morphSVG n'accepte pas de fonction).
+      strands.forEach((strand, index) =>
+        timeline.from(
+          strand,
           {
-            morphSVG: (index: number) => KNOTS[index] ?? '',
+            morphSVG: KNOTS[index] ?? '',
             duration: 2,
-            stagger: 0.12,
             ease: 'power2.inOut',
             immediateRender: true,
           },
-          '+=1', // un temps pour voir le fouillis avant qu'il se démêle
-        )
-        .to(q('[data-mark="situation"]'), { opacity: 0.45, duration: 0.6 }, '<0.6');
+          `untangle+=${index * 0.12}`,
+        ),
+      );
+      timeline.to(q('[data-mark="situation"]'), { opacity: 0.45, duration: 0.6 }, 'untangle+=0.6');
 
       // 2. La ligne se prolonge ; le premier pas la parcourt.
       timeline
