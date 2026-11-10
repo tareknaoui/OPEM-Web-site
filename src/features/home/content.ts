@@ -648,7 +648,7 @@ const fr: HomeContent = {
   heroDiagnostic: {
     label: 'Autodiagnostic 3 minutes chrono',
     intro: {
-      title: '', // plus de titre sur le bandeau (demande d'OPEM)
+      title: 'Sept leviers font votre performance. Un seul suffit à la freiner.',
       start: 'Faire le test',
     },
     welcome: {
@@ -2103,7 +2103,7 @@ const ar: HomeContent = {
   heroDiagnostic: {
     label: 'تشخيص ذاتي في 3 دقائق',
     intro: {
-      title: '',
+      title: 'سبعة روافع تصنع أداءكم، وواحد منها يكفي لكبحه.',
       start: 'ابدأوا الاختبار',
     },
     welcome: {

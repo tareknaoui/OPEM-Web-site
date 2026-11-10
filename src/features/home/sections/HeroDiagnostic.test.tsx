@@ -66,9 +66,9 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     // Le devis est dans la barre de navigation, pas dans l'accroche.
     expect(screen.queryByRole('link', { name: /Demander un devis/ })).toBeNull();
     // Sous le texte, deux lignes (la dernière phrase seule), puis le bouton vers les expertises ;
-    // plus de phrase des sept leviers (retirée à la demande d'OPEM).
+    // la phrase des sept leviers n'est plus sous le texte (elle reste le titre du bandeau).
     expect(screen.getByText('Une communication qui fait la différence.')).toBeInTheDocument();
-    expect(screen.queryByText(/Un seul suffit à la freiner/)).toBeNull();
+    expect(screen.queryByText(/Un seul suffit à la freiner/, { selector: 'p' })).toBeNull();
     expect(screen.getByRole('link', { name: /Découvrir nos expertises/ })).toHaveAttribute(
       'href',
       '/nos-expertises',
@@ -80,8 +80,10 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(items[2]).toHaveTextContent(/\+1\s500.*cadres et agents formés/);
     expect(items[3]).toHaveTextContent(/\+165.*experts mobilisables/);
     expect(document.querySelector('video')).toBeNull();
-    // Le bandeau du diagnostic n'a plus de titre : jamais de titre vide.
-    expect(screen.queryByRole('heading', { level: 2 })).toBeNull();
+    // Le bandeau du diagnostic : son titre, les sept leviers.
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      /Sept leviers font votre performance/,
+    );
     expect(screen.getByRole('figure', { name: /Les sept leviers OPEM/ })).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).toBeNull();
   });
