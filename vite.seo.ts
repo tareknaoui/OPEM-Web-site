@@ -28,6 +28,12 @@ const PAGES = [
   '/le-cabinet',
   '/nos-expertises',
   '/expertises/etudes-strategiques',
+  '/expertises/accompagnement-des-organisations',
+  '/expertises/coaching-professionnel',
+  '/expertises/certification-et-accreditation',
+  '/expertises/communication-institutionnelle',
+  '/formation',
+  '/missions',
   '/ia-appliquee',
   '/eclairages',
   '/actualites',
@@ -48,6 +54,9 @@ type PageMeta = {
   image: string;
   imageAlt: string;
 };
+
+/** Image d'aperçu commune (logo OPEM), pour les pages qui n'ont pas encore la leur. */
+const SHARE = { image: '/images/partage/opem-partage.png', alt: 'Logo OPEM, Beyond Quality' };
 
 /**
  * Réglages de référencement par page, repris mot pour mot des cahiers d'OPEM. Le titre de
@@ -75,6 +84,98 @@ const PAGE_META: Record<string, PageMeta> = {
     // Aucune illustration de la page ne s'y prête (schémas porteurs de mots) : le logo sur fond clair.
     image: '/images/partage/opem-logo-clair.png',
     imageAlt: 'Logo OPEM, Beyond Quality',
+  },
+  // Pages suivantes : titre identique à l'onglet ; description tirée du texte de la page
+  // (à valider par OPEM). Image d'aperçu commune, en attendant une image par page.
+  '/expertises/etudes-strategiques': {
+    title: 'Études stratégiques · OPEM',
+    description:
+      'Une décision engage l’avenir ; elle mérite mieux qu’une intuition. Nos études en établissent les faits, en chiffrent le coût et en mesurent les chances de réussite.',
+    socialTitle: 'Études stratégiques · OPEM',
+    socialDescription:
+      'Une décision engage l’avenir ; elle mérite mieux qu’une intuition. Nos études en établissent les faits, en chiffrent le coût et en mesurent les chances de réussite.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/expertises/accompagnement-des-organisations': {
+    title: 'Accompagnement des organisations · OPEM',
+    description:
+      'Une organisation se transforme par chantiers successifs. Notre accompagnement les hiérarchise, les conçoit, les déploie et conduit le changement.',
+    socialTitle: 'Accompagnement des organisations · OPEM',
+    socialDescription:
+      'Une organisation se transforme par chantiers successifs. Notre accompagnement les hiérarchise, les conçoit, les déploie et conduit le changement.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/expertises/coaching-professionnel': {
+    title: 'Coaching professionnel · OPEM',
+    description:
+      'Plus on dirige, moins on est contredit. Notre coaching questionne vos certitudes, vous contredit avec égards et vous accompagne jusqu’à l’action.',
+    socialTitle: 'Coaching professionnel · OPEM',
+    socialDescription:
+      'Plus on dirige, moins on est contredit. Notre coaching questionne vos certitudes, vous contredit avec égards et vous accompagne jusqu’à l’action.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/expertises/certification-et-accreditation': {
+    title: 'Certification et accréditation · OPEM',
+    description:
+      'Un certificat rassure ; une pratique convainc. Nos experts traduisent la norme en gestes de travail, préparent vos audits et vous mènent jusqu’à la certification.',
+    socialTitle: 'Certification et accréditation · OPEM',
+    socialDescription:
+      'Un certificat rassure ; une pratique convainc. Nos experts traduisent la norme en gestes de travail, préparent vos audits et vous mènent jusqu’à la certification.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/expertises/communication-institutionnelle': {
+    title: 'Communication institutionnelle · OPEM',
+    description:
+      'Soigner son image, c’est respecter ses clients. Nos équipes racontent votre histoire, conçoivent vos supports et les diffusent.',
+    socialTitle: 'Communication institutionnelle · OPEM',
+    socialDescription:
+      'Soigner son image, c’est respecter ses clients. Nos équipes racontent votre histoire, conçoivent vos supports et les diffusent.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/formation': {
+    title: 'Formation qualifiante · OPEM',
+    description:
+      'Une compétence se construit, puis s’éprouve au travail. Formations sur mesure ou en session ouverte à Alger : nous en posons les bases, en guidons la pratique et en mesurons les acquis.',
+    socialTitle: 'Formation qualifiante · OPEM',
+    socialDescription:
+      'Une compétence se construit, puis s’éprouve au travail. Formations sur mesure ou en session ouverte à Alger : nous en posons les bases, en guidons la pratique et en mesurons les acquis.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/missions': {
+    title: 'Missions et réalisations · OPEM',
+    description:
+      'Des missions menées avec méthode, présentées avec l’accord de nos clients : souvent anonymes, toujours vérifiables.',
+    socialTitle: 'Missions et réalisations · OPEM',
+    socialDescription:
+      'Des missions menées avec méthode, présentées avec l’accord de nos clients : souvent anonymes, toujours vérifiables.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/actualites': {
+    title: 'Actualités · OPEM',
+    description:
+      'Sessions, interventions et partenariats : ce qui se passe chez OPEM, au fil des mois.',
+    socialTitle: 'Actualités · OPEM',
+    socialDescription:
+      'Sessions, interventions et partenariats : ce qui se passe chez OPEM, au fil des mois.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/contact': {
+    title: 'Nous contacter · OPEM',
+    description:
+      'Un projet, une question ? Appelez-nous, écrivez-nous ou demandez un rendez-vous. OPEM, 16 rue La Bruyère, Bouzaréah, Alger.',
+    socialTitle: 'Nous contacter · OPEM',
+    socialDescription:
+      'Un projet, une question ? Appelez-nous, écrivez-nous ou demandez un rendez-vous. OPEM, 16 rue La Bruyère, Bouzaréah, Alger.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
   },
 };
 

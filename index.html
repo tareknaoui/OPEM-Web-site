@@ -32,6 +32,33 @@
     <meta property="og:image:alt" content="Logo OPEM, Beyond Quality" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Fiche d'identité pour Google (données structurées schema.org) : nom, coordonnées,
+         adresse. Coordonnées identiques à src/config/company.ts (à garder synchronisées). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "OPEM",
+        "alternateName": "Optimum Performance Management",
+        "slogan": "Beyond Quality",
+        "description": "Cabinet de conseil et de formation : études stratégiques, accompagnement des organisations, formation qualifiante, coaching, certification et communication institutionnelle.",
+        "url": "%SITE_URL%/",
+        "logo": "%SITE_URL%/logo-opem-couleur.svg",
+        "image": "%SITE_URL%/images/partage/opem-partage.png",
+        "foundingDate": "2019",
+        "telephone": "+213661119423",
+        "email": "general@opem-dz.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "16, rue La Bruyère",
+          "addressLocality": "Bouzaréah",
+          "addressRegion": "Alger",
+          "addressCountry": "DZ"
+        },
+        "areaServed": { "@type": "Country", "name": "Algérie" },
+        "knowsLanguage": ["fr", "ar"]
+      }
+    </script>
   </head>
   <body>
     <noscript>Ce site nécessite JavaScript.</noscript>
