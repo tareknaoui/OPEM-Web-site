@@ -138,3 +138,9 @@
     margin-inline: auto;
   }
 }
+
+/* « Pourquoi choisir OPEM » : surtitre agrandi à 17 px. */
+.section .eyebrow,
+.section .eyebrow:lang(ar) {
+  font-size: 17px;
+}

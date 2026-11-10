@@ -35,7 +35,6 @@ describe('HomePage', () => {
       .getAllByRole('heading', { level: 2 })
       .map((h) => h.textContent?.replace(/\s+/g, ' '));
     expect(titles).toEqual([
-      'Sept leviers font votre performance. Un seul suffit à la freiner.',
       'Ils nous font confiance',
       'Comprendre avant d’agir, transmettre avant de partir, mesurer avant de conclure.',
       'Six domaines, un seul fil conducteur : votre performance.',

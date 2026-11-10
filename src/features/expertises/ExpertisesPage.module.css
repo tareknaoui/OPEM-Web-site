@@ -236,7 +236,7 @@
   line-height: 1.5;
 }
 
-/* ---------- 02 Six domaines : une photo par domaine ---------- */
+/* ---------- 02 Six domaines : une illustration sur blanc par domaine ---------- */
 
 .domains {
   padding-block: var(--section-space);
@@ -298,11 +298,11 @@
 
 .cardArt {
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  background: var(--opem-blue-10);
+  aspect-ratio: 3 / 2;
+  background: var(--opem-white);
 }
 
-/* Ordinateur : la photo occupe la moitié de la rangée, à gauche puis à droite. */
+/* Ordinateur : l'illustration occupe la moitié de la rangée, à gauche puis à droite. */
 @media (min-width: 64em) {
   .card {
     display: grid;
@@ -327,7 +327,8 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* Dessin entier, jamais rogné : le fond blanc du dessin se fond dans la carte. */
+  object-fit: contain;
   transition: scale 700ms var(--ease-reveal, ease-out);
 }
 
@@ -510,7 +511,7 @@
   color: var(--opem-green);
 }
 
-/* ---------- 05 Parlons de votre besoin : tracé au trait ---------- */
+/* ---------- 05 Parlons de votre besoin : du flou au cap ---------- */
 
 .talk {
   padding-block: var(--section-space);
@@ -556,33 +557,101 @@
   overflow: visible;
 }
 
-.threadPath,
-.threadArrow {
+/* Les trois fils (décision, transformation, compétences), puis la ligne unique. */
+.strandNight,
+.strandBlue,
+.strandGreen,
+.threadLine {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-.threadPath {
-  stroke: var(--opem-night);
   stroke-width: 3;
-  transition: stroke-dashoffset 2.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.threadArrow {
+.strandNight,
+.threadLine {
+  stroke: var(--opem-night);
+}
+
+.strandBlue {
   stroke: var(--opem-blue);
-  stroke-width: 3.2;
-  transition: stroke-dashoffset 0.8s ease-out 2.5s;
 }
 
+.strandGreen {
+  stroke: var(--opem-green);
+}
+
+.threadLine {
+  stroke-width: 3.5;
+}
+
+/* La boussole du cap. */
+.compassRing,
+.compassInner {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.compassRing {
+  stroke: var(--opem-night);
+  stroke-width: 2.5;
+}
+
+.compassDisc {
+  fill: var(--opem-white);
+}
+
+.compassInner {
+  stroke: var(--opem-blue-30);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+}
+
+.compassTick {
+  stroke: var(--opem-night);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.needleHead {
+  fill: var(--opem-blue);
+}
+
+.needleTail {
+  fill: var(--opem-blue-30);
+}
+
+/* Le premier pas : un point vert cerclé de blanc. */
 .threadStep {
   fill: var(--opem-green);
+  stroke: var(--opem-white);
+  stroke-width: 3;
+}
+
+/* Halo : invisible tant que l'animation n'est pas allée au bout. */
+.threadHalo {
+  fill: none;
+  stroke: var(--opem-blue);
+  stroke-width: 2;
+  opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  scale: 0;
-  transition: scale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s;
+}
+
+.thread[data-done] .threadHalo {
+  animation: halo 2.4s ease-out infinite;
+}
+
+@keyframes halo {
+  0% {
+    opacity: 0.45;
+    scale: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 1.7;
+  }
 }
 
 .threadMarks {
@@ -590,26 +659,11 @@
   font-family: var(--font-heading);
   font-size: 16px;
   font-weight: 600;
-  opacity: 0;
-  transition: opacity 0.6s ease 2.6s;
 }
 
 .threadMarks:lang(ar) {
   font-family: var(--font-arabic);
   font-size: 18px;
-}
-
-.thread[data-drawn] .threadPath,
-.thread[data-drawn] .threadArrow {
-  stroke-dashoffset: 0;
-}
-
-.thread[data-drawn] .threadStep {
-  scale: 1;
-}
-
-.thread[data-drawn] .threadMarks {
-  opacity: 1;
 }
 
 /* Téléphone : boutons sur toute la largeur. */
@@ -622,10 +676,7 @@
 
 /* Moins d'animations : tout est en place d'emblée, rien ne bouge. */
 @media (prefers-reduced-motion: reduce) {
-  .threadPath,
-  .threadArrow,
-  .threadStep,
-  .threadMarks,
+  .thread[data-done] .threadHalo,
   .card[data-arrived] {
     transition: none;
     animation: none;

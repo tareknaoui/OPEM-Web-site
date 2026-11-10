@@ -1,3 +1,4 @@
+import { CompassIcon } from '@phosphor-icons/react/dist/csr/Compass';
 import { GraduationCapIcon } from '@phosphor-icons/react/dist/csr/GraduationCap';
 import { MegaphoneIcon } from '@phosphor-icons/react/dist/csr/Megaphone';
 import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
@@ -14,11 +15,12 @@ import {
 } from '@/features/cabinet/useCabinetMotion';
 import styles from './Relay.module.css';
 
-/** Les quatre métiers du cas client, dans l'ordre du texte : leur photo et leur icône (celles
+/** Les cinq métiers du cas client, dans l'ordre du texte : leur photo et leur icône (celles
  *  du bloc 01). Photos Pexels, recadrées en 4:3 (public/images/expertises). */
 const STEPS = [
   { photo: '/images/expertises/relais-accompagnement', Icon: TreeStructureIcon },
   { photo: '/images/expertises/relais-formation', Icon: GraduationCapIcon },
+  { photo: '/images/expertises/relais-coaching', Icon: CompassIcon },
   { photo: '/images/expertises/relais-communication', Icon: MegaphoneIcon },
   { photo: '/images/expertises/relais-certification', Icon: SealCheckIcon },
 ];
@@ -29,13 +31,13 @@ const HIDDEN_RTL = 'inset(0% 100% 0% 0%)';
 const SHOWN = 'inset(0% 0% 0% 0%)';
 
 /**
- * Bloc 03, « Les métiers se relaient » : quatre vraies photos, une par métier, se succèdent
+ * Bloc 03, « Les métiers se relaient » : cinq vraies photos, une par métier, se succèdent
  * dans un même cadre, chacune balayant la précédente comme on passe le témoin ; dessous, le fil
- * du relais allume les quatre métiers l'un après l'autre.
+ * du relais allume les cinq métiers l'un après l'autre.
  * Ordinateur (écran assez grand) : la section se fige et le relais avance au rythme de la
  * molette. Ailleurs : il se joue seul, une fois, à l'arrivée du cadre. Les chiffres du texte
  * (+30, +150) comptent jusqu'à leur valeur. Sans script ou en mouvement réduit : la dernière
- * photo et les quatre métiers allumés, immobiles.
+ * photo et les cinq métiers allumés, immobiles.
  */
 export function Relay({
   lanes,
@@ -116,7 +118,7 @@ export function Relay({
       const timeline = gsap.timeline({ defaults: { ease: 'none' } });
       relay(timeline).to({}, { duration: 0.6 }); // un temps sur le dernier métier
       ScrollTrigger.create({
-        ...panelPin(section, 220),
+        ...panelPin(section, 270),
         animation: timeline,
         // Un métier s'allume dès que sa photo a couvert la moitié du cadre.
         onUpdate: () => activate(Math.min(LAST, Math.floor(timeline.time() + 0.5))),

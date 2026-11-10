@@ -648,7 +648,7 @@ const fr: HomeContent = {
   heroDiagnostic: {
     label: 'Autodiagnostic 3 minutes chrono',
     intro: {
-      title: 'Sept leviers font votre performance. Un seul suffit à la freiner.',
+      title: '', // plus de titre sur le bandeau (demande d'OPEM)
       start: 'Faire le test',
     },
     welcome: {
@@ -1653,7 +1653,8 @@ const fr: HomeContent = {
             'Sécurité informatique',
             'Dialogue social',
             'Management de projet',
-            'Marchés publics et rédaction des cahiers des charges',
+            'Réglementation des marchés publics',
+            'Rédaction des cahiers des charges',
           ],
           link: {
             label: 'Voir le calendrier et s’inscrire',
@@ -1774,7 +1775,7 @@ const fr: HomeContent = {
     provisional: false,
     note: 'Chiffres communiqués par OPEM.',
     items: [
-      { value: 7, prefix: '+', label: 'ans d’expérience cumulée' },
+      { value: 7, prefix: '+', label: 'ans d’activité' },
       { value: 62, prefix: '+', label: 'organisations accompagnées' },
       { value: 1500, prefix: '+', label: 'cadres et agents formés' },
       { value: 165, prefix: '+', label: 'experts mobilisables' },
@@ -1977,6 +1978,7 @@ const fr: HomeContent = {
         {
           icon: 'cooperation',
           title: 'Coopération allemande',
+          highlight: 'GIZ',
           countLabel: 'programmes',
           tags: [
             'PME',
@@ -2101,7 +2103,7 @@ const ar: HomeContent = {
   heroDiagnostic: {
     label: 'تشخيص ذاتي في 3 دقائق',
     intro: {
-      title: 'سبعة روافع تصنع أداءكم، وواحد منها يكفي لكبحه.',
+      title: '',
       start: 'ابدأوا الاختبار',
     },
     welcome: {

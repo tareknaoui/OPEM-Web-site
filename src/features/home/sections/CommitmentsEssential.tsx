@@ -13,7 +13,7 @@ export function CommitmentsEssential({ commitments }: { commitments: HomeContent
     <section className={`on-surface ${styles.section}`} aria-labelledby="commitments-title">
       <div className="container">
         <div className={styles.header}>
-          <p className="eyebrow" data-reveal>
+          <p className={`eyebrow ${styles.eyebrow}`} data-reveal>
             {commitments.eyebrow}
           </p>
           <h2 id="commitments-title" className={`h2 ${styles.heading}`} data-reveal="title">

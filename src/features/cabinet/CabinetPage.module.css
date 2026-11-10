@@ -182,6 +182,7 @@
   font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.65;
   text-wrap: pretty;
+  white-space: pre-line; /* un retour à la ligne dans le texte est respecté */
 }
 
 .eyebrow:lang(ar),

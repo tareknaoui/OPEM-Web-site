@@ -7,7 +7,7 @@
   --news-line: #2b5b8a;
 
   padding-block: 5.5rem;
-  background: var(--opem-white);
+  background: #f1f2f3; /* gris très clair ; les cartes restent blanches */
 }
 
 .wrap {
@@ -98,7 +98,7 @@
   gap: 1rem;
   overflow: hidden;
   padding: 1.75rem;
-  border: 1px solid var(--opem-gray-light);
+  border: 1px solid #c4c8cb; /* gris neutre, plus grisé que le bleu-gris d'avant */
   border-radius: 6px;
   background: var(--opem-white);
 }
@@ -167,14 +167,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem 1rem;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid var(--opem-blue-10);
+  /* Pied de carte grisé, bord à bord (comme la photo en tête). */
+  margin: auto -1.75rem -1.75rem;
+  padding: 0.5rem 1.75rem;
+  border-top: 1px solid #d3d6d9;
+  background: #eceeef;
 }
 
 .meta {
   margin: 0;
-  color: var(--opem-gray);
+  color: var(--opem-anthracite);
   font-size: 0.9375rem;
 }
 

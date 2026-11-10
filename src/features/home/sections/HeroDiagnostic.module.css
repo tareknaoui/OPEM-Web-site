@@ -14,6 +14,10 @@
 }
 
 .text {
+  /* Écart sous le titre ; --intro-gap-base est l'ancien écart, pour garder le titre en place. */
+  --intro-gap-base: clamp(3rem, 2.25rem + 2vw, 4.5rem);
+  --intro-gap: clamp(4rem, 3rem + 3.5vw, 7rem);
+
   /* Les chiffres passent sur une ligne quand la colonne est assez large. */
   container-type: inline-size;
   padding: clamp(2rem, 1rem + 4vw, 5rem) var(--gutter) clamp(2.5rem, 2rem + 3vw, 4rem);
@@ -143,10 +147,11 @@
 
 .intro {
   max-width: 40rem;
-  margin: clamp(1.5rem, 1rem + 1vw, 2.25rem) 0 0;
-  color: var(--opem-blue-30);
+  /* Un peu d'air sous le titre : le texte descend légèrement. */
+  margin: var(--intro-gap) 0 0;
+  color: #f3f6fa; /* bleu 5 % : un cran plus clair que --opem-blue-10 */
   font-size: 1.0625rem;
-  line-height: 1.65;
+  line-height: 1.8;
 }
 
 /* Chaque moitié commence sa propre ligne. */
@@ -154,23 +159,7 @@
   display: block;
 }
 
-/* Phrase d'appui sous le texte, en blanc, puis le bouton vers les expertises : blanc sur bleu
-   nuit, comme celui du bandeau IA. */
-.tagline {
-  max-width: 40rem;
-  margin: var(--space-6) 0 0;
-  color: var(--color-on-nav);
-  font-family: var(--font-heading);
-  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
-  font-weight: 600;
-  line-height: 1.4;
-  text-wrap: balance;
-}
-
-.tagline:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
+/* Le bouton vers les expertises : blanc sur bleu nuit, comme celui du bandeau IA. */
 .cta {
   margin-top: var(--space-6);
   border-color: var(--opem-white);
@@ -260,7 +249,7 @@
 
 .figureLabel {
   max-width: 11rem;
-  color: var(--opem-blue-30);
+  color: #f3f6fa; /* bleu 5 %, comme le texte d'accueil */
   font-size: 0.875rem;
   line-height: 1.45;
 }
@@ -303,9 +292,9 @@
   }
 
   .intro {
-    margin-top: var(--space-6);
+    margin-top: var(--space-8);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.75;
   }
 }
 
@@ -345,6 +334,8 @@
   .text {
     grid-column: 2;
     align-self: center;
+    /* Colonne centrée : l'écart ajouté ferait remonter le titre de moitié, on le compense. */
+    translate: 0 calc((var(--intro-gap) - var(--intro-gap-base)) / 2);
     padding-inline: 0 clamp(2rem, 4vw, 4rem);
   }
 

@@ -26,7 +26,7 @@ export function DiagnosticCard({ diagnostic, className }: DiagnosticCardProps) {
         <SevenSRadar diagnostic={diagnostic} mode="idle" labels={false} className={styles.mark} />
         <div>
           <p className={styles.label}>{diagnostic.label}</p>
-          <h2 className={styles.title}>{diagnostic.intro.title}</h2>
+          {diagnostic.intro.title && <h2 className={styles.title}>{diagnostic.intro.title}</h2>}
         </div>
         <div className={styles.actions}>
           <button

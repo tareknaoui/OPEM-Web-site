@@ -37,7 +37,7 @@ describe('Page « Nos expertises »', () => {
     );
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => flat(h.textContent))).toEqual([
       'Six métiers, une seule exigence',
-      'Un client, quatre métiers.',
+      'Un client, cinq métiers.',
       'L’IA, là où elle sert vraiment.',
       'Ce qui attend aujourd’hui coûte davantage demain.',
     ]);
@@ -95,19 +95,20 @@ describe('Page « Nos expertises »', () => {
 
   it('bloc 03 : les chiffres en texte réel, aucun lien', () => {
     renderPage();
-    const section = screen.getByRole('region', { name: 'Un client, quatre métiers.' });
+    const section = screen.getByRole('region', { name: 'Un client, cinq métiers.' });
     expect(within(section).getByText('+30')).toBeInTheDocument();
     expect(within(section).getByText('cycles de formation')).toBeInTheDocument();
     expect(within(section).getByText('+150')).toBeInTheDocument();
     expect(within(section).queryAllByRole('link')).toHaveLength(0);
     expect(
-      within(section).getByRole('img', { name: /Quatre photos qui se relaient/ }),
+      within(section).getByRole('img', { name: /Cinq photos qui se relaient/ }),
     ).toBeVisible();
-    // Le fil du relais : les quatre métiers, tous allumés sans animation.
+    // Le fil du relais : les cinq métiers, tous allumés sans animation.
     const steps = within(section).getAllByRole('listitem');
     expect(steps.map((step) => step.textContent)).toEqual([
       'Accompagnement des organisations',
       'Formation qualifiante',
+      'Coaching professionnel',
       'Communication institutionnelle',
       'Certification et accréditation',
     ]);

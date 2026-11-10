@@ -34,7 +34,7 @@ describe('Section « Éclairages »', () => {
     expect(screen.getByRole('link', { name: /Posez-la-nous/ })).toHaveAttribute('href', '/contact');
     const news = within(screen.getByRole('complementary', { name: 'Actualité' }));
     expect(news.getByText('Nos formations qualifiantes de décembre')).toBeInTheDocument();
-    expect(news.getAllByRole('listitem')).toHaveLength(4);
+    expect(news.getAllByRole('listitem')).toHaveLength(5);
     expect(news.getByRole('link', { name: /Voir le calendrier/ })).toHaveAttribute(
       'href',
       '/formation/catalogue-et-sessions',

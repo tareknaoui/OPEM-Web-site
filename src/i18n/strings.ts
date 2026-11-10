@@ -19,7 +19,7 @@ export const strings = {
         'Certification, formation, accompagnement : un consultant OPEM vous rappelle pour en parler.',
       callUs: (phone: string) => `Appeler le ${phone}`,
       pitch:
-        'Cabinet de conseil en management : études stratégiques, accompagnement des organisations, formation, coaching et certification.',
+        'Cabinet de conseil : études stratégiques, accompagnement des organisations, formation, coaching et certification.',
       nav: 'Liens du pied de page',
       expertises: 'Nos expertises',
       site: 'Le site',

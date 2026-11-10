@@ -115,7 +115,7 @@ const fr: CabinetContent = {
     eyebrow: 'Le cabinet',
     headline: ['Optimum Performance Management (OPEM) :', 'notre nom est notre promesse.'],
     intro:
-      'Fondé en 2019, OPEM s’est donné un nom qui oblige. Depuis, chaque mission est conduite à sa hauteur, sans rien y céder. Organisations publiques et privées, programmes de coopération internationale : une même exigence nous anime en conseil comme en formation.',
+      'Fondé en 2019, OPEM s’est donné un nom qui oblige. Depuis, chaque mission est conduite à sa hauteur, sans rien y céder.\nOrganisations publiques et privées, programmes de coopération internationale : une même exigence nous anime en conseil comme en formation.',
     alt: 'Un formateur d’OPEM anime une session devant les participants',
     toc: 'Sur cette page',
   },

@@ -62,8 +62,9 @@ export type ExpertisesContent = {
 };
 
 /*
- * Les photos des six domaines : à dessein différentes des illustrations de l'accueil (demande
- * d'OPEM). Photos libres (Pexels, Unsplash), recadrées en 4:3 dans public/images/expertises.
+ * Les illustrations des six domaines : même esprit que celles de l'accueil (trait bleu, une
+ * touche d'ambre, petits personnages), mais sur fond blanc et avec d'autres scènes (demande
+ * d'OPEM). En 3:2 dans public/images/expertises.
  */
 const PHOTOS = '/images/expertises/domaine';
 
@@ -239,18 +240,18 @@ const FR: ExpertisesContent = {
         },
       ],
       [
-        'Un cadre étudie des graphiques imprimés, des rapports étalés sur la table',
-        'Un consultant anime une séance de travail devant un tableau, l’équipe autour de la table',
-        'Un formateur présente devant un écran ; les participants suivent, ordinateurs ouverts',
-        'Un entretien en tête-à-tête autour d’un bureau, près d’une fenêtre',
-        'Une ingénieure en casque et tenue de travail consulte un document dans un atelier industriel',
-        'Une équipe de création passe en revue nuanciers et supports imprimés',
+        'Deux personnes sur une grande carte regardent un chemin qui monte vers un drapeau au sommet, entourées d’une boussole et de graphiques',
+        'Une équipe assemble de grands blocs en une structure solide, à côté d’une liste cochée et d’un organigramme',
+        'Une formatrice présente des schémas sur un grand écran devant des participants à leurs ordinateurs',
+        'Un manager et sa coach montent un escalier vers une cible au sommet d’une montagne',
+        'Deux auditeurs examinent une liste de contrôle à la loupe, près d’un bouclier marqué d’une coche',
+        'Une oratrice au pupitre ; d’un bâtiment institutionnel, les messages partent vers le public, la presse et les écrans',
       ],
     ),
   },
   together: {
     eyebrow: 'Les métiers se relaient',
-    title: 'Un client, quatre métiers.',
+    title: 'Un client, cinq métiers.',
     figures: [
       { value: '+30', label: 'cycles de formation' },
       { value: '+150', label: 'apprenants' },
@@ -259,11 +260,12 @@ const FR: ExpertisesContent = {
     lanes: [
       'Accompagnement des organisations',
       'Formation qualifiante',
+      'Coaching professionnel',
       'Communication institutionnelle',
       'Certification et accréditation',
     ],
     alt: fr(
-      'Quatre photos qui se relaient dans un même cadre, une par métier d’OPEM au service d’un même client : accompagnement des organisations, formation qualifiante, communication institutionnelle, certification et accréditation',
+      'Cinq photos qui se relaient dans un même cadre, une par métier d’OPEM au service d’un même client : accompagnement des organisations, formation qualifiante, coaching professionnel, communication institutionnelle, certification et accréditation',
     ),
   },
   ai: {
@@ -401,25 +403,31 @@ const AR: ExpertisesContent = {
         },
       ],
       [
-        'إطار يدرس رسومًا بيانية مطبوعة، والتقارير مبسوطة على الطاولة',
-        'مستشار يدير جلسة عمل أمام سبورة، والفريق حول الطاولة',
-        'مكوّن يقدّم أمام شاشة؛ والمشاركون يتابعون وحواسيبهم مفتوحة',
-        'لقاء فردي حول مكتب، بالقرب من نافذة',
-        'مهندسة بخوذة وبزّة عمل تراجع وثيقة في ورشة صناعية',
-        'فريق إبداعي يراجع لوحات الألوان والمطبوعات',
+        'شخصان على خريطة كبيرة ينظران إلى طريق يصعد نحو راية في القمة، تحيط بهما بوصلة ورسوم بيانية',
+        'فريق يركّب كتلًا كبيرة في بناء متين، بجانب قائمة مؤشَّرة وهيكل تنظيمي',
+        'مكوّنة تعرض مخططات على شاشة كبيرة أمام مشاركين أمام حواسيبهم',
+        'مسيّر ومرافِقته يصعدان درجًا نحو هدف في قمة جبل',
+        'مدقّقان يفحصان قائمة مراقبة بالعدسة، بالقرب من درع عليه علامة صح',
+        'متحدثة على المنصة؛ ومن مبنى مؤسساتي تنطلق الرسائل نحو الجمهور والصحافة والشاشات',
       ],
     ),
   },
   together: {
     eyebrow: 'المهن تتكامل',
-    title: 'زبون واحد، أربع مهن.',
+    title: 'زبون واحد، خمس مهن.',
     figures: [
       { value: '+30', label: 'دورة تكوينية' },
       { value: '+150', label: 'متكوّنًا' },
     ],
     text: 'عهدت إلينا مؤسسة عمومية اقتصادية في قطاع البناء والأشغال العمومية والري بإنجاز كتالوجاتها المؤسساتية، وتكوين فرقها، وتعزيز كفاءاتهم في نظام إدارتها المدمج. وتمتد هذه الثقة إلى الدراسات التنظيمية وإلى وضع التسيير التقديري للوظائف والكفاءات.',
-    lanes: ['مرافقة المؤسسات', 'التكوين التأهيلي', 'الاتصال المؤسساتي', 'الإشهاد والاعتماد'],
-    alt: 'أربع صور تتعاقب في إطار واحد، صورة لكل مهنة من مهن OPEM في خدمة عميل واحد: مرافقة المؤسسات، التكوين التأهيلي، الاتصال المؤسساتي، الإشهاد والاعتماد',
+    lanes: [
+      'مرافقة المؤسسات',
+      'التكوين التأهيلي',
+      'الكوتشينغ المهني',
+      'الاتصال المؤسساتي',
+      'الإشهاد والاعتماد',
+    ],
+    alt: 'خمس صور تتعاقب في إطار واحد، صورة لكل مهنة من مهن OPEM في خدمة عميل واحد: مرافقة المؤسسات، التكوين التأهيلي، الكوتشينغ المهني، الاتصال المؤسساتي، الإشهاد والاعتماد',
   },
   ai: {
     eyebrow: 'الذكاء الاصطناعي التطبيقي',

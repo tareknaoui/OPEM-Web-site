@@ -18,8 +18,12 @@ import styles from './HeroDiagnostic.module.css';
 /** « +1 500 » dans les deux langues (en arabe, ar-DZ écrirait « 1.500 », lu comme 1,5). */
 const NUMBERS = new Intl.NumberFormat('fr-FR');
 
-/** Deux lignes : toutes les phrases sauf la dernière, puis la dernière seule en bas. */
+/**
+ * Les lignes du texte d'accueil. Un « \n » dans le texte (content.ts) va à la ligne à cet
+ * endroit précis ; sans « \n », toutes les phrases sauf la dernière, puis la dernière seule.
+ */
 function introLines(text: string) {
+  if (text.includes('\n')) return text.split('\n').map((line) => line.trim());
   const sentences = text.match(/[^.]+\./g)?.map((sentence) => sentence.trim()) ?? [];
   if (sentences.length < 2) return [text];
   return [sentences.slice(0, -1).join(' '), sentences[sentences.length - 1]!];
@@ -85,7 +89,6 @@ export function HeroDiagnostic({ hero, video, diagnostic, figures }: HeroDiagnos
             </span>
           ))}
         </p>
-        <p className={styles.tagline}>{video.tagline}</p>
         <Link to={video.cta.href} className={`btn ${styles.cta}`}>
           {video.cta.label}
           <ArrowRightIcon size={18} className="arrow" />
