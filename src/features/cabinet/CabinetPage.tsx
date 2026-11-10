@@ -2,6 +2,7 @@ import { useEffect, useRef, type MouseEvent } from 'react';
 import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cabinetContent } from './content';
+import { motionUpToAndRefresh } from './deferMotion';
 import { Doors } from './sections/Doors';
 import { Guarantees } from './sections/Guarantees';
 import { History } from './sections/History';
@@ -25,6 +26,8 @@ function goToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
   const target = document.getElementById(id);
   if (!target) return;
   event.preventDefault();
+  // Les animations des blocs sautés se préparent d'abord : la page prend sa vraie longueur.
+  motionUpToAndRefresh(target);
   target.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
   window.history.replaceState(window.history.state, '', `#${id}`);
 }
@@ -63,9 +66,12 @@ export default function CabinetPage() {
   useEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1));
     if (!id) return;
-    const frame = requestAnimationFrame(() =>
-      document.getElementById(id)?.scrollIntoView({ block: 'start' }),
-    );
+    const frame = requestAnimationFrame(() => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      motionUpToAndRefresh(target);
+      target.scrollIntoView({ block: 'start' });
+    });
     return () => cancelAnimationFrame(frame);
   }, []);
 

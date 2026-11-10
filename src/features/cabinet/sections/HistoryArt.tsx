@@ -12,6 +12,7 @@ import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
 import type { CabinetContent } from '../content';
 import { fitToScreen } from '../useCabinetMotion';
 import styles from './History.module.css';
+import { deferMotion } from '../deferMotion';
 
 /*
  * « Notre histoire » en trois temps, sur un tableau des domaines :
@@ -111,238 +112,240 @@ export function HistoryArt({
     const story = ref.current;
     const board = story?.querySelector<HTMLElement>('[data-board] > div');
     if (!story || !board || prefersReducedMotion()) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const all = (attr: string) => gsap.utils.toArray<HTMLElement>(`[${attr}]`, story);
-    const acts = all('data-act');
-    const captions = all('data-caption');
-    const strips = all('data-roll');
-    const slots = all('data-slot');
-    const cards = all('data-card');
-    const names = all('data-name');
-    const badges = all('data-badge');
-    const marks = all('data-mark');
-    const fill = story.querySelector('[data-fill]');
-    const ahead = story.querySelector('[data-ahead]');
-    const scan = story.querySelector<HTMLElement>('[data-scan]');
-    const hole = story.querySelector('[data-hole]');
-    // Le sixième domaine : son cadre vert, sa pastille et son année, qui passent au vert en 2025
-    // puis reviennent aux couleurs des autres en 2026.
-    const frame = story.querySelector('[data-frame]');
-    const newCard = cards[cards.length - 1];
-    const newIcon = newCard?.querySelector('[data-icon]') ?? null;
-    const newYear = newCard?.querySelector('[data-year]') ?? null;
-    const token = (name: string) => getComputedStyle(story).getPropertyValue(name).trim();
-    const blue = {
-      icon: { backgroundColor: token('--opem-blue-10'), color: token('--opem-blue') },
-      year: { color: '#5b6770' },
-    };
-    const green = {
-      icon: { backgroundColor: '#e3f1dd', color: token('--opem-green-dark') },
-      year: { color: token('--opem-green-dark') },
-    };
-    const list = years.split(' ');
-    const dir = rtl ? -1 : 1;
-    // Le nom s'écrit dans le sens de la lecture.
-    const hidden = rtl ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)';
-    /** Largeur de chaque chiffre (0 à 9) de chaque bande, pour ajuster sa fenêtre. */
-    const widths = strips.map((strip) =>
-      Array.from(strip.children, (digit) => digit.getBoundingClientRect().width),
-    );
-
-    /** Le compteur passe à l'année du repère : chaque chiffre roule jusqu'au sien. */
-    const roll = (timeline: gsap.core.Timeline, index: number, position: number | string) => {
-      const year = list[index] ?? '';
-      strips.forEach((strip, i) => {
-        const digit = Number(year[i] ?? 0);
-        timeline.to(
-          strip,
-          { yPercent: -digit * 10, duration: 1.4, ease: 'power2.inOut' },
-          position,
-        );
-        timeline.to(
-          strip.parentElement,
-          { width: widths[i]?.[digit] ?? 'auto', duration: 1.4, ease: 'power2.inOut' },
-          position,
-        );
-      });
-    };
-    /** Le repère courant : sa légende s'affiche, son acte s'allume, les autres s'estompent. */
-    const focus = (timeline: gsap.core.Timeline, index: number, position: number | string) => {
-      captions.forEach((caption, i) =>
-        timeline.to(
-          caption,
-          {
-            autoAlpha: i === index ? 1 : 0,
-            y: i === index ? 0 : i < index ? -12 : 12,
-            duration: 0.6,
-          },
-          position,
-        ),
+    return deferMotion(story, () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const all = (attr: string) => gsap.utils.toArray<HTMLElement>(`[${attr}]`, story);
+      const acts = all('data-act');
+      const captions = all('data-caption');
+      const strips = all('data-roll');
+      const slots = all('data-slot');
+      const cards = all('data-card');
+      const names = all('data-name');
+      const badges = all('data-badge');
+      const marks = all('data-mark');
+      const fill = story.querySelector('[data-fill]');
+      const ahead = story.querySelector('[data-ahead]');
+      const scan = story.querySelector<HTMLElement>('[data-scan]');
+      const hole = story.querySelector('[data-hole]');
+      // Le sixième domaine : son cadre vert, sa pastille et son année, qui passent au vert en 2025
+      // puis reviennent aux couleurs des autres en 2026.
+      const frame = story.querySelector('[data-frame]');
+      const newCard = cards[cards.length - 1];
+      const newIcon = newCard?.querySelector('[data-icon]') ?? null;
+      const newYear = newCard?.querySelector('[data-year]') ?? null;
+      const token = (name: string) => getComputedStyle(story).getPropertyValue(name).trim();
+      const blue = {
+        icon: { backgroundColor: token('--opem-blue-10'), color: token('--opem-blue') },
+        year: { color: '#5b6770' },
+      };
+      const green = {
+        icon: { backgroundColor: '#e3f1dd', color: token('--opem-green-dark') },
+        year: { color: token('--opem-green-dark') },
+      };
+      const list = years.split(' ');
+      const dir = rtl ? -1 : 1;
+      // Le nom s'écrit dans le sens de la lecture.
+      const hidden = rtl ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)';
+      /** Largeur de chaque chiffre (0 à 9) de chaque bande, pour ajuster sa fenêtre. */
+      const widths = strips.map((strip) =>
+        Array.from(strip.children, (digit) => digit.getBoundingClientRect().width),
       );
-      acts.forEach((act, i) =>
-        timeline.to(
-          act,
-          { opacity: i === index ? 1 : i < index ? 0.45 : 0.22, duration: 0.6 },
-          position,
-        ),
-      );
-    };
-    /** Un domaine apparaît, puis son nom s'écrit. */
-    const reveal = (
-      timeline: gsap.core.Timeline,
-      index: number,
-      position: number | string,
-      pop = false,
-    ) => {
-      const card = cards[index];
-      const name = names[index];
-      if (!card || !name) return;
-      timeline.from(
-        card,
-        pop
-          ? { opacity: 0, scale: 0.4, duration: 0.9, ease: 'back.out(1.8)' }
-          : { opacity: 0, y: 26, scale: 0.94, duration: 0.7, ease: 'power3.out' },
-        position,
-      );
-      timeline.fromTo(
-        name,
-        { clipPath: hidden },
-        { clipPath: 'inset(0 0% 0 0%)', duration: 0.7, ease: 'power2.inOut' },
-        '<+=0.3',
-      );
-    };
 
-    /**
-     * Le tableau, des cinq domaines à l'outil ; « story » : avec compteur et actes (ordinateur).
-     * « intro » montre les cinq domaines de 2019 dès que le tableau arrive à l'écran (pas de grand
-     * vide en attendant) ; « timeline » raconte 2025 et 2026 (sur ordinateur, au défilement).
-     */
-    const build = (intro: gsap.core.Timeline, timeline: gsap.core.Timeline, story: boolean) => {
-      strips.forEach((strip, i) => {
-        const digit = Number(list[0]?.[i] ?? 0);
-        gsap.set(strip, { yPercent: -digit * 10, y: 0 });
-        gsap.set(strip.parentElement, { width: widths[i]?.[digit] ?? 'auto' });
-      });
-      if (story) {
-        gsap.set(acts, { opacity: 0.22 });
-        gsap.set(captions, { autoAlpha: 0, y: 12 });
-        focus(intro, 0, 0);
-      }
-
-      // 2019 : le premier repère, puis les cinq domaines, un à un, et leurs noms.
-      intro.from(
-        marks[0] ?? [],
-        {
-          scale: 0,
-          opacity: 0,
-          duration: 0.5,
-          ease: 'back.out(2)',
-        },
-        0,
-      );
-      for (let i = 0; i < added; i += 1) reveal(intro, i, 0.2 + i * 0.3);
-      intro.fromTo(hole ?? [], { opacity: 0 }, { opacity: 1, duration: 0.5 });
-
-      // 2019 → 2025 : la frise avance, droite ; le sixième domaine surgit à la place libre.
-      timeline.addLabel('road', intro === timeline ? '+=0.4' : 0.2);
-      if (story) focus(timeline, 1, 'road');
-      timeline.fromTo(
-        fill,
-        { scaleX: 0 },
-        { scaleX: MARKS[1]! / 100, duration: 2, ease: 'none' },
-        'road',
-      );
-      roll(timeline, 1, 'road+=0.5');
-      timeline.from(marks[1] ?? [], { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)' });
-      reveal(timeline, added, '-=0.1', true);
-      timeline.to(hole ?? [], { opacity: 0, duration: 0.3 }, '<');
-      // Le temps de son arrivée, le sixième domaine est en vert (cadre, pastille, année).
-      timeline
-        .fromTo(frame, { opacity: 0 }, { opacity: 1, duration: 0.4 }, '<')
-        .fromTo(newIcon, blue.icon, { ...green.icon, duration: 0.4 }, '<')
-        .fromTo(newYear, blue.year, { ...green.year, duration: 0.4 }, '<');
-
-      // 2026 : l'IA fait son apparition. La bande balaie le tableau et pose un badge sur chaque
-      // domaine au moment où elle le traverse. Le sixième domaine n'est plus nouveau : il
-      // reprend les couleurs des autres.
-      timeline.addLabel('tool', '+=1.1');
-      if (story) focus(timeline, 2, 'tool');
-      roll(timeline, 2, 'tool');
-      timeline
-        .to(frame, { opacity: 0, duration: 0.6 }, 'tool')
-        .to(newIcon, { ...blue.icon, duration: 0.6 }, 'tool')
-        .to(newYear, { ...blue.year, duration: 0.6 }, 'tool');
-      timeline
-        .to(fill, { scaleX: MARKS[2]! / 100, duration: 0.7, ease: 'none' }, 'tool')
-        .from(marks[2] ?? [], { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)' })
-        .addLabel('sweep');
-      const sweep = 2.2;
-      if (scan) {
-        timeline
-          .set(scan, { opacity: 1 }, 'sweep')
-          .fromTo(
-            scan,
-            { x: () => -dir * scan.offsetWidth },
-            { x: () => dir * board.clientWidth, duration: sweep, ease: 'power1.inOut' },
-            'sweep',
-          )
-          .set(scan, { opacity: 0 });
-      }
-      badges.forEach((badge, i) => {
-        const slot = slots[i];
-        const center = slot ? (slot.offsetLeft + slot.offsetWidth / 2) / board.clientWidth : 0;
-        const at = Math.min(1, Math.max(0, rtl ? 1 - center : center));
-        timeline.from(
-          badge,
-          { scale: 0, opacity: 0, duration: 0.45, ease: 'back.out(2.5)' },
-          `sweep+=${(at * sweep * 0.9).toFixed(2)}`,
-        );
-      });
-      timeline.from(ahead ?? [], { opacity: 0, duration: 0.6 }, `sweep+=${sweep}`);
-      if (story) timeline.to({}, { duration: 1.2 }); // un temps pour relire le récit complet
-    };
-
-    const media = gsap.matchMedia(story);
-    media.add(
-      {
-        pin: '(min-width: 64em) and (min-height: 34em)',
-        flow: '(min-width: 64em) and (max-height: 33.99em)',
-        small: '(max-width: 63.99em)',
-      },
-      (context) => {
-        const { pin, small } = context.conditions ?? {};
-        const top = () => parseFloat(getComputedStyle(story).scrollMarginTop) || 0;
-        const content = story.firstElementChild;
-        const unfit =
-          pin && content instanceof HTMLElement
-            ? fitToScreen(content, () => window.innerHeight - top() - 16)
-            : undefined;
-        // Les cinq domaines de 2019 se posent dès que le tableau entre à l'écran.
-        const intro = gsap.timeline({
-          defaults: { ease: 'power3.out' },
-          scrollTrigger: { trigger: board, start: 'top 85%', once: true },
+      /** Le compteur passe à l'année du repère : chaque chiffre roule jusqu'au sien. */
+      const roll = (timeline: gsap.core.Timeline, index: number, position: number | string) => {
+        const year = list[index] ?? '';
+        strips.forEach((strip, i) => {
+          const digit = Number(year[i] ?? 0);
+          timeline.to(
+            strip,
+            { yPercent: -digit * 10, duration: 1.4, ease: 'power2.inOut' },
+            position,
+          );
+          timeline.to(
+            strip.parentElement,
+            { width: widths[i]?.[digit] ?? 'auto', duration: 1.4, ease: 'power2.inOut' },
+            position,
+          );
         });
-        // Téléphone : tout s'enchaîne d'un trait ; ordinateur : 2025 et 2026 au défilement.
-        const timeline = small
-          ? intro
-          : gsap.timeline({
-              defaults: { ease: 'power3.out' },
-              scrollTrigger: pin
-                ? {
-                    trigger: story,
-                    start: () => `center ${top() + (window.innerHeight - top()) / 2}px`,
-                    end: '+=1600',
-                    scrub: 0.7,
-                    pin: true,
-                    anticipatePin: 1,
-                  }
-                : { trigger: story, start: 'top 60%', end: 'bottom 40%', scrub: 0.7 },
-            });
-        build(intro, timeline, !small);
-        return unfit;
-      },
-    );
-    return () => media.revert();
+      };
+      /** Le repère courant : sa légende s'affiche, son acte s'allume, les autres s'estompent. */
+      const focus = (timeline: gsap.core.Timeline, index: number, position: number | string) => {
+        captions.forEach((caption, i) =>
+          timeline.to(
+            caption,
+            {
+              autoAlpha: i === index ? 1 : 0,
+              y: i === index ? 0 : i < index ? -12 : 12,
+              duration: 0.6,
+            },
+            position,
+          ),
+        );
+        acts.forEach((act, i) =>
+          timeline.to(
+            act,
+            { opacity: i === index ? 1 : i < index ? 0.45 : 0.22, duration: 0.6 },
+            position,
+          ),
+        );
+      };
+      /** Un domaine apparaît, puis son nom s'écrit. */
+      const reveal = (
+        timeline: gsap.core.Timeline,
+        index: number,
+        position: number | string,
+        pop = false,
+      ) => {
+        const card = cards[index];
+        const name = names[index];
+        if (!card || !name) return;
+        timeline.from(
+          card,
+          pop
+            ? { opacity: 0, scale: 0.4, duration: 0.9, ease: 'back.out(1.8)' }
+            : { opacity: 0, y: 26, scale: 0.94, duration: 0.7, ease: 'power3.out' },
+          position,
+        );
+        timeline.fromTo(
+          name,
+          { clipPath: hidden },
+          { clipPath: 'inset(0 0% 0 0%)', duration: 0.7, ease: 'power2.inOut' },
+          '<+=0.3',
+        );
+      };
+
+      /**
+       * Le tableau, des cinq domaines à l'outil ; « story » : avec compteur et actes (ordinateur).
+       * « intro » montre les cinq domaines de 2019 dès que le tableau arrive à l'écran (pas de grand
+       * vide en attendant) ; « timeline » raconte 2025 et 2026 (sur ordinateur, au défilement).
+       */
+      const build = (intro: gsap.core.Timeline, timeline: gsap.core.Timeline, story: boolean) => {
+        strips.forEach((strip, i) => {
+          const digit = Number(list[0]?.[i] ?? 0);
+          gsap.set(strip, { yPercent: -digit * 10, y: 0 });
+          gsap.set(strip.parentElement, { width: widths[i]?.[digit] ?? 'auto' });
+        });
+        if (story) {
+          gsap.set(acts, { opacity: 0.22 });
+          gsap.set(captions, { autoAlpha: 0, y: 12 });
+          focus(intro, 0, 0);
+        }
+
+        // 2019 : le premier repère, puis les cinq domaines, un à un, et leurs noms.
+        intro.from(
+          marks[0] ?? [],
+          {
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            ease: 'back.out(2)',
+          },
+          0,
+        );
+        for (let i = 0; i < added; i += 1) reveal(intro, i, 0.2 + i * 0.3);
+        intro.fromTo(hole ?? [], { opacity: 0 }, { opacity: 1, duration: 0.5 });
+
+        // 2019 → 2025 : la frise avance, droite ; le sixième domaine surgit à la place libre.
+        timeline.addLabel('road', intro === timeline ? '+=0.4' : 0.2);
+        if (story) focus(timeline, 1, 'road');
+        timeline.fromTo(
+          fill,
+          { scaleX: 0 },
+          { scaleX: MARKS[1]! / 100, duration: 2, ease: 'none' },
+          'road',
+        );
+        roll(timeline, 1, 'road+=0.5');
+        timeline.from(marks[1] ?? [], { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)' });
+        reveal(timeline, added, '-=0.1', true);
+        timeline.to(hole ?? [], { opacity: 0, duration: 0.3 }, '<');
+        // Le temps de son arrivée, le sixième domaine est en vert (cadre, pastille, année).
+        timeline
+          .fromTo(frame, { opacity: 0 }, { opacity: 1, duration: 0.4 }, '<')
+          .fromTo(newIcon, blue.icon, { ...green.icon, duration: 0.4 }, '<')
+          .fromTo(newYear, blue.year, { ...green.year, duration: 0.4 }, '<');
+
+        // 2026 : l'IA fait son apparition. La bande balaie le tableau et pose un badge sur chaque
+        // domaine au moment où elle le traverse. Le sixième domaine n'est plus nouveau : il
+        // reprend les couleurs des autres.
+        timeline.addLabel('tool', '+=1.1');
+        if (story) focus(timeline, 2, 'tool');
+        roll(timeline, 2, 'tool');
+        timeline
+          .to(frame, { opacity: 0, duration: 0.6 }, 'tool')
+          .to(newIcon, { ...blue.icon, duration: 0.6 }, 'tool')
+          .to(newYear, { ...blue.year, duration: 0.6 }, 'tool');
+        timeline
+          .to(fill, { scaleX: MARKS[2]! / 100, duration: 0.7, ease: 'none' }, 'tool')
+          .from(marks[2] ?? [], { scale: 0, opacity: 0, duration: 0.5, ease: 'back.out(2)' })
+          .addLabel('sweep');
+        const sweep = 2.2;
+        if (scan) {
+          timeline
+            .set(scan, { opacity: 1 }, 'sweep')
+            .fromTo(
+              scan,
+              { x: () => -dir * scan.offsetWidth },
+              { x: () => dir * board.clientWidth, duration: sweep, ease: 'power1.inOut' },
+              'sweep',
+            )
+            .set(scan, { opacity: 0 });
+        }
+        badges.forEach((badge, i) => {
+          const slot = slots[i];
+          const center = slot ? (slot.offsetLeft + slot.offsetWidth / 2) / board.clientWidth : 0;
+          const at = Math.min(1, Math.max(0, rtl ? 1 - center : center));
+          timeline.from(
+            badge,
+            { scale: 0, opacity: 0, duration: 0.45, ease: 'back.out(2.5)' },
+            `sweep+=${(at * sweep * 0.9).toFixed(2)}`,
+          );
+        });
+        timeline.from(ahead ?? [], { opacity: 0, duration: 0.6 }, `sweep+=${sweep}`);
+        if (story) timeline.to({}, { duration: 1.2 }); // un temps pour relire le récit complet
+      };
+
+      const media = gsap.matchMedia(story);
+      media.add(
+        {
+          pin: '(min-width: 64em) and (min-height: 34em)',
+          flow: '(min-width: 64em) and (max-height: 33.99em)',
+          small: '(max-width: 63.99em)',
+        },
+        (context) => {
+          const { pin, small } = context.conditions ?? {};
+          const top = () => parseFloat(getComputedStyle(story).scrollMarginTop) || 0;
+          const content = story.firstElementChild;
+          const unfit =
+            pin && content instanceof HTMLElement
+              ? fitToScreen(content, () => window.innerHeight - top() - 16)
+              : undefined;
+          // Les cinq domaines de 2019 se posent dès que le tableau entre à l'écran.
+          const intro = gsap.timeline({
+            defaults: { ease: 'power3.out' },
+            scrollTrigger: { trigger: board, start: 'top 85%', once: true },
+          });
+          // Téléphone : tout s'enchaîne d'un trait ; ordinateur : 2025 et 2026 au défilement.
+          const timeline = small
+            ? intro
+            : gsap.timeline({
+                defaults: { ease: 'power3.out' },
+                scrollTrigger: pin
+                  ? {
+                      trigger: story,
+                      start: () => `center ${top() + (window.innerHeight - top()) / 2}px`,
+                      end: '+=1600',
+                      scrub: 0.7,
+                      pin: true,
+                      anticipatePin: 1,
+                    }
+                  : { trigger: story, start: 'top 60%', end: 'bottom 40%', scrub: 0.7 },
+              });
+          build(intro, timeline, !small);
+          return unfit;
+        },
+      );
+      return () => media.revert();
+    });
   }, [rtl, years, added]);
 
   const last = milestones.length - 1;

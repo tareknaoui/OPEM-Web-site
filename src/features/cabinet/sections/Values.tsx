@@ -5,6 +5,7 @@ import type { CabinetContent } from '../content';
 import { VALUE_ICONS } from '../icons';
 import { motionAllowed, panelPin } from '../useCabinetMotion';
 import styles from './Values.module.css';
+import { deferMotion } from '../deferMotion';
 
 /** Écran assez haut pour la scène des valeurs (une valeur à la fois), quelle que soit la largeur. */
 const STAGE_QUERY = '(min-height: 36em)';
@@ -25,54 +26,57 @@ export function Values({ values }: { values: CabinetContent['values'] }) {
     const section = ref.current;
     const list = section?.querySelector<HTMLElement>('[data-list]');
     if (!section || !list || !motionAllowed()) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const media = gsap.matchMedia(section);
+    return deferMotion(section, () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const media = gsap.matchMedia(section);
 
-    media.add(STAGE_QUERY, () => {
-      const items = Array.from(list.children) as HTMLElement[];
-      const segments = section.querySelectorAll('[data-segment]');
-      // La carte prend au moins la hauteur de la plus haute valeur ; elles s'y superposent.
-      section.dataset.stage = '';
-      const fit = () => {
-        list.style.minHeight = '';
-        list.style.minHeight = `${Math.max(...items.map((item) => item.offsetHeight))}px`;
-      };
-      fit();
-      ScrollTrigger.addEventListener('refreshInit', fit);
+      media.add(STAGE_QUERY, () => {
+        const items = Array.from(list.children) as HTMLElement[];
+        const segments = section.querySelectorAll('[data-segment]');
+        // La carte prend au moins la hauteur de la plus haute valeur ; elles s'y superposent.
+        section.dataset.stage = '';
+        const fit = () => {
+          list.style.minHeight = '';
+          list.style.minHeight = `${Math.max(...items.map((item) => item.offsetHeight))}px`;
+        };
+        fit();
+        ScrollTrigger.addEventListener('refreshInit', fit);
 
-      const timeline = gsap.timeline({
-        defaults: { ease: 'power2.inOut' },
-        scrollTrigger: panelPin(section, items.length * 55),
+        const timeline = gsap.timeline({
+          defaults: { ease: 'power2.inOut' },
+          scrollTrigger: panelPin(section, items.length * 55),
+        });
+        const entries = section.querySelectorAll('[data-index]');
+        const part = (item: HTMLElement, name: string) =>
+          item.querySelector(`[data-${name}]`) ?? [];
+        gsap.set(items.slice(1), { autoAlpha: 0, y: 48 });
+        gsap.set(Array.from(entries).slice(1), { opacity: 0.45 });
+        timeline.fromTo(segments[0] ?? [], { scaleY: 0 }, { scaleY: 1, duration: 0.6 });
+        items.slice(1).forEach((item, index) => {
+          timeline
+            .to({}, { duration: 0.9 }) // le temps de lire la valeur
+            .to(items[index] ?? [], { autoAlpha: 0, y: -48, duration: 0.45 })
+            .to(item, { autoAlpha: 1, y: 0, duration: 0.6 }, '<0.3')
+            .from(part(item, 'numeral'), { yPercent: 35, duration: 0.7, ease: 'power3.out' }, '<')
+            .from(
+              part(item, 'mark'),
+              { rotate: -14, scale: 0.8, duration: 0.8, ease: 'power3.out' },
+              '<',
+            )
+            .to(entries[index] ?? [], { opacity: 0.45, duration: 0.4 }, '<')
+            .to(entries[index + 1] ?? [], { opacity: 1, duration: 0.4 }, '<')
+            .fromTo(segments[index + 1] ?? [], { scaleY: 0 }, { scaleY: 1, duration: 0.6 }, '<');
+        });
+        timeline.to({}, { duration: 1 });
+
+        return () => {
+          ScrollTrigger.removeEventListener('refreshInit', fit);
+          list.style.minHeight = '';
+          delete section.dataset.stage;
+        };
       });
-      const entries = section.querySelectorAll('[data-index]');
-      const part = (item: HTMLElement, name: string) => item.querySelector(`[data-${name}]`) ?? [];
-      gsap.set(items.slice(1), { autoAlpha: 0, y: 48 });
-      gsap.set(Array.from(entries).slice(1), { opacity: 0.45 });
-      timeline.fromTo(segments[0] ?? [], { scaleY: 0 }, { scaleY: 1, duration: 0.6 });
-      items.slice(1).forEach((item, index) => {
-        timeline
-          .to({}, { duration: 0.9 }) // le temps de lire la valeur
-          .to(items[index] ?? [], { autoAlpha: 0, y: -48, duration: 0.45 })
-          .to(item, { autoAlpha: 1, y: 0, duration: 0.6 }, '<0.3')
-          .from(part(item, 'numeral'), { yPercent: 35, duration: 0.7, ease: 'power3.out' }, '<')
-          .from(
-            part(item, 'mark'),
-            { rotate: -14, scale: 0.8, duration: 0.8, ease: 'power3.out' },
-            '<',
-          )
-          .to(entries[index] ?? [], { opacity: 0.45, duration: 0.4 }, '<')
-          .to(entries[index + 1] ?? [], { opacity: 1, duration: 0.4 }, '<')
-          .fromTo(segments[index + 1] ?? [], { scaleY: 0 }, { scaleY: 1, duration: 0.6 }, '<');
-      });
-      timeline.to({}, { duration: 1 });
-
-      return () => {
-        ScrollTrigger.removeEventListener('refreshInit', fit);
-        list.style.minHeight = '';
-        delete section.dataset.stage;
-      };
+      return () => media.revert();
     });
-    return () => media.revert();
   }, []);
 
   return (

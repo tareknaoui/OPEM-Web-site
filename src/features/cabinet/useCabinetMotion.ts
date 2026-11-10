@@ -3,6 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { useEffect, type RefObject } from 'react';
 import { prefersReducedMotion } from '@/hooks/prefersReducedMotion';
+import { deferMotion } from './deferMotion';
 
 /** Les effets ne tournent que dans un vrai navigateur, mouvement non réduit. */
 export function motionAllowed() {
@@ -78,8 +79,17 @@ export function useCabinetMotion(scope: RefObject<HTMLElement | null>, lang: str
     if (!root || !motionAllowed()) return;
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    const ctx = gsap.context(() => {
-      root.querySelectorAll<HTMLElement>('[data-motion="title"]').forEach((title) => {
+    // Chaque effet n'est préparé qu'à l'approche de son élément (voir deferMotion).
+    const each = (selector: string, setup: (element: HTMLElement, index: number) => void) =>
+      Array.from(root.querySelectorAll<HTMLElement>(selector)).map((element, index) =>
+        deferMotion(element, () => {
+          const ctx = gsap.context(() => setup(element, index), element);
+          return () => ctx.revert();
+        }),
+      );
+
+    const disposers = [
+      ...each('[data-motion="title"]', (title) => {
         SplitText.create(title, {
           type: 'lines',
           mask: 'lines',
@@ -93,9 +103,9 @@ export function useCabinetMotion(scope: RefObject<HTMLElement | null>, lang: str
               scrollTrigger: { trigger: title, start: 'top 95%', once: true },
             }),
         });
-      });
+      }),
 
-      root.querySelectorAll<HTMLElement>('[data-parallax]').forEach((frame) => {
+      ...each('[data-parallax]', (frame) => {
         const image = frame.querySelector('img');
         if (!image) return;
         gsap.fromTo(
@@ -108,9 +118,9 @@ export function useCabinetMotion(scope: RefObject<HTMLElement | null>, lang: str
             scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true },
           },
         );
-      });
+      }),
 
-      root.querySelectorAll<HTMLElement>('[data-motion="unveil"]').forEach((frame, index) => {
+      ...each('[data-motion="unveil"]', (frame, index) => {
         gsap.fromTo(
           frame,
           { clipPath: 'inset(100% 0% 0% 0%)' },
@@ -122,9 +132,9 @@ export function useCabinetMotion(scope: RefObject<HTMLElement | null>, lang: str
             scrollTrigger: { trigger: frame, start: 'top 95%', once: true },
           },
         );
-      });
+      }),
 
-      root.querySelectorAll<HTMLElement>('[data-motion="words"]').forEach((text) => {
+      ...each('[data-motion="words"]', (text) => {
         SplitText.create(text, {
           type: 'words',
           aria: 'none', // des mots découpés se lisent tels quels ; pas d'aria-label sur un <p>
@@ -141,14 +151,9 @@ export function useCabinetMotion(scope: RefObject<HTMLElement | null>, lang: str
               },
             ),
         });
-      });
-    }, root);
+      }),
+    ];
 
-    // Les découpes et les blocs figés allongent la page : on recalcule une fois tout posé.
-    const refresh = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => {
-      cancelAnimationFrame(refresh);
-      ctx.revert();
-    };
+    return () => disposers.forEach((dispose) => dispose());
   }, [scope, lang]);
 }

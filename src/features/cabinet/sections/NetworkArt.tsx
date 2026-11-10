@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import type { CabinetContent } from '../content';
 import { motionAllowed } from '../useCabinetMotion';
 import styles from './Network.module.css';
+import { deferMotion } from '../deferMotion';
 
 /*
  * « Notre réseau d'experts », en constellation, sur un panneau bleu nuit (le bloc reste blanc).
@@ -364,110 +365,112 @@ export function NetworkArt({ network }: { network: CabinetContent['network'] }) 
   useEffect(() => {
     const figure = ref.current;
     if (!figure || !motionAllowed()) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const media = gsap.matchMedia(figure);
-    media.add({ pin: '(min-height: 36em)', play: '(max-height: 35.99em)' }, (context) => {
-      const pin = Boolean(context.conditions?.pin);
-      const top = () => parseFloat(getComputedStyle(figure).scrollMarginTop) || 0;
-      const timeline = gsap.timeline({
-        defaults: { ease: 'power2.inOut' },
-        paused: !pin,
-        scrollTrigger: pin
-          ? {
-              trigger: figure,
-              start: () => `top ${top()}px`,
-              end: '+=130%',
-              scrub: 0.6,
-              pin: true,
-              anticipatePin: 1,
-            }
-          : undefined,
-      });
-
-      // Le ciel s'éclaire, la frontière se pose.
-      timeline
-        .from('[data-c="wave"]', { attr: { r: 0 }, duration: 1.6, ease: 'power2.out' }, 0)
-        .from('[data-c="frontier"]', { opacity: 0, duration: 0.9 }, 0.5)
-        .from('[data-c="label"][data-tone="pool"]', { opacity: 0, y: 6, duration: 0.5 }, 0.7);
-
-      // Les sept étoiles s'allument une à une : le cœur grandit et blanchit, l'anneau s'ouvre.
-      figure.querySelectorAll<SVGGElement>('[data-c="member"]').forEach((member, i) => {
-        const at = 1.1 + (i % 7) * 0.22;
-        const core = member.querySelector<SVGCircleElement>('[data-c="core"]');
-        const ring = member.querySelector<SVGCircleElement>('[data-c="ring"]');
-        const halo = member.querySelector<SVGCircleElement>('[data-c="halo"]');
-        if (core)
-          timeline.fromTo(
-            core,
-            { attr: { r: Number(core.dataset.r) * 0.3 }, fill: '#b2cade', opacity: 0.6 },
-            {
-              attr: { r: Number(core.dataset.r) },
-              fill: '#ffffff',
-              opacity: 1,
-              duration: 0.5,
-              ease: 'back.out(2)',
-            },
-            at,
-          );
-        if (ring)
-          timeline.fromTo(
-            ring,
-            { attr: { r: 0 }, opacity: 1 },
-            {
-              attr: { r: Number(ring.dataset.r) },
-              opacity: 0.55,
-              duration: 0.6,
-              ease: 'power3.out',
-            },
-            at + 0.05,
-          );
-        if (halo) timeline.from(halo, { opacity: 0, duration: 0.6 }, at + 0.05);
-      });
-
-      timeline
-        .fromTo(
-          '[data-c="link"]',
-          { strokeDashoffset: 1 },
-          { strokeDashoffset: 0, duration: 0.45, stagger: 0.05 },
-          '+=0.05',
-        )
-        .from('[data-c="label"][data-tone="team"]', { opacity: 0, y: 8, duration: 0.6 }, '-=0.3')
-        .fromTo(
-          '[data-c="arc"]',
-          { strokeDashoffset: 1 },
-          { strokeDashoffset: 0, duration: 1.1, ease: 'power1.inOut' },
-        )
-        .from('[data-c="beyond"]', { opacity: 0, duration: 0.3 }, '-=0.15')
-        .fromTo(
-          '[data-c="beyond-core"]',
-          { attr: { r: 0 } },
-          {
-            attr: { r: (_: number, el: SVGCircleElement) => Number(el.dataset.r) },
-            duration: 0.7,
-            ease: 'back.out(2.6)',
-          },
-          '<',
-        )
-        .from('[data-c="label"][data-tone="beyond"]', { opacity: 0, y: 8, duration: 0.6 });
-
-      // Deux profondeurs de ciel qui dérivent, tout le long de la scène.
-      const length = timeline.duration();
-      timeline
-        .fromTo('[data-c="sky"]', { x: 2.4 }, { x: -2.4, duration: length, ease: 'none' }, 0)
-        .fromTo('[data-c="vivier"]', { x: 1 }, { x: -1, duration: length, ease: 'none' }, 0);
-
-      if (pin) {
-        timeline.to({}, { duration: 1.1 }); // un temps sur la scène complète
-      } else {
-        ScrollTrigger.create({
-          trigger: figure,
-          start: 'top 88%',
-          once: true,
-          onEnter: () => timeline.play(),
+    return deferMotion(figure, () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const media = gsap.matchMedia(figure);
+      media.add({ pin: '(min-height: 36em)', play: '(max-height: 35.99em)' }, (context) => {
+        const pin = Boolean(context.conditions?.pin);
+        const top = () => parseFloat(getComputedStyle(figure).scrollMarginTop) || 0;
+        const timeline = gsap.timeline({
+          defaults: { ease: 'power2.inOut' },
+          paused: !pin,
+          scrollTrigger: pin
+            ? {
+                trigger: figure,
+                start: () => `top ${top()}px`,
+                end: '+=130%',
+                scrub: 0.6,
+                pin: true,
+                anticipatePin: 1,
+              }
+            : undefined,
         });
-      }
+
+        // Le ciel s'éclaire, la frontière se pose.
+        timeline
+          .from('[data-c="wave"]', { attr: { r: 0 }, duration: 1.6, ease: 'power2.out' }, 0)
+          .from('[data-c="frontier"]', { opacity: 0, duration: 0.9 }, 0.5)
+          .from('[data-c="label"][data-tone="pool"]', { opacity: 0, y: 6, duration: 0.5 }, 0.7);
+
+        // Les sept étoiles s'allument une à une : le cœur grandit et blanchit, l'anneau s'ouvre.
+        figure.querySelectorAll<SVGGElement>('[data-c="member"]').forEach((member, i) => {
+          const at = 1.1 + (i % 7) * 0.22;
+          const core = member.querySelector<SVGCircleElement>('[data-c="core"]');
+          const ring = member.querySelector<SVGCircleElement>('[data-c="ring"]');
+          const halo = member.querySelector<SVGCircleElement>('[data-c="halo"]');
+          if (core)
+            timeline.fromTo(
+              core,
+              { attr: { r: Number(core.dataset.r) * 0.3 }, fill: '#b2cade', opacity: 0.6 },
+              {
+                attr: { r: Number(core.dataset.r) },
+                fill: '#ffffff',
+                opacity: 1,
+                duration: 0.5,
+                ease: 'back.out(2)',
+              },
+              at,
+            );
+          if (ring)
+            timeline.fromTo(
+              ring,
+              { attr: { r: 0 }, opacity: 1 },
+              {
+                attr: { r: Number(ring.dataset.r) },
+                opacity: 0.55,
+                duration: 0.6,
+                ease: 'power3.out',
+              },
+              at + 0.05,
+            );
+          if (halo) timeline.from(halo, { opacity: 0, duration: 0.6 }, at + 0.05);
+        });
+
+        timeline
+          .fromTo(
+            '[data-c="link"]',
+            { strokeDashoffset: 1 },
+            { strokeDashoffset: 0, duration: 0.45, stagger: 0.05 },
+            '+=0.05',
+          )
+          .from('[data-c="label"][data-tone="team"]', { opacity: 0, y: 8, duration: 0.6 }, '-=0.3')
+          .fromTo(
+            '[data-c="arc"]',
+            { strokeDashoffset: 1 },
+            { strokeDashoffset: 0, duration: 1.1, ease: 'power1.inOut' },
+          )
+          .from('[data-c="beyond"]', { opacity: 0, duration: 0.3 }, '-=0.15')
+          .fromTo(
+            '[data-c="beyond-core"]',
+            { attr: { r: 0 } },
+            {
+              attr: { r: (_: number, el: SVGCircleElement) => Number(el.dataset.r) },
+              duration: 0.7,
+              ease: 'back.out(2.6)',
+            },
+            '<',
+          )
+          .from('[data-c="label"][data-tone="beyond"]', { opacity: 0, y: 8, duration: 0.6 });
+
+        // Deux profondeurs de ciel qui dérivent, tout le long de la scène.
+        const length = timeline.duration();
+        timeline
+          .fromTo('[data-c="sky"]', { x: 2.4 }, { x: -2.4, duration: length, ease: 'none' }, 0)
+          .fromTo('[data-c="vivier"]', { x: 1 }, { x: -1, duration: length, ease: 'none' }, 0);
+
+        if (pin) {
+          timeline.to({}, { duration: 1.1 }); // un temps sur la scène complète
+        } else {
+          ScrollTrigger.create({
+            trigger: figure,
+            start: 'top 88%',
+            once: true,
+            onEnter: () => timeline.play(),
+          });
+        }
+      });
+      return () => media.revert();
     });
-    return () => media.revert();
   }, []);
 
   return (

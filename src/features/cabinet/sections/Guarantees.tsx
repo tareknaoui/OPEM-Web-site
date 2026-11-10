@@ -5,6 +5,7 @@ import type { CabinetContent } from '../content';
 import { GUARANTEE_ICONS } from '../icons';
 import { motionAllowed } from '../useCabinetMotion';
 import styles from './Guarantees.module.css';
+import { deferMotion } from '../deferMotion';
 
 const PHOTO = '/images/cabinet/garanties-session';
 
@@ -24,23 +25,25 @@ export function Guarantees({ guarantees }: { guarantees: CabinetContent['guarant
     const section = ref.current;
     const panel = section?.querySelector('[data-panel-list]');
     if (!section || !panel || !motionAllowed()) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const context = gsap.context(() => {
-      gsap
-        .timeline({ scrollTrigger: { trigger: panel, start: 'top 92%', once: true } })
-        .from('[data-rule]', {
-          scaleX: 0,
-          duration: 0.8,
-          ease: 'power3.inOut',
-          stagger: 0.08,
-        })
-        .from(
-          '[data-guarantee]',
-          { opacity: 0, y: 18, duration: 0.7, ease: 'power3.out', stagger: 0.08 },
-          '<0.15',
-        );
-    }, section);
-    return () => context.revert();
+    return deferMotion(section, () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const context = gsap.context(() => {
+        gsap
+          .timeline({ scrollTrigger: { trigger: panel, start: 'top 92%', once: true } })
+          .from('[data-rule]', {
+            scaleX: 0,
+            duration: 0.8,
+            ease: 'power3.inOut',
+            stagger: 0.08,
+          })
+          .from(
+            '[data-guarantee]',
+            { opacity: 0, y: 18, duration: 0.7, ease: 'power3.out', stagger: 0.08 },
+            '<0.15',
+          );
+      }, section);
+      return () => context.revert();
+    });
   }, []);
 
   return (

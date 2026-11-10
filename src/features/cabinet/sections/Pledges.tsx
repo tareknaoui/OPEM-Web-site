@@ -5,6 +5,7 @@ import { Fragment, useEffect, useRef } from 'react';
 import type { CabinetContent } from '../content';
 import { motionAllowed } from '../useCabinetMotion';
 import styles from './Pledges.module.css';
+import { deferMotion } from '../deferMotion';
 
 /**
  * 06 « Nos engagements », le seul bloc foncé de la page (bleu nuit) : un serment, sans image.
@@ -25,50 +26,57 @@ export function Pledges({ pledges }: { pledges: CabinetContent['pledges'] }) {
     const text = section?.querySelector<HTMLElement>('[data-pledge]');
     const rule = section?.querySelector('[data-rule]');
     if (!section || !text || !motionAllowed()) return;
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+    return deferMotion(section, () => {
+      gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    const media = gsap.matchMedia(section);
-    media.add(
-      {
-        pin: '(min-height: 36em)',
-        flow: '(max-height: 35.99em)',
-      },
-      (context) => {
-        const pin = Boolean(context.conditions?.pin);
-        const split = SplitText.create(text, { type: 'words', aria: 'none' }); // le texte reste lu tel quel
-        const timeline = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: pin
-            ? {
-                trigger: section,
-                start: 'top top',
-                end: '+=110%',
-                scrub: 0.6,
-                pin: true,
-                anticipatePin: 1,
-              }
-            : { trigger: text, start: 'top 92%', end: 'top 50%', scrub: 0.4 },
-        });
-        split.words.forEach((word, index) => {
-          const at = index * 0.2;
-          timeline.fromTo(word, { opacity: 0.3 }, { opacity: 1, duration: 1 }, at);
-          const recipient = word.closest('strong');
-          if (recipient) {
-            const amber = getComputedStyle(recipient).color;
-            timeline.fromTo(word, { color: '#ffffff' }, { color: amber, duration: 1.2 }, at + 0.4);
-          }
-        });
-        timeline.fromTo(
-          rule ?? [],
-          { scaleX: 0 },
-          { scaleX: 1, duration: 2.5, ease: 'power2.out' },
-        );
-        // Un temps sur le serment complet avant que la page reprenne.
-        if (pin) timeline.to({}, { duration: 4 });
-        return () => split.revert();
-      },
-    );
-    return () => media.revert();
+      const media = gsap.matchMedia(section);
+      media.add(
+        {
+          pin: '(min-height: 36em)',
+          flow: '(max-height: 35.99em)',
+        },
+        (context) => {
+          const pin = Boolean(context.conditions?.pin);
+          const split = SplitText.create(text, { type: 'words', aria: 'none' }); // le texte reste lu tel quel
+          const timeline = gsap.timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: pin
+              ? {
+                  trigger: section,
+                  start: 'top top',
+                  end: '+=110%',
+                  scrub: 0.6,
+                  pin: true,
+                  anticipatePin: 1,
+                }
+              : { trigger: text, start: 'top 92%', end: 'top 50%', scrub: 0.4 },
+          });
+          split.words.forEach((word, index) => {
+            const at = index * 0.2;
+            timeline.fromTo(word, { opacity: 0.3 }, { opacity: 1, duration: 1 }, at);
+            const recipient = word.closest('strong');
+            if (recipient) {
+              const amber = getComputedStyle(recipient).color;
+              timeline.fromTo(
+                word,
+                { color: '#ffffff' },
+                { color: amber, duration: 1.2 },
+                at + 0.4,
+              );
+            }
+          });
+          timeline.fromTo(
+            rule ?? [],
+            { scaleX: 0 },
+            { scaleX: 1, duration: 2.5, ease: 'power2.out' },
+          );
+          // Un temps sur le serment complet avant que la page reprenne.
+          if (pin) timeline.to({}, { duration: 4 });
+          return () => split.revert();
+        },
+      );
+      return () => media.revert();
+    });
   }, []);
 
   return (

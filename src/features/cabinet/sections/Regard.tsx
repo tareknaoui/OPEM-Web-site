@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import type { CabinetContent } from '../content';
 import { fitToScreen, motionAllowed, PANEL_QUERY, panelPin, panelRoom } from '../useCabinetMotion';
 import styles from './Regard.module.css';
+import { deferMotion } from '../deferMotion';
 
 const DIR = '/images/cabinet';
 
@@ -30,44 +31,46 @@ export function Regard({ regard }: { regard: CabinetContent['regard'] }) {
   useEffect(() => {
     const section = ref.current;
     if (!section || !motionAllowed()) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const media = gsap.matchMedia(section);
-    const cards = () =>
-      Array.from(section.querySelectorAll('[data-idea]'), (card) => ({
-        card,
-        art: card.querySelector('[data-art]'),
-        body: card.querySelectorAll('[data-body]'),
-      }));
-    const hidden = { clipPath: 'inset(100% 0% 0% 0%)' };
-    const shown = { clipPath: 'inset(0% 0% 0% 0%)' };
+    return deferMotion(section, () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const media = gsap.matchMedia(section);
+      const cards = () =>
+        Array.from(section.querySelectorAll('[data-idea]'), (card) => ({
+          card,
+          art: card.querySelector('[data-art]'),
+          body: card.querySelectorAll('[data-body]'),
+        }));
+      const hidden = { clipPath: 'inset(100% 0% 0% 0%)' };
+      const shown = { clipPath: 'inset(0% 0% 0% 0%)' };
 
-    // Écran assez grand : la section se fige, les trois idées se dévoilent l'une après l'autre.
-    media.add(PANEL_QUERY, () => {
-      const unfit =
-        section.firstElementChild instanceof HTMLElement
-          ? fitToScreen(section.firstElementChild, panelRoom(section))
-          : undefined;
-      const timeline = gsap.timeline({ scrollTrigger: panelPin(section, 90) });
-      cards().forEach(({ art, body }) => {
-        timeline
-          .fromTo(art, hidden, { ...shown, duration: 1, ease: 'power2.out' })
-          .from(body, { opacity: 0, y: 24, duration: 0.7, stagger: 0.1 }, '<0.4');
+      // Écran assez grand : la section se fige, les trois idées se dévoilent l'une après l'autre.
+      media.add(PANEL_QUERY, () => {
+        const unfit =
+          section.firstElementChild instanceof HTMLElement
+            ? fitToScreen(section.firstElementChild, panelRoom(section))
+            : undefined;
+        const timeline = gsap.timeline({ scrollTrigger: panelPin(section, 90) });
+        cards().forEach(({ art, body }) => {
+          timeline
+            .fromTo(art, hidden, { ...shown, duration: 1, ease: 'power2.out' })
+            .from(body, { opacity: 0, y: 24, duration: 0.7, stagger: 0.1 }, '<0.4');
+        });
+        timeline.to({}, { duration: 1.2 }); // un temps sur les trois idées
+        return unfit;
       });
-      timeline.to({}, { duration: 1.2 }); // un temps sur les trois idées
-      return unfit;
-    });
-    // Ailleurs : chaque idée se dévoile à son arrivée.
-    media.add(`not all and ${PANEL_QUERY}`, () => {
-      cards().forEach(({ card, art }) => {
-        gsap.fromTo(art, hidden, {
-          ...shown,
-          duration: 1.2,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: card, start: 'top 92%', once: true },
+      // Ailleurs : chaque idée se dévoile à son arrivée.
+      media.add(`not all and ${PANEL_QUERY}`, () => {
+        cards().forEach(({ card, art }) => {
+          gsap.fromTo(art, hidden, {
+            ...shown,
+            duration: 1.2,
+            ease: 'expo.out',
+            scrollTrigger: { trigger: card, start: 'top 92%', once: true },
+          });
         });
       });
+      return () => media.revert();
     });
-    return () => media.revert();
   }, []);
 
   return (

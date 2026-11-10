@@ -5,6 +5,7 @@ import type { CabinetContent } from '../content';
 import { STEP_ICONS } from '../icons';
 import { fitToScreen, motionAllowed, PANEL_QUERY, panelPin, panelRoom } from '../useCabinetMotion';
 import styles from './Method.module.css';
+import { deferMotion } from '../deferMotion';
 
 /**
  * 04 « Travailler avec OPEM » (ancre #travailler-avec-opem, visée par la FAQ de l'accueil), sur
@@ -24,48 +25,50 @@ export function Method({ method }: { method: CabinetContent['method'] }) {
     const section = ref.current;
     const list = section?.querySelector('ol');
     if (!section || !list || !motionAllowed()) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const media = gsap.matchMedia(section);
-    const parts = () =>
-      Array.from(list.children, (step) => ({
-        step,
-        line: step.querySelector('[data-line]'),
-        card: step.querySelector('[data-card]'),
-        icon: step.querySelector('[data-icon]'),
-      }));
+    return deferMotion(section, () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const media = gsap.matchMedia(section);
+      const parts = () =>
+        Array.from(list.children, (step) => ({
+          step,
+          line: step.querySelector('[data-line]'),
+          card: step.querySelector('[data-card]'),
+          icon: step.querySelector('[data-icon]'),
+        }));
 
-    // Écran assez grand : la section se fige ; le fil se trace et allume les cartes une à une.
-    media.add(PANEL_QUERY, () => {
-      const unfit =
-        section.firstElementChild instanceof HTMLElement
-          ? fitToScreen(section.firstElementChild, panelRoom(section))
-          : undefined;
-      const timeline = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: panelPin(section, 100),
+      // Écran assez grand : la section se fige ; le fil se trace et allume les cartes une à une.
+      media.add(PANEL_QUERY, () => {
+        const unfit =
+          section.firstElementChild instanceof HTMLElement
+            ? fitToScreen(section.firstElementChild, panelRoom(section))
+            : undefined;
+        const timeline = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: panelPin(section, 100),
+        });
+        parts().forEach(({ line, card, icon }) => {
+          timeline
+            .from(card, { opacity: 0.2, y: 36, duration: 0.7, ease: 'power2.out' })
+            .from(icon, { scale: 0.5, rotate: -20, duration: 0.5, ease: 'back.out(2)' }, '<0.2')
+            .from(line, { scaleX: 0, duration: 1 }, '<');
+        });
+        timeline.to({}, { duration: 1 }); // un temps sur les quatre engagements
+        return unfit;
       });
-      parts().forEach(({ line, card, icon }) => {
-        timeline
-          .from(card, { opacity: 0.2, y: 36, duration: 0.7, ease: 'power2.out' })
-          .from(icon, { scale: 0.5, rotate: -20, duration: 0.5, ease: 'back.out(2)' }, '<0.2')
-          .from(line, { scaleX: 0, duration: 1 }, '<');
+
+      // Ailleurs : chaque temps se pose à son arrivée.
+      media.add(`not all and ${PANEL_QUERY}`, () => {
+        parts().forEach(({ step, line, card, icon }) => {
+          gsap
+            .timeline({ scrollTrigger: { trigger: step, start: 'top 95%', once: true } })
+            .from(line, { scaleX: 0, duration: 0.9, ease: 'power2.inOut' })
+            .from(card, { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' }, '<0.1')
+            .from(icon, { scale: 0.5, duration: 0.6, ease: 'back.out(2)' }, '<0.3');
+        });
       });
-      timeline.to({}, { duration: 1 }); // un temps sur les quatre engagements
-      return unfit;
+
+      return () => media.revert();
     });
-
-    // Ailleurs : chaque temps se pose à son arrivée.
-    media.add(`not all and ${PANEL_QUERY}`, () => {
-      parts().forEach(({ step, line, card, icon }) => {
-        gsap
-          .timeline({ scrollTrigger: { trigger: step, start: 'top 95%', once: true } })
-          .from(line, { scaleX: 0, duration: 0.9, ease: 'power2.inOut' })
-          .from(card, { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' }, '<0.1')
-          .from(icon, { scale: 0.5, duration: 0.6, ease: 'back.out(2)' }, '<0.3');
-      });
-    });
-
-    return () => media.revert();
   }, []);
 
   return (
