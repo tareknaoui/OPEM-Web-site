@@ -738,9 +738,11 @@
   }
 }
 
-/* Petit ordinateur (1280 à 1535 px) : neuf rubriques, plus la langue et le bouton. La barre se
-   resserre (écarts, taille du texte, logo, bouton) pour tout tenir sur une ligne. */
-@media (min-width: 80em) and (max-width: 95.99em) {
+/* Petit ordinateur (1280 à 1663 px) : neuf rubriques, plus la langue et le bouton. La barre se
+   resserre (écarts, taille du texte, logo, bouton) pour tout tenir sur une ligne. (Jusqu'à
+   1535 px seulement, le bouton « Parlons de votre projet » sortait de l'écran entre 1536 et
+   1600 px environ.) */
+@media (min-width: 80em) and (max-width: 103.99em) {
   .bar {
     gap: 0.75rem;
   }

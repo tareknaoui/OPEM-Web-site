@@ -44,16 +44,13 @@ export function ContactBand() {
           <p className={styles.cardTitle}>{details.title}</p>
           <ul className={styles.channels}>
             <li>
-              <a
-                href={company.phone.href}
-                className={styles.channel}
-                aria-label={details.call(company.phone.display)}
-              >
+              {/* Nom lu : « Téléphone 06 61 11 94 23 », le texte visible (WCAG 2.5.3). */}
+              <a href={company.phone.href} className={styles.channel}>
                 <span className={styles.icon} aria-hidden="true">
                   <PhoneIcon size={24} weight="duotone" />
                 </span>
                 <span className={styles.channelText}>
-                  <span className={styles.channelLabel}>{details.phone}</span>
+                  <span className={styles.channelLabel}>{details.phone}</span>{' '}
                   <span className={styles.channelValue} dir="ltr">
                     {company.phone.display}
                   </span>
@@ -66,7 +63,7 @@ export function ContactBand() {
                   <EnvelopeSimpleIcon size={24} weight="duotone" />
                 </span>
                 <span className={styles.channelText}>
-                  <span className={styles.channelLabel}>{details.email}</span>
+                  <span className={styles.channelLabel}>{details.email}</span>{' '}
                   <span className={styles.channelValue} dir="ltr">
                     {company.email}
                   </span>

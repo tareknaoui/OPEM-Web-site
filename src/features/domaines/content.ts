@@ -36,7 +36,7 @@ export const DOMAIN_PHOTOS: Record<
       },
     },
     wide: {
-      small: '/images/actualites/salle-reunion.jpg',
+      small: '/images/actualites/salle-reunion.webp',
       width: 1280,
       height: 720,
       alt: {
@@ -47,7 +47,8 @@ export const DOMAIN_PHOTOS: Record<
   },
   'coaching-professionnel': {
     hero: {
-      small: '/images/domaines/coaching.jpg',
+      small: '/images/domaines/coaching-700.webp',
+      large: '/images/domaines/coaching.webp',
       width: 1280,
       height: 960,
       alt: {
@@ -56,7 +57,7 @@ export const DOMAIN_PHOTOS: Record<
       },
     },
     wide: {
-      small: '/images/actualites/bureau.jpg',
+      small: '/images/actualites/bureau.webp',
       width: 1280,
       height: 720,
       alt: {

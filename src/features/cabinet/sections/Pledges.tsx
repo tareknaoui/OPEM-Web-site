@@ -35,7 +35,7 @@ export function Pledges({ pledges }: { pledges: CabinetContent['pledges'] }) {
       },
       (context) => {
         const pin = Boolean(context.conditions?.pin);
-        const split = SplitText.create(text, { type: 'words' });
+        const split = SplitText.create(text, { type: 'words', aria: 'none' }); // le texte reste lu tel quel
         const timeline = gsap.timeline({
           defaults: { ease: 'none' },
           scrollTrigger: pin

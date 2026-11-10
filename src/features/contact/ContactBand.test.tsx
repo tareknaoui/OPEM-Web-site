@@ -33,7 +33,7 @@ describe('Bloc « Premier échange »', () => {
       QUOTE_HREF,
     );
     expect(
-      within(band).getByRole('link', { name: `Appeler le ${company.phone.display}` }),
+      within(band).getByRole('link', { name: `Téléphone ${company.phone.display}` }),
     ).toHaveAttribute('href', company.phone.href);
     expect(within(band).getByRole('link', { name: /general@opem-dz\.com/ })).toHaveAttribute(
       'href',

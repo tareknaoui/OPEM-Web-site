@@ -46,7 +46,7 @@ describe('Pages des domaines d’expertise', () => {
     quotes.forEach((link) =>
       expect(link).toHaveAttribute('href', '/contact/demande-de-rendez-vous'),
     );
-    expect(screen.getByRole('link', { name: /Appeler le/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^Téléphone 06/ })).toBeInTheDocument();
   });
 
   it('accompagnement : ses missions et l’ancre de la sous-rubrique « Diagnostic d’entreprise »', () => {

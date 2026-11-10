@@ -127,6 +127,7 @@ export function useCabinetMotion(scope: RefObject<HTMLElement | null>, lang: str
       root.querySelectorAll<HTMLElement>('[data-motion="words"]').forEach((text) => {
         SplitText.create(text, {
           type: 'words',
+          aria: 'none', // des mots découpés se lisent tels quels ; pas d'aria-label sur un <p>
           autoSplit: true,
           onSplit: (self) =>
             gsap.fromTo(

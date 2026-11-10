@@ -363,12 +363,15 @@ la citation ou l'auteur y sont vides.
 
 ## 11. Déploiement et cache
 
+- **VPS (mise en ligne définitive)** : tout est dans [`deploy/`](deploy/README.md) : guide pas à
+  pas (Ubuntu 24.04, Nginx, WordPress dans `/cms`), configuration Nginx équivalente à
+  `vercel.json`, et `bash deploy/deploy.sh` pour mettre en ligne une nouvelle version.
 - **Vercel** : chaque push sur `main` déclenche un build (`npm run build`, sortie `dist/`).
 - **`vercel.json` est la configuration de production** : réécriture de toutes les routes vers
   `index.html` (SPA), en-têtes de sécurité, cache. Vercel **ignore** `public/_headers` (gardé
   pour Netlify / Cloudflare Pages).
-- La CSP existe à **trois endroits à garder synchronisés** : `vercel.json`, `public/_headers`,
-  `vite.config.ts` (pour `npm run preview`).
+- La CSP existe à **quatre endroits à garder synchronisés** : `vercel.json`, `public/_headers`,
+  `vite.config.ts` (pour `npm run preview`) et `deploy/nginx/snippets/opem-site-headers.conf`.
 
 | Fichiers                 | Cache                        | Pourquoi                                                       |
 | ------------------------ | ---------------------------- | -------------------------------------------------------------- |

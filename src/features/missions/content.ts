@@ -127,7 +127,8 @@ const FR: MissionsContent = {
         id: 'mortalite-des-entreprises',
         kind: 'international',
         image: {
-          small: '/images/domaines/etudes-strategiques.jpg',
+          small: '/images/domaines/etudes-strategiques-700.webp',
+          large: '/images/domaines/etudes-strategiques.webp',
           alt: 'Deux consultants échangent devant un tableau blanc couvert de notes',
         },
         domains: ['etudes-strategiques'],
@@ -272,7 +273,8 @@ const AR: MissionsContent = {
         id: 'mortalite-des-entreprises',
         kind: 'international',
         image: {
-          small: '/images/domaines/etudes-strategiques.jpg',
+          small: '/images/domaines/etudes-strategiques-700.webp',
+          large: '/images/domaines/etudes-strategiques.webp',
           alt: 'مستشاران يتحاوران أمام سبورة بيضاء مليئة بالملاحظات',
         },
         domains: ['etudes-strategiques'],

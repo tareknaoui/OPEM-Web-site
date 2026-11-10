@@ -8,6 +8,8 @@ coverage
 .env
 .env.*
 !.env.example
+# Réglages de mise en ligne (adresse du VPS) : copie locale de deploy/deploy.env.example
+/deploy/deploy.env
 
 # Éditeurs / OS
 .vscode/*
