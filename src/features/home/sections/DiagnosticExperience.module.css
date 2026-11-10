@@ -17,6 +17,21 @@
   color: var(--opem-white);
 }
 
+/* Résultat : la page passe sur fond blanc (l'en-tête des étapes reste bleu nuit). */
+.dialog[data-mode='result'] {
+  background: var(--opem-white);
+  color: var(--opem-night);
+}
+
+/* Résultat en pages : chaque page commence en haut, même courte. */
+.body[data-mode='result'] {
+  align-content: start;
+}
+
+.dialog[data-mode='result'] .body :focus-visible {
+  outline-color: var(--color-primary);
+}
+
 .dialog[open] {
   display: flex;
   flex-direction: column;

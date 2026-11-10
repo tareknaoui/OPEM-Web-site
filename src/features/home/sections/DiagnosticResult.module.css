@@ -1,19 +1,152 @@
-/* Écran de résultat de l'autodiagnostic, sur bleu nuit : texte blanc, secondaire en bleu 30 %,
-   ambre réservé aux repères (niveau atteint, leviers fragiles, valeurs). Le formulaire du
-   rapport est une carte blanche (pas d'ambre sur blanc). */
+/* Écran de résultat de l'autodiagnostic, sur fond blanc (texte bleu nuit, secondaire en gris,
+   repères en bleu OPEM), sauf « Votre empreinte » : une bande bleu nuit, où le radar et les
+   lectures du score sont en blanc, bleu 30 % et ambre. Sur blanc, l'ambre ne marque que les
+   leviers fragiles, en filet, jamais en texte (charte). Le formulaire est une carte bleu très clair ; la carte du
+   consultant, en bleu nuit, appelle l'action. */
 
 .result {
   display: grid;
-  gap: clamp(3.5rem, 2.5rem + 3vw, 6rem);
+  gap: clamp(2rem, 1.5rem + 2vw, 3rem);
   padding-bottom: var(--space-8);
 }
 
-/* Titre de bloc : petites capitales bleu 30 %. */
+/* ---------- Pages : barre des quatre parties, page affichée, Précédent / Suivant ---------- */
+
+.top {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Quatre segments : le numéro et le nom ; la page affichée en bleu nuit avec un filet bleu OPEM,
+   les pages vues avec un filet bleu clair. Sur téléphone, seul le nom de la page affichée. */
+.pager {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pager > li {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Téléphone : la page affichée prend la place de son nom. */
+.pager > li:has(> [aria-current='step']) {
+  flex-grow: 3;
+}
+
+.pagerItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 0 0.25rem;
+  border: 0;
+  border-top: 3px solid var(--opem-gray-light);
+  background: none;
+  color: var(--opem-gray);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    color 200ms,
+    border-color 200ms;
+}
+
+.pagerItem:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.pagerItem:hover {
+  color: var(--opem-night);
+}
+
+.pagerItem[data-done] {
+  border-top-color: var(--opem-blue-30);
+}
+
+.pagerItem[aria-current='step'] {
+  border-top-color: var(--color-primary);
+  color: var(--opem-night);
+}
+
+.pagerNumber {
+  font-variant-numeric: tabular-nums;
+}
+
+.pagerItem[aria-current='step'] .pagerNumber {
+  color: var(--color-primary);
+}
+
+/* Téléphone : le nom des autres pages réservé aux lecteurs d'écran. */
+.pagerItem:not([aria-current='step']) .pagerName {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.page {
+  display: grid;
+  gap: clamp(3rem, 2rem + 3vw, 5rem);
+  animation: enter 500ms var(--ease-reveal) both;
+}
+
+.page:focus {
+  outline: none;
+}
+
+.pageNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--opem-gray-light);
+}
+
+.pageNav:empty {
+  display: none;
+}
+
+.previous {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* « Suivant · Appuis et fragilités → », à la fin de la ligne. */
+.next {
+  flex-wrap: wrap;
+  margin-inline-start: auto;
+  min-height: 3.25rem;
+  white-space: normal;
+}
+
+/* Le nom de la page suivante, à partir de la tablette. */
+.nextName {
+  display: none;
+  font-weight: 400;
+}
+
+.nextName::before {
+  content: '·';
+  margin-inline-end: 0.5rem;
+}
+
+/* Titre de bloc : petites capitales vert foncé, comme les surtitres du site sur fond clair. */
 .blockTitle,
 .eyebrow,
 .label {
   margin: 0;
-  color: var(--opem-blue-30);
+  color: var(--opem-green-dark);
   font-family: var(--font-heading);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -39,7 +172,7 @@
 
 .text {
   margin: var(--space-3) 0 0;
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -56,7 +189,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  margin-bottom: var(--space-8);
+  justify-self: start;
 }
 
 /* Flèche vers l'arrière (retour aux questions). */
@@ -70,15 +203,15 @@
 
 /* Récapitulatif : « Entreprise privée · Industrie · … · Direction générale », sous le titre. */
 .facts {
-  margin: var(--space-2) 0 0;
-  color: var(--opem-white);
-  font-size: 0.9375rem;
+  margin: var(--space-4) 0 0;
+  color: var(--opem-gray);
+  font-size: 0.875rem;
   line-height: 1.6;
 }
 
 .profile {
-  margin: clamp(1.5rem, 1rem + 1.5vw, 2.5rem) 0 0;
-  color: var(--opem-white);
+  margin: var(--space-3) 0 0;
+  color: var(--opem-night);
   font-family: var(--font-heading);
   font-size: clamp(2.25rem, 1.3rem + 3.6vw, 4.5rem);
   font-weight: 600;
@@ -101,7 +234,7 @@
 .lead {
   max-width: 44rem;
   margin: var(--space-4) 0 0;
-  color: var(--opem-blue-30);
+  color: var(--opem-gray);
   font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
   line-height: 1.6;
 }
@@ -121,23 +254,64 @@
   }
 }
 
-/* ---------- 2. Votre empreinte ---------- */
+/* ---------- 2. Votre empreinte : bande bleu nuit, d'un bord à l'autre de l'écran ---------- */
 
-/* Le radar en grand, centré, sur presque toute la largeur ; dessous, niveau et équilibre. */
+/* Sur la bande : blanc, bleu 30 % et ambre (l'ambre ne vit que sur fond foncé). La bande
+   déborde du conteneur jusqu'aux bords de l'écran (ombre et découpe), sans défilement latéral. */
 .footprint {
   display: grid;
-  gap: var(--space-8);
+  gap: var(--space-6);
+  padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  background: var(--opem-night);
+  color: var(--opem-white);
+  box-shadow: 0 0 0 100vmax var(--opem-night);
+  clip-path: inset(0 -100vmax);
   animation: enter 700ms var(--ease-reveal) 300ms both;
+}
+
+.footprint .blockTitle,
+.footprint .text {
+  color: var(--opem-blue-30);
+}
+
+.footprintGrid {
+  display: grid;
+  gap: var(--space-10, 2.5rem);
 }
 
 .radar {
   justify-self: center;
-  width: min(100%, 60rem);
+  width: min(100%, 44rem);
 }
 
+/* Les deux lectures du score, chacune sous son titre. */
 .analysis {
   display: grid;
   gap: var(--space-8);
+  align-content: center;
+}
+
+.reading {
+  display: grid;
+  gap: 0.625rem;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.readingTitle {
+  margin: 0;
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.readingTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
 }
 
 .legend {
@@ -179,29 +353,22 @@
   vertical-align: 0.05em;
 }
 
-/* Niveau global sur une échelle de 4 (niveau atteint en ambre). */
-.level {
-  display: grid;
-  gap: 0.5rem;
-}
-
-/* « Niveau 2 sur 4, en structuration », puis le score : lisible d'un coup d'œil. */
+/* « Niveau 2 sur 4 », puis le nom du niveau en ambre ; l'échelle de 4 ; le total en points. */
 .levelName {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.25rem var(--space-4);
+  gap: 0.25rem var(--space-3);
   margin: 0;
   color: var(--opem-white);
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2.25rem);
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
   font-weight: 600;
   line-height: 1.2;
 }
 
-.totalScore {
+.levelStage {
   color: var(--opem-amber);
-  font-size: 0.8em;
 }
 
 .levelName:lang(ar) {
@@ -209,10 +376,16 @@
   line-height: 1.5;
 }
 
+.totalScore {
+  margin: 0;
+  color: var(--opem-blue-30);
+  font-size: 0.875rem;
+}
+
 .scale {
   display: flex;
   gap: 4px;
-  margin: 0;
+  margin: 0.25rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -301,13 +474,21 @@
   text-align: end;
 }
 
+/* Note d'un levier à côté de son nom (points d'appui, points de fragilité). */
+.leverScore {
+  margin-inline-start: 0.625rem;
+  color: var(--opem-gray);
+  font-family: var(--font-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* ---------- 3 et 4. Points d'appui, points de fragilité ---------- */
 
 .pair {
   display: grid;
   gap: var(--space-8);
-  padding-top: var(--space-8);
-  border-top: 1px solid rgb(255 255 255 / 0.2);
 }
 
 .levers {
@@ -321,7 +502,7 @@
 /* Un levier : un filet au début (blanc pour un appui, ambre pour une fragilité). */
 .leverItem {
   padding-inline-start: var(--space-4);
-  border-inline-start: 3px solid var(--opem-white);
+  border-inline-start: 3px solid var(--color-primary);
 }
 
 .leverItem[data-tone='weak'] {
@@ -330,7 +511,7 @@
 
 .leverTitle {
   margin: 0;
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-family: var(--font-heading);
   font-size: 1.125rem;
   font-weight: 600;
@@ -343,12 +524,12 @@
 
 .leverItem .text {
   margin-top: var(--space-2);
-  color: var(--opem-blue-30);
+  color: var(--opem-gray);
 }
 
 .cost {
   margin: var(--space-3) 0 0;
-  color: var(--opem-white);
+  color: var(--opem-night);
   line-height: 1.6;
 }
 
@@ -363,14 +544,13 @@
   display: grid;
   gap: var(--space-8);
   padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-  border: 1px solid rgb(255 255 255 / 0.3);
   border-radius: 14px;
-  background: rgb(255 255 255 / 0.05);
+  background: var(--opem-blue-10);
 }
 
 .startLever {
   margin: 0;
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-family: var(--font-heading);
   font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.25rem);
   font-weight: 600;
@@ -390,7 +570,7 @@
 
 .actionText {
   margin: 0.375rem 0 0;
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-family: var(--font-heading);
   font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   font-weight: 600;
@@ -403,7 +583,7 @@
 
 .note {
   margin: var(--space-3) 0 0;
-  color: var(--opem-blue-30);
+  color: var(--opem-gray);
   font-size: 0.9375rem;
   font-style: italic;
   line-height: 1.55;
@@ -415,7 +595,7 @@
 
 .report {
   margin: var(--space-6) 0 0;
-  color: var(--opem-blue-30);
+  color: var(--opem-gray);
   font-size: 0.9375rem;
   line-height: 1.55;
 }
@@ -424,7 +604,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  color: var(--opem-white);
+  color: var(--color-primary);
   font-family: var(--font-heading);
   font-weight: 600;
   text-underline-offset: 0.25em;
@@ -434,13 +614,9 @@
   font-family: var(--font-arabic);
 }
 
-.down {
-  rotate: 90deg;
-}
-
 .indicator {
   margin: 0.375rem 0 var(--space-4);
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-weight: 600;
   line-height: 1.55;
 }
@@ -459,7 +635,7 @@
 }
 
 .domainLink {
-  color: var(--opem-white);
+  color: var(--color-primary);
   font-family: var(--font-heading);
   font-weight: 600;
   text-decoration: underline;
@@ -486,17 +662,12 @@
 .roleText {
   max-width: 48rem;
   margin: 0;
-  color: var(--opem-white);
+  color: var(--opem-night);
   font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   line-height: 1.6;
 }
 
 /* ---------- 7. Pour aller plus loin ---------- */
-
-.more {
-  padding-top: var(--space-8);
-  border-top: 1px solid rgb(255 255 255 / 0.2);
-}
 
 .moreGrid {
   display: grid;
@@ -504,12 +675,12 @@
   align-items: start;
 }
 
-/* Formulaire du rapport : carte blanche, texte bleu nuit. */
+/* Formulaire du rapport : carte bleu très clair, texte bleu nuit. */
 .form {
   scroll-margin-top: 6rem;
   padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
   border-radius: 14px;
-  background: var(--opem-white);
+  background: var(--opem-blue-10);
   color: var(--opem-night);
 }
 
@@ -635,10 +806,8 @@
   order: -1;
   gap: var(--space-4);
   padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
-  /* Touche d'ambre très légère : contour et voile, jamais le texte. */
-  border: 1px solid rgb(242 178 48 / 0.55);
   border-radius: 14px;
-  background: rgb(242 178 48 / 0.07);
+  background: var(--opem-night);
 }
 
 .consultantTitle {
@@ -683,7 +852,7 @@
   padding: 0.375rem 0;
   border: 0;
   background: none;
-  color: var(--opem-white);
+  color: var(--color-primary);
   font-family: var(--font-heading);
   font-size: 0.9375rem;
   font-weight: 600;
@@ -701,6 +870,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .page,
   .hero,
   .profile,
   .footprint,
@@ -712,6 +882,23 @@
 /* ---------- Tablette et ordinateur ---------- */
 
 @media (min-width: 36em) {
+  .pager > li:has(> [aria-current='step']) {
+    flex-grow: 1;
+  }
+
+  .nextName {
+    display: inline;
+  }
+
+  .pagerItem:not([aria-current='step']) .pagerName {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+
   .bar {
     grid-template-columns: 11rem 1fr;
     align-items: center;
@@ -727,11 +914,11 @@
 }
 
 @media (min-width: 64em) {
-  /* Sous le radar : le niveau à gauche, l'équilibre à droite. */
-  .analysis {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-    gap: clamp(2rem, 5vw, 5rem);
+  /* Le radar à gauche, les deux lectures du score à droite. */
+  .footprintGrid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
   }
 
   .start {
@@ -742,7 +929,7 @@
   /* La colonne de droite : un filet vertical avant l'indicateur. */
   .startSide {
     padding-inline-start: clamp(1.5rem, 3vw, 3rem);
-    border-inline-start: 1px solid rgb(255 255 255 / 0.2);
+    border-inline-start: 1px solid var(--opem-gray-light);
   }
 
   .moreGrid {

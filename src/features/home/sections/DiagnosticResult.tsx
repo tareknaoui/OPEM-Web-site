@@ -1,4 +1,12 @@
-import { useId, useState, type CSSProperties, type FormEvent, type RefObject } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FormEvent,
+  type RefObject,
+} from 'react';
 import { Link } from 'react-router';
 import { ArrowRightIcon } from '@/components/icons';
 import { http } from '@/lib/http';
@@ -34,10 +42,11 @@ type DiagnosticResultProps = {
 };
 
 /**
- * Écran de résultat de l'autodiagnostic, textes et règles d'OPEM : votre profil, votre empreinte
- * (radar, niveau global, cadre et humain), points d'appui, points de fragilité, commencer par,
- * votre rôle, pour aller plus loin (rapport détaillé contre coordonnées, consultant, nouveau
- * test). Les phrases s'ajustent à la taille, au statut, au secteur et à la fonction.
+ * Écran de résultat de l'autodiagnostic, textes et règles d'OPEM, en quatre pages : 1. votre
+ * profil et votre empreinte (radar, niveau global, cadre et humain) ; 2. points d'appui et de
+ * fragilité ; 3. commencer par, votre rôle ; 4. pour aller plus loin (rapport détaillé contre
+ * coordonnées, consultant, nouveau test). Une barre des pages en haut, Précédent / Suivant en
+ * bas. Les phrases s'ajustent à la taille, au statut, au secteur et à la fonction.
  */
 export function DiagnosticResult({
   diagnostic,
@@ -63,8 +72,9 @@ export function DiagnosticResult({
   const totalScore = (labels.totalScore[plural] ?? labels.totalScore.other)
     .replace('{total}', String(result.total))
     .replace('{max}', String(maxScore));
-  // « en structuration » : nom du niveau après une virgule, sans majuscule.
-  const levelName = level ? level.name.charAt(0).toLowerCase() + level.name.slice(1) : '';
+  // « 1 sur 3 » : la note d'un levier, la même que sur le radar.
+  const scoreOf = (axis: DiagnosticAxis) =>
+    labels.axisScore.replace('{score}', String(result.scores[axis] ?? 0));
   const note = (axis: DiagnosticAxis) => result.scores[axis] ?? 0;
   const domainsOf = (axis: DiagnosticAxis) =>
     (note(axis) >= 2 && axes[axis].domainsFrom2) || axes[axis].domains;
@@ -99,136 +109,164 @@ export function DiagnosticResult({
   const role = mod.roles.find((item) => item.ids.includes(context.fonction ?? ''))?.text;
   const formId = `${ids}-report`;
 
-  return (
-    <div className={styles.result}>
-      {/* 1. Votre profil : « Revoir mes réponses » en haut, puis le titre, le récapitulatif
-          des réponses sur l'organisation, et le nom du profil. */}
+  // Page affichée ; `anchor` : élément à montrer après le changement (le formulaire du rapport).
+  const [page, setPage] = useState(0);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const anchor = useRef<string | null>(null);
+  const moved = useRef(false);
+  const goTo = (index: number, target?: string) => {
+    anchor.current = target ?? null;
+    moved.current = true;
+    setPage(index);
+  };
+
+  // Nouvelle page : retour en haut du plein écran (ou vers l'élément visé), focus sur son titre.
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!moved.current || !root) return;
+    const target = anchor.current ? document.getElementById(anchor.current) : null;
+    anchor.current = null;
+    const heading = root.querySelector<HTMLElement>('h2, h3');
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+    if (target?.scrollIntoView) target.scrollIntoView({ behavior: 'smooth' });
+    else {
+      const dialog = root.closest('dialog');
+      if (dialog) dialog.scrollTop = 0;
+    }
+  }, [page]);
+
+  // Le résultat en quatre pages : profil et empreinte, appuis et fragilités, par où commencer,
+  // pour aller plus loin. Chaque page est un écran court, avec un seul sujet.
+  const pages = [
+    <>
       <header className={styles.hero}>
-        <button
-          type="button"
-          className={`${styles.textButton} ${styles.review}`}
-          onClick={onReview}
-        >
-          <ArrowRightIcon size={16} className={styles.reviewIcon} />
-          {labels.restart}
-        </button>
         <p className={styles.eyebrow}>{labels.profileLabel}</p>
-        {facts.length > 0 && <p className={styles.facts}>{facts.join(' · ')}</p>}
         <h2 ref={headingRef} tabIndex={-1} className={styles.profile}>
           {profile.name}
         </h2>
         <p className={styles.lead}>{profile.text}</p>
+        {facts.length > 0 && <p className={styles.facts}>{facts.join(' · ')}</p>}
       </header>
 
-      {/* 2. Votre empreinte : le radar en grand, centré ; dessous, le niveau et le score, puis
-          l'équilibre entre le cadre et l'humain. */}
       <section className={styles.footprint} aria-labelledby={`${ids}-footprint`}>
         <h3 id={`${ids}-footprint`} className={styles.blockTitle}>
           {labels.footprintTitle}
         </h3>
-        <div className={styles.radar}>
-          <SevenSRadar
-            diagnostic={diagnostic}
-            mode="result"
-            scores={result.scores}
-            weak={result.weak}
-            tone="dark"
-          />
-          <p className={styles.legend} aria-hidden="true">
-            <span className={styles.legendYours}>{labels.yours}</span>
-            <span className={styles.legendIdeal}>{labels.ideal}</span>
-            {result.weak.length > 0 && (
-              <span className={styles.legendWeak}>{labels.weakTitle}</span>
-            )}
-          </p>
-        </div>
-        <div className={styles.analysis}>
-          <div className={styles.level}>
-            <p className={styles.levelName}>
-              {analysis.levelLabel.replace('{level}', String(result.level + 1))}
-              {diagnostic.comma}
-              {levelName}
-              <span className={styles.totalScore}>{totalScore}</span>
+        <div className={styles.footprintGrid}>
+          <div className={styles.radar}>
+            <SevenSRadar
+              diagnostic={diagnostic}
+              mode="result"
+              scores={result.scores}
+              weak={result.weak}
+              tone="dark"
+            />
+            <p className={styles.legend} aria-hidden="true">
+              <span className={styles.legendYours}>{labels.yours}</span>
+              <span className={styles.legendIdeal}>{labels.ideal}</span>
+              {result.weak.length > 0 && (
+                <span className={styles.legendWeak}>{labels.weakTitle}</span>
+              )}
             </p>
-            <ol className={styles.scale} aria-hidden="true">
-              {analysis.levels.map((item, index) => (
-                <li
-                  key={item.name}
-                  data-on={index <= result.level || undefined}
-                  data-current={index === result.level || undefined}
-                />
-              ))}
-            </ol>
-            <p className={styles.text}>{level?.text}</p>
           </div>
-          <div>
-            <dl className={styles.balance}>
-              {(['hard', 'soft'] as const).map((side) => (
-                <div key={side} className={styles.bar}>
-                  <dt>
-                    <span className={styles.barLabel}>{analysis[side].label}</span>
-                    <span className={styles.hint}>{analysis[side].hint}</span>
-                  </dt>
-                  <dd>
-                    <span className={styles.track} aria-hidden="true">
-                      <span
-                        className={styles.fill}
-                        style={{ '--value': `${result[side]}%` } as CSSProperties}
-                      />
-                    </span>
-                    <span className={styles.barValue}>{percent(result[side])}</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <p className={styles.text}>{analysis.balance[result.balance]}</p>
+          <div className={styles.analysis}>
+            <section className={styles.reading} aria-labelledby={`${ids}-level`}>
+              <h4 id={`${ids}-level`} className={styles.readingTitle}>
+                {labels.levelTitle}
+              </h4>
+              <p className={styles.levelName}>
+                {analysis.levelLabel.replace('{level}', String(result.level + 1))}{' '}
+                <span className={styles.levelStage}>{level?.name}</span>
+              </p>
+              <ol className={styles.scale} aria-hidden="true">
+                {analysis.levels.map((item, index) => (
+                  <li
+                    key={item.name}
+                    data-on={index <= result.level || undefined}
+                    data-current={index === result.level || undefined}
+                  />
+                ))}
+              </ol>
+              <p className={styles.totalScore}>{totalScore}</p>
+              <p className={styles.text}>{level?.text}</p>
+            </section>
+            <section className={styles.reading} aria-labelledby={`${ids}-balance`}>
+              <h4 id={`${ids}-balance`} className={styles.readingTitle}>
+                {labels.balanceTitle}
+              </h4>
+              <dl className={styles.balance}>
+                {(['hard', 'soft'] as const).map((side) => (
+                  <div key={side} className={styles.bar}>
+                    <dt>
+                      <span className={styles.barLabel}>{analysis[side].label}</span>
+                      <span className={styles.hint}>{analysis[side].hint}</span>
+                    </dt>
+                    <dd>
+                      <span className={styles.track} aria-hidden="true">
+                        <span
+                          className={styles.fill}
+                          style={{ '--value': `${result[side]}%` } as CSSProperties}
+                        />
+                      </span>
+                      <span className={styles.barValue}>{percent(result[side])}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className={styles.text}>{analysis.balance[result.balance]}</p>
+            </section>
           </div>
         </div>
       </section>
-
-      {/* 3. Vos points d'appui · 4. Vos points de fragilité */}
-      <div className={styles.pair}>
-        <section aria-labelledby={`${ids}-strengths`}>
-          <h3 id={`${ids}-strengths`} className={styles.blockTitle}>
-            {labels.strengthsTitle}
-          </h3>
-          {result.strengths.length > 0 ? (
-            <ul className={styles.levers}>
-              {result.strengths.map((axis) => (
-                <li key={axis} className={styles.leverItem} data-tone="strength">
-                  <h4 className={styles.leverTitle}>{axes[axis].title}</h4>
-                  {finding(axis) && <p className={styles.text}>{finding(axis)}</p>}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.text}>{labels.noStrength}</p>
-          )}
-        </section>
-        <section aria-labelledby={`${ids}-weak`}>
-          <h3 id={`${ids}-weak`} className={styles.blockTitle}>
-            {labels.weakTitle}
-          </h3>
-          {result.weak.length > 0 ? (
-            <ul className={styles.levers}>
-              {result.weak.map((axis) => (
-                <li key={axis} className={styles.leverItem} data-tone="weak">
-                  <h4 className={styles.leverTitle}>{axes[axis].title}</h4>
-                  {finding(axis) && <p className={styles.text}>{finding(axis)}</p>}
-                  <p className={styles.cost}>
-                    <span className={styles.label}>{labels.costLabel}</span>
-                    {levers[axis].costs[note(axis)]}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.text}>{labels.noWeak}</p>
-          )}
-        </section>
-      </div>
-
-      {/* 5. Commencer par */}
+    </>,
+    <div className={styles.pair}>
+      <section aria-labelledby={`${ids}-strengths`}>
+        <h3 id={`${ids}-strengths`} className={styles.blockTitle}>
+          {labels.strengthsTitle}
+        </h3>
+        {result.strengths.length > 0 ? (
+          <ul className={styles.levers}>
+            {result.strengths.map((axis) => (
+              <li key={axis} className={styles.leverItem} data-tone="strength">
+                <h4 className={styles.leverTitle}>
+                  {axes[axis].title} <span className={styles.leverScore}>{scoreOf(axis)}</span>
+                </h4>
+                {finding(axis) && <p className={styles.text}>{finding(axis)}</p>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={styles.text}>{labels.noStrength}</p>
+        )}
+      </section>
+      <section aria-labelledby={`${ids}-weak`}>
+        <h3 id={`${ids}-weak`} className={styles.blockTitle}>
+          {labels.weakTitle}
+        </h3>
+        {result.weak.length > 0 ? (
+          <ul className={styles.levers}>
+            {result.weak.map((axis) => (
+              <li key={axis} className={styles.leverItem} data-tone="weak">
+                <h4 className={styles.leverTitle}>
+                  {axes[axis].title} <span className={styles.leverScore}>{scoreOf(axis)}</span>
+                </h4>
+                {finding(axis) && <p className={styles.text}>{finding(axis)}</p>}
+                <p className={styles.cost}>
+                  <span className={styles.label}>{labels.costLabel}</span>
+                  {levers[axis].costs[note(axis)]}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={styles.text}>{labels.noWeak}</p>
+        )}
+      </section>
+    </div>,
+    <>
       <section className={styles.start} aria-labelledby={`${ids}-start`}>
         <div>
           <h3 id={`${ids}-start`} className={styles.blockTitle}>
@@ -252,13 +290,13 @@ export function DiagnosticResult({
               href={`#${formId}`}
               className={styles.reportLink}
               onClick={(event) => {
-                // Défilement dans le plein écran, sans toucher à l'adresse de la page.
+                // Le formulaire est sur la dernière page : on y passe, sans toucher à l'adresse.
                 event.preventDefault();
-                document.getElementById(formId)?.scrollIntoView({ behavior: 'smooth' });
+                goTo(labels.pager.pages.length - 1, formId);
               }}
             >
               {labels.report.link}
-              <ArrowRightIcon size={16} className={styles.down} />
+              <ArrowRightIcon size={16} className="arrow" />
             </a>
           </p>
         </div>
@@ -281,7 +319,6 @@ export function DiagnosticResult({
         </div>
       </section>
 
-      {/* 6. Votre rôle (aucune phrase pour « Autre fonction » : bloc masqué). */}
       {role && (
         <section aria-labelledby={`${ids}-role`}>
           <h3 id={`${ids}-role`} className={styles.blockTitle}>
@@ -290,43 +327,105 @@ export function DiagnosticResult({
           <p className={styles.roleText}>{role}</p>
         </section>
       )}
-
-      {/* 7. Pour aller plus loin */}
-      <section className={styles.more} aria-labelledby={`${ids}-more`}>
-        <h3 id={`${ids}-more`} className={styles.blockTitle}>
-          {labels.moreTitle}
-        </h3>
-        <div className={styles.moreGrid}>
-          <ReportForm
-            id={formId}
-            labels={labels.form}
-            fonction={fonction}
-            payload={{ context, answers, profile: result.profile, total: result.total }}
-          />
-          {/* Encart du consultant, mis en avant : avant le formulaire sur mobile ; à côté sur
-              ordinateur, où il reste à l'écran pendant qu'on remplit le formulaire. */}
-          <div className={styles.side}>
-            <aside className={styles.consultantCard} aria-labelledby={`${ids}-consultant`}>
-              <p id={`${ids}-consultant`} className={styles.consultantTitle}>
-                {labels.consultantCard.title}
-              </p>
-              <p className={styles.consultantText}>{labels.consultantCard.text}</p>
-              <Link
-                to={consultantHref(labels.consultant, result, context, answers)}
-                className={`btn btn-light ${styles.consultant}`}
-              >
-                {labels.consultant.label}
-                <ArrowRightIcon size={20} className="arrow" />
-              </Link>
-            </aside>
-            <div className={styles.otherActions}>
-              <button type="button" className={styles.textButton} onClick={onRetake}>
-                {labels.retake}
-              </button>
-            </div>
+    </>,
+    <section aria-labelledby={`${ids}-more`}>
+      <h3 id={`${ids}-more`} className={styles.blockTitle}>
+        {labels.moreTitle}
+      </h3>
+      <div className={styles.moreGrid}>
+        <ReportForm
+          id={formId}
+          labels={labels.form}
+          fonction={fonction}
+          payload={{ context, answers, profile: result.profile, total: result.total }}
+        />
+        {/* Encart du consultant, mis en avant : avant le formulaire sur mobile ; à côté sur
+                ordinateur, où il reste à l'écran pendant qu'on remplit le formulaire. */}
+        <div className={styles.side}>
+          <aside className={styles.consultantCard} aria-labelledby={`${ids}-consultant`}>
+            <p id={`${ids}-consultant`} className={styles.consultantTitle}>
+              {labels.consultantCard.title}
+            </p>
+            <p className={styles.consultantText}>{labels.consultantCard.text}</p>
+            <Link
+              to={consultantHref(labels.consultant, result, context, answers)}
+              className={`btn btn-light ${styles.consultant}`}
+            >
+              {labels.consultant.label}
+              <ArrowRightIcon size={20} className="arrow" />
+            </Link>
+          </aside>
+          <div className={styles.otherActions}>
+            <button type="button" className={styles.textButton} onClick={onRetake}>
+              {labels.retake}
+            </button>
           </div>
         </div>
-      </section>
+      </div>
+    </section>,
+  ];
+  const last = pages.length - 1;
+
+  return (
+    <div className={styles.result}>
+      <div className={styles.top}>
+        <button
+          type="button"
+          className={`${styles.textButton} ${styles.review}`}
+          onClick={onReview}
+        >
+          <ArrowRightIcon size={16} className={styles.reviewIcon} />
+          {labels.restart}
+        </button>
+        <nav aria-label={labels.pager.label}>
+          <ol className={styles.pager}>
+            {labels.pager.pages.map((name, index) => (
+              <li key={name}>
+                <button
+                  type="button"
+                  className={styles.pagerItem}
+                  aria-current={index === page ? 'step' : undefined}
+                  data-done={index < page || undefined}
+                  onClick={() => goTo(index)}
+                >
+                  <span className={styles.pagerNumber} aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className={styles.pagerName}>{name}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </div>
+
+      <div key={page} ref={pageRef} className={styles.page}>
+        {pages[page]}
+      </div>
+
+      <div className={styles.pageNav}>
+        {page > 0 && (
+          <button
+            type="button"
+            className={`${styles.textButton} ${styles.previous}`}
+            onClick={() => goTo(page - 1)}
+          >
+            <ArrowRightIcon size={16} className={styles.reviewIcon} />
+            {labels.pager.previous}
+          </button>
+        )}
+        {page < last && (
+          <button
+            type="button"
+            className={`btn btn-primary ${styles.next}`}
+            onClick={() => goTo(page + 1)}
+          >
+            {labels.pager.next}
+            <span className={styles.nextName}>{labels.pager.pages[page + 1]}</span>
+            <ArrowRightIcon size={20} className="arrow" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

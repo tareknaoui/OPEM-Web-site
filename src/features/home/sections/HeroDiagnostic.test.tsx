@@ -264,7 +264,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     expect(screen.getByRole('heading', { name: 'L’organisation alignée' })).toBeInTheDocument();
   });
 
-  it('affiche le résultat dans l’ordre : profil, empreinte, appuis, fragilités, commencer par, rôle', async () => {
+  it('affiche le résultat en quatre pages : profil et empreinte, appuis et fragilités, commencer par et rôle, aller plus loin', async () => {
     renderHero();
     answerAll();
 
@@ -272,22 +272,27 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     const profile = screen.getByRole('heading', { name: 'L’organisation en fondation' });
     await waitFor(() => expect(profile).toHaveFocus());
     const dialog = within(screen.getByRole('dialog'));
-    expect(dialog.getByText('Votre profil')).toBeInTheDocument();
+    expect(dialog.getByText('Votre profil', { selector: 'p' })).toBeInTheDocument();
     expect(
       dialog.getByText(
         'Entreprise privée · Industrie · Moyenne entreprise, de 50 à 250 personnes · Direction générale',
       ),
     ).toBeInTheDocument();
     expect(dialog.getByText(/La plupart des leviers restent à construire/)).toBeInTheDocument();
-    const titles = dialog.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
-    expect(titles).toEqual([
-      'Votre empreinte',
-      'Vos points d’appui',
-      'Vos points de fragilité',
-      'Commencer par',
-      'Votre rôle',
-      'Pour aller plus loin',
+    const titles = () => dialog.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    const pager = within(dialog.getByRole('navigation', { name: 'Parties du résultat' }));
+    expect(pager.getAllByRole('button').map((button) => button.textContent)).toEqual([
+      '01Votre profil',
+      '02Appuis et fragilités',
+      '03Par où commencer',
+      '04Aller plus loin',
     ]);
+    expect(pager.getByRole('button', { name: /Votre profil/ })).toHaveAttribute(
+      'aria-current',
+      'step',
+    );
+    expect(dialog.queryByRole('button', { name: 'Précédent' })).toBeNull();
+    expect(titles()).toEqual(['Votre empreinte']);
 
     // 2. Votre empreinte : radar, niveau global, cadre et humain.
     expect(
@@ -295,27 +300,33 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
         /Cap et priorités, 0 sur 3/,
       ),
     ).toBeInTheDocument();
-    expect(dialog.getByText(/Niveau 1 sur 4/)).toHaveTextContent(
-      'Niveau 1 sur 4, initial0 point sur 21',
-    );
+    expect(dialog.getByText(/Niveau 1 sur 4/)).toHaveTextContent('Niveau 1 sur 4 Initial');
+    expect(dialog.getByText('0 point sur 21')).toBeInTheDocument();
     expect(dialog.getByText('Niveau maximal')).toBeInTheDocument();
     expect(dialog.getByText(/Le cadre et l’humain avancent au même rythme/)).toBeInTheDocument();
 
-    // 3. Aucun point d'appui ; 4. deux fragilités, avec leur constat et leur coût.
+    // Page 2. Aucun point d'appui ; deux fragilités, avec leur constat et leur coût.
+    answer(/^Suivant/);
+    expect(titles()).toEqual(['Vos points d’appui', 'Vos points de fragilité']);
+    await waitFor(() =>
+      expect(dialog.getByRole('heading', { name: 'Vos points d’appui' })).toHaveFocus(),
+    );
     expect(dialog.getByText(/Aucun levier n’est encore solide/)).toBeInTheDocument();
     const weak = dialog.getByRole('heading', { name: 'Vos points de fragilité' }).parentElement!;
     expect(
       within(weak)
         .getAllByRole('heading', { level: 4 })
         .map((h) => h.textContent),
-    ).toEqual(['Cap et priorités', 'Organisation et rôles']);
+    ).toEqual(['Cap et priorités 0 sur 3', 'Organisation et rôles 0 sur 3']);
     expect(
       within(weak).getByText(/Vos orientations se décident au fil des occasions/),
     ).toBeVisible();
     expect(within(weak).getByText(/Chaque occasion est saisie sans être choisie/)).toBeVisible();
 
-    // 5. Commencer par : le cap, sa première action, l'indicateur, les phrases de taille et de
+    // Page 3. Commencer par : le cap, sa première action, l'indicateur, les phrases de taille et de
     // statut (pas de phrase de secteur : l'industrie ne porte pas sur le cap), le domaine.
+    answer(/^Suivant/);
+    expect(titles()).toEqual(['Commencer par', 'Votre rôle']);
     const startBlock = dialog.getByRole('heading', { name: 'Commencer par' }).closest('section')!;
     const block = within(startBlock as HTMLElement);
     expect(block.getByText('Cap et priorités')).toBeInTheDocument();
@@ -334,16 +345,26 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
     );
     expect(block.getByRole('link', { name: /Recevoir mon rapport/ })).toBeInTheDocument();
 
-    // 6. Votre rôle : la phrase de la direction générale.
+    // Votre rôle : la phrase de la direction générale.
     expect(dialog.getByText(/En tant que dirigeant, vous êtes le premier levier/)).toBeVisible();
 
-    // 7. Pour aller plus loin : consultant (réponses en paramètres), formulaire pré-rempli.
+    // Page 4. Pour aller plus loin : consultant (réponses en paramètres), formulaire pré-rempli.
+    // « Recevoir mon rapport détaillé » y mène directement.
+    fireEvent.click(block.getByRole('link', { name: /Recevoir mon rapport/ }));
+    expect(titles()).toEqual(['Pour aller plus loin']);
+    expect(dialog.queryByRole('button', { name: /^Suivant/ })).toBeNull();
     expect(
       dialog.getByRole('link', { name: /Échanger avec un consultant/ }).getAttribute('href'),
     ).toMatch(
       /^\/contact\?source=autodiagnostic&statut=privee&secteur=industrie&effectif=50-250&fonction=direction&strategie=implicite&.*&profil=fondation&maturite=0$/,
     );
     expect(dialog.getByRole('textbox', { name: 'Fonction' })).toHaveValue('Direction générale');
+
+    // Précédent, puis la barre des pages : retour à la première page.
+    answer(/^Précédent/);
+    expect(titles()).toEqual(['Commencer par', 'Votre rôle']);
+    fireEvent.click(pager.getByRole('button', { name: /Votre profil/ }));
+    expect(titles()).toEqual(['Votre empreinte']);
 
     // « Revoir mes réponses » : première question, réponses conservées.
     answer(/Revoir mes réponses/);
@@ -367,6 +388,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
   it('« Refaire le test » efface les réponses et ramène à l’accueil', () => {
     renderHero();
     answerAll();
+    answer(/Aller plus loin/);
     answer(/Refaire le test/);
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByRole('heading', { level: 2 })).toHaveTextContent(/Sept leviers font/);
@@ -379,6 +401,7 @@ describe('Bandeau « Autodiagnostic 7S »', () => {
   it('envoie la demande de rapport, et ne confirme qu’après la réponse du serveur', async () => {
     renderHero();
     answerAll();
+    answer(/Aller plus loin/);
     const dialog = within(screen.getByRole('dialog'));
     const fill = () => {
       fireEvent.change(dialog.getByRole('textbox', { name: 'Nom et prénom' }), {

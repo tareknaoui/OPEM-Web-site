@@ -9,6 +9,11 @@ import styles from './SevenSRadar.module.css';
 
 /** Rayon du niveau 3 (plein), en unités du dessin. */
 const R = 88;
+/**
+ * Part du rayon gardée pour la note 0 : un levier à 0 reste sur sa branche, lisible, au lieu
+ * de se confondre avec les autres au centre.
+ */
+const BASE = 0.2;
 
 /** Formes d'exemple que prend le radar d'invitation, tour à tour (niveaux 0 à 3). */
 const IDLE = [
@@ -38,7 +43,7 @@ type SevenSRadarProps = {
 
 function vertex(index: number, count: number, level: number) {
   const angle = -Math.PI / 2 + (index * 2 * Math.PI) / count;
-  const radius = (R * level) / 3;
+  const radius = R * (BASE + ((1 - BASE) * level) / 3);
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);
   return { x: radius * cos, y: radius * sin, cos, sin };
@@ -100,7 +105,7 @@ export function SevenSRadar({
         aria-hidden="true"
         focusable="false"
       >
-        {[1, 2, 3].map((level) => (
+        {(mode === 'result' ? [0, 1, 2, 3] : [1, 2, 3]).map((level) => (
           <polygon
             key={level}
             className={cx(styles.ring, mode === 'result' && level === 3 && styles.ideal)}
@@ -127,8 +132,10 @@ export function SevenSRadar({
           );
         })}
 
+        {/* L'onde part du point du levier lui-même (sa note), pas du bord du radar. */}
         {beacons.map((axis) => {
-          const { x, y } = vertex(axes.indexOf(axis), count, 3);
+          const index = axes.indexOf(axis);
+          const { x, y } = vertex(index, count, values[index] ?? 0);
           return <circle key={axis} className={styles.beacon} cx={x} cy={y} r={7} />;
         })}
 
@@ -136,12 +143,19 @@ export function SevenSRadar({
           axes.map((axis, index) => {
             const { x, y, cos, sin } = vertex(index, count, 3);
             const lines = labelLines(diagnostic.axes[axis].label);
+            // Résultat : la note du levier sous son nom (« 1 sur 3 »).
+            const score =
+              mode === 'result'
+                ? diagnostic.result.axisScore.replace('{score}', String(scores[axis] ?? 0))
+                : null;
+            const rows = lines.length + (score ? 1 : 0);
             // Nom au-dessus du radar : les lignes montent ; sur les côtés, elles sont centrées.
-            const shift = sin < -0.5 ? lines.length - 1 : sin > 0.5 ? 0 : (lines.length - 1) / 2;
+            const shift = sin < -0.5 ? rows - 1 : sin > 0.5 ? 0 : (rows - 1) / 2;
             return (
               <text
                 key={axis}
                 className={styles.label}
+                data-weak={(mode === 'result' && weak.includes(axis)) || undefined}
                 x={x + cos * 14}
                 y={y + sin * 14}
                 textAnchor={Math.abs(cos) < 0.25 ? 'middle' : cos > 0 ? 'start' : 'end'}
@@ -156,6 +170,11 @@ export function SevenSRadar({
                     {line}
                   </tspan>
                 ))}
+                {score && (
+                  <tspan className={styles.score} x={x + cos * 14} dy={`${LABEL_LINE * 1.05}em`}>
+                    {score}
+                  </tspan>
+                )}
               </text>
             );
           })}

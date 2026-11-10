@@ -153,6 +153,9 @@
 /* Chaque moitié commence sa propre ligne. */
 .introLine {
   display: block;
+  position: relative;
+  left: 0px;
+  top: 36px;
 }
 
 /* Le bouton vers les expertises : blanc sur bleu nuit, comme celui du bandeau IA. */
@@ -164,6 +167,9 @@
   transition:
     background-color 200ms,
     border-color 200ms;
+  position: relative;
+  left: 2px;
+  top: 36px;
 }
 
 .cta:hover {

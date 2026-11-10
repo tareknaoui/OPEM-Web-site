@@ -105,6 +105,27 @@
   transition: fill 300ms;
 }
 
+/* Résultat : nom des leviers fragiles en couleur des ondes ; note du levier dessous, plus
+   discrète. */
+.label[data-weak] {
+  fill: var(--beacon);
+}
+
+/* Résultat sur blanc : les points et les ondes des leviers fragiles en ambre (repère graphique,
+   jamais du texte), leur nom en bleu OPEM. */
+.radar[data-tone='light'][data-mode='result'] {
+  --beacon: var(--opem-amber);
+}
+
+.radar[data-tone='light'] .label[data-weak] {
+  fill: var(--color-primary);
+}
+
+.score {
+  font-weight: 500;
+  opacity: 0.8;
+}
+
 .label:lang(ar) {
   font-family: var(--font-arabic);
   font-size: 14px;
@@ -118,9 +139,10 @@
   }
 }
 
+/* Ordinateur : le radar partage la largeur avec les lectures du score (environ 40 rem). */
 @media (min-width: 64em) {
   .radar[data-mode='result'] .label {
-    font-size: 7.5px;
+    font-size: 10px;
   }
 }
 

@@ -204,6 +204,9 @@ export type HomeContent = {
       yours: string;
       ideal: string;
       footprintTitle: string;
+      /** Titres des deux lectures du score, à côté du radar. */
+      levelTitle: string;
+      balanceTitle: string;
       strengthsTitle: string;
       noStrength: string;
       weakTitle: string;
@@ -243,6 +246,8 @@ export type HomeContent = {
       retake: string;
       /** Ramène à la première question, réponses conservées. */
       restart: string;
+      /** Le résultat en pages : nom de la navigation, nom de chaque page, boutons. */
+      pager: { label: string; pages: string[]; previous: string; next: string };
     };
     /** Nom et texte de chaque profil. */
     profiles: Record<DiagnosticProfile, { name: string; text: string }>;
@@ -1242,6 +1247,8 @@ const fr: HomeContent = {
       // Pas « Organisation alignée » : ne pas confondre la forme idéale avec le profil du même nom.
       ideal: 'Niveau maximal',
       footprintTitle: 'Votre empreinte',
+      levelTitle: 'Votre niveau global',
+      balanceTitle: 'Le cadre et l’humain',
       strengthsTitle: 'Vos points d’appui',
       noStrength:
         'Aucun levier n’est encore solide : mieux vaut avancer pas à pas, un chantier à la fois.',
@@ -1288,6 +1295,12 @@ const fr: HomeContent = {
       },
       retake: 'Refaire le test',
       restart: 'Revoir mes réponses',
+      pager: {
+        label: 'Parties du résultat',
+        pages: ['Votre profil', 'Appuis et fragilités', 'Par où commencer', 'Aller plus loin'],
+        previous: 'Précédent',
+        next: 'Suivant',
+      },
     },
     profiles: {
       alignee: {
@@ -2621,6 +2634,8 @@ const ar: HomeContent = {
       yours: 'مؤسستكم',
       ideal: 'المستوى الأقصى',
       footprintTitle: 'بصمتكم',
+      levelTitle: 'مستواكم العام',
+      balanceTitle: 'الإطار والجانب الإنساني',
       strengthsTitle: 'نقاط ارتكازكم',
       noStrength: 'لا توجد بعد رافعة متينة: الأفضل التقدم خطوة خطوة، ورشة واحدة في كل مرة.',
       weakTitle: 'نقاط هشاشتكم',
@@ -2665,6 +2680,12 @@ const ar: HomeContent = {
       },
       retake: 'إعادة الاختبار',
       restart: 'مراجعة إجاباتي',
+      pager: {
+        label: 'أقسام النتيجة',
+        pages: ['ملفّكم', 'الارتكاز والهشاشة', 'من أين نبدأ', 'للمضي أبعد'],
+        previous: 'السابق',
+        next: 'التالي',
+      },
     },
     profiles: {
       alignee: {

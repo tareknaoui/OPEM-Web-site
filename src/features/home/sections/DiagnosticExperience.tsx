@@ -280,13 +280,15 @@ export function DiagnosticExperience({ diagnostic, open, onClose }: DiagnosticEx
     <dialog
       ref={dialogRef}
       className={styles.dialog}
+      data-mode={mode}
       aria-label={diagnostic.label}
       onClose={handleClose}
       onKeyDown={onKeyDown}
     >
       {open && (
         <>
-          <LeverScenes active={scene} />
+          {/* Résultat sur fond blanc : pas d'illustration de fond (bleu nuit). */}
+          {mode !== 'result' && <LeverScenes active={scene} />}
           <header className={styles.top} data-mode={mode}>
             <div className={cx('container', styles.topInner)}>
               {!welcome && (
