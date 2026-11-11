@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import type { Plugin } from 'vite';
+import { PUBLISHED_PAGES } from './src/config/pages.ts';
 
 /* ==========================================================================
    Référencement, au moment du build :
@@ -20,27 +21,10 @@ import type { Plugin } from 'vite';
 const DEFAULT_SITE_URL = 'https://sas-fawn-delta.vercel.app';
 
 /**
- * Pages publiées, dans le plan du site. N'y mettre que les pages réellement construites
- * (une adresse qui mène à « Page introuvable » nuit au référencement).
+ * Pages publiées, dans le plan du site : la liste de src/config/pages.ts, partagée avec la page
+ * « Plan du site ».
  */
-const PAGES = [
-  '/',
-  '/le-cabinet',
-  '/nos-expertises',
-  '/expertises/etudes-strategiques',
-  '/expertises/accompagnement-des-organisations',
-  '/expertises/coaching-professionnel',
-  '/expertises/certification-et-accreditation',
-  '/expertises/communication-institutionnelle',
-  '/formation',
-  '/missions',
-  '/ia-appliquee',
-  '/eclairages',
-  '/actualites',
-  '/contact',
-  '/contact/demande-de-rendez-vous',
-  '/contact/rejoindre-notre-reseau',
-];
+const PAGES: readonly string[] = PUBLISHED_PAGES;
 
 type PageMeta = {
   /** Titre pour Google et pour l'onglet, mot pour mot (le nom du site n'est pas ajouté). */
@@ -174,6 +158,35 @@ const PAGE_META: Record<string, PageMeta> = {
     socialTitle: 'Nous contacter · OPEM',
     socialDescription:
       'Un projet, une question ? Appelez-nous, écrivez-nous ou demandez un rendez-vous. OPEM, 16 rue La Bruyère, Bouzaréah, Alger.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  // Pages légales : titres identiques à src/features/legal/content.ts.
+  '/mentions-legales': {
+    title: 'Mentions légales · OPEM',
+    description:
+      'Éditeur du site, directrice de la publication, hébergement et propriété intellectuelle : les informations légales du site d’OPEM.',
+    socialTitle: 'Mentions légales · OPEM',
+    socialDescription:
+      'Éditeur du site, directrice de la publication, hébergement et propriété intellectuelle : les informations légales du site d’OPEM.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/confidentialite': {
+    title: 'Politique de confidentialité · OPEM',
+    description:
+      'Quelles données OPEM recueille par ses formulaires, pourquoi, combien de temps elle les garde, et comment exercer vos droits (loi n° 18-07).',
+    socialTitle: 'Politique de confidentialité · OPEM',
+    socialDescription:
+      'Quelles données OPEM recueille par ses formulaires, pourquoi, combien de temps elle les garde, et comment exercer vos droits (loi n° 18-07).',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/plan-du-site': {
+    title: 'Plan du site · OPEM',
+    description: 'Toutes les pages du site d’OPEM, rubrique par rubrique.',
+    socialTitle: 'Plan du site · OPEM',
+    socialDescription: 'Toutes les pages du site d’OPEM, rubrique par rubrique.',
     image: SHARE.image,
     imageAlt: SHARE.alt,
   },

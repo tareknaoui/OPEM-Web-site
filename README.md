@@ -418,13 +418,19 @@ dépend du chemin du projet) : c'est normal, le rendu est identique.
       6 valeurs (proposées), agrément n° 539 et dispositif qualité de la formation (catalogue 2021) toujours valables.
 - [ ] Traductions arabes.
 - [ ] Vraies photos et, idéalement, une vidéo tournée au cabinet.
+- [ ] **Mentions légales** : forme juridique, capital, RC, NIF, NIS et hébergeur, à renseigner
+      dans `src/config/company.ts` (`legalIdentity`). Tant qu'une valeur vaut `null`, la page
+      affiche « à compléter ». Textes des pages légales : `src/features/legal/content.ts`
+      (mettre à jour la politique de confidentialité si un formulaire change).
 
 **Développement**
 
-- [ ] Pages du menu : seules `/`, `/le-cabinet`, `/about` et `/contact` existent (les deux
-      dernières sont des ébauches). Toutes les autres routes de `menu.ts` (`/expertises/…`,
-      `/formation/…`, `/missions/…`, `/eclairages/…`, `/actualites/…`, mentions légales…)
-      affichent la page 404.
+- [x] Pages légales : `/mentions-legales`, `/confidentialite`, `/plan-du-site` (le plan est
+      construit depuis le menu, sans les adresses qui mènent à la page 404).
+- [ ] Pages du menu encore sans page (404) : sous-rubriques de `/eclairages/…` et
+      `/actualites/…`, articles et actualités liés depuis l'accueil. Liste des pages publiées :
+      `src/config/pages.ts` (partagée par sitemap.xml et la page « Plan du site »).
+- [ ] Point d'accès `/api/rapport` (rapport détaillé de l'autodiagnostic) : n'existe pas encore.
 - [ ] Page « Intelligence artificielle appliquée » (`/expertises/intelligence-artificielle`,
       bouton du bandeau IA) : à créer, et à ajouter au menu « Nos expertises ».
 - [ ] Formulaire « Être rappelé » / demande de devis (`/contact`), pré-rempli avec les réponses

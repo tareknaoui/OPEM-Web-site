@@ -1,0 +1,353 @@
+/* Pages légales (mentions, confidentialité, plan du site) : en-tête bleu nuit comme « IA
+   appliquée », puis un texte sobre et lisible sur blanc. Ambre seulement en repère sur le bleu
+   nuit (trait du surtitre). Aucune animation : ce sont des pages qu'on lit. */
+
+.hero {
+  background: var(--opem-night);
+  color: var(--color-on-nav);
+}
+
+.heroInner {
+  padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 clamp(1.25rem, 1rem + 1vw, 2rem);
+  color: var(--opem-blue-30);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kicker::before {
+  content: '';
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-amber);
+}
+
+.headline {
+  margin: 0;
+  color: var(--color-on-nav);
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 1.25rem + 3.6vw, 4.25rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.intro {
+  max-width: 42rem;
+  margin: clamp(1.25rem, 1rem + 1vw, 2rem) 0 0;
+  color: var(--opem-blue-30);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.65;
+}
+
+.updated {
+  margin: var(--space-6) 0 0;
+  color: var(--opem-blue-30);
+  font-size: 0.875rem;
+}
+
+.kicker:lang(ar),
+.headline:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.headline:lang(ar) {
+  line-height: 1.3;
+}
+
+/* ---------- Corps : sommaire + sections ---------- */
+
+.body {
+  display: grid;
+  gap: var(--space-10);
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--section-space);
+}
+
+.plainBody {
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--section-space);
+}
+
+.toc {
+  padding: var(--space-6);
+  background: var(--color-surface);
+}
+
+.tocTitle {
+  margin: 0 0 var(--space-3);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tocList {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.tocList a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.tocList a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.sections {
+  display: grid;
+  gap: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  min-width: 0;
+  max-width: 48rem;
+}
+
+.section {
+  scroll-margin-top: calc(var(--header-height-compact) + var(--space-6));
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--color-primary);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.sectionTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.number {
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.paragraph {
+  margin: var(--space-4) 0 0;
+  line-height: 1.7;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  line-height: 1.6;
+}
+
+.list li::marker {
+  color: var(--opem-green);
+}
+
+/* Lignes « libellé : valeur ». */
+.facts {
+  display: grid;
+  margin: 0;
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fact:first-child {
+  padding-top: 0;
+}
+
+.fact dt {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.fact dd {
+  margin: 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 40em) {
+  .fact {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .fact dt {
+    font-size: inherit;
+  }
+}
+
+/* Valeur qu'OPEM doit encore fournir : visible, sans alarmer. */
+.pending {
+  color: var(--color-muted);
+  font-style: italic;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.pending:lang(ar) {
+  font-style: normal;
+}
+
+/* Un formulaire par carte (politique de confidentialité). */
+.cards {
+  display: grid;
+  gap: var(--grid-gap);
+  margin-top: var(--space-6);
+}
+
+.card {
+  padding: var(--space-6);
+  background: var(--color-surface);
+}
+
+.card .fact {
+  grid-template-columns: 1fr;
+  gap: var(--space-1, 0.25rem);
+  border-color: color-mix(in srgb, var(--opem-blue) 15%, transparent);
+}
+
+.card .fact:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.card .fact dt {
+  color: var(--color-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.card .fact dt:lang(ar) {
+  letter-spacing: 0;
+}
+
+.cardTitle {
+  margin: 0 0 var(--space-4);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.cardTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+@media (min-width: 48em) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .body {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: clamp(3rem, 2rem + 3vw, 6rem);
+    align-items: start;
+  }
+
+  .toc {
+    position: sticky;
+    top: calc(var(--header-height-compact) + var(--space-6));
+  }
+}
+
+/* ---------- Plan du site ---------- */
+
+.sitemap {
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 2vw, 3rem) var(--grid-gap);
+}
+
+.group {
+  min-width: 0;
+}
+
+.groupTitle {
+  margin: 0 0 var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--color-primary);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.groupTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.groupTitle a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.groupTitle a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.tree {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.45;
+}
+
+.tree .tree {
+  margin-top: var(--space-3);
+  padding-inline-start: var(--space-4);
+  border-inline-start: 2px solid var(--color-border);
+}
+
+.tree a {
+  color: var(--color-text);
+}
+
+.tree a:hover {
+  color: var(--color-primary);
+}
+
+@media (min-width: 40em) {
+  .sitemap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .sitemap {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

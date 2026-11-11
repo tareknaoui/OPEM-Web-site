@@ -97,6 +97,24 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: 'mentions-legales',
+        lazy: async () => ({
+          Component: (await import('@/features/legal/MentionsPage')).default,
+        }),
+      },
+      {
+        path: 'confidentialite',
+        lazy: async () => ({
+          Component: (await import('@/features/legal/PrivacyPage')).default,
+        }),
+      },
+      {
+        path: 'plan-du-site',
+        lazy: async () => ({
+          Component: (await import('@/features/legal/SitemapPage')).default,
+        }),
+      },
+      {
         path: '*',
         lazy: async () => ({
           Component: (await import('@/features/not-found/NotFoundPage')).default,
