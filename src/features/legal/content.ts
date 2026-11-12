@@ -77,7 +77,7 @@ export const mentionsContent: Record<Lang, LegalPageContent> = {
           {
             kind: 'facts',
             rows: [
-              { label: 'Raison sociale', value: `${company.shortName} – ${company.fullName}` },
+              { label: 'Raison sociale', value: `${company.shortName} - ${company.fullName}` },
               { label: 'Forme juridique', value: value(legalIdentity.legalForm) },
               { label: 'Capital social', value: value(legalIdentity.capital) },
               { label: 'Siège social', value: company.address.fr },
@@ -191,7 +191,7 @@ export const mentionsContent: Record<Lang, LegalPageContent> = {
           {
             kind: 'facts',
             rows: [
-              { label: 'التسمية', value: `${company.shortName} – ${company.fullName}` },
+              { label: 'التسمية', value: `${company.shortName} - ${company.fullName}` },
               { label: 'الشكل القانوني', value: value(legalIdentity.legalForm) },
               { label: 'رأس المال الاجتماعي', value: value(legalIdentity.capital) },
               { label: 'المقر الاجتماعي', value: company.address.ar },
@@ -313,7 +313,7 @@ export const privacyContent: Record<Lang, LegalPageContent> = {
             rows: [
               {
                 label: 'Responsable du traitement',
-                value: `${company.shortName} – ${company.fullName}, ${company.address.fr}`,
+                value: `${company.shortName} - ${company.fullName}, ${company.address.fr}`,
               },
               { label: 'Déléguée à la protection des données', value: company.manager.fr },
               { label: 'Pour la joindre', value: [mail(company.privacyEmail)] },
@@ -510,7 +510,7 @@ export const privacyContent: Record<Lang, LegalPageContent> = {
             rows: [
               {
                 label: 'المسؤول عن المعالجة',
-                value: `${company.shortName} – ${company.fullName}، ${company.address.ar}`,
+                value: `${company.shortName} - ${company.fullName}، ${company.address.ar}`,
               },
               { label: 'مندوبة حماية المعطيات', value: company.manager.ar },
               { label: 'للتواصل معها', value: [mail(company.privacyEmail)] },

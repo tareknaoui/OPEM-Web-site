@@ -207,7 +207,7 @@ export function Footer() {
       <div className={styles.bottom}>
         <div className={cx('container', styles.bottomInner)}>
           <p className={styles.copyright}>
-            © {new Date().getFullYear()} {company.shortName} — {company.fullName}. {t.footer.rights}
+            © {new Date().getFullYear()} {company.shortName} - {company.fullName}. {t.footer.rights}
           </p>
           <ul className={styles.legal} aria-label={t.footer.legal}>
             {legalLinks.map(({ key, href }) => (

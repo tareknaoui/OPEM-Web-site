@@ -120,11 +120,12 @@
   line-height: 1.12;
   letter-spacing: -0.025em;
   text-wrap: balance;
+  margin-top: 51px;
 }
 
 .openingTitleEnd {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: 40px;
   color: var(--opem-blue);
 }
 

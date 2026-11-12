@@ -16,7 +16,7 @@ export const strings = {
     footer: {
       ctaTitle: 'Un projet, une question ?',
       ctaText:
-        'Certification, formation, accompagnement : un consultant OPEM vous rappelle pour en parler.',
+        'Études, accompagnement, formation, coaching, certification, communication ou IA : un consultant OPEM vous rappelle pour en parler.',
       callUs: (phone: string) => `Appeler le ${phone}`,
       pitch:
         'Cabinet de conseil : études stratégiques, accompagnement des organisations, formation, coaching et certification.',
@@ -52,7 +52,8 @@ export const strings = {
     languageSwitcher: 'اختيار اللغة',
     footer: {
       ctaTitle: 'مشروع أو سؤال؟',
-      ctaText: 'الإشهاد، التكوين، المرافقة: يتصل بكم أحد مستشاري OPEM للحديث عن ذلك.',
+      ctaText:
+        'الدراسات، المرافقة، التكوين، الكوتشينغ، الإشهاد، الاتصال أو الذكاء الاصطناعي: يتصل بكم أحد مستشاري OPEM للحديث عن ذلك.',
       callUs: (phone: string) => `اتصل بالرقم ${phone}`,
       pitch: 'مكتب استشارات في التسيير: دراسات استراتيجية، مرافقة المؤسسات، تكوين، كوتشينغ وإشهاد.',
       nav: 'روابط تذييل الصفحة',

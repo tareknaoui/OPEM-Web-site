@@ -148,6 +148,9 @@
   color: #f3f6fa; /* bleu 5 % : un cran plus clair que --opem-blue-10 */
   font-size: 1.0625rem;
   line-height: 1.8;
+  position: relative;
+  left: -5px;
+  top: -45px;
 }
 
 /* Chaque moitié commence sa propre ligne. */
@@ -155,7 +158,7 @@
   display: block;
   position: relative;
   left: 0px;
-  top: 36px;
+  top: 51px;
 }
 
 /* Le bouton vers les expertises : blanc sur bleu nuit, comme celui du bandeau IA. */
@@ -168,8 +171,8 @@
     background-color 200ms,
     border-color 200ms;
   position: relative;
-  left: 2px;
-  top: 36px;
+  left: -5px;
+  top: 5px;
 }
 
 .cta:hover {
