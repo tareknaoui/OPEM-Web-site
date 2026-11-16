@@ -202,6 +202,13 @@
   text-wrap: balance;
 }
 
+/* Les lignes du titre montent derrière un masque (data-motion="title") : un peu de place sous
+   chaque ligne pour que les jambages (g, p, ’) ne soient pas rognés, sans changer l'interligne. */
+.title > * {
+  padding-block-end: 0.14em;
+  margin-block-end: -0.14em;
+}
+
 .subtitle {
   color: var(--opem-blue);
   font-family: var(--font-heading);
