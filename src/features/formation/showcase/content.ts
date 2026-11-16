@@ -47,7 +47,22 @@ export type ShowcaseIcon =
   | 'meal'
   | 'materials'
   | 'test'
-  | 'certificate';
+  | 'certificate'
+  // Fonctions visées (« Pour qui ») et prérequis.
+  | 'leader'
+  | 'quality'
+  | 'people'
+  | 'improvement'
+  | 'manager'
+  | 'company'
+  | 'experience'
+  | 'confidential'
+  // « Pourquoi cette formation » : symptômes constatés, puis les deux volets de la singularité.
+  | 'overlap'
+  | 'escalate'
+  | 'bypass'
+  | 'inside'
+  | 'outside';
 
 export type TrainingShowcase = {
   /** Identifiant de la session dans l'agenda, et fin de l'adresse de la page. */
@@ -70,16 +85,28 @@ export type TrainingShowcase = {
     place: string;
     city: string;
   };
-  /** lead : le constat ; edge : ce qui distingue la formation (encadré « Sa singularité »). */
-  why: { title: string; lead: string; edge: string };
+  /**
+   * Pourquoi cette formation, du problème à la solution : symptoms, ce que le participant
+   * constate (2 à 4 cartes) ; answer, ce que la formation apporte ; edge, ce qui la distingue
+   * (« Sa singularité », en deux volets reliés).
+   */
+  why: {
+    title: string;
+    symptoms: { icon: ShowcaseIcon; text: string }[];
+    answer: string;
+    edge: { icon: ShowcaseIcon; label: string; text: string }[];
+  };
   /** Titre de « Quatre temps forts » (la suite après la virgule change d'une formation à l'autre). */
   stepsTitle: string;
   /** Exactement quatre temps forts, chacun avec son pictogramme. */
   steps: { icon: ShowcaseIcon; title: string; text: string }[];
   /** Ce que vous emportez : une tuile par acquis, avec son pictogramme. */
   gains: { icon: ShowcaseIcon; text: string }[];
-  /** roles : les fonctions visées, en étiquettes ; prerequisites : un point par prérequis. */
-  audience: { roles: string[]; prerequisites: string[] };
+  /** roles : les fonctions visées (une carte chacune) ; prerequisites : un point par prérequis. */
+  audience: {
+    roles: { icon: ShowcaseIcon; label: string }[];
+    prerequisites: { icon: ShowcaseIcon; text: string }[];
+  };
   /** Ce que la session comprend (un pictogramme par élément), puis qui l'anime. */
   includes: { items: { icon: ShowcaseIcon; text: string }[]; trainer: string };
   /** Le premier est mis en avant ; les deux suivants dessous. */
@@ -128,6 +155,8 @@ export type ShowcaseLabels = {
   trainer: string;
   /** Titre de l'encadré de « Pourquoi cette formation ». */
   edge: string;
+  /** Petit titre au-dessus des symptômes constatés. */
+  symptoms: string;
   voices: { eyebrow: string; title: string };
   figures: { eyebrow: string; items: { value: string; label: string }[] };
   cta: {
@@ -193,6 +222,7 @@ const LABELS_FR: ShowcaseLabels = {
   includes: 'La session comprend',
   trainer: 'Animation',
   edge: 'Sa singularité',
+  symptoms: 'Vous les constatez',
   voices: { eyebrow: 'Ils en parlent', title: 'La parole aux participants' },
   figures: {
     eyebrow: 'OPEM en chiffres',
@@ -269,6 +299,7 @@ const LABELS_AR: ShowcaseLabels = {
   includes: 'تشمل الدورة',
   trainer: 'التأطير',
   edge: 'ما يميّزه',
+  symptoms: 'ما تلاحظونه',
   voices: { eyebrow: 'شهادات', title: 'الكلمة للمشاركين' },
   figures: {
     eyebrow: 'OPEM في أرقام',
@@ -325,8 +356,25 @@ const FR: TrainingShowcase[] = [
     },
     why: {
       title: fr('Constater un blocage ne suffit pas : il faut le prouver, puis le corriger.'),
-      lead: 'Des responsabilités qui se chevauchent, des décisions qui remontent toujours à la direction, des processus contournés sur le terrain. Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.',
-      edge: 'Vous apprenez à conduire vous-même un diagnostic interne léger et régulier, et à reconnaître le moment où un regard extérieur apporte le plus, pour commander et exploiter un diagnostic externe.',
+      symptoms: [
+        { icon: 'overlap', text: 'Des responsabilités qui se chevauchent' },
+        { icon: 'escalate', text: 'Des décisions qui remontent toujours à la direction' },
+        { icon: 'bypass', text: 'Des processus contournés sur le terrain' },
+      ],
+      answer:
+        'Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.',
+      edge: [
+        {
+          icon: 'inside',
+          label: 'En interne',
+          text: 'Conduire vous-même un diagnostic léger et régulier',
+        },
+        {
+          icon: 'outside',
+          label: 'Avec un regard extérieur',
+          text: 'Reconnaître le moment où il apporte le plus, pour commander et exploiter un diagnostic externe',
+        },
+      ],
     },
     stepsTitle: 'Quatre temps forts, de l’analyse à l’action',
     steps: [
@@ -362,17 +410,23 @@ const FR: TrainingShowcase[] = [
     ],
     audience: {
       roles: [
-        'Directeurs',
-        'Responsables organisation',
-        'Qualité',
-        'Ressources humaines',
-        'Amélioration continue',
-        'Chefs de service',
-        'Dirigeants de PME',
+        { icon: 'leader', label: 'Directeurs' },
+        { icon: 'structure', label: 'Responsables organisation' },
+        { icon: 'quality', label: 'Qualité' },
+        { icon: 'people', label: 'Ressources humaines' },
+        { icon: 'improvement', label: 'Amélioration continue' },
+        { icon: 'manager', label: 'Chefs de service' },
+        { icon: 'company', label: 'Dirigeants de PME' },
       ],
       prerequisites: [
-        'Une première expérience d’encadrement ou de fonction transversale',
-        'Une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité',
+        {
+          icon: 'experience',
+          text: 'Une première expérience d’encadrement ou de fonction transversale',
+        },
+        {
+          icon: 'confidential',
+          text: 'Une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité',
+        },
       ],
     },
     includes: {
@@ -429,8 +483,20 @@ const AR: TrainingShowcase[] = [
     },
     why: {
       title: 'ملاحظة الانسداد لا تكفي: يجب إثباته، ثم معالجته.',
-      lead: 'مسؤوليات متداخلة، وقرارات تعود دائمًا إلى الإدارة، وعمليات يُلتفّ عليها في الميدان. يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على تنظيم مؤسستكم.',
-      edge: 'تتعلّمون كيف تُجرون بأنفسكم تشخيصًا داخليًا خفيفًا ومنتظمًا، وكيف تدركون اللحظة التي تكون فيها النظرة الخارجية أجدى، لطلب تشخيص خارجي والاستفادة منه.',
+      symptoms: [
+        { icon: 'overlap', text: 'مسؤوليات متداخلة' },
+        { icon: 'escalate', text: 'قرارات تعود دائمًا إلى الإدارة' },
+        { icon: 'bypass', text: 'عمليات يُلتفّ عليها في الميدان' },
+      ],
+      answer: 'يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على تنظيم مؤسستكم.',
+      edge: [
+        { icon: 'inside', label: 'داخليًا', text: 'تُجرون بأنفسكم تشخيصًا خفيفًا ومنتظمًا' },
+        {
+          icon: 'outside',
+          label: 'بنظرة خارجية',
+          text: 'تدركون اللحظة التي تكون فيها أجدى، لطلب تشخيص خارجي والاستفادة منه',
+        },
+      ],
     },
     stepsTitle: 'أربع محطات، من التحليل إلى العمل',
     steps: [
@@ -463,17 +529,20 @@ const AR: TrainingShowcase[] = [
     ],
     audience: {
       roles: [
-        'المديرون',
-        'مسؤولو التنظيم',
-        'الجودة',
-        'الموارد البشرية',
-        'التحسين المستمر',
-        'رؤساء المصالح',
-        'مسيّرو المؤسسات الصغيرة والمتوسطة',
+        { icon: 'leader', label: 'المديرون' },
+        { icon: 'structure', label: 'مسؤولو التنظيم' },
+        { icon: 'quality', label: 'الجودة' },
+        { icon: 'people', label: 'الموارد البشرية' },
+        { icon: 'improvement', label: 'التحسين المستمر' },
+        { icon: 'manager', label: 'رؤساء المصالح' },
+        { icon: 'company', label: 'مسيّرو المؤسسات الصغيرة والمتوسطة' },
       ],
       prerequisites: [
-        'خبرة أولى في التأطير أو في وظيفة عرضية',
-        'وضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية',
+        { icon: 'experience', text: 'خبرة أولى في التأطير أو في وظيفة عرضية' },
+        {
+          icon: 'confidential',
+          text: 'وضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية',
+        },
       ],
     },
     includes: {
