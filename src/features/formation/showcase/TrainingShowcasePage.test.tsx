@@ -49,16 +49,31 @@ describe('Page vitrine d’une formation', () => {
       'OPEM en chiffres',
       'Recevez la fiche technique détaillée et votre devis',
     ]);
-    // Les quatre temps forts, puis « Pour qui » et « La session comprend ».
+    // Les quatre temps forts, puis « Pour qui », « Prérequis » et « La session comprend ».
     expect(screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
       'Cadrer et collecter',
       'Lire l’organisation',
       'Comprendre et décider',
       'Convaincre et agir',
       'Pour qui',
+      'Prérequis',
       'La session comprend',
     ]);
     expect(screen.getByText(/Contenu protégé/)).toBeInTheDocument();
+  });
+
+  it('du texte découpé : singularité encadrée, fonctions en étiquettes, session en éléments', () => {
+    renderPage();
+    expect(screen.getByText('Sa singularité')).toBeInTheDocument();
+    expect(screen.getByText('Dirigeants de PME')).toBeInTheDocument();
+    for (const entry of [
+      'Repas et pauses-café',
+      'Supports et outils remis à chaque participant',
+      'Test final des connaissances',
+      'Attestation de participation',
+    ]) {
+      expect(screen.getByText(entry)).toBeInTheDocument();
+    }
   });
 
   it('la barre d’ancres mène à chaque bloc de la page', () => {

@@ -31,6 +31,24 @@ export const SHOWCASE_CONTACT = {
   phone: { display: '0770 442 645', href: 'tel:+213770442645' },
 } as const;
 
+/**
+ * Pictogrammes disponibles (Phosphor, voir ICONS dans TrainingShowcasePage.tsx). Pour une autre
+ * formation, choisir dans cette liste ; en ajouter un = l'importer et l'ajouter à ICONS.
+ */
+export type ShowcaseIcon =
+  | 'collect'
+  | 'structure'
+  | 'decide'
+  | 'present'
+  | 'draft'
+  | 'toolbox'
+  | 'plan'
+  | 'compass'
+  | 'meal'
+  | 'materials'
+  | 'test'
+  | 'certificate';
+
 export type TrainingShowcase = {
   /** Identifiant de la session dans l'agenda, et fin de l'adresse de la page. */
   id: string;
@@ -52,14 +70,18 @@ export type TrainingShowcase = {
     place: string;
     city: string;
   };
-  why: { title: string; lead: string; text: string };
+  /** lead : le constat ; edge : ce qui distingue la formation (encadré « Sa singularité »). */
+  why: { title: string; lead: string; edge: string };
   /** Titre de « Quatre temps forts » (la suite après la virgule change d'une formation à l'autre). */
   stepsTitle: string;
-  /** Exactement quatre temps forts. */
-  steps: { title: string; text: string }[];
-  gains: string[];
-  audience: { text: string; prerequisites: string };
-  includes: { text: string; trainer: string };
+  /** Exactement quatre temps forts, chacun avec son pictogramme. */
+  steps: { icon: ShowcaseIcon; title: string; text: string }[];
+  /** Ce que vous emportez : une tuile par acquis, avec son pictogramme. */
+  gains: { icon: ShowcaseIcon; text: string }[];
+  /** roles : les fonctions visées, en étiquettes ; prerequisites : un point par prérequis. */
+  audience: { roles: string[]; prerequisites: string[] };
+  /** Ce que la session comprend (un pictogramme par élément), puis qui l'anime. */
+  includes: { items: { icon: ShowcaseIcon; text: string }[]; trainer: string };
   /** Le premier est mis en avant ; les deux suivants dessous. */
   voices: { quote: string; author: string }[];
 };
@@ -101,7 +123,11 @@ export type ShowcaseLabels = {
   steps: { eyebrow: string; note: string };
   gains: { eyebrow: string; title: string };
   audience: string;
+  prerequisites: string;
   includes: string;
+  trainer: string;
+  /** Titre de l'encadré de « Pourquoi cette formation ». */
+  edge: string;
   voices: { eyebrow: string; title: string };
   figures: { eyebrow: string; items: { value: string; label: string }[] };
   cta: {
@@ -163,7 +189,10 @@ const LABELS_FR: ShowcaseLabels = {
   },
   gains: { eyebrow: 'Ce que vous emportez', title: 'Vous repartez avec du concret' },
   audience: 'Pour qui',
+  prerequisites: 'Prérequis',
   includes: 'La session comprend',
+  trainer: 'Animation',
+  edge: 'Sa singularité',
   voices: { eyebrow: 'Ils en parlent', title: 'La parole aux participants' },
   figures: {
     eyebrow: 'OPEM en chiffres',
@@ -236,7 +265,10 @@ const LABELS_AR: ShowcaseLabels = {
   },
   gains: { eyebrow: 'ما تخرجون به', title: 'تعودون بنتائج ملموسة' },
   audience: 'لمن هذا التكوين',
+  prerequisites: 'المتطلبات المسبقة',
   includes: 'تشمل الدورة',
+  trainer: 'التأطير',
+  edge: 'ما يميّزه',
   voices: { eyebrow: 'شهادات', title: 'الكلمة للمشاركين' },
   figures: {
     eyebrow: 'OPEM في أرقام',
@@ -294,45 +326,64 @@ const FR: TrainingShowcase[] = [
     why: {
       title: fr('Constater un blocage ne suffit pas : il faut le prouver, puis le corriger.'),
       lead: 'Des responsabilités qui se chevauchent, des décisions qui remontent toujours à la direction, des processus contournés sur le terrain. Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.',
-      text: fr(
-        'Sa singularité : vous apprenez à conduire vous-même un diagnostic interne léger et régulier, et à reconnaître le moment où un regard extérieur apporte le plus, pour commander et exploiter un diagnostic externe.',
-      ),
+      edge: 'Vous apprenez à conduire vous-même un diagnostic interne léger et régulier, et à reconnaître le moment où un regard extérieur apporte le plus, pour commander et exploiter un diagnostic externe.',
     },
     stepsTitle: 'Quatre temps forts, de l’analyse à l’action',
     steps: [
       {
+        icon: 'collect',
         title: 'Cadrer et collecter',
         text: 'Bâtir un diagnostic sur des faits, non sur des impressions.',
       },
       {
+        icon: 'structure',
         title: 'Lire l’organisation',
         text: 'Structure, responsabilités et processus à l’épreuve du réel.',
       },
       {
+        icon: 'decide',
         title: 'Comprendre et décider',
         text: 'Causes, priorités et choix entre regard interne et regard externe.',
       },
       {
+        icon: 'present',
         title: 'Convaincre et agir',
         text: 'Restitution, plan d’action et mise en pratique dans votre structure.',
       },
     ],
     gains: [
-      fr('Une première ébauche de diagnostic de votre propre structure ;'),
-      fr('Un dossier d’outils directement utilisables à votre retour ;'),
-      fr('Un plan d’action priorisé, à affiner avec vos équipes ;'),
-      'Des critères pour choisir entre diagnostic interne et diagnostic externe.',
+      { icon: 'draft', text: 'Une première ébauche de diagnostic de votre propre structure' },
+      { icon: 'toolbox', text: 'Un dossier d’outils directement utilisables à votre retour' },
+      { icon: 'plan', text: 'Un plan d’action priorisé, à affiner avec vos équipes' },
+      {
+        icon: 'compass',
+        text: 'Des critères pour choisir entre diagnostic interne et diagnostic externe',
+      },
     ],
     audience: {
-      text: 'Directeurs, responsables organisation, qualité, ressources humaines ou amélioration continue, chefs de service, dirigeants de PME.',
-      prerequisites: fr(
-        'Prérequis : une première expérience d’encadrement ou de fonction transversale, et une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité.',
-      ),
+      roles: [
+        'Directeurs',
+        'Responsables organisation',
+        'Qualité',
+        'Ressources humaines',
+        'Amélioration continue',
+        'Chefs de service',
+        'Dirigeants de PME',
+      ],
+      prerequisites: [
+        'Une première expérience d’encadrement ou de fonction transversale',
+        'Une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité',
+      ],
     },
     includes: {
-      text: 'Les repas et pauses-café, les supports et outils remis à chaque participant, un test final des connaissances et une attestation de participation.',
+      items: [
+        { icon: 'meal', text: 'Repas et pauses-café' },
+        { icon: 'materials', text: 'Supports et outils remis à chaque participant' },
+        { icon: 'test', text: 'Test final des connaissances' },
+        { icon: 'certificate', text: 'Attestation de participation' },
+      ],
       trainer:
-        'Animation par un consultant senior en organisation, praticien du diagnostic dans des entreprises publiques et privées.',
+        'Un consultant senior en organisation, praticien du diagnostic dans des entreprises publiques et privées.',
     },
     voices: [
       {
@@ -379,32 +430,60 @@ const AR: TrainingShowcase[] = [
     why: {
       title: 'ملاحظة الانسداد لا تكفي: يجب إثباته، ثم معالجته.',
       lead: 'مسؤوليات متداخلة، وقرارات تعود دائمًا إلى الإدارة، وعمليات يُلتفّ عليها في الميدان. يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على تنظيم مؤسستكم.',
-      text: 'ما يميّزه: تتعلّمون كيف تُجرون بأنفسكم تشخيصًا داخليًا خفيفًا ومنتظمًا، وكيف تدركون اللحظة التي تكون فيها النظرة الخارجية أجدى، لطلب تشخيص خارجي والاستفادة منه.',
+      edge: 'تتعلّمون كيف تُجرون بأنفسكم تشخيصًا داخليًا خفيفًا ومنتظمًا، وكيف تدركون اللحظة التي تكون فيها النظرة الخارجية أجدى، لطلب تشخيص خارجي والاستفادة منه.',
     },
     stepsTitle: 'أربع محطات، من التحليل إلى العمل',
     steps: [
-      { title: 'التأطير وجمع المعطيات', text: 'بناء تشخيص على الوقائع، لا على الانطباعات.' },
-      { title: 'قراءة التنظيم', text: 'الهيكل والمسؤوليات والعمليات على محكّ الواقع.' },
       {
+        icon: 'collect',
+        title: 'التأطير وجمع المعطيات',
+        text: 'بناء تشخيص على الوقائع، لا على الانطباعات.',
+      },
+      {
+        icon: 'structure',
+        title: 'قراءة التنظيم',
+        text: 'الهيكل والمسؤوليات والعمليات على محكّ الواقع.',
+      },
+      {
+        icon: 'decide',
         title: 'الفهم واتخاذ القرار',
         text: 'الأسباب والأولويات والاختيار بين النظرة الداخلية والنظرة الخارجية.',
       },
-      { title: 'الإقناع والتنفيذ', text: 'عرض النتائج وخطة العمل والتطبيق داخل مؤسستكم.' },
+      {
+        icon: 'present',
+        title: 'الإقناع والتنفيذ',
+        text: 'عرض النتائج وخطة العمل والتطبيق داخل مؤسستكم.',
+      },
     ],
     gains: [
-      'مسودة أولى لتشخيص مؤسستكم؛',
-      'ملف أدوات قابلة للاستعمال مباشرة عند عودتكم؛',
-      'خطة عمل مرتّبة حسب الأولوية، تُستكمل مع فرقكم؛',
-      'معايير للاختيار بين التشخيص الداخلي والتشخيص الخارجي.',
+      { icon: 'draft', text: 'مسودة أولى لتشخيص مؤسستكم' },
+      { icon: 'toolbox', text: 'ملف أدوات قابلة للاستعمال مباشرة عند عودتكم' },
+      { icon: 'plan', text: 'خطة عمل مرتّبة حسب الأولوية، تُستكمل مع فرقكم' },
+      { icon: 'compass', text: 'معايير للاختيار بين التشخيص الداخلي والتشخيص الخارجي' },
     ],
     audience: {
-      text: 'المديرون، ومسؤولو التنظيم والجودة والموارد البشرية والتحسين المستمر، ورؤساء المصالح، ومسيّرو المؤسسات الصغيرة والمتوسطة.',
-      prerequisites:
-        'المتطلبات المسبقة: خبرة أولى في التأطير أو في وظيفة عرضية، ووضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية.',
+      roles: [
+        'المديرون',
+        'مسؤولو التنظيم',
+        'الجودة',
+        'الموارد البشرية',
+        'التحسين المستمر',
+        'رؤساء المصالح',
+        'مسيّرو المؤسسات الصغيرة والمتوسطة',
+      ],
+      prerequisites: [
+        'خبرة أولى في التأطير أو في وظيفة عرضية',
+        'وضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية',
+      ],
     },
     includes: {
-      text: 'الوجبات واستراحات القهوة، والدعائم والأدوات المسلّمة لكل مشارك، واختبار نهائي للمعارف، وشهادة مشاركة.',
-      trainer: 'يؤطّرها مستشار أول في التنظيم، ممارس للتشخيص في مؤسسات عمومية وخاصة.',
+      items: [
+        { icon: 'meal', text: 'الوجبات واستراحات القهوة' },
+        { icon: 'materials', text: 'الدعائم والأدوات المسلّمة لكل مشارك' },
+        { icon: 'test', text: 'اختبار نهائي للمعارف' },
+        { icon: 'certificate', text: 'شهادة مشاركة' },
+      ],
+      trainer: 'مستشار أول في التنظيم، ممارس للتشخيص في مؤسسات عمومية وخاصة.',
     },
     voices: [
       {

@@ -1,6 +1,22 @@
+import { BookOpenTextIcon } from '@phosphor-icons/react/dist/csr/BookOpenText';
+import { CertificateIcon } from '@phosphor-icons/react/dist/csr/Certificate';
+import { ChalkboardTeacherIcon } from '@phosphor-icons/react/dist/csr/ChalkboardTeacher';
+import { CheckCircleIcon } from '@phosphor-icons/react/dist/csr/CheckCircle';
+import { ClipboardTextIcon } from '@phosphor-icons/react/dist/csr/ClipboardText';
 import { ClockIcon } from '@phosphor-icons/react/dist/csr/Clock';
+import { CompassIcon } from '@phosphor-icons/react/dist/csr/Compass';
+import { ExamIcon } from '@phosphor-icons/react/dist/csr/Exam';
+import { FileMagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/FileMagnifyingGlass';
 import { FileTextIcon } from '@phosphor-icons/react/dist/csr/FileText';
+import { ForkKnifeIcon } from '@phosphor-icons/react/dist/csr/ForkKnife';
+import { LightbulbIcon } from '@phosphor-icons/react/dist/csr/Lightbulb';
+import { ListChecksIcon } from '@phosphor-icons/react/dist/csr/ListChecks';
+import { MagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/MagnifyingGlass';
 import { MapPinIcon } from '@phosphor-icons/react/dist/csr/MapPin';
+import { PresentationChartIcon } from '@phosphor-icons/react/dist/csr/PresentationChart';
+import { ScalesIcon } from '@phosphor-icons/react/dist/csr/Scales';
+import { ToolboxIcon } from '@phosphor-icons/react/dist/csr/Toolbox';
+import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
 import { UsersThreeIcon } from '@phosphor-icons/react/dist/csr/UsersThree';
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router';
@@ -17,10 +33,27 @@ import {
   findShowcase,
   SHOWCASE_CONTACT,
   showcaseLabels,
+  type ShowcaseIcon,
   type ShowcaseLabels,
   type TrainingShowcase,
 } from './content';
 import styles from './TrainingShowcasePage.module.css';
+
+/** Les pictogrammes que le contenu peut choisir (ShowcaseIcon dans content.ts). */
+const ICONS: Record<ShowcaseIcon, typeof ClockIcon> = {
+  collect: MagnifyingGlassIcon,
+  structure: TreeStructureIcon,
+  decide: ScalesIcon,
+  present: PresentationChartIcon,
+  draft: FileMagnifyingGlassIcon,
+  toolbox: ToolboxIcon,
+  plan: ListChecksIcon,
+  compass: CompassIcon,
+  meal: ForkKnifeIcon,
+  materials: BookOpenTextIcon,
+  test: ExamIcon,
+  certificate: CertificateIcon,
+};
 
 const REQUEST_ID = 'demande';
 /** Ancres de la barre collée (même ordre que les blocs). */
@@ -201,69 +234,123 @@ function Showcase({ item }: { item: TrainingShowcase }) {
           {/* ---------- Pourquoi cette formation ---------- */}
           <section className={styles.block} {...sectionProps(0)}>
             <p className={styles.eyebrow}>{t.why}</p>
-            <h2 id={`${ids}-${SECTIONS[0]}`} className={styles.sectionTitle} data-motion="title">
+            {/* Pas d'animation ligne à ligne ici : elle couperait « pas : » avant les deux-points. */}
+            <h2 id={`${ids}-${SECTIONS[0]}`} className={styles.sectionTitle}>
               {item.why.title}
             </h2>
             <p className={styles.lead}>{item.why.lead}</p>
-            <p>{item.why.text}</p>
+            <div className={styles.edge}>
+              <span className={styles.edgeIcon} aria-hidden="true">
+                <LightbulbIcon size={26} weight="duotone" />
+              </span>
+              <div>
+                <p className={styles.edgeLabel}>{t.edge}</p>
+                <p>{item.why.edge}</p>
+              </div>
+            </div>
           </section>
 
-          {/* ---------- Quatre temps forts ---------- */}
+          {/* ---------- Quatre temps forts : une carte par temps, avec son pictogramme ---------- */}
           <section className={styles.block} {...sectionProps(1)}>
             <p className={styles.eyebrow}>{t.steps.eyebrow}</p>
-            <h2 id={`${ids}-${SECTIONS[1]}`} className={styles.sectionTitle} data-motion="title">
+            <h2 id={`${ids}-${SECTIONS[1]}`} className={styles.sectionTitle}>
               {item.stepsTitle}
             </h2>
-            <ol className={styles.steps}>
-              {item.steps.map((step, index) => (
-                <li key={step.title}>
-                  <span className={styles.stepNum} aria-hidden="true">
-                    {index + 1}
-                  </span>
-                  <h3 className={styles.stepTitle}>{step.title}</h3>
-                  <p>{step.text}</p>
-                </li>
-              ))}
+            <ol className={styles.stepGrid}>
+              {item.steps.map((step, index) => {
+                const Icon = ICONS[step.icon];
+                return (
+                  <li key={step.title} className={styles.stepCard}>
+                    <span className={styles.iconBox} aria-hidden="true">
+                      <Icon size={28} weight="duotone" />
+                    </span>
+                    <span className={styles.stepNum} aria-hidden="true">
+                      {index + 1}
+                    </span>
+                    <h3 className={styles.stepTitle}>{step.title}</h3>
+                    <p className={styles.small}>{step.text}</p>
+                  </li>
+                );
+              })}
             </ol>
-            <p className={styles.note}>{t.steps.note}</p>
+            <p className={styles.note}>
+              <FileTextIcon size={18} aria-hidden="true" />
+              <span>{t.steps.note}</span>
+            </p>
           </section>
 
-          {/* ---------- Ce que vous emportez ---------- */}
+          {/* ---------- Ce que vous emportez : une tuile par acquis ---------- */}
           <section className={styles.block} {...sectionProps(2)}>
             <p className={styles.eyebrow}>{t.gains.eyebrow}</p>
             <h2 id={`${ids}-${SECTIONS[2]}`} className={styles.sectionTitle}>
               {t.gains.title}
             </h2>
-            <ul className={styles.checks}>
-              {item.gains.map((gain) => (
-                <li key={gain}>
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.check}>
-                    <circle cx="12" cy="12" r="10.5" />
-                    <path d="M7 12.5l3.4 3.4L17 9" />
-                  </svg>
-                  <span>{gain}</span>
-                </li>
-              ))}
+            <ul className={styles.gainGrid}>
+              {item.gains.map((gain) => {
+                const Icon = ICONS[gain.icon];
+                return (
+                  <li key={gain.text} className={styles.gain}>
+                    <span className={styles.gainIcon} aria-hidden="true">
+                      <Icon size={26} weight="duotone" />
+                    </span>
+                    <span>{gain.text}</span>
+                  </li>
+                );
+              })}
             </ul>
           </section>
 
-          {/* ---------- Pour qui · La session comprend ---------- */}
+          {/* ---------- Pour qui · Prérequis · La session comprend ---------- */}
           <section className={styles.block} {...sectionProps(3)}>
             <h2 id={`${ids}-${SECTIONS[3]}`} className="sr-only">
               {t.audienceHeading}
             </h2>
             <div className={styles.duo}>
-              <div>
-                <h3 className={styles.eyebrow}>{t.audience}</h3>
-                <p>{item.audience.text}</p>
-                <p className={styles.muted}>{item.audience.prerequisites}</p>
+              <div className={styles.panel}>
+                <h3 className={styles.panelTitle}>
+                  <UsersThreeIcon size={24} weight="duotone" aria-hidden="true" />
+                  {t.audience}
+                </h3>
+                <ul className={styles.chips}>
+                  {item.audience.roles.map((role) => (
+                    <li key={role}>{role}</li>
+                  ))}
+                </ul>
               </div>
-              <div>
-                <h3 className={styles.eyebrow}>{t.includes}</h3>
-                <p>{item.includes.text}</p>
-                <p className={styles.muted}>{item.includes.trainer}</p>
+              <div className={styles.panel}>
+                <h3 className={styles.panelTitle}>
+                  <ClipboardTextIcon size={24} weight="duotone" aria-hidden="true" />
+                  {t.prerequisites}
+                </h3>
+                <ul className={styles.ticks}>
+                  {item.audience.prerequisites.map((line) => (
+                    <li key={line}>
+                      <CheckCircleIcon size={20} weight="fill" aria-hidden="true" />
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
+
+            <h3 className={cx(styles.eyebrow, styles.includesTitle)}>{t.includes}</h3>
+            <ul className={styles.includes}>
+              {item.includes.items.map((entry) => {
+                const Icon = ICONS[entry.icon];
+                return (
+                  <li key={entry.text}>
+                    <Icon size={30} weight="duotone" aria-hidden="true" />
+                    <span>{entry.text}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className={styles.trainer}>
+              <ChalkboardTeacherIcon size={24} weight="duotone" aria-hidden="true" />
+              <span>
+                <b>{t.trainer}</b> {item.includes.trainer}
+              </span>
+            </p>
           </section>
 
           {/* ---------- Témoignages ---------- */}

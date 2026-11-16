@@ -349,27 +349,87 @@
   padding-top: 3rem;
 }
 
-/* Quatre temps forts : index numéroté entre deux filets. */
-.steps {
-  margin: 0;
+/* « Sa singularité » : encadré bleu très clair, ampoule verte. */
+.edge {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding: 1.25rem 1.375rem;
+  border-inline-start: 4px solid var(--opem-green);
+  background: var(--opem-blue-10);
+}
+
+.edgeIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--opem-white);
+  color: var(--opem-green-dark);
+}
+
+.edgeLabel {
+  margin-bottom: 0.25rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.edgeLabel:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+}
+
+.small {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Quatre temps forts : cartes avec pictogramme et numéro. */
+.stepGrid {
+  display: grid;
+  gap: 0.875rem;
+  margin: 0.5rem 0 0;
   padding: 0;
-  border-top: 1px solid var(--rule);
   list-style: none;
 }
 
-.steps li {
+.stepCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.375rem 1.375rem 1.5rem;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--opem-blue);
+  background: var(--opem-white);
+}
+
+.iconBox {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr);
-  gap: 0.25rem 1rem;
-  padding-block: 1.25rem;
-  border-bottom: 1px solid var(--rule);
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 0.375rem;
+  border-radius: 0.75rem;
+  background: var(--opem-blue-10);
+  color: var(--opem-blue);
 }
 
 .stepNum {
-  grid-row: span 2;
-  color: var(--opem-blue);
+  position: absolute;
+  top: 1.125rem;
+  inset-inline-end: 1.25rem;
+  color: var(--opem-blue-10);
   font-family: var(--font-heading);
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -378,7 +438,7 @@
   margin: 0;
   color: var(--opem-anthracite);
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.1875rem;
   font-weight: 600;
   line-height: 1.3;
 }
@@ -388,59 +448,203 @@
 }
 
 .note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--opem-gray);
   font-size: 1rem;
 }
 
-.checks {
+.note svg {
+  flex: none;
+  color: var(--opem-green-dark);
+}
+
+@media (min-width: 40em) {
+  .stepGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* Ce que vous emportez : tuiles à pictogramme vert. */
+.gainGrid {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gain {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--opem-blue-10);
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+
+.gainIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--opem-white);
+  color: var(--opem-green-dark);
+}
+
+@media (min-width: 40em) {
+  .gainGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Pour qui (étiquettes) et prérequis (points cochés), côte à côte. */
+.duo {
   display: grid;
   gap: 0.875rem;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.375rem;
+  border: 1px solid var(--rule);
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.panelTitle svg {
+  flex: none;
+  color: var(--opem-green-dark);
+}
+
+.panelTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
 }
 
-.checks li {
+.chips li {
+  padding: 0.375rem 0.75rem;
+  border: 1.5px solid var(--opem-blue);
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.chips li:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.ticks {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.ticks li {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.check {
-  flex: none;
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-top: 0.1rem;
-  fill: none;
-  stroke: var(--opem-green-dark);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.check circle {
-  stroke-width: 2;
-}
-
-.check path {
-  stroke-width: 2.4;
-}
-
-.duo {
-  display: grid;
-  gap: 1.75rem;
-}
-
-.duo > div {
-  display: flex;
-  flex-direction: column;
   gap: 0.625rem;
+}
+
+.ticks svg {
+  flex: none;
+  margin-top: 0.125rem;
+  color: var(--opem-green);
 }
 
 @media (min-width: 40em) {
   .duo {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* La session comprend : quatre éléments à pictogramme, puis l'animation. */
+.includesTitle {
+  margin-top: 1rem;
+}
+
+.includes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.includes li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 1rem;
+  background: var(--opem-blue-10);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.includes svg {
+  color: var(--opem-blue);
+}
+
+@media (min-width: 48em) {
+  .includes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.trainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: var(--opem-gray);
+  font-size: 1rem;
+}
+
+.trainer svg {
+  flex: none;
+  color: var(--opem-green-dark);
+}
+
+.trainer b {
+  display: block;
+  color: var(--opem-anthracite);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.trainer b:lang(ar) {
+  font-family: var(--font-arabic);
 }
 
 /* Témoignages : le premier en grand sur bleu nuit, les deux autres sur bleu très clair. */
