@@ -31,6 +31,11 @@
   color: var(--color-on-primary);
 }
 
+/* Page qui a sa propre demande (vitrine d'une formation) : une seule action (useHideFooterCta). */
+:global(html[data-footer-cta='off']) .cta {
+  display: none;
+}
+
 .ctaInner {
   display: flex;
   flex-wrap: wrap;

@@ -9,6 +9,7 @@ import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { env } from '@/lib/env';
 import { formationContent } from './content';
+import { findShowcase } from './showcase/content';
 import styles from './FormationPage.module.css';
 
 /** Ancre de l'agenda (cible de « Catalogue et sessions » et des fiches formation du menu). */
@@ -164,7 +165,15 @@ export default function FormationPage() {
                           <span className={styles.new}>{home.trainings.newBadge}</span>
                         )}
                       </p>
-                      <h3 className={styles.sessionTitle}>{item.title}</h3>
+                      <h3 className={styles.sessionTitle}>
+                        {findShowcase(lang, item.id) ? (
+                          <Link to={item.href} className={styles.sessionLink}>
+                            {item.title}
+                          </Link>
+                        ) : (
+                          item.title
+                        )}
+                      </h3>
                       <p className={styles.promise}>{item.promise}</p>
                       <p className={styles.meta}>
                         <span>{range}</span>

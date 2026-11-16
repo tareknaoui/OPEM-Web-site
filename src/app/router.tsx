@@ -47,6 +47,14 @@ export const router = createBrowserRouter([
         lazy: async () => ({ Component: (await import('@/features/ia/IaPage')).default }),
       },
       {
+        // Vitrine d'une formation inter-entreprises (modèle unique, formation/showcase/content.ts) ;
+        // une formation sans vitrine affiche « Formation qualifiante », descendue à sa session.
+        path: 'formation/fiches-formation/:id',
+        lazy: async () => ({
+          Component: (await import('@/features/formation/showcase/TrainingShowcasePage')).default,
+        }),
+      },
+      {
         // « Formation qualifiante » et ses rubriques (catalogue et sessions, fiches formation) :
         // une seule page, qui descend jusqu'à l'agenda (ou jusqu'à la session d'une fiche).
         path: 'formation/*',

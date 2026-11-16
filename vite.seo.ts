@@ -131,6 +131,17 @@ const PAGE_META: Record<string, PageMeta> = {
     image: SHARE.image,
     imageAlt: SHARE.alt,
   },
+  // Vitrines des formations : titre identique à l'onglet (titre de la formation · OPEM).
+  '/formation/fiches-formation/diagnostic-d-organisation': {
+    title: 'Diagnostic d’organisation · OPEM',
+    description:
+      'Formation inter-entreprises à Alger, du 6 au 9 décembre 2026 : quatre jours pour apprendre à conduire le diagnostic de votre propre organisation, du cadrage à la restitution. 12 participants au plus.',
+    socialTitle: 'Diagnostic d’organisation · Formation inter-entreprises OPEM',
+    socialDescription:
+      'Repérer les blocages, optimiser les processus : quatre jours à Alger pour conduire le diagnostic de votre organisation. Demandez la fiche technique et un devis.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
   '/missions': {
     title: 'Missions et réalisations · OPEM',
     description:

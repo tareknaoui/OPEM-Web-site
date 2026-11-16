@@ -345,6 +345,19 @@
   letter-spacing: -0.02em;
 }
 
+/* Formation qui a sa page vitrine : le titre y mène. */
+.sessionLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--opem-green);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.sessionLink:hover {
+  color: var(--opem-blue);
+}
+
 .promise {
   margin: 0;
   color: var(--opem-anthracite);
