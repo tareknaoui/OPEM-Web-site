@@ -31,33 +31,6 @@ export const SHOWCASE_CONTACT = {
   phone: { display: '0770 442 645', href: 'tel:+213770442645' },
 } as const;
 
-/**
- * Pictogrammes disponibles (Phosphor, voir ICONS dans TrainingShowcasePage.tsx). Pour une autre
- * formation, choisir dans cette liste ; en ajouter un = l'importer et l'ajouter à ICONS.
- */
-export type ShowcaseIcon =
-  | 'collect'
-  | 'structure'
-  | 'decide'
-  | 'present'
-  | 'draft'
-  | 'toolbox'
-  | 'plan'
-  | 'compass'
-  | 'meal'
-  | 'materials'
-  | 'test'
-  | 'certificate'
-  // Fonctions visées (« Pour qui ») et prérequis.
-  | 'experience'
-  | 'confidential'
-  // « Pourquoi cette formation » : symptômes constatés, puis les deux volets de la singularité.
-  | 'overlap'
-  | 'escalate'
-  | 'bypass'
-  | 'inside'
-  | 'outside';
-
 export type TrainingShowcase = {
   /** Identifiant de la session dans l'agenda, et fin de l'adresse de la page. */
   id: string;
@@ -81,28 +54,28 @@ export type TrainingShowcase = {
   };
   /**
    * Pourquoi cette formation, du problème à la solution : symptoms, ce que le participant
-   * constate (2 à 4 cartes) ; answer, ce que la formation apporte ; edge, ce qui la distingue
+   * constate (2 à 4 points) ; answer, ce que la formation apporte ; edge, ce qui la distingue
    * (« Sa singularité », en deux volets reliés).
    */
   why: {
     title: string;
-    symptoms: { icon: ShowcaseIcon; text: string }[];
+    symptoms: string[];
     answer: string;
-    edge: { icon: ShowcaseIcon; label: string; text: string }[];
+    edge: { label: string; text: string }[];
   };
   /** Titre de « Quatre temps forts » (la suite après la virgule change d'une formation à l'autre). */
   stepsTitle: string;
   /** Exactement quatre temps forts (numérotés dans la fiche). */
   steps: { title: string; text: string }[];
-  /** Ce que vous emportez : une tuile par acquis, avec son pictogramme. */
-  gains: { icon: ShowcaseIcon; text: string }[];
+  /** Ce que vous emportez : un point par acquis. */
+  gains: string[];
   /** roles : les fonctions visées (une étiquette chacune) ; prerequisites : un point par prérequis. */
   audience: {
     roles: string[];
-    prerequisites: { icon: ShowcaseIcon; text: string }[];
+    prerequisites: string[];
   };
-  /** Ce que la session comprend (un pictogramme par élément), puis qui l'anime. */
-  includes: { items: { icon: ShowcaseIcon; text: string }[]; trainer: string };
+  /** Ce que la session comprend (un point par élément), puis qui l'anime. */
+  includes: { items: string[]; trainer: string };
   /** Le premier est mis en avant ; les deux suivants dessous. */
   voices: { quote: string; author: string }[];
 };
@@ -348,20 +321,15 @@ const FR: TrainingShowcase[] = [
     why: {
       title: fr('Constater un blocage ne suffit pas : il faut le prouver, puis le corriger.'),
       symptoms: [
-        { icon: 'overlap', text: 'Des responsabilités qui se chevauchent' },
-        { icon: 'escalate', text: 'Des décisions qui remontent toujours à la direction' },
-        { icon: 'bypass', text: 'Des processus contournés sur le terrain' },
+        'Des responsabilités qui se chevauchent',
+        'Des décisions qui remontent toujours à la direction',
+        'Des processus contournés sur le terrain',
       ],
       answer:
         'Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.',
       edge: [
+        { label: 'En interne', text: 'Conduire vous-même un diagnostic léger et régulier' },
         {
-          icon: 'inside',
-          label: 'En interne',
-          text: 'Conduire vous-même un diagnostic léger et régulier',
-        },
-        {
-          icon: 'outside',
           label: 'Avec un regard extérieur',
           text: 'Reconnaître le moment où il apporte le plus, pour commander et exploiter un diagnostic externe',
         },
@@ -387,13 +355,10 @@ const FR: TrainingShowcase[] = [
       },
     ],
     gains: [
-      { icon: 'draft', text: 'Une première ébauche de diagnostic de votre propre structure' },
-      { icon: 'toolbox', text: 'Un dossier d’outils directement utilisables à votre retour' },
-      { icon: 'plan', text: 'Un plan d’action priorisé, à affiner avec vos équipes' },
-      {
-        icon: 'compass',
-        text: 'Des critères pour choisir entre diagnostic interne et diagnostic externe',
-      },
+      'Une première ébauche de diagnostic de votre propre structure',
+      'Un dossier d’outils directement utilisables à votre retour',
+      'Un plan d’action priorisé, à affiner avec vos équipes',
+      'Des critères pour choisir entre diagnostic interne et diagnostic externe',
     ],
     audience: {
       roles: [
@@ -406,22 +371,16 @@ const FR: TrainingShowcase[] = [
         'Dirigeants de PME',
       ],
       prerequisites: [
-        {
-          icon: 'experience',
-          text: 'Une première expérience d’encadrement ou de fonction transversale',
-        },
-        {
-          icon: 'confidential',
-          text: 'Une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité',
-        },
+        'Une première expérience d’encadrement ou de fonction transversale',
+        'Une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité',
       ],
     },
     includes: {
       items: [
-        { icon: 'meal', text: 'Repas et pauses-café' },
-        { icon: 'materials', text: 'Supports et outils remis à chaque participant' },
-        { icon: 'test', text: 'Test final des connaissances' },
-        { icon: 'certificate', text: 'Attestation de participation' },
+        'Repas et pauses-café',
+        'Supports et outils remis à chaque participant',
+        'Test final des connaissances',
+        'Attestation de participation',
       ],
       trainer:
         'Un consultant senior en organisation, praticien du diagnostic dans des entreprises publiques et privées.',
@@ -471,15 +430,14 @@ const AR: TrainingShowcase[] = [
     why: {
       title: 'ملاحظة الانسداد لا تكفي: يجب إثباته، ثم معالجته.',
       symptoms: [
-        { icon: 'overlap', text: 'مسؤوليات متداخلة' },
-        { icon: 'escalate', text: 'قرارات تعود دائمًا إلى الإدارة' },
-        { icon: 'bypass', text: 'عمليات يُلتفّ عليها في الميدان' },
+        'مسؤوليات متداخلة',
+        'قرارات تعود دائمًا إلى الإدارة',
+        'عمليات يُلتفّ عليها في الميدان',
       ],
       answer: 'يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على تنظيم مؤسستكم.',
       edge: [
-        { icon: 'inside', label: 'داخليًا', text: 'تُجرون بأنفسكم تشخيصًا خفيفًا ومنتظمًا' },
+        { label: 'داخليًا', text: 'تُجرون بأنفسكم تشخيصًا خفيفًا ومنتظمًا' },
         {
-          icon: 'outside',
           label: 'بنظرة خارجية',
           text: 'تدركون اللحظة التي تكون فيها أجدى، لطلب تشخيص خارجي والاستفادة منه',
         },
@@ -505,10 +463,10 @@ const AR: TrainingShowcase[] = [
       },
     ],
     gains: [
-      { icon: 'draft', text: 'مسودة أولى لتشخيص مؤسستكم' },
-      { icon: 'toolbox', text: 'ملف أدوات قابلة للاستعمال مباشرة عند عودتكم' },
-      { icon: 'plan', text: 'خطة عمل مرتّبة حسب الأولوية، تُستكمل مع فرقكم' },
-      { icon: 'compass', text: 'معايير للاختيار بين التشخيص الداخلي والتشخيص الخارجي' },
+      'مسودة أولى لتشخيص مؤسستكم',
+      'ملف أدوات قابلة للاستعمال مباشرة عند عودتكم',
+      'خطة عمل مرتّبة حسب الأولوية، تُستكمل مع فرقكم',
+      'معايير للاختيار بين التشخيص الداخلي والتشخيص الخارجي',
     ],
     audience: {
       roles: [
@@ -521,19 +479,16 @@ const AR: TrainingShowcase[] = [
         'مسيّرو المؤسسات الصغيرة والمتوسطة',
       ],
       prerequisites: [
-        { icon: 'experience', text: 'خبرة أولى في التأطير أو في وظيفة عرضية' },
-        {
-          icon: 'confidential',
-          text: 'وضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية',
-        },
+        'خبرة أولى في التأطير أو في وظيفة عرضية',
+        'وضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية',
       ],
     },
     includes: {
       items: [
-        { icon: 'meal', text: 'الوجبات واستراحات القهوة' },
-        { icon: 'materials', text: 'الدعائم والأدوات المسلّمة لكل مشارك' },
-        { icon: 'test', text: 'اختبار نهائي للمعارف' },
-        { icon: 'certificate', text: 'شهادة مشاركة' },
+        'الوجبات واستراحات القهوة',
+        'الدعائم والأدوات المسلّمة لكل مشارك',
+        'اختبار نهائي للمعارف',
+        'شهادة مشاركة',
       ],
       trainer: 'مستشار أول في التنظيم، ممارس للتشخيص في مؤسسات عمومية وخاصة.',
     },

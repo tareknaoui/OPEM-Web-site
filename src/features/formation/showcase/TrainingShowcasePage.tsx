@@ -1,32 +1,7 @@
-import { ArrowFatLinesUpIcon } from '@phosphor-icons/react/dist/csr/ArrowFatLinesUp';
-import { ArrowsSplitIcon } from '@phosphor-icons/react/dist/csr/ArrowsSplit';
-import { BinocularsIcon } from '@phosphor-icons/react/dist/csr/Binoculars';
-import { BookOpenTextIcon } from '@phosphor-icons/react/dist/csr/BookOpenText';
-import { BriefcaseIcon } from '@phosphor-icons/react/dist/csr/Briefcase';
-import { CertificateIcon } from '@phosphor-icons/react/dist/csr/Certificate';
-import { ChalkboardTeacherIcon } from '@phosphor-icons/react/dist/csr/ChalkboardTeacher';
 import { CheckCircleIcon } from '@phosphor-icons/react/dist/csr/CheckCircle';
-import { ClipboardTextIcon } from '@phosphor-icons/react/dist/csr/ClipboardText';
 import { ClockIcon } from '@phosphor-icons/react/dist/csr/Clock';
-import { CompassIcon } from '@phosphor-icons/react/dist/csr/Compass';
-import { ExamIcon } from '@phosphor-icons/react/dist/csr/Exam';
-import { FileMagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/FileMagnifyingGlass';
 import { FileTextIcon } from '@phosphor-icons/react/dist/csr/FileText';
-import { ForkKnifeIcon } from '@phosphor-icons/react/dist/csr/ForkKnife';
-import { HouseLineIcon } from '@phosphor-icons/react/dist/csr/HouseLine';
-import { IntersectThreeIcon } from '@phosphor-icons/react/dist/csr/IntersectThree';
-import { LightbulbIcon } from '@phosphor-icons/react/dist/csr/Lightbulb';
-import { ListChecksIcon } from '@phosphor-icons/react/dist/csr/ListChecks';
-import { ListNumbersIcon } from '@phosphor-icons/react/dist/csr/ListNumbers';
-import { LockKeyIcon } from '@phosphor-icons/react/dist/csr/LockKey';
-import { MagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/MagnifyingGlass';
 import { MapPinIcon } from '@phosphor-icons/react/dist/csr/MapPin';
-import { PackageIcon } from '@phosphor-icons/react/dist/csr/Package';
-import { PresentationChartIcon } from '@phosphor-icons/react/dist/csr/PresentationChart';
-import { ScalesIcon } from '@phosphor-icons/react/dist/csr/Scales';
-import { TargetIcon } from '@phosphor-icons/react/dist/csr/Target';
-import { ToolboxIcon } from '@phosphor-icons/react/dist/csr/Toolbox';
-import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
 import { UsersThreeIcon } from '@phosphor-icons/react/dist/csr/UsersThree';
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router';
@@ -44,34 +19,10 @@ import {
   findShowcase,
   SHOWCASE_CONTACT,
   showcaseLabels,
-  type ShowcaseIcon,
   type ShowcaseLabels,
   type TrainingShowcase,
 } from './content';
 import styles from './TrainingShowcasePage.module.css';
-
-/** Les pictogrammes que le contenu peut choisir (ShowcaseIcon dans content.ts). */
-const ICONS: Record<ShowcaseIcon, typeof ClockIcon> = {
-  collect: MagnifyingGlassIcon,
-  structure: TreeStructureIcon,
-  decide: ScalesIcon,
-  present: PresentationChartIcon,
-  draft: FileMagnifyingGlassIcon,
-  toolbox: ToolboxIcon,
-  plan: ListChecksIcon,
-  compass: CompassIcon,
-  meal: ForkKnifeIcon,
-  materials: BookOpenTextIcon,
-  test: ExamIcon,
-  certificate: CertificateIcon,
-  experience: BriefcaseIcon,
-  confidential: LockKeyIcon,
-  overlap: IntersectThreeIcon,
-  escalate: ArrowFatLinesUpIcon,
-  bypass: ArrowsSplitIcon,
-  inside: HouseLineIcon,
-  outside: BinocularsIcon,
-};
 
 /** Rang, dans « OPEM en chiffres », du chiffre affiché sur la photo d'ouverture. */
 const PROOF_FIGURE = 3;
@@ -119,16 +70,18 @@ function requestHref(item: TrainingShowcase, t: ShowcaseLabels, dates: string | 
  * unique : version 10 « catalogue » retenue par OPEM (façon Cegos, ORSYS).
  * Même langage que les autres pages (« Formation qualifiante », « Le cabinet ») :
  * - Ouverture sur bleu très clair : fil d'Ariane, format et ville, titre, sous-titre, accroche,
- *   étiquettes ; à côté, une grande photo arrondie qui se dévoile (léger effet de profondeur).
+ *   chiffres clés et référence ; à côté, une grande photo arrondie qui se dévoile (léger effet
+ *   de profondeur) avec une preuve chiffrée posée sur son angle.
  * - Deux colonnes sur ordinateur : à droite un encadré « Prochaine session » qui chevauche le bas
  *   de l'ouverture puis reste à l'écran (dates de l'agenda, durée et horaires, effectif, lieu,
  *   référence, demande de fiche technique et de devis) ; à gauche, sous une barre d'ancres
- *   collée sous le menu : Pourquoi cette formation (« Sa singularité » encadrée) ; Quatre temps
- *   forts (cartes à pictogramme ; programme détaillé sur demande) ; Ce que vous emportez
- *   (tuiles) ; Pour qui (étiquettes), Prérequis, La session comprend, l'animation.
+ *   collée sous le menu, une fiche blanche, une ligne par rubrique (intitulé à filet vert,
+ *   listes à pastilles, sans pictogrammes) : Pourquoi cette formation (« Sa singularité »
+ *   encadrée) ; Quatre temps forts (numérotés ; programme détaillé sur demande) ; Ce que vous
+ *   emportez ; Pour qui (étiquettes), Prérequis, La session comprend, l'animation.
  * - Témoignages sur un bandeau bleu nuit pleine largeur, avec trois photos de sessions.
  * - OPEM en chiffres, la demande (encadré bleu OPEM), la mention de protection du contenu.
- * Titres, cartes et tuiles apparaissent au défilement (data-reveal, réglé pour tout le site).
+ * Les titres apparaissent au défilement (data-reveal, réglé pour tout le site).
  * Tablette et téléphone : une colonne, l'encadré « session » juste après l'ouverture ; sur
  * téléphone, une barre fixe reprend la demande entre l'encadré et la demande du bas.
  * Le bandeau d'appel du pied de page est masqué : une seule action sur la page.
@@ -281,42 +234,27 @@ function Showcase({ item }: { item: TrainingShowcase }) {
           <div className={styles.fiche}>
             {/* Pourquoi cette formation */}
             <section className={styles.row} {...sectionProps(0)}>
-              <RowHead icon={TargetIcon} id={`${ids}-${SECTIONS[0]}`} label={t.why} />
+              <RowHead id={`${ids}-${SECTIONS[0]}`} label={t.why} />
               <div className={styles.rowBody}>
                 <p className={styles.hook}>{item.why.title}</p>
                 <ul className={styles.list}>
-                  {item.why.symptoms.map((symptom) => {
-                    const Icon = ICONS[symptom.icon];
-                    return (
-                      <li key={symptom.text}>
-                        <Icon size={22} weight="duotone" aria-hidden="true" />
-                        <span>{symptom.text}</span>
-                      </li>
-                    );
-                  })}
+                  {item.why.symptoms.map((symptom) => (
+                    <li key={symptom}>{symptom}</li>
+                  ))}
                 </ul>
                 <p className={styles.answer}>
                   <CheckCircleIcon size={22} weight="fill" aria-hidden="true" />
                   <span>{item.why.answer}</span>
                 </p>
                 <div className={styles.edge}>
-                  <p className={styles.edgeLabel}>
-                    <LightbulbIcon size={18} weight="duotone" aria-hidden="true" />
-                    {t.edge}
-                  </p>
+                  <p className={styles.edgeLabel}>{t.edge}</p>
                   <ul className={styles.list}>
-                    {item.why.edge.map((part) => {
-                      const Icon = ICONS[part.icon];
-                      return (
-                        <li key={part.label}>
-                          <Icon size={22} weight="duotone" aria-hidden="true" />
-                          <span>
-                            <b>{part.label}</b>
-                            {part.text}
-                          </span>
-                        </li>
-                      );
-                    })}
+                    {item.why.edge.map((part) => (
+                      <li key={part.label}>
+                        <b>{part.label}</b>
+                        {part.text}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -324,11 +262,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
 
             {/* Quatre temps forts */}
             <section className={styles.row} {...sectionProps(1)}>
-              <RowHead
-                icon={ListNumbersIcon}
-                id={`${ids}-${SECTIONS[1]}`}
-                label={item.stepsTitle}
-              />
+              <RowHead id={`${ids}-${SECTIONS[1]}`} label={item.stepsTitle} />
               <div className={styles.rowBody}>
                 <ol className={styles.steps}>
                   {item.steps.map((step, index) => (
@@ -343,35 +277,26 @@ function Showcase({ item }: { item: TrainingShowcase }) {
                     </li>
                   ))}
                 </ol>
-                <p className={styles.note}>
-                  <FileTextIcon size={16} aria-hidden="true" />
-                  <span>{t.steps.note}</span>
-                </p>
+                <p className={styles.note}>{t.steps.note}</p>
               </div>
             </section>
 
             {/* Ce que vous emportez */}
             <section className={styles.row} {...sectionProps(2)}>
-              <RowHead icon={ToolboxIcon} id={`${ids}-${SECTIONS[2]}`} label={t.gains.eyebrow} />
+              <RowHead id={`${ids}-${SECTIONS[2]}`} label={t.gains.eyebrow} />
               <div className={styles.rowBody}>
                 <p className={styles.rowLead}>{t.gains.title}</p>
                 <ul className={styles.list}>
-                  {item.gains.map((gain) => {
-                    const Icon = ICONS[gain.icon];
-                    return (
-                      <li key={gain.text}>
-                        <Icon size={22} weight="duotone" aria-hidden="true" />
-                        <span>{gain.text}</span>
-                      </li>
-                    );
-                  })}
+                  {item.gains.map((gain) => (
+                    <li key={gain}>{gain}</li>
+                  ))}
                 </ul>
               </div>
             </section>
 
             {/* Pour qui */}
             <section className={styles.row} {...sectionProps(3)}>
-              <RowHead icon={UsersThreeIcon} id={`${ids}-${SECTIONS[3]}`} label={t.audience} />
+              <RowHead id={`${ids}-${SECTIONS[3]}`} label={t.audience} />
               <div className={styles.rowBody}>
                 <ul className={styles.chips}>
                   {item.audience.roles.map((role) => (
@@ -383,47 +308,31 @@ function Showcase({ item }: { item: TrainingShowcase }) {
 
             {/* Prérequis */}
             <section className={styles.row} aria-labelledby={`${ids}-prerequisites`}>
-              <RowHead
-                icon={ClipboardTextIcon}
-                id={`${ids}-prerequisites`}
-                label={t.prerequisites}
-              />
+              <RowHead id={`${ids}-prerequisites`} label={t.prerequisites} />
               <div className={styles.rowBody}>
                 <ul className={styles.list}>
-                  {item.audience.prerequisites.map((line) => {
-                    const Icon = ICONS[line.icon];
-                    return (
-                      <li key={line.text}>
-                        <Icon size={22} weight="duotone" aria-hidden="true" />
-                        <span>{line.text}</span>
-                      </li>
-                    );
-                  })}
+                  {item.audience.prerequisites.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
                 </ul>
               </div>
             </section>
 
             {/* La session comprend */}
             <section className={styles.row} aria-labelledby={`${ids}-includes`}>
-              <RowHead icon={PackageIcon} id={`${ids}-includes`} label={t.includes} />
+              <RowHead id={`${ids}-includes`} label={t.includes} />
               <div className={styles.rowBody}>
                 <ul className={cx(styles.list, styles.listTwo)}>
-                  {item.includes.items.map((entry) => {
-                    const Icon = ICONS[entry.icon];
-                    return (
-                      <li key={entry.text}>
-                        <Icon size={22} weight="duotone" aria-hidden="true" />
-                        <span>{entry.text}</span>
-                      </li>
-                    );
-                  })}
+                  {item.includes.items.map((entry) => (
+                    <li key={entry}>{entry}</li>
+                  ))}
                 </ul>
               </div>
             </section>
 
             {/* Animation */}
             <section className={styles.row} aria-labelledby={`${ids}-trainer`}>
-              <RowHead icon={ChalkboardTeacherIcon} id={`${ids}-trainer`} label={t.trainer} />
+              <RowHead id={`${ids}-trainer`} label={t.trainer} />
               <div className={styles.rowBody}>
                 <p>{item.includes.trainer}</p>
               </div>
@@ -631,16 +540,11 @@ function Showcase({ item }: { item: TrainingShowcase }) {
   );
 }
 
-/** Intitulé d'une ligne de la fiche : petit pictogramme, puis le titre de la rubrique. */
-function RowHead({ icon: Icon, id, label }: { icon: typeof ClockIcon; id: string; label: string }) {
+/** Intitulé d'une ligne de la fiche : le titre de la rubrique, précédé d'un filet vert. */
+function RowHead({ id, label }: { id: string; label: string }) {
   return (
-    <div className={styles.rowHead}>
-      <span className={styles.rowIcon} aria-hidden="true">
-        <Icon size={22} weight="duotone" />
-      </span>
-      <h2 id={id} className={styles.rowTitle}>
-        {label}
-      </h2>
-    </div>
+    <h2 id={id} className={styles.rowTitle}>
+      {label}
+    </h2>
   );
 }
