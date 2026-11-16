@@ -1,23 +1,19 @@
 import { ArrowFatLinesUpIcon } from '@phosphor-icons/react/dist/csr/ArrowFatLinesUp';
-import { ArrowsClockwiseIcon } from '@phosphor-icons/react/dist/csr/ArrowsClockwise';
 import { ArrowsSplitIcon } from '@phosphor-icons/react/dist/csr/ArrowsSplit';
 import { BinocularsIcon } from '@phosphor-icons/react/dist/csr/Binoculars';
 import { BookOpenTextIcon } from '@phosphor-icons/react/dist/csr/BookOpenText';
 import { BriefcaseIcon } from '@phosphor-icons/react/dist/csr/Briefcase';
-import { BuildingsIcon } from '@phosphor-icons/react/dist/csr/Buildings';
 import { CertificateIcon } from '@phosphor-icons/react/dist/csr/Certificate';
 import { ChalkboardTeacherIcon } from '@phosphor-icons/react/dist/csr/ChalkboardTeacher';
 import { CheckCircleIcon } from '@phosphor-icons/react/dist/csr/CheckCircle';
 import { ClipboardTextIcon } from '@phosphor-icons/react/dist/csr/ClipboardText';
 import { ClockIcon } from '@phosphor-icons/react/dist/csr/Clock';
 import { CompassIcon } from '@phosphor-icons/react/dist/csr/Compass';
-import { CrownIcon } from '@phosphor-icons/react/dist/csr/Crown';
 import { ExamIcon } from '@phosphor-icons/react/dist/csr/Exam';
 import { FileMagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/FileMagnifyingGlass';
 import { FileTextIcon } from '@phosphor-icons/react/dist/csr/FileText';
 import { ForkKnifeIcon } from '@phosphor-icons/react/dist/csr/ForkKnife';
 import { HouseLineIcon } from '@phosphor-icons/react/dist/csr/HouseLine';
-import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/csr/IdentificationBadge';
 import { IntersectThreeIcon } from '@phosphor-icons/react/dist/csr/IntersectThree';
 import { LightbulbIcon } from '@phosphor-icons/react/dist/csr/Lightbulb';
 import { ListChecksIcon } from '@phosphor-icons/react/dist/csr/ListChecks';
@@ -28,11 +24,9 @@ import { MapPinIcon } from '@phosphor-icons/react/dist/csr/MapPin';
 import { PackageIcon } from '@phosphor-icons/react/dist/csr/Package';
 import { PresentationChartIcon } from '@phosphor-icons/react/dist/csr/PresentationChart';
 import { ScalesIcon } from '@phosphor-icons/react/dist/csr/Scales';
-import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
 import { TargetIcon } from '@phosphor-icons/react/dist/csr/Target';
 import { ToolboxIcon } from '@phosphor-icons/react/dist/csr/Toolbox';
 import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
-import { UserGearIcon } from '@phosphor-icons/react/dist/csr/UserGear';
 import { UsersThreeIcon } from '@phosphor-icons/react/dist/csr/UsersThree';
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router';
@@ -70,12 +64,6 @@ const ICONS: Record<ShowcaseIcon, typeof ClockIcon> = {
   materials: BookOpenTextIcon,
   test: ExamIcon,
   certificate: CertificateIcon,
-  leader: CrownIcon,
-  quality: SealCheckIcon,
-  people: IdentificationBadgeIcon,
-  improvement: ArrowsClockwiseIcon,
-  manager: UserGearIcon,
-  company: BuildingsIcon,
   experience: BriefcaseIcon,
   confidential: LockKeyIcon,
   overlap: IntersectThreeIcon,
@@ -85,6 +73,8 @@ const ICONS: Record<ShowcaseIcon, typeof ClockIcon> = {
   outside: BinocularsIcon,
 };
 
+/** Rang, dans « OPEM en chiffres », du chiffre affiché sur la photo d'ouverture. */
+const PROOF_FIGURE = 3;
 const REQUEST_ID = 'demande';
 /** Ancres de la barre collée (même ordre que les blocs). */
 const SECTIONS = ['pourquoi', 'temps-forts', 'emportez', 'public', 'temoignages'] as const;
@@ -171,6 +161,8 @@ function Showcase({ item }: { item: TrainingShowcase }) {
   const { practical } = item;
   const seats = fill(t.facts.seatsValue, { n: practical.seats });
   const [mainVoice, ...otherVoices] = item.voices;
+  // « +1 500 professionnels formés », repris des chiffres OPEM pour l'ouverture.
+  const proof = t.figures.items[PROOF_FIGURE];
   // Photos réelles de sessions (celles de l'agenda de l'accueil), à côté du témoignage.
   const photos = homeContent[lang].trainings.photos;
   const photosLabel = formationContent[lang].voices.photosLabel;
@@ -229,27 +221,44 @@ function Showcase({ item }: { item: TrainingShowcase }) {
             </h1>
             <p className={styles.subtitle}>{item.subtitle}</p>
             <p className={styles.intro}>{item.intro}</p>
-            <ul className={styles.tags} aria-label={t.tags.label} data-reveal-stagger>
-              <li>{t.tags.inter}</li>
-              <li>{practical.mode}</li>
-              <li>{practical.duration}</li>
-              <li>{`${seats} ${t.facts.seatsMore}`}</li>
-              <li>
-                {t.reference} <span dir="ltr">{item.reference}</span>
-              </li>
-            </ul>
+            <dl className={styles.keyFacts} data-reveal-stagger>
+              <div>
+                <dt>{t.facts.duration}</dt>
+                <dd>{practical.duration}</dd>
+              </div>
+              <div>
+                <dt>{t.facts.mode}</dt>
+                <dd>{practical.mode}</dd>
+              </div>
+              <div>
+                <dt>{t.facts.seats}</dt>
+                <dd>{seats}</dd>
+              </div>
+            </dl>
+            <p className={styles.heroRef}>
+              {t.reference} <span dir="ltr">{item.reference}</span>
+            </p>
           </div>
-          <figure className={styles.photo} data-motion="unveil" data-parallax>
-            <img
-              src={item.photo.small}
-              srcSet={`${item.photo.small} 700w, ${item.photo.large} 1400w`}
-              sizes="(min-width: 60em) 42vw, 100vw"
-              alt={item.photo.alt}
-              width={700}
-              height={525}
-              fetchPriority="high"
-            />
-          </figure>
+          <div className={styles.visual}>
+            <figure className={styles.photo} data-motion="unveil" data-parallax>
+              <img
+                src={item.photo.small}
+                srcSet={`${item.photo.small} 700w, ${item.photo.large} 1400w`}
+                sizes="(min-width: 60em) 42vw, 100vw"
+                alt={item.photo.alt}
+                width={700}
+                height={525}
+                fetchPriority="high"
+              />
+            </figure>
+            {/* Une preuve chiffrée posée sur l'angle de la photo (hors de l'image elle-même). */}
+            {proof && (
+              <p className={styles.proof} data-reveal>
+                <b>{proof.value}</b>
+                <span>{proof.label}</span>
+              </p>
+            )}
+          </div>
         </div>
       </section>
 
@@ -365,15 +374,9 @@ function Showcase({ item }: { item: TrainingShowcase }) {
               <RowHead icon={UsersThreeIcon} id={`${ids}-${SECTIONS[3]}`} label={t.audience} />
               <div className={styles.rowBody}>
                 <ul className={styles.chips}>
-                  {item.audience.roles.map((role) => {
-                    const Icon = ICONS[role.icon];
-                    return (
-                      <li key={role.label}>
-                        <Icon size={16} weight="duotone" aria-hidden="true" />
-                        {role.label}
-                      </li>
-                    );
-                  })}
+                  {item.audience.roles.map((role) => (
+                    <li key={role}>{role}</li>
+                  ))}
                 </ul>
               </div>
             </section>

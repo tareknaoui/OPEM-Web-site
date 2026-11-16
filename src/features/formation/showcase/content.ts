@@ -49,12 +49,6 @@ export type ShowcaseIcon =
   | 'test'
   | 'certificate'
   // Fonctions visées (« Pour qui ») et prérequis.
-  | 'leader'
-  | 'quality'
-  | 'people'
-  | 'improvement'
-  | 'manager'
-  | 'company'
   | 'experience'
   | 'confidential'
   // « Pourquoi cette formation » : symptômes constatés, puis les deux volets de la singularité.
@@ -102,9 +96,9 @@ export type TrainingShowcase = {
   steps: { title: string; text: string }[];
   /** Ce que vous emportez : une tuile par acquis, avec son pictogramme. */
   gains: { icon: ShowcaseIcon; text: string }[];
-  /** roles : les fonctions visées (une carte chacune) ; prerequisites : un point par prérequis. */
+  /** roles : les fonctions visées (une étiquette chacune) ; prerequisites : un point par prérequis. */
   audience: {
-    roles: { icon: ShowcaseIcon; label: string }[];
+    roles: string[];
     prerequisites: { icon: ShowcaseIcon; text: string }[];
   };
   /** Ce que la session comprend (un pictogramme par élément), puis qui l'anime. */
@@ -123,6 +117,8 @@ export type ShowcaseLabels = {
     duration: string;
     seats: string;
     place: string;
+    /** « Format » (présentiel, à distance…), dans les chiffres clés de l'ouverture. */
+    mode: string;
     /** « {n} participants ». */
     seatsValue: string;
     seatsMore: string;
@@ -132,7 +128,6 @@ export type ShowcaseLabels = {
   /** Les dates de la session : « 6 au 9 décembre » ({start} sans le mois s'il est le même). */
   range: string;
   /** Étiquettes sous le titre : nom de la liste (lecteurs d'écran) et format. */
-  tags: { label: string; inter: string };
   /** Encadré « session » (fixe à droite sur ordinateur). */
   card: { next: string; note: string; refMore: string };
   /** Barre d'ancres collée en haut. */
@@ -188,13 +183,13 @@ const LABELS_FR: ShowcaseLabels = {
     duration: 'Durée',
     seats: 'Effectif',
     place: 'Lieu',
+    mode: 'Format',
     seatsValue: `{n}${N}participants`,
     seatsMore: 'au plus',
     noDate: 'Sur demande',
     noDateMore: 'prochaine session à venir',
   },
   range: '{start} au {end}',
-  tags: { label: 'En bref', inter: 'Inter-entreprises' },
   card: {
     next: 'Prochaine session',
     note: 'Le tarif et le programme détaillé vous sont adressés sur demande.',
@@ -264,13 +259,13 @@ const LABELS_AR: ShowcaseLabels = {
     duration: 'المدة',
     seats: 'عدد المشاركين',
     place: 'المكان',
+    mode: 'الصيغة',
     seatsValue: '{n} مشاركًا',
     seatsMore: 'كحد أقصى',
     noDate: 'حسب الطلب',
     noDateMore: 'الدورة القادمة قريبًا',
   },
   range: 'من {start} إلى {end}',
-  tags: { label: 'باختصار', inter: 'بين المؤسسات' },
   card: {
     next: 'الدورة القادمة',
     note: 'يُرسل إليكم السعر والبرنامج المفصّل عند الطلب.',
@@ -402,13 +397,13 @@ const FR: TrainingShowcase[] = [
     ],
     audience: {
       roles: [
-        { icon: 'leader', label: 'Directeurs' },
-        { icon: 'structure', label: 'Responsables organisation' },
-        { icon: 'quality', label: 'Qualité' },
-        { icon: 'people', label: 'Ressources humaines' },
-        { icon: 'improvement', label: 'Amélioration continue' },
-        { icon: 'manager', label: 'Chefs de service' },
-        { icon: 'company', label: 'Dirigeants de PME' },
+        'Directeurs',
+        'Responsables organisation',
+        'Qualité',
+        'Ressources humaines',
+        'Amélioration continue',
+        'Chefs de service',
+        'Dirigeants de PME',
       ],
       prerequisites: [
         {
@@ -517,13 +512,13 @@ const AR: TrainingShowcase[] = [
     ],
     audience: {
       roles: [
-        { icon: 'leader', label: 'المديرون' },
-        { icon: 'structure', label: 'مسؤولو التنظيم' },
-        { icon: 'quality', label: 'الجودة' },
-        { icon: 'people', label: 'الموارد البشرية' },
-        { icon: 'improvement', label: 'التحسين المستمر' },
-        { icon: 'manager', label: 'رؤساء المصالح' },
-        { icon: 'company', label: 'مسيّرو المؤسسات الصغيرة والمتوسطة' },
+        'المديرون',
+        'مسؤولو التنظيم',
+        'الجودة',
+        'الموارد البشرية',
+        'التحسين المستمر',
+        'رؤساء المصالح',
+        'مسيّرو المؤسسات الصغيرة والمتوسطة',
       ],
       prerequisites: [
         { icon: 'experience', text: 'خبرة أولى في التأطير أو في وظيفة عرضية' },
