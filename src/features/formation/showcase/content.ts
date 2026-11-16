@@ -98,8 +98,8 @@ export type TrainingShowcase = {
   };
   /** Titre de « Quatre temps forts » (la suite après la virgule change d'une formation à l'autre). */
   stepsTitle: string;
-  /** Exactement quatre temps forts, chacun avec son pictogramme. */
-  steps: { icon: ShowcaseIcon; title: string; text: string }[];
+  /** Exactement quatre temps forts (numérotés dans la fiche). */
+  steps: { title: string; text: string }[];
   /** Ce que vous emportez : une tuile par acquis, avec son pictogramme. */
   gains: { icon: ShowcaseIcon; text: string }[];
   /** roles : les fonctions visées (une carte chacune) ; prerequisites : un point par prérequis. */
@@ -144,8 +144,6 @@ export type ShowcaseLabels = {
     audience: string;
     voices: string;
   };
-  /** Titre (lecteurs d'écran) du bloc « Pour qui » et « La session comprend ». */
-  audienceHeading: string;
   why: string;
   steps: { eyebrow: string; note: string };
   gains: { eyebrow: string; title: string };
@@ -210,7 +208,6 @@ const LABELS_FR: ShowcaseLabels = {
     audience: 'Public et session',
     voices: 'Témoignages',
   },
-  audienceHeading: 'Public, prérequis et contenu de la session',
   why: 'Pourquoi cette formation',
   steps: {
     eyebrow: 'Le programme en bref',
@@ -287,7 +284,6 @@ const LABELS_AR: ShowcaseLabels = {
     audience: 'الجمهور والدورة',
     voices: 'شهادات',
   },
-  audienceHeading: 'الجمهور والمتطلبات المسبقة ومحتوى الدورة',
   why: 'لماذا هذا التكوين',
   steps: {
     eyebrow: 'البرنامج باختصار',
@@ -379,22 +375,18 @@ const FR: TrainingShowcase[] = [
     stepsTitle: 'Quatre temps forts, de l’analyse à l’action',
     steps: [
       {
-        icon: 'collect',
         title: 'Cadrer et collecter',
         text: 'Bâtir un diagnostic sur des faits, non sur des impressions.',
       },
       {
-        icon: 'structure',
         title: 'Lire l’organisation',
         text: 'Structure, responsabilités et processus à l’épreuve du réel.',
       },
       {
-        icon: 'decide',
         title: 'Comprendre et décider',
         text: 'Causes, priorités et choix entre regard interne et regard externe.',
       },
       {
-        icon: 'present',
         title: 'Convaincre et agir',
         text: 'Restitution, plan d’action et mise en pratique dans votre structure.',
       },
@@ -501,22 +493,18 @@ const AR: TrainingShowcase[] = [
     stepsTitle: 'أربع محطات، من التحليل إلى العمل',
     steps: [
       {
-        icon: 'collect',
         title: 'التأطير وجمع المعطيات',
         text: 'بناء تشخيص على الوقائع، لا على الانطباعات.',
       },
       {
-        icon: 'structure',
         title: 'قراءة التنظيم',
         text: 'الهيكل والمسؤوليات والعمليات على محكّ الواقع.',
       },
       {
-        icon: 'decide',
         title: 'الفهم واتخاذ القرار',
         text: 'الأسباب والأولويات والاختيار بين النظرة الداخلية والنظرة الخارجية.',
       },
       {
-        icon: 'present',
         title: 'الإقناع والتنفيذ',
         text: 'عرض النتائج وخطة العمل والتطبيق داخل مؤسستكم.',
       },

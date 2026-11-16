@@ -21,14 +21,15 @@ import { IdentificationBadgeIcon } from '@phosphor-icons/react/dist/csr/Identifi
 import { IntersectThreeIcon } from '@phosphor-icons/react/dist/csr/IntersectThree';
 import { LightbulbIcon } from '@phosphor-icons/react/dist/csr/Lightbulb';
 import { ListChecksIcon } from '@phosphor-icons/react/dist/csr/ListChecks';
+import { ListNumbersIcon } from '@phosphor-icons/react/dist/csr/ListNumbers';
 import { LockKeyIcon } from '@phosphor-icons/react/dist/csr/LockKey';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react/dist/csr/MagnifyingGlass';
 import { MapPinIcon } from '@phosphor-icons/react/dist/csr/MapPin';
 import { PackageIcon } from '@phosphor-icons/react/dist/csr/Package';
-import { PlusIcon } from '@phosphor-icons/react/dist/csr/Plus';
 import { PresentationChartIcon } from '@phosphor-icons/react/dist/csr/PresentationChart';
 import { ScalesIcon } from '@phosphor-icons/react/dist/csr/Scales';
 import { SealCheckIcon } from '@phosphor-icons/react/dist/csr/SealCheck';
+import { TargetIcon } from '@phosphor-icons/react/dist/csr/Target';
 import { ToolboxIcon } from '@phosphor-icons/react/dist/csr/Toolbox';
 import { TreeStructureIcon } from '@phosphor-icons/react/dist/csr/TreeStructure';
 import { UserGearIcon } from '@phosphor-icons/react/dist/csr/UserGear';
@@ -267,200 +268,164 @@ function Showcase({ item }: { item: TrainingShowcase }) {
             </ul>
           </nav>
 
-          {/* ---------- Pourquoi cette formation ---------- */}
-          <section className={styles.block} {...sectionProps(0)}>
-            <p className={styles.eyebrow}>{t.why}</p>
-            {/* Pas d'animation ligne à ligne ici : elle couperait « pas : » avant les deux-points. */}
-            <h2 id={`${ids}-${SECTIONS[0]}`} className={styles.sectionTitle} data-reveal="title">
-              {item.why.title}
-            </h2>
-
-            {/* 1. Le constat : les symptômes, en cartes bleu nuit (pictogrammes ambre). */}
-            <p className={styles.miniLabel}>{t.symptoms}</p>
-            <ul className={cx(styles.symptoms, 'on-dark')} data-reveal-stagger>
-              {item.why.symptoms.map((symptom) => {
-                const Icon = ICONS[symptom.icon];
-                return (
-                  <li key={symptom.text} className={styles.symptom}>
-                    <Icon size={30} weight="duotone" aria-hidden="true" />
-                    <span>{symptom.text}</span>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* 2. La réponse : ce que la formation apporte. */}
-            <p className={styles.answer} data-reveal>
-              <CheckCircleIcon size={30} weight="fill" aria-hidden="true" />
-              <span>{item.why.answer}</span>
-            </p>
-
-            {/* 3. Sa singularité : deux volets reliés. */}
-            <div className={styles.edge} data-reveal>
-              <p className={styles.edgeLabel}>
-                <span className={styles.edgeIcon} aria-hidden="true">
-                  <LightbulbIcon size={22} weight="duotone" />
-                </span>
-                {t.edge}
-              </p>
-              <ul className={styles.edgeParts}>
-                {item.why.edge.map((part, index) => {
-                  const Icon = ICONS[part.icon];
-                  return (
-                    <li key={part.label} className={styles.edgePart}>
-                      {index > 0 && (
-                        <span className={styles.edgeLink} aria-hidden="true">
-                          <PlusIcon size={18} weight="bold" />
-                        </span>
-                      )}
-                      <span className={styles.edgePartIcon} aria-hidden="true">
-                        <Icon size={28} weight="duotone" />
-                      </span>
-                      <b>{part.label}</b>
-                      <span>{part.text}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </section>
-
-          {/* ---------- Quatre temps forts : une carte par temps, avec son pictogramme ---------- */}
-          <section className={styles.block} {...sectionProps(1)}>
-            <p className={styles.eyebrow}>{t.steps.eyebrow}</p>
-            <h2 id={`${ids}-${SECTIONS[1]}`} className={styles.sectionTitle} data-reveal="title">
-              {item.stepsTitle}
-            </h2>
-            <ol className={styles.stepGrid} data-reveal-stagger>
-              {item.steps.map((step, index) => {
-                const Icon = ICONS[step.icon];
-                return (
-                  <li key={step.title} className={styles.stepCard}>
-                    <span className={styles.iconBox} aria-hidden="true">
-                      <Icon size={28} weight="duotone" />
-                    </span>
-                    <span className={styles.stepNum} aria-hidden="true">
-                      {index + 1}
-                    </span>
-                    <h3 className={styles.stepTitle}>{step.title}</h3>
-                    <p className={styles.small}>{step.text}</p>
-                  </li>
-                );
-              })}
-            </ol>
-            <p className={styles.note}>
-              <FileTextIcon size={18} aria-hidden="true" />
-              <span>{t.steps.note}</span>
-            </p>
-          </section>
-
-          {/* ---------- Ce que vous emportez : une tuile par acquis ---------- */}
-          <section className={styles.block} {...sectionProps(2)}>
-            <p className={styles.eyebrow}>{t.gains.eyebrow}</p>
-            <h2 id={`${ids}-${SECTIONS[2]}`} className={styles.sectionTitle} data-reveal="title">
-              {t.gains.title}
-            </h2>
-            <ul className={styles.gainGrid} data-reveal-stagger>
-              {item.gains.map((gain) => {
-                const Icon = ICONS[gain.icon];
-                return (
-                  <li key={gain.text} className={styles.gain}>
-                    <span className={styles.gainIcon} aria-hidden="true">
-                      <Icon size={26} weight="duotone" />
-                    </span>
-                    <span>{gain.text}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-
-          {/* ---------- Pour qui · Prérequis · La session comprend ---------- */}
-          <section className={styles.block} {...sectionProps(3)}>
-            <h2 id={`${ids}-${SECTIONS[3]}`} className="sr-only">
-              {t.audienceHeading}
-            </h2>
-            {/* Pour qui : une carte par fonction, avec son pictogramme. */}
-            <h3 className={styles.groupTitle}>
-              <span className={styles.groupBadge} aria-hidden="true">
-                <UsersThreeIcon size={22} weight="duotone" />
-              </span>
-              {t.audience}
-            </h3>
-            <ul className={styles.roles} data-reveal-stagger>
-              {item.audience.roles.map((role) => {
-                const Icon = ICONS[role.icon];
-                return (
-                  <li key={role.label} className={styles.role}>
-                    <span className={styles.roleIcon} aria-hidden="true">
-                      <Icon size={26} weight="duotone" />
-                    </span>
-                    <span className={styles.roleLabel}>{role.label}</span>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* Prérequis : panneau bleu nuit, grands numéros ambre (ambre sur fond foncé). */}
-            <div className={cx(styles.prereq, 'on-dark')} data-reveal>
-              <h3 className={styles.prereqTitle}>
-                <ClipboardTextIcon size={24} weight="duotone" aria-hidden="true" />
-                {t.prerequisites}
-              </h3>
-              <ol className={styles.prereqList}>
-                {item.audience.prerequisites.map((line, index) => {
-                  const Icon = ICONS[line.icon];
-                  return (
-                    <li key={line.text}>
-                      <span className={styles.prereqNum} aria-hidden="true">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      <Icon size={30} weight="duotone" className={styles.prereqIcon} aria-hidden />
-                      <p>{line.text}</p>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-
-            {/* La session comprend : une carte par élément, coche verte « inclus ». */}
-            <h3 className={cx(styles.groupTitle, styles.includesTitle)}>
-              <span className={styles.groupBadge} aria-hidden="true">
-                <PackageIcon size={22} weight="duotone" />
-              </span>
-              {t.includes}
-            </h3>
-            <ul className={styles.includes} data-reveal-stagger>
-              {item.includes.items.map((entry) => {
-                const Icon = ICONS[entry.icon];
-                return (
-                  <li key={entry.text} className={styles.include}>
-                    <CheckCircleIcon
-                      size={22}
-                      weight="fill"
-                      className={styles.includeCheck}
-                      aria-hidden="true"
-                    />
-                    <span className={styles.includeIcon} aria-hidden="true">
-                      <Icon size={30} weight="duotone" />
-                    </span>
-                    <span className={styles.includeText}>{entry.text}</span>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* L'animation : carte mise en avant, pictogramme du formateur. */}
-            <div className={styles.trainer} data-reveal>
-              <span className={styles.trainerIcon} aria-hidden="true">
-                <ChalkboardTeacherIcon size={34} weight="duotone" />
-              </span>
-              <div className={styles.trainerBody}>
-                <p className={styles.trainerLabel}>{t.trainer}</p>
-                <p className={styles.trainerText}>{item.includes.trainer}</p>
+          {/* ---------- La fiche : une ligne par rubrique, intitulé à gauche, contenu à droite ---------- */}
+          <div className={styles.fiche}>
+            {/* Pourquoi cette formation */}
+            <section className={styles.row} {...sectionProps(0)}>
+              <RowHead icon={TargetIcon} id={`${ids}-${SECTIONS[0]}`} label={t.why} />
+              <div className={styles.rowBody}>
+                <p className={styles.hook}>{item.why.title}</p>
+                <ul className={styles.list}>
+                  {item.why.symptoms.map((symptom) => {
+                    const Icon = ICONS[symptom.icon];
+                    return (
+                      <li key={symptom.text}>
+                        <Icon size={22} weight="duotone" aria-hidden="true" />
+                        <span>{symptom.text}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className={styles.answer}>
+                  <CheckCircleIcon size={22} weight="fill" aria-hidden="true" />
+                  <span>{item.why.answer}</span>
+                </p>
+                <div className={styles.edge}>
+                  <p className={styles.edgeLabel}>
+                    <LightbulbIcon size={18} weight="duotone" aria-hidden="true" />
+                    {t.edge}
+                  </p>
+                  <ul className={styles.list}>
+                    {item.why.edge.map((part) => {
+                      const Icon = ICONS[part.icon];
+                      return (
+                        <li key={part.label}>
+                          <Icon size={22} weight="duotone" aria-hidden="true" />
+                          <span>
+                            <b>{part.label}</b>
+                            {part.text}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+
+            {/* Quatre temps forts */}
+            <section className={styles.row} {...sectionProps(1)}>
+              <RowHead
+                icon={ListNumbersIcon}
+                id={`${ids}-${SECTIONS[1]}`}
+                label={item.stepsTitle}
+              />
+              <div className={styles.rowBody}>
+                <ol className={styles.steps}>
+                  {item.steps.map((step, index) => (
+                    <li key={step.title}>
+                      <span className={styles.stepNum} aria-hidden="true">
+                        {index + 1}
+                      </span>
+                      <div>
+                        <h3 className={styles.stepTitle}>{step.title}</h3>
+                        <p>{step.text}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                <p className={styles.note}>
+                  <FileTextIcon size={16} aria-hidden="true" />
+                  <span>{t.steps.note}</span>
+                </p>
+              </div>
+            </section>
+
+            {/* Ce que vous emportez */}
+            <section className={styles.row} {...sectionProps(2)}>
+              <RowHead icon={ToolboxIcon} id={`${ids}-${SECTIONS[2]}`} label={t.gains.eyebrow} />
+              <div className={styles.rowBody}>
+                <p className={styles.rowLead}>{t.gains.title}</p>
+                <ul className={styles.list}>
+                  {item.gains.map((gain) => {
+                    const Icon = ICONS[gain.icon];
+                    return (
+                      <li key={gain.text}>
+                        <Icon size={22} weight="duotone" aria-hidden="true" />
+                        <span>{gain.text}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </section>
+
+            {/* Pour qui */}
+            <section className={styles.row} {...sectionProps(3)}>
+              <RowHead icon={UsersThreeIcon} id={`${ids}-${SECTIONS[3]}`} label={t.audience} />
+              <div className={styles.rowBody}>
+                <ul className={styles.chips}>
+                  {item.audience.roles.map((role) => {
+                    const Icon = ICONS[role.icon];
+                    return (
+                      <li key={role.label}>
+                        <Icon size={16} weight="duotone" aria-hidden="true" />
+                        {role.label}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </section>
+
+            {/* Prérequis */}
+            <section className={styles.row} aria-labelledby={`${ids}-prerequisites`}>
+              <RowHead
+                icon={ClipboardTextIcon}
+                id={`${ids}-prerequisites`}
+                label={t.prerequisites}
+              />
+              <div className={styles.rowBody}>
+                <ul className={styles.list}>
+                  {item.audience.prerequisites.map((line) => {
+                    const Icon = ICONS[line.icon];
+                    return (
+                      <li key={line.text}>
+                        <Icon size={22} weight="duotone" aria-hidden="true" />
+                        <span>{line.text}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </section>
+
+            {/* La session comprend */}
+            <section className={styles.row} aria-labelledby={`${ids}-includes`}>
+              <RowHead icon={PackageIcon} id={`${ids}-includes`} label={t.includes} />
+              <div className={styles.rowBody}>
+                <ul className={cx(styles.list, styles.listTwo)}>
+                  {item.includes.items.map((entry) => {
+                    const Icon = ICONS[entry.icon];
+                    return (
+                      <li key={entry.text}>
+                        <Icon size={22} weight="duotone" aria-hidden="true" />
+                        <span>{entry.text}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </section>
+
+            {/* Animation */}
+            <section className={styles.row} aria-labelledby={`${ids}-trainer`}>
+              <RowHead icon={ChalkboardTeacherIcon} id={`${ids}-trainer`} label={t.trainer} />
+              <div className={styles.rowBody}>
+                <p>{item.includes.trainer}</p>
+              </div>
+            </section>
+          </div>
         </div>
 
         {/* ---------- Encadré « session » ---------- */}
@@ -659,6 +624,20 @@ function Showcase({ item }: { item: TrainingShowcase }) {
           {t.cta.button}
         </a>
       </div>
+    </div>
+  );
+}
+
+/** Intitulé d'une ligne de la fiche : petit pictogramme, puis le titre de la rubrique. */
+function RowHead({ icon: Icon, id, label }: { icon: typeof ClockIcon; id: string; label: string }) {
+  return (
+    <div className={styles.rowHead}>
+      <span className={styles.rowIcon} aria-hidden="true">
+        <Icon size={22} weight="duotone" />
+      </span>
+      <h2 id={id} className={styles.rowTitle}>
+        {label}
+      </h2>
     </div>
   );
 }

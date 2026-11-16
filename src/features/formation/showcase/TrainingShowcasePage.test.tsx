@@ -39,25 +39,30 @@ describe('Page vitrine d’une formation', () => {
     );
     expect(screen.getByText('Repérer les blocages, optimiser les processus.')).toBeInTheDocument();
     expect(screen.getAllByText('D02-26.INTER.01. V1').length).toBeGreaterThanOrEqual(3);
+    // Une ligne de la fiche par rubrique, puis témoignages, chiffres et demande.
     const sections = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     expect(sections).toEqual([
-      'Constater un blocage ne suffit pas : il faut le prouver, puis le corriger.',
+      'Pourquoi cette formation',
       'Quatre temps forts, de l’analyse à l’action',
-      'Vous repartez avec du concret',
-      'Public, prérequis et contenu de la session',
+      'Ce que vous emportez',
+      'Pour qui',
+      'Prérequis',
+      'La session comprend',
+      'Animation',
       'La parole aux participants',
       'OPEM en chiffres',
       'Recevez la fiche technique détaillée et votre devis',
     ]);
-    // Les quatre temps forts, puis « Pour qui », « Prérequis » et « La session comprend ».
+    expect(
+      screen.getByText(
+        /^Constater un blocage ne suffit pas\s: il faut le prouver, puis le corriger\.$/,
+      ),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
       'Cadrer et collecter',
       'Lire l’organisation',
       'Comprendre et décider',
       'Convaincre et agir',
-      'Pour qui',
-      'Prérequis',
-      'La session comprend',
     ]);
     expect(screen.getByText(/Contenu protégé/)).toBeInTheDocument();
   });
