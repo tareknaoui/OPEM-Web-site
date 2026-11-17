@@ -181,7 +181,7 @@ const LABELS_FR: ShowcaseLabels = {
   steps: {
     title: 'Comment ça se passe',
     items: [
-      'Vous envoyez votre demande en deux minutes.',
+      'Vous envoyez votre demande en quelques secondes seulement.',
       'Notre service formation l’examine et vous contacte.',
       'Vous recevez la fiche technique détaillée et, si vous le souhaitez, votre devis.',
     ],
@@ -278,7 +278,7 @@ const LABELS_AR: ShowcaseLabels = {
   steps: {
     title: 'كيف تجري العملية',
     items: [
-      'ترسلون طلبكم في دقيقتين.',
+      'ترسلون طلبكم في ثوانٍ معدودة فقط.',
       'تدرسه مصلحة التكوين وتتصل بكم.',
       'تتلقون البطاقة التقنية المفصّلة، وعرض السعر إن رغبتم في ذلك.',
     ],
