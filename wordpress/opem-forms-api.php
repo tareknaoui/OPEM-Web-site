@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: OPEM – Formulaires (rendez-vous, candidature)
+ * Plugin Name: OPEM – Formulaires (rendez-vous, candidature, demande de formation)
  * Description: Reçoit les deux formulaires du site React, les vérifie et les envoie par courriel à OPEM ; tient la liste de diffusion à part ; range les candidatures et leurs fichiers hors de l’accès public.
  * Version:     1.0.0
  * Requires PHP: 7.4
@@ -10,6 +10,8 @@
  *
  * Réglages facultatifs, dans wp-config.php (valeur par défaut entre parenthèses) :
  *   OPEM_FORMS_TO_CONTACT   destinataire des demandes de rendez-vous (contact@opem-dz.com)
+ *   OPEM_FORMS_TO_FORMATIONS destinataire des demandes de fiche technique et de devis des
+ *                           pages formation (formations@opem-dz.com)
  *   OPEM_FORMS_TO_EXPERT    destinataire des candidatures (expert@opem-dz.com)
  *   OPEM_FORMS_PRIVATE_DIR  dossier des fichiers reçus, HORS de la racine du site
  *                           (dossier « opem-prive » à côté du dossier de WordPress)
@@ -25,6 +27,9 @@
  *
  * Points d’accès (multipart/form-data) :
  *   POST /wp-json/opem/v1/rendez-vous   demande de rendez-vous → OPEM_FORMS_TO_CONTACT
+ *   POST /wp-json/opem/v1/demande-formation  fiche technique détaillée et devis d’une formation
+ *                                       → OPEM_FORMS_TO_FORMATIONS (la fiche n’est jamais
+ *                                       envoyée automatiquement : le service formation répond)
  *   POST /wp-json/opem/v1/candidature   candidature, CV et documents → OPEM_FORMS_TO_EXPERT
  *   POST /wp-json/opem/v1/inscription   inscription aux éclairages (page Éclairages) → liste de diffusion
  * Désinscription de la liste de diffusion : https://<wordpress>/?opem_desinscription=<jeton>
@@ -41,6 +46,7 @@ defined('ABSPATH') || exit;
 foreach (
     [
         'OPEM_FORMS_TO_CONTACT'  => 'contact@opem-dz.com',
+        'OPEM_FORMS_TO_FORMATIONS' => 'formations@opem-dz.com',
         'OPEM_FORMS_TO_EXPERT'   => 'expert@opem-dz.com',
         'OPEM_FORMS_ORIGINS'     => '',
         'OPEM_FORMS_MAIL_MAX_MB' => 15,
@@ -157,6 +163,11 @@ add_action('rest_api_init', function () {
         // Formulaire public : les contrôles (robots, fréquence, origine) sont dans le traitement.
         'permission_callback' => '__return_true',
         'callback'            => 'opem_forms_appointment',
+    ]);
+    register_rest_route('opem/v1', '/demande-formation', [
+        'methods'             => WP_REST_Server::CREATABLE,
+        'permission_callback' => '__return_true',
+        'callback'            => 'opem_forms_training_request',
     ]);
     register_rest_route('opem/v1', '/candidature', [
         'methods'             => WP_REST_Server::CREATABLE,
@@ -390,6 +401,106 @@ function opem_forms_appointment(WP_REST_Request $request): WP_REST_Response
     }
     if ($newsletter) {
         opem_forms_subscribe($email, $name, $lang, 'rendez-vous');
+    }
+    opem_forms_rate_hit();
+    return new WP_REST_Response(['ok' => true], 200);
+}
+
+/* ==========================================================================
+   Formulaire 1 bis : demande de fiche technique et de devis (pages formation)
+   ========================================================================== */
+
+/**
+ * Pages /formation/fiches-formation/<id> : la personne demande la fiche technique détaillée,
+ * un devis, ou les deux. Tout est obligatoire sauf « Rester informé ». La formation (titre,
+ * référence, dates) vient de la page ; le service formation examine chaque demande avant
+ * d'adresser la fiche : rien n'est envoyé automatiquement à la personne.
+ */
+function opem_forms_training_request(WP_REST_Request $request): WP_REST_Response
+{
+    $guard = opem_forms_guard($request);
+    if ($guard) {
+        return $guard;
+    }
+    $errors = [];
+
+    $wantSheet = opem_forms_checked($request, 'wantSheet');
+    $wantQuote = opem_forms_checked($request, 'wantQuote');
+    if (!$wantSheet && !$wantQuote) {
+        $errors['wants'] = 'required';
+    }
+    $fields = [];
+    foreach (['name' => 120, 'role' => 120, 'organisation' => 120] as $key => $max) {
+        $fields[$key] = opem_forms_text($request, $key, $max);
+        if ($fields[$key] === '') {
+            $errors[$key] = 'required';
+        }
+    }
+    $participants = opem_forms_text($request, 'participants', 3);
+    if ($participants === '') {
+        $errors['participants'] = 'required';
+    } elseif (!preg_match('/^\d{1,3}$/', $participants) || (int) $participants < 1) {
+        $errors['participants'] = 'number';
+    }
+    $email = opem_forms_email($request, $errors);
+    $phone = opem_forms_phone($request, $errors);
+
+    // La formation demandée : identifiant d'adresse, titre, référence et dates de la page.
+    $formation = opem_forms_text($request, 'formation', 80);
+    $title     = opem_forms_text($request, 'title', 160);
+    $reference = opem_forms_text($request, 'reference', 40);
+    $dates     = opem_forms_text($request, 'dates', 80);
+    if (!preg_match('/^[a-z0-9-]{1,80}$/', $formation) || $title === '') {
+        $errors['formation'] = 'required';
+    }
+
+    if (!opem_forms_checked($request, 'consent')) {
+        $errors['consent'] = 'required';
+    }
+    $newsletter = opem_forms_checked($request, 'newsletter');
+    if ($errors) {
+        return opem_forms_invalid($errors);
+    }
+    $lang = opem_forms_lang($request);
+    $now  = opem_forms_now_text();
+
+    $wanted = array_filter([
+        $wantSheet ? 'la fiche technique détaillée' : '',
+        $wantQuote ? 'un devis' : '',
+    ]);
+    $lines = [
+        'FORMATION DEMANDÉE',
+        $title . ($reference !== '' ? ' (réf. ' . $reference . ')' : ''),
+        'Session : ' . ($dates !== '' ? $dates : '— (dates sur demande)'),
+        'Page du site : /formation/fiches-formation/' . $formation,
+        '',
+        'Je souhaite recevoir : ' . implode(' et ', $wanted),
+        '',
+        '——————————————————————————————',
+        '',
+        'Nom et prénom : ' . $fields['name'],
+        'Fonction : ' . $fields['role'],
+        'Nombre de participants envisagé : ' . (int) $participants,
+        'Organisme : ' . $fields['organisation'],
+        'E-mail professionnel : ' . $email,
+        'Téléphone : ' . $phone,
+        '',
+        '——————————————————————————————',
+        'La fiche technique n’est jamais envoyée automatiquement : examiner la demande avant de répondre.',
+        'Consentement : donné le ' . $now,
+        'Rester informé : ' . ($newsletter ? 'oui, inscrit à la liste de diffusion le ' . $now : 'non'),
+        'Langue du site : ' . ($lang === 'ar' ? 'arabe' : 'français'),
+    ];
+
+    $subject = 'Demande de ' . implode(' et de ', array_map(function ($want) {
+        return $want === 'un devis' ? 'devis' : 'fiche technique';
+    }, $wanted)) . ' : ' . $title . ' · ' . $fields['name'] . ' (' . $fields['organisation'] . ')';
+    if (!opem_forms_mail(OPEM_FORMS_TO_FORMATIONS, $subject, $lines, $fields['name'], $email)) {
+        error_log('OPEM formulaires : échec de l’envoi de la demande de formation.');
+        return new WP_REST_Response(['code' => 'mail'], 502);
+    }
+    if ($newsletter) {
+        opem_forms_subscribe($email, $fields['name'], $lang, 'formation');
     }
     opem_forms_rate_hit();
     return new WP_REST_Response(['ok' => true], 200);
@@ -989,6 +1100,7 @@ function opem_forms_admin_page(): void
     echo '<h2>État des réglages</h2><table class="widefat striped"><tbody>';
     $status = [
         'Demandes de rendez-vous envoyées à'  => OPEM_FORMS_TO_CONTACT,
+        'Demandes de formation envoyées à'    => OPEM_FORMS_TO_FORMATIONS,
         'Candidatures envoyées à'             => OPEM_FORMS_TO_EXPERT,
         'Candidatures enregistrées'           => (string) $candidates,
         'Dossier privé des fichiers'          => $root !== '' ? $root . ' (accessible en écriture)' : 'INDISPONIBLE : régler OPEM_FORMS_PRIVATE_DIR dans wp-config.php',

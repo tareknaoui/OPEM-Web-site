@@ -1,145 +1,126 @@
 import type { Lang } from '@/i18n/language';
 
 /*
- * Pages vitrine des formations inter-entreprises (/formation/fiches-formation/<id>).
+ * Pages des formations inter-entreprises (/formation/fiches-formation/<id>).
  *
- * Modèle unique, version 10 « catalogue » retenue par OPEM (encadré « session » fixe à droite,
- * barre d'ancres) : chaque formation a la même page ; seuls changent les textes, la photo et la
- * référence de son entrée ci-dessous. Les dates
- * viennent de l'agenda (homeContent.trainings.items, même `id`) : une seule source, l'agenda
- * et la vitrine ne peuvent pas se contredire. Sans session programmée, la page affiche
- * « Prochaine session : sur demande ».
+ * Modèle unique retenu par OPEM (maquettes du 17 novembre 2026, variante 4 « fond clair, scène
+ * bleu nuit ») : chaque formation a la même page ; seuls changent les textes, l'illustration et
+ * la référence de son entrée ci-dessous. Les dates viennent de l'agenda
+ * (homeContent.trainings.items, même `id`) : une seule source, l'agenda et la page ne peuvent
+ * pas se contredire. Sans session programmée, la page affiche « Dates : sur demande ».
  *
- * La page n'affiche ni le tarif ni le programme détaillé : ils ne sont envoyés que sur demande.
+ * La page n'affiche ni le tarif ni le programme détaillé : la fiche technique n'est jamais
+ * envoyée automatiquement, le service formation examine chaque demande (formulaire du bas de
+ * page, serveur : wordpress/opem-forms-api.php, point d'accès « demande-formation »).
  *
- * PROVISOIRE, à confirmer par OPEM : les témoignages, l'adresse et le téléphone de contact
- * (CONTACT), la destination du bouton (courriel prérempli), les chiffres clés (ceux de la
- * consigne : ils diffèrent de ceux de l'accueil). L'arabe est à faire relire.
+ * Textes français définitifs (maquettes d'OPEM). L'arabe est à faire relire.
+ * À PRÉCISER par OPEM : la destination du lien « Confier… » de « Plan de formation 2027 »
+ * (provisoirement la page « Formation qualifiante ») et de « Cybersécurité opérationnelle »
+ * (provisoirement « Conformité et protection des données »).
  *
- * Ajouter une formation : copier l'entrée « diagnostic-d-organisation » dans FR et AR, avec
- * l'`id` de sa session dans l'agenda, puis déposer sa photo dans public/images/sessions/
- * (deux tailles : 1 400 et 700 px de large).
+ * Ajouter une formation : copier une entrée dans FR et AR, avec l'`id` de sa session dans
+ * l'agenda ; déposer son illustration (style isométrique, version pour fond bleu nuit) dans
+ * public/images/formations/<id>.svg ; indiquer la position du signal ambre sur le point clé
+ * de l'illustration (en % de sa largeur et de sa hauteur) ; ajouter l'adresse de la page dans
+ * src/config/pages.ts et vite.seo.ts. Les témoignages ne se répètent pas d'une page à l'autre.
  */
 
 const N = ' ';
 /** Espace insécable avant « : ; ? ! » (typographie française). */
 const fr = (text: string) => text.replace(/ ([:;?!])/g, `${N}$1`);
 
-/** Contact des formations (provisoire : à confirmer par OPEM). */
+/** Le service formation : destinataire des demandes, coordonnées affichées. */
 export const SHOWCASE_CONTACT = {
   email: 'formations@opem-dz.com',
   phone: { display: '0770 442 645', href: 'tel:+213770442645' },
 } as const;
 
+type Link = { label: string; href: string };
+
 export type TrainingShowcase = {
   /** Identifiant de la session dans l'agenda, et fin de l'adresse de la page. */
   id: string;
   reference: string;
-  /** Cycle du catalogue (fil d'Ariane). */
+  /** Cycle du catalogue, en tête du surtitre (« Cycle Management »). */
   cycle: string;
   title: string;
-  subtitle: string;
-  intro: string;
-  photo: { small: string; large: string; alt: string };
-  practical: {
-    /** « Présentiel » (étiquette sous le titre). */
-    mode: string;
-    /** « 4 jours ». */
-    duration: string;
-    /** « de 9 h à 16 h ». */
-    hours: string;
-    seats: number;
-    place: string;
-    city: string;
-  };
+  /** L'accroche au-dessus du titre : la question, puis la réponse (surlignée en vert). */
+  hook: { question: string; answer: string };
+  /** La promesse, sous le titre. */
+  promise: string;
+  duration: string;
+  seats: number;
+  place: string;
+  city: string;
   /**
-   * Pourquoi cette formation, du problème à la solution : symptoms, ce que le participant
-   * constate (2 à 4 points) ; answer, ce que la formation apporte ; edge, ce qui la distingue
-   * (« Sa singularité », en deux volets reliés).
+   * L'illustration du haut de page (version pour fond bleu nuit) et le point clé où se pose le
+   * signal ambre animé, en % de la largeur et de la hauteur de l'image.
    */
-  why: {
-    title: string;
-    symptoms: string[];
-    answer: string;
-    edge: { label: string; text: string }[];
-  };
-  /** Titre de « Quatre temps forts » (la suite après la virgule change d'une formation à l'autre). */
-  stepsTitle: string;
-  /** Exactement quatre temps forts (numérotés dans la fiche). */
-  steps: { title: string; text: string }[];
-  /** Ce que vous emportez : un point par acquis. */
+  illustration: { src: string; alt: string; signal: { x: number; y: number } };
+  /** Pourquoi cette formation : le constat et la réponse, sa singularité, le lien « Confier… ». */
+  why: { text: string; edge: string; link: Link };
+  /** Vous repartez avec : trois acquis, numérotés. */
   gains: string[];
-  /** roles : les fonctions visées (une étiquette chacune) ; prerequisites : un point par prérequis. */
-  audience: {
-    roles: string[];
-    prerequisites: string[];
-  };
-  /** Ce que la session comprend (un point par élément), puis qui l'anime. */
-  includes: { items: string[]; trainer: string };
-  /** Le premier est mis en avant ; les deux suivants dessous. */
+  /** Pour qui : une phrase. */
+  audience: string;
+  /** Pourquoi OPEM : trois raisons, une phrase découpée (« ; » puis « . »). */
+  reasons: string[];
+  /** Témoignages propres à cette formation (un à trois) ; le premier est mis en avant. */
   voices: { quote: string; author: string }[];
 };
 
 export type ShowcaseLabels = {
-  breadcrumb: { label: string; root: { label: string; href: string } };
-  /** « Formation inter-entreprises · {city} ». */
+  breadcrumb: { label: string; root: Link; catalogue: Link };
+  /** Surtitre : « {cycle} · Formation inter-entreprises · {city} ». */
   format: string;
+  actions: { sheet: string; quote: string };
   facts: {
     label: string;
-    dates: string;
     duration: string;
+    dates: string;
     seats: string;
     place: string;
-    /** « Format » (présentiel, à distance…), dans les chiffres clés de l'ouverture. */
-    mode: string;
     /** « {n} participants ». */
     seatsValue: string;
-    seatsMore: string;
     noDate: string;
-    noDateMore: string;
   };
-  /** Les dates de la session : « 6 au 9 décembre » ({start} sans le mois s'il est le même). */
+  /** Les dates : « 06 au 09 déc. 2026 » ({start} sans le mois ni l'année s'ils sont les mêmes). */
   range: string;
-  /** Étiquettes sous le titre : nom de la liste (lecteurs d'écran) et format. */
-  /** Encadré « session » (fixe à droite sur ordinateur). */
-  card: { next: string; note: string; refMore: string };
-  /** Barre d'ancres collée en haut. */
-  tabs: {
-    label: string;
-    why: string;
-    steps: string;
-    gains: string;
-    audience: string;
-    voices: string;
-  };
   why: string;
-  steps: { eyebrow: string; note: string };
-  gains: { eyebrow: string; title: string };
-  audience: string;
-  prerequisites: string;
-  includes: string;
-  trainer: string;
-  /** Titre de l'encadré de « Pourquoi cette formation ». */
   edge: string;
-  /** Petit titre au-dessus des symptômes constatés. */
-  symptoms: string;
-  voices: { eyebrow: string; title: string };
-  figures: { eyebrow: string; items: { value: string; label: string }[] };
-  cta: {
+  gains: string;
+  audience: string;
+  reasons: { title: string; link: Link };
+  figures: { label: string; items: { value: string; label: string }[]; link: Link };
+  voices: string;
+  request: {
     title: string;
-    /** « … Le groupe est limité à {n} participants. » */
-    text: string;
-    button: string;
-    phone: string;
+    intro: string;
+    /** « Vous pouvez aussi nous écrire à {email} ou nous appeler au {phone}. » */
+    contact: [string, string, string];
+    requiredNote: string;
+    want: string;
+    wantSheet: string;
+    wantQuote: string;
+    name: string;
+    role: string;
+    participants: string;
+    participantsError: string;
+    organisation: string;
+    organisationHelp: string;
     email: string;
-    /** « Référence à rappeler : {ref} ». */
-    reminder: string;
-    /**
-     * Courriel prérempli : objet et corps ({title}, {ref}, {session}) ; {session} reçoit
-     * `session` (avec {dates}) quand une session est programmée, rien sinon.
-     */
-    mail: { subject: string; body: string; session: string };
+    phone: string;
+    consentTitle: string;
+    consent: string;
+    consentError: string;
+    newsletterTitle: string;
+    newsletter: string;
+    submit: string;
+    legal: [string, string, string];
+    thanks: string;
+    failure: { unavailable: string; rate: string; tooLarge: string };
   };
+  service: string;
   reference: string;
   protection: string;
 };
@@ -148,73 +129,80 @@ const LABELS_FR: ShowcaseLabels = {
   breadcrumb: {
     label: 'Fil d’Ariane',
     root: { label: 'Formation qualifiante', href: '/formation' },
+    catalogue: { label: 'Catalogue et sessions', href: '/formation/catalogue-et-sessions' },
   },
-  format: 'Formation inter-entreprises · {city}',
+  format: '{cycle} · Formation inter-entreprises · {city}',
+  actions: { sheet: 'Recevoir la fiche technique détaillée', quote: 'Demander un devis' },
   facts: {
-    label: 'Dates, durée, effectif et lieu',
-    dates: 'Dates',
+    label: 'La session',
     duration: 'Durée',
-    seats: 'Effectif',
+    dates: 'Dates',
+    seats: 'Places',
     place: 'Lieu',
-    mode: 'Format',
     seatsValue: `{n}${N}participants`,
-    seatsMore: 'au plus',
     noDate: 'Sur demande',
-    noDateMore: 'prochaine session à venir',
   },
   range: '{start} au {end}',
-  card: {
-    next: 'Prochaine session',
-    note: 'Le tarif et le programme détaillé vous sont adressés sur demande.',
-    refMore: 'Formation inter-entreprises',
-  },
-  tabs: {
-    label: 'Sur cette page',
-    why: 'Pourquoi',
-    steps: 'Temps forts',
-    gains: 'Ce que vous emportez',
-    audience: 'Public et session',
-    voices: 'Témoignages',
-  },
   why: 'Pourquoi cette formation',
-  steps: {
-    eyebrow: 'Le programme en bref',
-    note: 'Le programme détaillé figure dans la fiche technique, adressée sur demande.',
-  },
-  gains: { eyebrow: 'Ce que vous emportez', title: 'Vous repartez avec du concret' },
+  edge: fr('Sa singularité :'),
+  gains: 'Vous repartez avec',
   audience: 'Pour qui',
-  prerequisites: 'Prérequis',
-  includes: 'La session comprend',
-  trainer: 'Animation',
-  edge: 'Sa singularité',
-  symptoms: 'Vous les constatez',
-  voices: { eyebrow: 'Ils en parlent', title: 'La parole aux participants' },
+  reasons: {
+    title: 'Pourquoi OPEM',
+    link: { label: 'Découvrir le cabinet', href: '/le-cabinet' },
+  },
   figures: {
-    eyebrow: 'OPEM en chiffres',
+    label: 'OPEM en chiffres',
     items: [
       { value: '+7', label: 'ans d’activité' },
       { value: '+62', label: 'organisations accompagnées' },
       { value: '+170', label: 'formations dispensées' },
       { value: `+1${N}500`, label: 'professionnels formés' },
-      { value: '+365', label: 'experts mobilisables' },
     ],
+    link: { label: 'Voir nos missions et réalisations', href: '/missions' },
   },
-  cta: {
-    title: 'Recevez la fiche technique détaillée et votre devis',
-    text: `Le programme complet, le tarif et les modalités d’inscription vous sont adressés sur simple demande. Le groupe est limité à {n}${N}participants.`,
-    button: 'Demander la fiche technique et un devis',
-    phone: fr('Téléphone :'),
-    email: fr('Courriel :'),
-    reminder: fr('Référence à rappeler : {ref}'),
-    mail: {
-      subject: fr('Fiche technique et devis : {title} (réf. {ref})'),
-      body: fr(
-        'Bonjour,\n\nJe souhaite recevoir la fiche technique détaillée et un devis pour la formation « {title} »{session} (réf. {ref}).\n\nOrganisation :\nNombre de participants :\nTéléphone :\n\nMerci.',
-      ),
-      session: ', session du {dates}',
+  voices: 'Témoignages',
+  request: {
+    title: 'Recevez la fiche technique détaillée',
+    intro: fr(
+      'Programme complet par module, méthodes pédagogiques, profil du formateur et modalités pratiques : notre service formation examine chaque demande et vous adresse la fiche par e-mail, avec un devis si vous le souhaitez.',
+    ),
+    contact: ['Vous pouvez aussi nous écrire à ', ' ou nous appeler au ', '.'],
+    requiredNote: 'Les champs marqués d’un astérisque sont obligatoires.',
+    want: 'Je souhaite recevoir',
+    wantSheet: 'la fiche technique détaillée',
+    wantQuote: 'un devis',
+    name: 'Nom et prénom',
+    role: 'Fonction',
+    participants: 'Nombre de participants envisagé',
+    participantsError: 'Indiquez un nombre de participants, par exemple 3.',
+    organisation: 'Organisme',
+    organisationHelp: fr('À titre personnel ? Indiquez-le simplement.'),
+    email: 'E-mail professionnel',
+    phone: 'Téléphone',
+    consentTitle: 'Consentement',
+    consent:
+      'J’accepte que les informations saisies soient utilisées par OPEM pour répondre à ma demande et, le cas échéant, me recontacter à ce sujet. Elles ne sont transmises à aucun tiers et sont conservées trois ans après notre dernier contact.',
+    consentError: 'Cochez cette case pour que nous puissions traiter votre demande.',
+    newsletterTitle: 'Rester informé',
+    newsletter:
+      'Je souhaite recevoir les éclairages d’OPEM et l’annonce de ses nouvelles offres et formations.',
+    submit: 'Envoyer ma demande',
+    legal: [
+      `Conformément à la loi n°${N}18-07 du 10 juin 2018 relative à la protection des personnes physiques dans le traitement des données à caractère personnel, modifiée et complétée, vous pouvez accéder à vos données, les rectifier ou vous opposer à leur traitement en écrivant à `,
+      'contact@opem-dz.com',
+      '.',
+    ],
+    thanks:
+      'Merci, votre demande nous est bien parvenue. Notre service formation l’examine et vous contacte.',
+    failure: {
+      unavailable: `L’envoi n’a pas abouti. Réessayez dans un instant, ou écrivez-nous à ${SHOWCASE_CONTACT.email}.`,
+      rate: `Trop d’envois en peu de temps. Réessayez dans une heure, ou écrivez-nous à ${SHOWCASE_CONTACT.email}.`,
+      tooLarge: `L’envoi n’a pas abouti. Écrivez-nous à ${SHOWCASE_CONTACT.email}.`,
     },
   },
-  reference: 'Réf.',
+  service: fr('Service formation :'),
+  reference: `Réf.${N}`,
   protection: fr(
     '© OPEM. Contenu protégé : toute reproduction sans autorisation écrite est interdite.',
   ),
@@ -224,78 +212,82 @@ const LABELS_AR: ShowcaseLabels = {
   breadcrumb: {
     label: 'مسار التصفح',
     root: { label: 'التكوين التأهيلي', href: '/formation' },
+    catalogue: { label: 'الفهرس والدورات', href: '/formation/catalogue-et-sessions' },
   },
-  format: 'تكوين بين المؤسسات · {city}',
+  format: '{cycle} · تكوين بين المؤسسات · {city}',
+  actions: { sheet: 'احصلوا على البطاقة التقنية المفصّلة', quote: 'اطلبوا عرض سعر' },
   facts: {
-    label: 'التواريخ والمدة وعدد المشاركين والمكان',
-    dates: 'التواريخ',
+    label: 'الدورة',
     duration: 'المدة',
-    seats: 'عدد المشاركين',
+    dates: 'التواريخ',
+    seats: 'المقاعد',
     place: 'المكان',
-    mode: 'الصيغة',
     seatsValue: '{n} مشاركًا',
-    seatsMore: 'كحد أقصى',
     noDate: 'حسب الطلب',
-    noDateMore: 'الدورة القادمة قريبًا',
   },
   range: 'من {start} إلى {end}',
-  card: {
-    next: 'الدورة القادمة',
-    note: 'يُرسل إليكم السعر والبرنامج المفصّل عند الطلب.',
-    refMore: 'تكوين بين المؤسسات',
-  },
-  tabs: {
-    label: 'في هذه الصفحة',
-    why: 'لماذا',
-    steps: 'المحطات',
-    gains: 'ما تخرجون به',
-    audience: 'الجمهور والدورة',
-    voices: 'شهادات',
-  },
   why: 'لماذا هذا التكوين',
-  steps: {
-    eyebrow: 'البرنامج باختصار',
-    note: 'يرد البرنامج المفصّل في البطاقة التقنية، التي تُرسل عند الطلب.',
-  },
-  gains: { eyebrow: 'ما تخرجون به', title: 'تعودون بنتائج ملموسة' },
+  edge: 'ما يميّزه:',
+  gains: 'ما تخرجون به',
   audience: 'لمن هذا التكوين',
-  prerequisites: 'المتطلبات المسبقة',
-  includes: 'تشمل الدورة',
-  trainer: 'التأطير',
-  edge: 'ما يميّزه',
-  symptoms: 'ما تلاحظونه',
-  voices: { eyebrow: 'شهادات', title: 'الكلمة للمشاركين' },
+  reasons: {
+    title: 'لماذا OPEM',
+    link: { label: 'اكتشفوا المكتب', href: '/le-cabinet' },
+  },
   figures: {
-    eyebrow: 'OPEM في أرقام',
+    label: 'OPEM في أرقام',
     items: [
       { value: '+7', label: 'سنوات من النشاط' },
       { value: '+62', label: 'مؤسسة مرافَقة' },
       { value: '+170', label: 'دورة تكوينية منجزة' },
       { value: '+1500', label: 'مهني تم تكوينهم' },
-      { value: '+365', label: 'خبيرًا يمكن تجنيدهم' },
     ],
+    link: { label: 'اطّلعوا على مهامنا وإنجازاتنا', href: '/missions' },
   },
-  cta: {
-    title: 'احصلوا على البطاقة التقنية المفصّلة وعرض السعر',
-    text: 'يُرسل إليكم البرنامج الكامل والسعر وكيفيات التسجيل بمجرد الطلب. عدد المشاركين محدود بـ {n} مشاركًا.',
-    button: 'اطلبوا البطاقة التقنية وعرض السعر',
-    phone: 'الهاتف:',
-    email: 'البريد الإلكتروني:',
-    reminder: 'المرجع الواجب ذكره: {ref}',
-    mail: {
-      subject: 'البطاقة التقنية وعرض السعر: {title} (المرجع {ref})',
-      body: 'السلام عليكم،\n\nأرغب في الحصول على البطاقة التقنية المفصّلة وعرض سعر لتكوين «{title}»{session} (المرجع {ref}).\n\nالمؤسسة:\nعدد المشاركين:\nالهاتف:\n\nشكرًا.',
-      session: '، دورة {dates}',
+  voices: 'شهادات',
+  request: {
+    title: 'احصلوا على البطاقة التقنية المفصّلة',
+    intro:
+      'البرنامج الكامل حسب الوحدات، والطرق البيداغوجية، وملف المكوّن، والكيفيات العملية: تدرس مصلحة التكوين كل طلب وترسل إليكم البطاقة بالبريد الإلكتروني، مع عرض سعر إن رغبتم في ذلك.',
+    contact: ['يمكنكم أيضًا مراسلتنا على ', ' أو الاتصال بنا على ', '.'],
+    requiredNote: 'الخانات المشار إليها بنجمة إلزامية.',
+    want: 'أرغب في الحصول على',
+    wantSheet: 'البطاقة التقنية المفصّلة',
+    wantQuote: 'عرض سعر',
+    name: 'الاسم واللقب',
+    role: 'الوظيفة',
+    participants: 'عدد المشاركين المتوقع',
+    participantsError: 'أدخلوا عدد المشاركين، مثلًا 3.',
+    organisation: 'الهيئة',
+    organisationHelp: 'بصفة شخصية؟ يكفي أن تذكروا ذلك.',
+    email: 'البريد الإلكتروني المهني',
+    phone: 'الهاتف',
+    consentTitle: 'الموافقة',
+    consent:
+      'أوافق على أن تستعمل OPEM المعلومات المدخلة للرد على طلبي، والاتصال بي عند الاقتضاء بشأنه. لا تُنقل هذه المعلومات إلى أي طرف آخر، وتُحفظ ثلاث سنوات بعد آخر اتصال بيننا.',
+    consentError: 'ضعوا علامة في هذه الخانة حتى نتمكن من معالجة طلبكم.',
+    newsletterTitle: 'البقاء على اطلاع',
+    newsletter: 'أرغب في تلقي إضاءات OPEM والإعلان عن عروضها وتكويناتها الجديدة.',
+    submit: 'أرسلوا طلبي',
+    legal: [
+      'طبقًا للقانون رقم 18-07 المؤرخ في 10 يونيو 2018 المتعلق بحماية الأشخاص الطبيعيين في مجال معالجة المعطيات ذات الطابع الشخصي، المعدّل والمتمّم، يمكنكم الاطلاع على معطياتكم أو تصحيحها أو الاعتراض على معالجتها بمراسلة ',
+      'contact@opem-dz.com',
+      '.',
+    ],
+    thanks: 'شكرًا، لقد وصلنا طلبكم. تدرسه مصلحة التكوين وتتصل بكم.',
+    failure: {
+      unavailable: `لم يتم الإرسال. أعيدوا المحاولة بعد لحظة، أو راسلونا على ${SHOWCASE_CONTACT.email}.`,
+      rate: `عدد كبير من الإرسالات في وقت قصير. أعيدوا المحاولة بعد ساعة، أو راسلونا على ${SHOWCASE_CONTACT.email}.`,
+      tooLarge: `لم يتم الإرسال. راسلونا على ${SHOWCASE_CONTACT.email}.`,
     },
   },
-  reference: 'المرجع',
-  protection: '© OPEM. محتوى محمي: يُمنع أي استنساخ دون إذن كتابي.',
+  service: 'مصلحة التكوين:',
+  reference: 'المرجع ',
+  protection: '© OPEM. محتوى محمي: يُمنع أي نسخ دون إذن كتابي.',
 };
 
-const PHOTO = {
-  small: '/images/sessions/revue-documents-700.webp',
-  large: '/images/sessions/revue-documents.webp',
-};
+/** Témoignage commun aux formations « Diagnostic » et « Cybersécurité » : l'auteur. */
+const PARTICIPANT = { fr: 'Participant à une formation OPEM', ar: 'مشارك في تكوين لـ OPEM' };
 
 const FR: TrainingShowcase[] = [
   {
@@ -303,104 +295,174 @@ const FR: TrainingShowcase[] = [
     reference: 'D02-26.INTER.01. V1',
     cycle: 'Cycle Management',
     title: 'Diagnostic d’organisation',
-    subtitle: 'Repérer les blocages, optimiser les processus.',
-    intro:
-      'Quatre jours pour apprendre à conduire le diagnostic de votre propre organisation, du cadrage à la restitution.',
-    photo: {
-      ...PHOTO,
-      alt: 'Des participants travaillent sur des documents autour d’une table, pendant une session OPEM',
+    hook: {
+      question: fr(
+        'Vos équipes s’épuisent, les décisions traînent, les mêmes problèmes reviennent ?',
+      ),
+      answer: 'Le blocage est souvent dans l’organisation.',
     },
-    practical: {
-      mode: 'Présentiel',
-      duration: `4${N}jours`,
-      hours: `de 9${N}h à 16${N}h`,
-      seats: 12,
-      place: 'École OPEM',
-      city: 'Alger',
+    promise: 'Repérer les blocages, optimiser les processus.',
+    duration: `4${N}jours`,
+    seats: 12,
+    place: 'École OPEM',
+    city: 'Alger',
+    illustration: {
+      src: '/images/formations/diagnostic-d-organisation.svg',
+      alt: 'Illustration : un processus en quatre postes, dont un point de blocage repéré à la loupe par un consultant',
+      signal: { x: 53.57, y: 47.43 },
     },
     why: {
-      title: fr('Constater un blocage ne suffit pas : il faut le prouver, puis le corriger.'),
-      symptoms: [
-        'Des responsabilités qui se chevauchent',
-        'Des décisions qui remontent toujours à la direction',
-        'Des processus contournés sur le terrain',
-      ],
-      answer:
-        'Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.',
-      edge: [
-        { label: 'En interne', text: 'Conduire vous-même un diagnostic léger et régulier' },
-        {
-          label: 'Avec un regard extérieur',
-          text: 'Reconnaître le moment où il apporte le plus, pour commander et exploiter un diagnostic externe',
-        },
-      ],
+      text: fr(
+        'Des responsabilités qui se chevauchent, des décisions qui remontent toujours à la direction, des processus contournés sur le terrain : vous les constatez, mais comment les prouver, puis les corriger ? Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.',
+      ),
+      edge: 'vous apprenez à conduire vous-même un diagnostic interne léger et régulier, et à reconnaître le moment où un regard extérieur apporte le plus, pour commander et exploiter un diagnostic externe.',
+      link: {
+        label: fr('Confier le diagnostic à nos consultants : accompagnement des organisations'),
+        href: '/expertises/accompagnement-des-organisations/diagnostic-d-entreprise',
+      },
     },
-    stepsTitle: 'Quatre temps forts, de l’analyse à l’action',
-    steps: [
-      {
-        title: 'Cadrer et collecter',
-        text: 'Bâtir un diagnostic sur des faits, non sur des impressions.',
-      },
-      {
-        title: 'Lire l’organisation',
-        text: 'Structure, responsabilités et processus à l’épreuve du réel.',
-      },
-      {
-        title: 'Comprendre et décider',
-        text: 'Causes, priorités et choix entre regard interne et regard externe.',
-      },
-      {
-        title: 'Convaincre et agir',
-        text: 'Restitution, plan d’action et mise en pratique dans votre structure.',
-      },
-    ],
     gains: [
-      'Une première ébauche de diagnostic de votre propre structure',
-      'Un dossier d’outils directement utilisables à votre retour',
-      'Un plan d’action priorisé, à affiner avec vos équipes',
-      'Des critères pour choisir entre diagnostic interne et diagnostic externe',
+      'Une méthode complète pour conduire un diagnostic, du cadrage au plan d’action.',
+      'Vos processus clés cartographiés et leurs points de blocage localisés.',
+      'Une première ébauche de diagnostic de votre structure, prête à présenter à votre direction.',
     ],
-    audience: {
-      roles: [
-        'Directeurs',
-        'Responsables organisation',
-        'Qualité',
-        'Ressources humaines',
-        'Amélioration continue',
-        'Chefs de service',
-        'Dirigeants de PME',
-      ],
-      prerequisites: [
-        'Une première expérience d’encadrement ou de fonction transversale',
-        'Une situation réelle de votre structure à analyser, traitée dans le respect de la confidentialité',
-      ],
-    },
-    includes: {
-      items: [
-        'Repas et pauses-café',
-        'Supports et outils remis à chaque participant',
-        'Test final des connaissances',
-        'Attestation de participation',
-      ],
-      trainer:
-        'Un consultant senior en organisation, praticien du diagnostic dans des entreprises publiques et privées.',
-    },
+    audience:
+      'Directeurs, responsables organisation, qualité, ressources humaines et performance, dirigeants de PME.',
+    reasons: [
+      fr('Une méthode éprouvée en mission de conseil, au cœur des entreprises ;'),
+      fr('des cas réels d’entreprises algériennes, publiques et privées ;'),
+      'un formateur praticien du diagnostic.',
+    ],
     voices: [
       {
         quote: fr(
           'En dix-sept ans de carrière, j’ai assisté à beaucoup de formations génériques qui sont vite oubliées. Avec OPEM, c’est différent : on travaille sur les vrais blocages du terrain et on sort avec des solutions prêtes à l’emploi.',
         ),
-        author: 'Participant à une formation OPEM',
+        author: PARTICIPANT.fr,
       },
       {
         quote:
           'Je repars avec des outils concrets prêts à être appliqués. Merci à l’équipe OPEM pour son sérieux, ses qualités et ses exigences.',
-        author: 'Participant à une formation OPEM',
+        author: PARTICIPANT.fr,
       },
       {
         quote:
           'Contenu dense, supports pédagogiques consistants et clairs. OPEM maîtrise son sujet et respecte parfaitement les objectifs annoncés.',
-        author: 'Participant à une formation OPEM',
+        author: PARTICIPANT.fr,
+      },
+    ],
+  },
+  {
+    id: 'plan-de-formation-2027',
+    reference: 'D04-26.INTER.01. V1',
+    cycle: 'Cycle Ingénierie de la formation',
+    title: 'Plan de formation 2027',
+    hook: {
+      question: fr('Votre budget formation travaille-t-il pour l’entreprise ?'),
+      answer: 'Un plan bien bâti fait toute la différence.',
+    },
+    promise: 'Un plan qui sert vraiment l’entreprise.',
+    duration: `3${N}jours`,
+    seats: 12,
+    place: 'École OPEM',
+    city: 'Alger',
+    illustration: {
+      src: '/images/formations/plan-de-formation-2027.svg',
+      alt: 'Illustration : une équipe gravit les quatre actions du plan 2027 jusqu’au fanion de l’objectif, avec la table des besoins et le budget au pied',
+      signal: { x: 81.51, y: 6.14 },
+    },
+    why: {
+      text: 'Chaque année, le budget formation est engagé, les stages s’enchaînent, sans que l’on voie ce qui a concrètement changé. Cette formation vous donne la méthode pour bâtir un plan qui part des priorités de l’entreprise, se chiffre au plus juste et convainc la direction. Chaque dinar engagé devient un choix assumé.',
+      edge: 'un fil rouge, le plan 2027 d’une entreprise fictive, construit module après module jusqu’à sa présentation devant une direction simulée. Programmée début décembre, la session vous laisse le temps d’appliquer la démarche avant le lancement de l’exercice.',
+      link: {
+        label: fr('Confier votre plan de formation à nos consultants : ingénierie de la formation'),
+        href: '/formation',
+      },
+    },
+    gains: [
+      'Une méthode pour relier chaque formation aux priorités de l’entreprise.',
+      fr(
+        'Des outils réutilisables chaque année : guide d’entretien, matrice de priorisation, trame de plan chiffré.',
+      ),
+      'Les clés pour bâtir votre propre plan 2027 et fédérer toutes les parties prenantes.',
+    ],
+    audience:
+      'Responsables formation, directeurs et responsables des ressources humaines, chargés du développement des compétences, dirigeants de PME.',
+    reasons: [
+      fr(
+        'Une pratique du conseil en ingénierie de la formation, en entreprise comme en institution ;',
+      ),
+      fr(
+        'trois jours de pratique : exercices, simulations d’entretien et présentation devant une direction simulée ;',
+      ),
+      'un formateur chevronné, rompu à l’élaboration de plans de formation en entreprise.',
+    ],
+    voices: [
+      {
+        quote: fr(
+          `La meilleure preuve de la qualité d’OPEM, ce sont nos salariés qui la donnent : 98${N}% de satisfaction à chaud cette année, et des managers qui nous redemandent déjà de nouvelles sessions.`,
+        ),
+        author: 'Entreprise cliente d’OPEM',
+      },
+    ],
+  },
+  {
+    id: 'cybersecurite-operationnelle',
+    reference: 'D14-26.INTER.01. V1',
+    cycle: 'Cycle Cybersécurité',
+    title: 'Cybersécurité opérationnelle',
+    hook: {
+      question: fr('Votre réseau tiendrait-il face à un rançongiciel dimanche matin ?'),
+      answer: 'Cinq jours pour apprendre à le protéger, à détecter l’attaque et à y faire face.',
+    },
+    promise: 'Protéger, détecter, réagir.',
+    duration: `5${N}jours`,
+    seats: 12,
+    place: 'École OPEM',
+    city: 'Alger',
+    illustration: {
+      src: '/images/formations/cybersecurite-operationnelle.svg',
+      alt: 'Illustration : des serveurs protégés par un dôme, une analyste repère une alerte dans les journaux d’événements, des postes de travail reliés au réseau',
+      signal: { x: 57.81, y: 29.21 },
+    },
+    why: {
+      text: fr(
+        'Une attaque ne laisse pas le temps de relire la documentation : chaque geste de défense se pratique ici sur machine, sans risque pour votre système.',
+      ),
+      edge: 'une gestion de crise simulée en équipe, au plus près d’une attaque réelle.',
+      link: {
+        label: fr(
+          'Confier la sécurité de votre système d’information à nos consultants : cybersécurité',
+        ),
+        href: '/expertises/accompagnement-des-organisations/conformite-et-protection-des-donnees',
+      },
+    },
+    gains: [
+      'Des réglages de sécurité éprouvés sur machine.',
+      'Une méthode pour détecter une compromission et y répondre.',
+      fr('Des modèles prêts à l’emploi : matrice des risques, fiche d’incident, fiches réflexes.'),
+    ],
+    audience:
+      'Administrateurs systèmes et réseaux, responsables informatiques, techniciens d’exploitation et de support, responsables de la sécurité des systèmes d’information, ingénieurs d’infrastructure.',
+    reasons: [
+      fr(
+        'Des programmes soigneusement construits autour des problèmes concrets vécus par les entreprises ;',
+      ),
+      fr(
+        'un expert de la sécurité des systèmes d’information, certifié ISO/IEC 27001 et rompu au terrain ;',
+      ),
+      'des postes de travail performants mis à disposition par OPEM, pour pratiquer sans contrainte.',
+    ],
+    voices: [
+      {
+        quote: `Formation pratique, très bon formateur, accueil chaleureux, matériel informatique performant. J’ai beaucoup aimé et je recommande à 100${N}%.`,
+        author: PARTICIPANT.fr,
+      },
+      {
+        quote: fr(
+          'Pédagogie au top, accueil irréprochable et formateurs passionnés. De loin la meilleure formation que j’ai reçue. Merci OPEM !',
+        ),
+        author: PARTICIPANT.fr,
       },
     ],
   },
@@ -412,100 +474,153 @@ const AR: TrainingShowcase[] = [
     reference: 'D02-26.INTER.01. V1',
     cycle: 'دورة التسيير',
     title: 'تشخيص التنظيم',
-    subtitle: 'رصد مواطن الانسداد وتحسين العمليات.',
-    intro:
-      'أربعة أيام لتتعلّموا كيف تُجرون تشخيص تنظيم مؤسستكم بأنفسكم، من التأطير إلى عرض النتائج.',
-    photo: {
-      ...PHOTO,
-      alt: 'مشاركون يعملون على وثائق حول طاولة خلال دورة لـ OPEM',
+    hook: {
+      question: 'فرقكم مُنهَكة، والقرارات تتأخر، والمشاكل نفسها تتكرر؟',
+      answer: 'غالبًا ما يكون الانسداد في التنظيم.',
     },
-    practical: {
-      mode: 'حضوري',
-      duration: '4 أيام',
-      hours: 'من 9 سا إلى 16 سا',
-      seats: 12,
-      place: 'مدرسة OPEM',
-      city: 'الجزائر العاصمة',
+    promise: 'تحديد مواطن الانسداد وتحسين المسارات.',
+    duration: '4 أيام',
+    seats: 12,
+    place: 'مدرسة OPEM',
+    city: 'الجزائر العاصمة',
+    illustration: {
+      src: '/images/formations/diagnostic-d-organisation.svg',
+      alt: 'رسم توضيحي: مسار من أربعة مراكز عمل، يرصد فيه مستشار نقطة انسداد بالعدسة المكبّرة',
+      signal: { x: 53.57, y: 47.43 },
     },
     why: {
-      title: 'ملاحظة الانسداد لا تكفي: يجب إثباته، ثم معالجته.',
-      symptoms: [
-        'مسؤوليات متداخلة',
-        'قرارات تعود دائمًا إلى الإدارة',
-        'عمليات يُلتفّ عليها في الميدان',
-      ],
-      answer: 'يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على تنظيم مؤسستكم.',
-      edge: [
-        { label: 'داخليًا', text: 'تُجرون بأنفسكم تشخيصًا خفيفًا ومنتظمًا' },
-        {
-          label: 'بنظرة خارجية',
-          text: 'تدركون اللحظة التي تكون فيها أجدى، لطلب تشخيص خارجي والاستفادة منه',
-        },
-      ],
+      text: 'مسؤوليات متداخلة، وقرارات تصعد دائمًا إلى الإدارة، ومسارات يُتحايل عليها في الميدان: تلاحظونها، لكن كيف تُثبتونها ثم تعالجونها؟ يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على مؤسستكم.',
+      edge: 'تتعلّمون إجراء تشخيص داخلي خفيف ومنتظم بأنفسكم، وتمييز اللحظة التي تكون فيها النظرة الخارجية أجدى، لطلب تشخيص خارجي والاستفادة منه.',
+      link: {
+        label: 'أوكلوا التشخيص إلى مستشارينا: مرافقة المؤسسات',
+        href: '/expertises/accompagnement-des-organisations/diagnostic-d-entreprise',
+      },
     },
-    stepsTitle: 'أربع محطات، من التحليل إلى العمل',
-    steps: [
-      {
-        title: 'التأطير وجمع المعطيات',
-        text: 'بناء تشخيص على الوقائع، لا على الانطباعات.',
-      },
-      {
-        title: 'قراءة التنظيم',
-        text: 'الهيكل والمسؤوليات والعمليات على محكّ الواقع.',
-      },
-      {
-        title: 'الفهم واتخاذ القرار',
-        text: 'الأسباب والأولويات والاختيار بين النظرة الداخلية والنظرة الخارجية.',
-      },
-      {
-        title: 'الإقناع والتنفيذ',
-        text: 'عرض النتائج وخطة العمل والتطبيق داخل مؤسستكم.',
-      },
-    ],
     gains: [
-      'مسودة أولى لتشخيص مؤسستكم',
-      'ملف أدوات قابلة للاستعمال مباشرة عند عودتكم',
-      'خطة عمل مرتّبة حسب الأولوية، تُستكمل مع فرقكم',
-      'معايير للاختيار بين التشخيص الداخلي والتشخيص الخارجي',
+      'منهجية متكاملة لإجراء التشخيص، من التأطير إلى خطة العمل.',
+      'مساراتكم الرئيسية مرسومة ونقاط انسدادها محدّدة.',
+      'مسودة أولى لتشخيص مؤسستكم، جاهزة لعرضها على إدارتكم.',
     ],
-    audience: {
-      roles: [
-        'المديرون',
-        'مسؤولو التنظيم',
-        'الجودة',
-        'الموارد البشرية',
-        'التحسين المستمر',
-        'رؤساء المصالح',
-        'مسيّرو المؤسسات الصغيرة والمتوسطة',
-      ],
-      prerequisites: [
-        'خبرة أولى في التأطير أو في وظيفة عرضية',
-        'وضعية حقيقية من مؤسستكم للتحليل، تُعالج في ظل احترام السرية',
-      ],
-    },
-    includes: {
-      items: [
-        'الوجبات واستراحات القهوة',
-        'الدعائم والأدوات المسلّمة لكل مشارك',
-        'اختبار نهائي للمعارف',
-        'شهادة مشاركة',
-      ],
-      trainer: 'مستشار أول في التنظيم، ممارس للتشخيص في مؤسسات عمومية وخاصة.',
-    },
+    audience:
+      'المديرون، ومسؤولو التنظيم والجودة والموارد البشرية والأداء، ومسيّرو المؤسسات الصغيرة والمتوسطة.',
+    reasons: [
+      'منهجية مجرّبة في مهام الاستشارة، في قلب المؤسسات؛',
+      'حالات حقيقية لمؤسسات جزائرية عمومية وخاصة؛',
+      'مكوّن ممارس للتشخيص.',
+    ],
     voices: [
       {
         quote:
-          'خلال سبعة عشر عامًا من المسار المهني، حضرت الكثير من التكوينات العامة التي تُنسى بسرعة. مع OPEM الأمر مختلف: نعمل على الانسدادات الحقيقية في الميدان ونخرج بحلول جاهزة للتطبيق.',
-        author: 'مشارك في تكوين لـ OPEM',
+          'خلال سبعة عشر عامًا من مساري المهني، حضرت تكوينات عامة كثيرة سرعان ما تُنسى. مع OPEM الأمر مختلف: نعمل على الانسدادات الحقيقية في الميدان ونخرج بحلول جاهزة للتطبيق.',
+        author: PARTICIPANT.ar,
       },
       {
-        quote: 'أعود بأدوات ملموسة جاهزة للتطبيق. شكرًا لفريق OPEM على جدّيته وكفاءته وصرامته.',
-        author: 'مشارك في تكوين لـ OPEM',
+        quote: 'أغادر بأدوات ملموسة جاهزة للتطبيق. شكرًا لفريق OPEM على جدّيته وكفاءته وصرامته.',
+        author: PARTICIPANT.ar,
       },
       {
         quote:
-          'محتوى كثيف، ودعائم بيداغوجية متينة وواضحة. OPEM تتقن موضوعها وتحترم الأهداف المعلنة تمامًا.',
-        author: 'مشارك في تكوين لـ OPEM',
+          'محتوى غني، ودعائم بيداغوجية متينة وواضحة. OPEM تتقن موضوعها وتحترم الأهداف المعلنة تمامًا.',
+        author: PARTICIPANT.ar,
+      },
+    ],
+  },
+  {
+    id: 'plan-de-formation-2027',
+    reference: 'D04-26.INTER.01. V1',
+    cycle: 'دورة هندسة التكوين',
+    title: 'مخطط التكوين 2027',
+    hook: {
+      question: 'هل تعمل ميزانية التكوين لصالح مؤسستكم؟',
+      answer: 'المخطط المُحكم يصنع الفارق.',
+    },
+    promise: 'مخطط يخدم المؤسسة حقًّا.',
+    duration: '3 أيام',
+    seats: 12,
+    place: 'مدرسة OPEM',
+    city: 'الجزائر العاصمة',
+    illustration: {
+      src: '/images/formations/plan-de-formation-2027.svg',
+      alt: 'رسم توضيحي: فريق يصعد الإجراءات الأربعة لمخطط 2027 حتى راية الهدف، وعند القاعدة جدول الاحتياجات والميزانية',
+      signal: { x: 81.51, y: 6.14 },
+    },
+    why: {
+      text: 'كل سنة تُصرف ميزانية التكوين وتتوالى الدورات، دون أن نرى ما الذي تغيّر فعلًا. يمنحكم هذا التكوين المنهجية لبناء مخطط ينطلق من أولويات المؤسسة، ويُقدَّر بدقة، ويُقنع الإدارة. فيصبح كل دينار يُصرف خيارًا مدروسًا.',
+      edge: 'خيط ناظم: مخطط 2027 لمؤسسة افتراضية، يُبنى وحدة بعد وحدة حتى عرضه أمام إدارة افتراضية. ولأن الدورة مبرمجة مطلع ديسمبر، فهي تترك لكم الوقت لتطبيق المنهجية قبل انطلاق السنة المالية.',
+      link: {
+        label: 'أوكلوا مخطط التكوين إلى مستشارينا: هندسة التكوين',
+        href: '/formation',
+      },
+    },
+    gains: [
+      'منهجية لربط كل تكوين بأولويات المؤسسة.',
+      'أدوات قابلة لإعادة الاستعمال كل سنة: دليل المقابلة، ومصفوفة ترتيب الأولويات، ونموذج المخطط المقدَّر.',
+      'مفاتيح بناء مخططكم لسنة 2027 وحشد جميع الأطراف المعنية.',
+    ],
+    audience:
+      'مسؤولو التكوين، ومديرو ومسؤولو الموارد البشرية، والمكلّفون بتطوير الكفاءات، ومسيّرو المؤسسات الصغيرة والمتوسطة.',
+    reasons: [
+      'ممارسة للاستشارة في هندسة التكوين، في المؤسسات كما في الهيئات؛',
+      'ثلاثة أيام من التطبيق: تمارين، ومحاكاة مقابلات، وعرض أمام إدارة افتراضية؛',
+      'مكوّن متمرّس، خبير في إعداد مخططات التكوين في المؤسسات.',
+    ],
+    voices: [
+      {
+        quote:
+          'أفضل دليل على جودة OPEM يقدّمه موظفونا: 98% من الرضا مباشرة بعد التكوين هذه السنة، ومديرون يطلبون منا دورات جديدة.',
+        author: 'مؤسسة من زبائن OPEM',
+      },
+    ],
+  },
+  {
+    id: 'cybersecurite-operationnelle',
+    reference: 'D14-26.INTER.01. V1',
+    cycle: 'دورة الأمن السيبراني',
+    title: 'الأمن السيبراني العملي',
+    hook: {
+      question: 'هل تصمد شبكتكم أمام برنامج فدية صباح يوم أحد؟',
+      answer: 'خمسة أيام لتتعلّموا حمايتها، ورصد الهجوم، ومواجهته.',
+    },
+    promise: 'الحماية، والرصد، والتصدّي.',
+    duration: '5 أيام',
+    seats: 12,
+    place: 'مدرسة OPEM',
+    city: 'الجزائر العاصمة',
+    illustration: {
+      src: '/images/formations/cybersecurite-operationnelle.svg',
+      alt: 'رسم توضيحي: خوادم تحميها قبة، ومحلّلة ترصد إنذارًا في سجلات الأحداث، ومحطات عمل موصولة بالشبكة',
+      signal: { x: 57.81, y: 29.21 },
+    },
+    why: {
+      text: 'الهجوم لا يترك وقتًا لإعادة قراءة الوثائق: كل إجراء دفاعي يُمارَس هنا على الحاسوب، دون أي خطر على نظامكم.',
+      edge: 'تسيير أزمة افتراضية ضمن فريق، في ظروف قريبة من هجوم حقيقي.',
+      link: {
+        label: 'أوكلوا أمن نظام معلوماتكم إلى مستشارينا: الأمن السيبراني',
+        href: '/expertises/accompagnement-des-organisations/conformite-et-protection-des-donnees',
+      },
+    },
+    gains: [
+      'إعدادات أمنية مجرّبة على الحاسوب.',
+      'منهجية لرصد الاختراق والتصدّي له.',
+      'نماذج جاهزة للاستعمال: مصفوفة المخاطر، وبطاقة الحادث، وبطاقات ردود الفعل.',
+    ],
+    audience:
+      'مديرو الأنظمة والشبكات، ومسؤولو الإعلام الآلي، وتقنيو الاستغلال والدعم، ومسؤولو أمن أنظمة المعلومات، ومهندسو البنية التحتية.',
+    reasons: [
+      'برامج مبنية بعناية حول المشاكل الملموسة التي تعيشها المؤسسات؛',
+      'خبير في أمن أنظمة المعلومات، حاصل على شهادة ISO/IEC 27001 ومتمرّس في الميدان؛',
+      'محطات عمل عالية الأداء توفّرها OPEM، للتطبيق دون قيود.',
+    ],
+    voices: [
+      {
+        quote:
+          'تكوين تطبيقي، ومكوّن ممتاز، واستقبال حار، وتجهيزات إعلام آلي عالية الأداء. أعجبني كثيرًا وأوصي به بنسبة 100%.',
+        author: PARTICIPANT.ar,
+      },
+      {
+        quote:
+          'بيداغوجيا في القمة، واستقبال لا تشوبه شائبة، ومكوّنون شغوفون. أفضل تكوين تلقيته على الإطلاق. شكرًا OPEM!',
+        author: PARTICIPANT.ar,
       },
     ],
   },
@@ -514,10 +629,9 @@ const AR: TrainingShowcase[] = [
 export const showcaseLabels: Record<Lang, ShowcaseLabels> = { fr: LABELS_FR, ar: LABELS_AR };
 const SHOWCASES: Record<Lang, TrainingShowcase[]> = { fr: FR, ar: AR };
 
-/** La vitrine d'une formation, ou `undefined` si elle n'en a pas (encore). */
+/** La formation d'adresse `id` dans la langue demandée (undefined : pas encore de page). */
 export function findShowcase(lang: Lang, id: string | undefined) {
-  return id ? SHOWCASES[lang].find((item) => item.id === id) : undefined;
+  return SHOWCASES[lang].find((item) => item.id === id);
 }
 
-/** Adresses des vitrines (plan du site, référencement). */
 export const SHOWCASE_IDS = FR.map((item) => item.id);

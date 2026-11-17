@@ -15,8 +15,10 @@ export const PUBLISHED_PAGES = [
   '/expertises/certification-et-accreditation',
   '/expertises/communication-institutionnelle',
   '/formation',
-  // Vitrines des formations (une par entrée de formation/showcase/content.ts).
+  // Pages des formations (une par entrée de formation/showcase/content.ts).
   '/formation/fiches-formation/diagnostic-d-organisation',
+  '/formation/fiches-formation/plan-de-formation-2027',
+  '/formation/fiches-formation/cybersecurite-operationnelle',
   '/missions',
   '/ia-appliquee',
   '/eclairages',

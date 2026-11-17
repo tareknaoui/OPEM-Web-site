@@ -1,9 +1,4 @@
-import { CheckCircleIcon } from '@phosphor-icons/react/dist/csr/CheckCircle';
-import { ClockIcon } from '@phosphor-icons/react/dist/csr/Clock';
-import { FileTextIcon } from '@phosphor-icons/react/dist/csr/FileText';
-import { MapPinIcon } from '@phosphor-icons/react/dist/csr/MapPin';
-import { UsersThreeIcon } from '@phosphor-icons/react/dist/csr/UsersThree';
-import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
+import { useId, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { useHideFooterCta } from '@/app/layouts/footer/useHideFooterCta';
 import { ArrowRightIcon } from '@/components/icons';
@@ -13,79 +8,29 @@ import { scrollToElement } from '@/hooks/useSmoothScroll';
 import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { env } from '@/lib/env';
-import { formationContent } from '../content';
 import FormationPage from '../FormationPage';
-import {
-  findShowcase,
-  SHOWCASE_CONTACT,
-  showcaseLabels,
-  type ShowcaseLabels,
-  type TrainingShowcase,
-} from './content';
+import { findShowcase, SHOWCASE_CONTACT, showcaseLabels, type TrainingShowcase } from './content';
+import { fill, sessionDates } from './dates';
+import { RequestForm, type Wants } from './RequestForm';
 import styles from './TrainingShowcasePage.module.css';
 
-/** Rang, dans « OPEM en chiffres », du chiffre affiché sur la photo d'ouverture. */
-const PROOF_FIGURE = 3;
 const REQUEST_ID = 'demande';
-/** Ancres de la barre collée (même ordre que les blocs). */
-const SECTIONS = ['pourquoi', 'temps-forts', 'emportez', 'public', 'temoignages'] as const;
-
-/** Une date AAAA-MM-JJ, lue à midi pour éviter tout décalage de fuseau. */
-const parse = (date: string) => new Date(`${date}T12:00:00`);
-
-const fill = (text: string, values: Record<string, string | number>) =>
-  text.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ''));
-
 /**
- * Les dates d'une session : « 6 au 9 décembre » (le mois une seule fois s'il est le même),
- * puis l'année à part.
- */
-function sessionDates(start: string, end: string, locale: string, pattern: string) {
-  const from = parse(start);
-  const to = parse(end);
-  const sameMonth = from.getMonth() === to.getMonth() && from.getFullYear() === to.getFullYear();
-  const dayMonth = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long' });
-  const dayOnly = new Intl.DateTimeFormat(locale, { day: 'numeric' });
-  const range = fill(pattern, {
-    start: (sameMonth ? dayOnly : dayMonth).format(from),
-    end: dayMonth.format(to),
-  });
-  return `${range} ${to.getFullYear()}`;
-}
-
-/** Le courriel de demande, prérempli avec la formation, la session et la référence. */
-function requestHref(item: TrainingShowcase, t: ShowcaseLabels, dates: string | null) {
-  const values = {
-    title: item.title,
-    ref: item.reference,
-    session: dates ? fill(t.cta.mail.session, { dates }) : '',
-  };
-  const subject = encodeURIComponent(fill(t.cta.mail.subject, values));
-  const body = encodeURIComponent(fill(t.cta.mail.body, values));
-  return `mailto:${SHOWCASE_CONTACT.email}?subject=${subject}&body=${body}`;
-}
-
-/**
- * Page vitrine d'une formation inter-entreprises (/formation/fiches-formation/<id>), modèle
- * unique : version 10 « catalogue » retenue par OPEM (façon Cegos, ORSYS).
- * Même langage que les autres pages (« Formation qualifiante », « Le cabinet ») :
- * - Ouverture sur bleu très clair : fil d'Ariane, format et ville, titre, sous-titre, accroche,
- *   chiffres clés et référence ; à côté, une grande photo arrondie qui se dévoile (léger effet
- *   de profondeur) avec une preuve chiffrée posée sur son angle.
- * - Deux colonnes sur ordinateur : à droite un encadré « Prochaine session » qui chevauche le bas
- *   de l'ouverture puis reste à l'écran (dates de l'agenda, durée et horaires, effectif, lieu,
- *   référence, demande de fiche technique et de devis) ; à gauche, sous une barre d'ancres
- *   collée sous le menu, une fiche blanche, une ligne par rubrique (intitulé à filet vert,
- *   listes à pastilles, sans pictogrammes) : Pourquoi cette formation (« Sa singularité »
- *   encadrée) ; Quatre temps forts (numérotés ; programme détaillé sur demande) ; Ce que vous
- *   emportez ; Pour qui (étiquettes), Prérequis, La session comprend, l'animation.
- * - Témoignages sur un bandeau bleu nuit pleine largeur, avec trois photos de sessions.
- * - OPEM en chiffres, la demande (encadré bleu OPEM), la mention de protection du contenu.
- * Les titres apparaissent au défilement (data-reveal, réglé pour tout le site).
- * Tablette et téléphone : une colonne, l'encadré « session » juste après l'ouverture ; sur
- * téléphone, une barre fixe reprend la demande entre l'encadré et la demande du bas.
+ * Page d'une formation inter-entreprises (/formation/fiches-formation/<id>) : le modèle unique
+ * retenu par OPEM (variante 4 « fond clair, scène bleu nuit »), le même pour chaque formation.
+ * - Haut de page sur bleu très clair quadrillé : fil d'Ariane, surtitre (cycle, format, ville),
+ *   accroche (question, puis réponse surlignée en vert), titre, filet vert, promesse ; sur
+ *   téléphone, les dates et le lieu en une ligne ; les deux boutons, qui mènent au formulaire
+ *   et y cochent la demande choisie. À côté, une carte bleu nuit qui déborde sur la section
+ *   suivante : l'illustration de la formation, son signal ambre animé sur le point clé, puis
+ *   durée, dates, places et lieu.
+ * - Pourquoi cette formation (et sa singularité, puis le lien « Confier… à nos consultants ») ;
+ *   Vous repartez avec (trois acquis numérotés) ; sur un bandeau bleu très clair, Pour qui et
+ *   Pourquoi OPEM ; OPEM en chiffres ; les témoignages propres à la formation, sur bleu nuit.
+ * - Le formulaire de demande de la fiche technique détaillée et d'un devis (RequestForm).
+ * - Le service formation, la référence et la mention de protection du contenu.
  * Le bandeau d'appel du pied de page est masqué : une seule action sur la page.
- * Une formation sans vitrine garde l'ancien comportement (page « Formation qualifiante »,
+ * Une formation sans page garde l'ancien comportement (page « Formation qualifiante »,
  * descendue jusqu'à sa session).
  */
 export default function TrainingShowcasePage() {
@@ -101,450 +46,271 @@ function Showcase({ item }: { item: TrainingShowcase }) {
   const t = showcaseLabels[lang];
   const ids = useId();
   const pageRef = useRef<HTMLDivElement>(null);
-  const topActionRef = useRef<HTMLAnchorElement>(null);
-  const requestRef = useRef<HTMLElement>(null);
-  const [dock, setDock] = useState(false);
+  const [wants, setWants] = useState<Wants>({ sheet: true, quote: false });
   useCabinetMotion(pageRef, lang);
   useHideFooterCta();
 
   const locale = lang === 'ar' ? 'ar-DZ' : 'fr-FR';
   const session = homeContent[lang].trainings.items.find((s) => s.id === item.id);
   const dates = session ? sessionDates(session.date, session.end, locale, t.range) : null;
-  const mailto = requestHref(item, t, dates);
-  const { practical } = item;
-  const seats = fill(t.facts.seatsValue, { n: practical.seats });
+  const seats = fill(t.facts.seatsValue, { n: item.seats });
+  const where = `${item.place}, ${item.city}`;
   const [mainVoice, ...otherVoices] = item.voices;
-  // « +1 500 professionnels formés », repris des chiffres OPEM pour l'ouverture.
-  const proof = t.figures.items[PROOF_FIGURE];
-  // Photos réelles de sessions (celles de l'agenda de l'accueil), à côté du témoignage.
-  const photos = homeContent[lang].trainings.photos;
-  const photosLabel = formationContent[lang].voices.photosLabel;
-  const tabLabels = [t.tabs.why, t.tabs.steps, t.tabs.gains, t.tabs.audience, t.tabs.voices];
+  const signal = {
+    '--x': `${item.illustration.signal.x}%`,
+    '--y': `${item.illustration.signal.y}%`,
+  } as CSSProperties;
 
-  // Barre fixe (téléphone) : visible entre les deux demandes, une fois le bouton de l'encadré
-  // passé et tant que l'encadré du bas n'est pas arrivé (ni dépassé : pas sur le pied de page).
-  useEffect(() => {
-    const top = topActionRef.current;
-    const request = requestRef.current;
-    if (!top || !request || typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(() => {
-      const pastTop = top.getBoundingClientRect().bottom < 0;
-      const beforeRequest = request.getBoundingClientRect().top > window.innerHeight;
-      setDock(pastTop && beforeRequest);
-    });
-    observer.observe(top);
-    observer.observe(request);
-    return () => observer.disconnect();
-  }, []);
-
-  const toSection = (targetId: string) => (event: MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById(targetId);
+  // Les deux boutons du haut : descendre au formulaire, la demande choisie déjà cochée.
+  const ask = (want: keyof Wants) => (event: MouseEvent<HTMLAnchorElement>) => {
+    setWants((current) => ({ ...current, [want]: true }));
+    const target = document.getElementById(REQUEST_ID);
     if (!target) return;
     event.preventDefault();
     scrollToElement(target);
     target.focus({ preventScroll: true });
   };
 
-  const sectionProps = (index: number) => ({
-    id: SECTIONS[index],
-    tabIndex: -1,
-    'aria-labelledby': `${ids}-${SECTIONS[index]}`,
-  });
+  const facts = [
+    { label: t.facts.duration, value: item.duration },
+    { label: t.facts.dates, value: dates ?? t.facts.noDate },
+    { label: t.facts.seats, value: seats },
+    { label: t.facts.place, value: where },
+  ];
 
   return (
     <div ref={pageRef} className={styles.page}>
       <title>{`${item.title} · ${env.appName}`}</title>
 
-      {/* ---------- Ouverture (bleu très clair, comme « Formation qualifiante ») ---------- */}
-      <section className={styles.heroBand} aria-labelledby={`${ids}-title`}>
+      {/* ---------- Haut de page : le texte, et la scène bleu nuit qui déborde ---------- */}
+      <section className={styles.hero} aria-labelledby={`${ids}-title`}>
         <div className={cx('container', styles.heroGrid)}>
-          <div className={styles.hero}>
+          <div className={styles.heroText}>
             <nav aria-label={t.breadcrumb.label} className={styles.crumbs}>
               <ol>
                 <li>
                   <Link to={t.breadcrumb.root.href}>{t.breadcrumb.root.label}</Link>
                 </li>
-                <li>{item.cycle}</li>
+                <li>
+                  <Link to={t.breadcrumb.catalogue.href}>{t.breadcrumb.catalogue.label}</Link>
+                </li>
                 <li aria-current="page">{item.title}</li>
               </ol>
             </nav>
-            <p className={styles.eyebrow}>{fill(t.format, { city: practical.city })}</p>
+            <p className={styles.eyebrow}>
+              {fill(t.format, { cycle: item.cycle, city: item.city })}
+            </p>
+            <p className={styles.hook}>
+              {item.hook.question}{' '}
+              <span className={styles.hookAnswer}>
+                <span>{item.hook.answer}</span>
+              </span>
+            </p>
             <h1 id={`${ids}-title`} className={styles.title} data-motion="title">
               {item.title}
             </h1>
-            <p className={styles.subtitle}>{item.subtitle}</p>
-            <p className={styles.intro}>{item.intro}</p>
-            <dl className={styles.keyFacts} data-reveal-stagger>
-              <div>
-                <dt>{t.facts.duration}</dt>
-                <dd>{practical.duration}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.mode}</dt>
-                <dd>{practical.mode}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.seats}</dt>
-                <dd>{seats}</dd>
-              </div>
-            </dl>
-            <p className={styles.heroRef}>
-              {t.reference} <span dir="ltr">{item.reference}</span>
+            <span className={styles.titleBar} aria-hidden="true" />
+            <p className={styles.promise}>{item.promise}</p>
+            {/* Téléphone : la carte de la session vient plus bas ; les dates restent en vue. */}
+            <p className={styles.heroWhen}>
+              {dates ?? t.facts.noDate} · {where}
             </p>
+            <div className={styles.actions}>
+              <a href={`#${REQUEST_ID}`} className={styles.primary} onClick={ask('sheet')}>
+                {t.actions.sheet}
+                <ArrowRightIcon size={18} className="arrow" />
+              </a>
+              <a href={`#${REQUEST_ID}`} className={styles.secondary} onClick={ask('quote')}>
+                {t.actions.quote}
+              </a>
+            </div>
           </div>
-          <div className={styles.visual}>
-            <figure className={styles.photo} data-motion="unveil" data-parallax>
-              <img
-                src={item.photo.small}
-                srcSet={`${item.photo.small} 700w, ${item.photo.large} 1400w`}
-                sizes="(min-width: 60em) 42vw, 100vw"
-                alt={item.photo.alt}
-                width={700}
-                height={525}
-                fetchPriority="high"
-              />
-            </figure>
-            {/* Une preuve chiffrée posée sur l'angle de la photo (hors de l'image elle-même). */}
-            {proof && (
-              <p className={styles.proof} data-reveal>
-                <b>{proof.value}</b>
-                <span>{proof.label}</span>
-              </p>
-            )}
+
+          <div className={styles.scene}>
+            <div className={styles.sceneArt}>
+              <div className={styles.art} style={signal}>
+                <img
+                  src={item.illustration.src}
+                  alt={item.illustration.alt}
+                  width={572}
+                  height={388}
+                  fetchPriority="high"
+                />
+                <span className={styles.signal} aria-hidden="true" />
+              </div>
+            </div>
+            <dl className={styles.facts} aria-label={t.facts.label}>
+              {facts.map((fact) => (
+                <div key={fact.label}>
+                  <dt>{fact.label}</dt>
+                  <dd>{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>
 
-      <div className={cx('container', styles.layout)}>
-        <div className={styles.col}>
-          {/* ---------- Barre d'ancres ---------- */}
-          <nav className={styles.tabs} aria-label={t.tabs.label}>
-            <ul>
-              {SECTIONS.map((section, index) => (
-                <li key={section}>
-                  <a href={`#${section}`} onClick={toSection(section)}>
-                    {tabLabels[index]}
-                  </a>
-                </li>
+      {/* ---------- Pourquoi cette formation ---------- */}
+      <section
+        className={cx('container', styles.split, styles.first)}
+        aria-labelledby={`${ids}-why`}
+      >
+        <div className={styles.splitHead}>
+          <h2 id={`${ids}-why`} className={styles.h2} data-reveal="title">
+            {t.why}
+          </h2>
+        </div>
+        <div className={styles.splitBody}>
+          <p className={styles.lead}>{item.why.text}</p>
+          <p className={styles.edge}>
+            <b>{t.edge}</b> {item.why.edge}
+          </p>
+          <Link to={item.why.link.href} className={styles.more}>
+            {item.why.link.label} ›
+          </Link>
+        </div>
+      </section>
+
+      {/* ---------- Vous repartez avec ---------- */}
+      <section className={cx('container', styles.split)} aria-labelledby={`${ids}-gains`}>
+        <div className={styles.splitHead}>
+          <h2 id={`${ids}-gains`} className={styles.h2} data-reveal="title">
+            {t.gains}
+          </h2>
+        </div>
+        <ol className={cx(styles.splitBody, styles.gains)} data-reveal-stagger>
+          {item.gains.map((gain, index) => (
+            <li key={gain}>
+              <span className={styles.gainNum} aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span>{gain}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* ---------- Pour qui · Pourquoi OPEM ---------- */}
+      <div className={styles.band}>
+        <div className={cx('container', styles.bandGrid)}>
+          <section aria-labelledby={`${ids}-audience`}>
+            <h2 id={`${ids}-audience`} className={styles.h3} data-reveal="title">
+              {t.audience}
+            </h2>
+            <p>{item.audience}</p>
+          </section>
+          <section aria-labelledby={`${ids}-reasons`}>
+            <h2 id={`${ids}-reasons`} className={styles.h3} data-reveal="title">
+              {t.reasons.title}
+            </h2>
+            <ul className={styles.reasons}>
+              {item.reasons.map((reason) => (
+                <li key={reason}>{reason}</li>
               ))}
             </ul>
-          </nav>
-
-          {/* ---------- La fiche : une ligne par rubrique, intitulé à gauche, contenu à droite ---------- */}
-          <div className={styles.fiche}>
-            {/* Pourquoi cette formation */}
-            <section className={styles.row} {...sectionProps(0)}>
-              <RowHead id={`${ids}-${SECTIONS[0]}`} label={t.why} />
-              <div className={styles.rowBody}>
-                <p className={styles.hook}>{item.why.title}</p>
-                <ul className={styles.list}>
-                  {item.why.symptoms.map((symptom) => (
-                    <li key={symptom}>{symptom}</li>
-                  ))}
-                </ul>
-                <p className={styles.answer}>
-                  <CheckCircleIcon size={22} weight="fill" aria-hidden="true" />
-                  <span>{item.why.answer}</span>
-                </p>
-                <div className={styles.edge}>
-                  <p className={styles.edgeLabel}>{t.edge}</p>
-                  <ul className={styles.list}>
-                    {item.why.edge.map((part) => (
-                      <li key={part.label}>
-                        <b>{part.label}</b>
-                        {part.text}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Quatre temps forts */}
-            <section className={styles.row} {...sectionProps(1)}>
-              <RowHead id={`${ids}-${SECTIONS[1]}`} label={item.stepsTitle} />
-              <div className={styles.rowBody}>
-                <ol className={styles.steps}>
-                  {item.steps.map((step, index) => (
-                    <li key={step.title}>
-                      <span className={styles.stepNum} aria-hidden="true">
-                        {index + 1}
-                      </span>
-                      <div>
-                        <h3 className={styles.stepTitle}>{step.title}</h3>
-                        <p>{step.text}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-                <p className={styles.note}>{t.steps.note}</p>
-              </div>
-            </section>
-
-            {/* Ce que vous emportez */}
-            <section className={styles.row} {...sectionProps(2)}>
-              <RowHead id={`${ids}-${SECTIONS[2]}`} label={t.gains.eyebrow} />
-              <div className={styles.rowBody}>
-                <p className={styles.rowLead}>{t.gains.title}</p>
-                <ul className={styles.list}>
-                  {item.gains.map((gain) => (
-                    <li key={gain}>{gain}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {/* Pour qui */}
-            <section className={styles.row} {...sectionProps(3)}>
-              <RowHead id={`${ids}-${SECTIONS[3]}`} label={t.audience} />
-              <div className={styles.rowBody}>
-                <ul className={styles.chips}>
-                  {item.audience.roles.map((role) => (
-                    <li key={role}>{role}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {/* Prérequis */}
-            <section className={styles.row} aria-labelledby={`${ids}-prerequisites`}>
-              <RowHead id={`${ids}-prerequisites`} label={t.prerequisites} />
-              <div className={styles.rowBody}>
-                <ul className={styles.list}>
-                  {item.audience.prerequisites.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {/* La session comprend */}
-            <section className={styles.row} aria-labelledby={`${ids}-includes`}>
-              <RowHead id={`${ids}-includes`} label={t.includes} />
-              <div className={styles.rowBody}>
-                <ul className={cx(styles.list, styles.listTwo)}>
-                  {item.includes.items.map((entry) => (
-                    <li key={entry}>{entry}</li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {/* Animation */}
-            <section className={styles.row} aria-labelledby={`${ids}-trainer`}>
-              <RowHead id={`${ids}-trainer`} label={t.trainer} />
-              <div className={styles.rowBody}>
-                <p>{item.includes.trainer}</p>
-              </div>
-            </section>
-          </div>
+            <Link to={t.reasons.link.href} className={styles.more}>
+              {t.reasons.link.label} ›
+            </Link>
+          </section>
         </div>
-
-        {/* ---------- Encadré « session » ---------- */}
-        <aside className={styles.card} aria-label={t.facts.label}>
-          <p className={styles.cardLabel}>{t.card.next}</p>
-          <p className={styles.cardDate}>{dates ?? t.facts.noDate}</p>
-          <dl className={styles.cardFacts}>
-            <div>
-              <dt>
-                <ClockIcon size={22} aria-hidden="true" />
-                <span className="sr-only">{t.facts.duration}</span>
-              </dt>
-              <dd>
-                <b>{practical.duration}</b>
-                <span>{practical.hours}</span>
-              </dd>
-            </div>
-            <div>
-              <dt>
-                <UsersThreeIcon size={22} aria-hidden="true" />
-                <span className="sr-only">{t.facts.seats}</span>
-              </dt>
-              <dd>
-                <b>{seats}</b>
-                <span>{t.facts.seatsMore}</span>
-              </dd>
-            </div>
-            <div>
-              <dt>
-                <MapPinIcon size={22} aria-hidden="true" />
-                <span className="sr-only">{t.facts.place}</span>
-              </dt>
-              <dd>
-                <b>{practical.place}</b>
-                <span>{practical.city}</span>
-              </dd>
-            </div>
-            <div>
-              <dt>
-                <FileTextIcon size={22} aria-hidden="true" />
-                <span className="sr-only">{t.reference}</span>
-              </dt>
-              <dd>
-                <b>
-                  {t.reference} <span dir="ltr">{item.reference}</span>
-                </b>
-                <span>{t.card.refMore}</span>
-              </dd>
-            </div>
-          </dl>
-          <a
-            ref={topActionRef}
-            href={`#${REQUEST_ID}`}
-            className={styles.primary}
-            onClick={toSection(REQUEST_ID)}
-          >
-            {t.cta.button}
-            <ArrowRightIcon size={18} className="arrow" />
-          </a>
-          <p className={styles.cardNote}>{t.card.note}</p>
-          <p className={styles.cardContact}>
-            <a href={SHOWCASE_CONTACT.phone.href} dir="ltr">
-              {SHOWCASE_CONTACT.phone.display}
-            </a>
-            <a href={`mailto:${SHOWCASE_CONTACT.email}`} dir="ltr">
-              {SHOWCASE_CONTACT.email}
-            </a>
-          </p>
-        </aside>
       </div>
 
-      {/* ---------- Témoignages : bandeau bleu nuit pleine largeur, avec photos de sessions ---------- */}
+      {/* ---------- OPEM en chiffres ---------- */}
+      <section className={cx('container', styles.figuresBlock)} aria-labelledby={`${ids}-figures`}>
+        <h2 id={`${ids}-figures`} className="sr-only">
+          {t.figures.label}
+        </h2>
+        <ul className={styles.figures} data-reveal-stagger>
+          {t.figures.items.map((figure) => (
+            <li key={figure.label}>
+              <b>{figure.value}</b>
+              <span>{figure.label}</span>
+            </li>
+          ))}
+        </ul>
+        <Link to={t.figures.link.href} className={styles.more}>
+          {t.figures.link.label} ›
+        </Link>
+      </section>
+
+      {/* ---------- Témoignages propres à la formation ---------- */}
       {mainVoice && (
-        <section className={cx(styles.voicesBand, 'on-dark')} {...sectionProps(4)}>
-          <div className={cx('container', styles.voicesGrid)}>
-            <div className={styles.voicesText}>
-              <p className={cx(styles.eyebrow, styles.eyebrowDark)}>{t.voices.eyebrow}</p>
-              <h2 id={`${ids}-${SECTIONS[4]}`} className={styles.voicesTitle} data-reveal="title">
-                {t.voices.title}
-              </h2>
-              <figure className={styles.voiceMain} data-reveal>
-                <span className={styles.qmark} aria-hidden="true">
-                  «
-                </span>
-                <blockquote>
-                  <p>{mainVoice.quote}</p>
-                </blockquote>
-                <figcaption>{mainVoice.author}</figcaption>
-              </figure>
-            </div>
-            <ul className={styles.voicePhotos} aria-label={photosLabel}>
-              {photos.map((photo) => (
-                <li key={photo.src} className={styles.voicePhoto} data-motion="unveil">
-                  <img
-                    src={photo.src.replace('.webp', '-700.webp')}
-                    alt={photo.alt}
-                    width={700}
-                    height={525}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </li>
-              ))}
-            </ul>
+        <section className={styles.voicesBand} aria-labelledby={`${ids}-voices`}>
+          <div className={cx('container', styles.voicesInner)}>
+            <h2 id={`${ids}-voices`} className="sr-only">
+              {t.voices}
+            </h2>
+            <figure className={styles.voiceMain} data-reveal>
+              <span className={styles.qmark} aria-hidden="true">
+                «
+              </span>
+              <blockquote>
+                <p>{mainVoice.quote}</p>
+              </blockquote>
+              <figcaption>{mainVoice.author}</figcaption>
+            </figure>
+            {otherVoices.length > 0 && (
+              <div className={styles.voices} data-reveal-stagger>
+                {otherVoices.map((voice) => (
+                  <figure key={voice.quote} className={styles.voice}>
+                    <blockquote>
+                      <p>« {voice.quote} »</p>
+                    </blockquote>
+                    <figcaption>{voice.author}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            )}
           </div>
-          {otherVoices.length > 0 && (
-            <div className={cx('container', styles.voices)} data-reveal-stagger>
-              {otherVoices.map((voice) => (
-                <figure key={voice.quote} className={styles.voice}>
-                  <blockquote>
-                    <p>{voice.quote}</p>
-                  </blockquote>
-                  <figcaption>{voice.author}</figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
         </section>
       )}
 
-      {/* ---------- OPEM en chiffres ---------- */}
-      <section className={styles.figures} aria-labelledby={`${ids}-figures`}>
-        <div className="container">
-          <h2 id={`${ids}-figures`} className={cx(styles.eyebrow, styles.eyebrowBlue)}>
-            {t.figures.eyebrow}
+      {/* ---------- Demande de la fiche technique et du devis ---------- */}
+      <section
+        id={REQUEST_ID}
+        tabIndex={-1}
+        className={cx('container', styles.request)}
+        aria-labelledby={`${ids}-request`}
+      >
+        <div className={styles.requestText}>
+          <h2 id={`${ids}-request`} className={styles.h2} data-reveal="title">
+            {t.request.title}
           </h2>
-          <dl className={styles.figureList} data-reveal-stagger>
-            {t.figures.items.map((figure) => (
-              <div key={figure.label} className={styles.figure}>
-                <dt>{figure.label}</dt>
-                <dd dir="ltr">{figure.value}</dd>
-              </div>
-            ))}
-          </dl>
+          <p>{t.request.intro}</p>
+          <p className={styles.requestContact}>
+            {t.request.contact[0]}
+            <a href={`mailto:${SHOWCASE_CONTACT.email}`} dir="ltr">
+              {SHOWCASE_CONTACT.email}
+            </a>
+            {t.request.contact[1]}
+            <a href={SHOWCASE_CONTACT.phone.href} dir="ltr">
+              {SHOWCASE_CONTACT.phone.display}
+            </a>
+            {t.request.contact[2]}
+          </p>
         </div>
+        <RequestForm item={item} dates={dates} wants={wants} onWants={setWants} />
       </section>
 
-      {/* ---------- Demande de la fiche technique et du devis ---------- */}
-      <div className="container">
-        <section
-          ref={requestRef}
-          id={REQUEST_ID}
-          className={cx(styles.request, 'on-dark')}
-          aria-labelledby={`${ids}-request`}
-          tabIndex={-1}
-        >
-          <div className={styles.requestText}>
-            <h2 id={`${ids}-request`} className={styles.requestTitle}>
-              {t.cta.title}
-            </h2>
-            <span className={styles.amberRule} aria-hidden="true" />
-            <p>{fill(t.cta.text, { n: practical.seats })}</p>
-          </div>
-          <div className={styles.requestActions}>
-            <a href={mailto} className={styles.light}>
-              {t.cta.button}
-              <ArrowRightIcon size={18} className="arrow" />
-            </a>
-            <p className={styles.contact}>
-              <span>
-                {t.cta.phone}{' '}
-                <a href={SHOWCASE_CONTACT.phone.href} dir="ltr">
-                  {SHOWCASE_CONTACT.phone.display}
-                </a>
-              </span>
-              <span>
-                {t.cta.email}{' '}
-                <a href={`mailto:${SHOWCASE_CONTACT.email}`} dir="ltr">
-                  {SHOWCASE_CONTACT.email}
-                </a>
-              </span>
-              <span className={styles.reminder}>
-                {fill(t.cta.reminder, { ref: '' })}
-                <span dir="ltr">{item.reference}</span>
-              </span>
-            </p>
-          </div>
-        </section>
-
-        <p className={styles.protection}>
-          <span>{t.protection}</span>
-          <span>
-            {t.reference} <span dir="ltr">{item.reference}</span>
-          </span>
+      {/* ---------- Service formation, référence, protection du contenu ---------- */}
+      <div className={cx('container', styles.colophon)}>
+        <p>
+          {t.service}{' '}
+          <a href={SHOWCASE_CONTACT.phone.href} dir="ltr">
+            {SHOWCASE_CONTACT.phone.display}
+          </a>{' '}
+          ·{' '}
+          <a href={`mailto:${SHOWCASE_CONTACT.email}`} dir="ltr">
+            {SHOWCASE_CONTACT.email}
+          </a>
         </p>
-      </div>
-
-      {/* Barre fixe (téléphone) */}
-      <div className={cx(styles.dock, dock && styles.dockShown)} aria-hidden={!dock}>
-        <a
-          href={`#${REQUEST_ID}`}
-          className={styles.primary}
-          tabIndex={dock ? 0 : -1}
-          onClick={toSection(REQUEST_ID)}
-        >
-          {t.cta.button}
-        </a>
+        <p>
+          {t.reference}
+          <span dir="ltr">{item.reference}</span>
+        </p>
+        <p className={styles.protection}>{t.protection}</p>
       </div>
     </div>
-  );
-}
-
-/** Intitulé d'une ligne de la fiche : le titre de la rubrique, précédé d'un filet vert. */
-function RowHead({ id, label }: { id: string; label: string }) {
-  return (
-    <h2 id={id} className={styles.rowTitle}>
-      {label}
-    </h2>
   );
 }

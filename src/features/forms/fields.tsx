@@ -83,7 +83,7 @@ export function TextField({
   onChange: (value: string) => void;
   type?: 'text' | 'email';
   autoComplete?: string;
-  inputMode?: 'text' | 'email';
+  inputMode?: 'text' | 'email' | 'numeric';
   maxLength?: number;
 }) {
   const ids = useIds(name);

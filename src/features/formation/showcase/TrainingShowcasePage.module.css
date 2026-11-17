@@ -1,24 +1,22 @@
-/* Page vitrine d'une formation : version 10 « catalogue » retenue par OPEM, dans le langage des
-   autres pages du site (« Formation qualifiante », « Le cabinet ») : ouverture sur bleu très
-   clair avec une grande photo arrondie qui se dévoile, surtitres précédés d'un filet vert, titres
-   en bleu nuit, cartes arrondies qui se soulèvent au survol, témoignages sur un bandeau bleu nuit
-   avec des photos de sessions. Deux colonnes sur ordinateur (contenu à gauche, encadré
-   « session » fixe à droite), barre d'ancres collée sous le menu.
-   Vert sur fond clair, ambre sur fond foncé (guillemet, filet de la demande) ; boutons bleu OPEM,
-   blancs sur l'encadré bleu ; pas de dégradé, pas de texte sur les photos. Mobile d'abord ;
-   propriétés logiques pour l'arabe (miroir). */
+/* Page d'une formation : modèle unique retenu par OPEM (maquettes du 17 novembre 2026,
+   variante 4 « fond clair, scène bleu nuit »). Haut de page sur bleu très clair quadrillé de
+   blanc, titre en bleu nuit, filets verts ; à côté, une carte bleu nuit (l'illustration de la
+   formation, son signal ambre animé, les informations de la session) qui déborde sur la
+   section suivante. Corps en deux colonnes (intitulé à gauche, contenu à droite), un bandeau
+   bleu très clair, les chiffres, les témoignages sur bleu nuit, puis le formulaire.
+   Vert sur fond clair, ambre seulement sur fond bleu nuit (signal, guillemet) ; boutons bleu
+   OPEM, jamais ambre. Mobile d'abord ; propriétés logiques pour l'arabe (miroir). */
 
 .page {
   --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --rule: #dfe5ea;
-  --radius-card: 14px;
-  /* Hauteur du menu une fois réduit au défilement : la barre d'ancres se colle dessous. */
-  --stick: var(--header-height-compact);
+  --rule: #c0cacf;
+  /* Débord de la carte bleu nuit sur la section qui suit (ordinateur). */
+  --overlap: 4.5rem;
 
   color: var(--opem-anthracite);
   font-family: var(--font-text);
   font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .page:lang(ar),
@@ -31,72 +29,189 @@
 }
 
 :where(.page) [id] {
-  scroll-margin-top: calc(var(--stick) + 4rem);
+  scroll-margin-top: calc(var(--header-height-compact) + 1.5rem);
 }
 
 :where(.page) section:focus {
   outline: none;
 }
 
-/* ---------- Typographie commune (celle de « Formation qualifiante ») ---------- */
+/* ---------- Haut de page ---------- */
 
-.eyebrow {
+.hero {
+  background-color: var(--opem-blue-10);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.75) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.75) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.heroGrid {
+  display: grid;
+  gap: 2.5rem;
+  padding-block: clamp(1.75rem, 1rem + 2.5vw, 2.75rem) 0;
+}
+
+@media (min-width: 60em) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 2.75rem;
+  }
+}
+
+.heroText {
   display: flex;
-  align-items: center;
-  gap: 0.875rem;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.125rem;
+  min-width: 0;
+}
+
+@media (min-width: 60em) {
+  .heroText {
+    padding-block-end: clamp(2.25rem, 1rem + 3vw, 3.75rem);
+  }
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
   margin: 0;
-  color: var(--opem-green-dark);
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  line-height: 1.4;
-  text-transform: uppercase;
+  padding: 0;
+  list-style: none;
+  color: var(--opem-gray);
+  font-size: 0.9375rem;
 }
 
-.eyebrow::before {
-  content: '';
-  flex: none;
-  width: 2.5rem;
-  height: 2px;
-  background: var(--opem-green);
+.crumbs li + li::before {
+  content: '›';
+  margin-inline-end: 0.5rem;
 }
 
-/* Sur bleu nuit : bleu 30 % et filet ambre (pas d'ambre dans les textes, choix du client). */
-.eyebrowDark {
-  color: var(--opem-blue-30);
+.crumbs a {
+  color: var(--opem-gray);
 }
 
-.eyebrowDark::before {
-  background: var(--opem-amber);
-}
-
-.eyebrowBlue {
+.crumbs a:hover {
   color: var(--opem-blue);
 }
 
+.crumbs [aria-current] {
+  color: var(--opem-night);
+}
+
+.eyebrow {
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
 .eyebrow:lang(ar) {
+  font-family: var(--font-arabic);
   font-size: 0.9375rem;
   letter-spacing: 0;
 }
 
-.title:lang(ar),
-.voicesTitle:lang(ar) {
+/* L'accroche : la question en gris, la réponse en bleu nuit, surlignée de vert. */
+.hook {
+  color: var(--opem-gray);
+  font-family: var(--font-heading);
+  font-size: clamp(1.1875rem, 1rem + 0.7vw, 1.4375rem);
+  line-height: 1.5;
+}
+
+.hookAnswer {
+  display: block;
+  margin-block-start: 0.25rem;
+}
+
+.hookAnswer span {
+  color: var(--opem-night);
+  font-weight: 600;
+  box-shadow: inset 0 -0.5em 0 rgb(77 164 52 / 0.32);
+  box-decoration-break: clone;
+}
+
+.hook:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.title {
+  margin: 0.25rem 0 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2.625rem, 1.5rem + 4vw, 4.375rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.title:lang(ar) {
   font-family: var(--font-arabic);
   letter-spacing: 0;
+  line-height: 1.3;
+}
+
+/* Les lignes du titre montent derrière un masque (data-motion="title") : un peu de place sous
+   chaque ligne pour que les jambages (g, p, ’) ne soient pas rognés. */
+.title > * {
+  padding-block-end: 0.14em;
+  margin-block-end: -0.14em;
+}
+
+.titleBar {
+  width: 7.5rem;
+  height: 0.5rem;
+  background: var(--opem-green);
+}
+
+.promise {
+  color: var(--opem-anthracite);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
   line-height: 1.4;
 }
 
-/* ---------- Boutons : bleu OPEM sur clair, blanc sur bleu (pas de bouton ambre) ---------- */
+/* Les dates et le lieu en une ligne, sur téléphone et tablette seulement. */
+.heroWhen {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.heroWhen:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+@media (min-width: 60em) {
+  .heroWhen {
+    display: none;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block-start: 0.375rem;
+}
 
 .primary,
-.light {
+.secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
   min-height: 3.25rem;
-  padding: 0.875rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 999px;
   font-family: var(--font-heading);
   font-size: 0.9375rem;
@@ -106,7 +221,8 @@
   text-decoration: none;
   transition:
     background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .primary {
@@ -118,795 +234,408 @@
   background: var(--opem-night);
 }
 
-.light {
+.secondary {
+  border: 2px solid var(--opem-blue);
   background: var(--opem-white);
   color: var(--opem-blue);
 }
 
-.light:hover {
+.secondary:hover {
   background: var(--opem-blue-10);
 }
 
 .primary:focus-visible,
-.light:focus-visible {
-  outline: 2px solid var(--opem-amber);
+.secondary:focus-visible {
+  outline: 2px solid var(--opem-blue);
   outline-offset: 3px;
 }
 
 .primary:lang(ar),
-.light:lang(ar) {
+.secondary:lang(ar) {
   font-family: var(--font-arabic);
 }
 
-/* ---------- Ouverture : bleu très clair, texte à gauche, grande photo à droite ---------- */
-
-.heroBand {
-  padding-block: clamp(1.75rem, 1rem + 2vw, 3rem) clamp(3rem, 2rem + 4vw, 5.5rem);
-  background: var(--opem-blue-10);
-}
-
-.heroGrid {
-  display: grid;
-  gap: clamp(2rem, 1.25rem + 2.5vw, 4rem);
-}
-
-@media (min-width: 60em) {
-  .heroGrid {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-    align-items: center;
-  }
-}
-
-.hero {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.25rem;
-  min-width: 0;
-}
-
-.crumbs ol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.625rem;
-  margin: 0 0 0.75rem;
-  padding: 0;
-  list-style: none;
-  color: var(--opem-gray);
-  font-size: 0.9375rem;
-}
-
-.crumbs li + li::before {
-  content: '›';
-  margin-inline-end: 0.625rem;
-  color: var(--opem-gray-light);
-}
-
-.crumbs a {
-  color: var(--opem-gray);
-}
-
-.crumbs a:hover {
-  color: var(--opem-blue);
-}
-
-.title {
-  max-width: 17ch;
-  margin: 0;
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 1.4rem + 3.4vw, 4.25rem);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-/* Les lignes du titre montent derrière un masque (data-motion="title") : un peu de place sous
-   chaque ligne pour que les jambages (g, p, ’) ne soient pas rognés, sans changer l'interligne. */
-.title > * {
-  padding-block-end: 0.14em;
-  margin-block-end: -0.14em;
-}
-
-.subtitle {
-  color: var(--opem-blue);
-  font-family: var(--font-heading);
-  font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
-  font-weight: 500;
-  line-height: 1.35;
-}
-
-.subtitle:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
-.intro {
-  max-width: 34em;
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
-}
-
-/* Chiffres clés : un bandeau blanc à trois cases, intitulé discret au-dessus de la valeur. */
-.keyFacts {
-  display: grid;
-  grid-auto-columns: minmax(0, auto);
-  grid-auto-flow: column;
-  justify-content: start;
-  margin: 0.75rem 0 0;
-  padding: 0;
-  border-radius: var(--radius-card);
-  background: var(--opem-white);
-  box-shadow:
-    0 1px 2px rgb(17 54 91 / 0.06),
-    0 18px 40px -24px rgb(17 54 91 / 0.35);
-}
-
-.keyFacts > div {
-  display: grid;
-  align-content: start;
-  gap: 0.25rem;
-  padding: 0.875rem 1rem;
-}
-
-.keyFacts > div + div {
-  border-inline-start: 1px solid var(--rule);
-}
-
-@media (min-width: 30em) {
-  .keyFacts > div {
-    padding: 1.125rem 1.75rem;
-  }
-}
-
-.keyFacts dt {
-  color: var(--opem-gray);
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.keyFacts dd {
-  margin: 0;
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.3125rem);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-
-.keyFacts dt:lang(ar),
-.keyFacts dd:lang(ar) {
-  font-family: var(--font-arabic);
-  letter-spacing: 0;
-}
-
-.keyFacts dt:lang(ar) {
-  font-size: 0.875rem;
-}
-
-.heroRef {
-  color: var(--opem-gray);
-  font-size: 0.875rem;
-  letter-spacing: 0.02em;
-}
-
-/* La photo : un motif de points décale l'image, une preuve chiffrée se pose sur son angle. */
-.visual {
-  position: relative;
-  margin-block-end: 1.5rem;
-}
-
-.visual::before {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  inset-block-end: -0.75rem;
-  inset-inline-end: -0.75rem;
-  width: 55%;
-  height: 60%;
-  border-radius: 16px;
-  background-image: radial-gradient(var(--opem-blue-30) 2px, transparent 2.2px);
-  background-size: 14px 14px;
-}
-
-@media (min-width: 60em) {
-  .visual {
-    margin-block-end: 0;
-  }
-
-  .visual::before {
-    inset-block-end: -2.25rem;
-    inset-inline-end: -2.25rem;
-  }
-}
-
-.photo {
+/* La scène bleu nuit : l'illustration, puis les informations de la session. */
+.scene {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   overflow: hidden;
-  margin: 0;
-  border-radius: 16px;
-  aspect-ratio: 4 / 3;
-  background: var(--opem-white);
-  box-shadow: 0 30px 60px -36px rgb(17 54 91 / 0.55);
+  border-radius: 20px;
+  background: var(--opem-night);
+  color: var(--opem-white);
+  box-shadow: 0 30px 60px -36px rgb(17 54 91 / 0.6);
 }
 
-.photo img {
+@media (min-width: 60em) {
+  .scene {
+    margin-block-end: calc(-1 * var(--overlap));
+  }
+}
+
+/* Le filet vert au pied de la carte. */
+.scene::after {
+  content: '';
+  height: 0.5rem;
+  background: var(--opem-green);
+}
+
+.sceneArt {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 1rem;
+}
+
+.art {
+  position: relative;
+  width: 100%;
+}
+
+.art img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 45%;
+  height: auto;
 }
 
-.proof {
+/* Le signal ambre sur le point clé de l'illustration : un point, et une onde qui s'élargit. */
+.signal {
   position: absolute;
-  z-index: 2;
-  inset-block-end: -1.5rem;
-  inset-inline-start: 1rem;
+  inset-inline-start: var(--x);
+  inset-block-start: var(--y);
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: -0.375rem;
+  border: 2px solid var(--opem-night);
+  border-radius: 50%;
+  background: var(--opem-amber);
+}
+
+/* L'illustration ne se retourne pas en arabe : le signal garde sa position depuis la gauche. */
+.art:dir(rtl) .signal {
+  inset-inline-start: auto;
+  left: var(--x);
+}
+
+.signal::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--opem-amber);
+  border-radius: 50%;
+  animation: signal 2.6s ease-out infinite;
+}
+
+@keyframes signal {
+  0% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  80%,
+  100% {
+    transform: scale(4.6);
+    opacity: 0;
+  }
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 1.125rem 1.25rem;
+  margin: 0;
+  padding: 1.25rem clamp(1.125rem, 0.5rem + 1.6vw, 1.75rem) 1.5rem;
+  border-block-start: 1px solid rgb(178 202 222 / 0.3);
+}
+
+.facts > div {
   display: grid;
   gap: 0.125rem;
-  max-width: 13rem;
-  padding: 0.875rem 1.25rem 0.875rem 1.125rem;
-  border-inline-start: 3px solid var(--opem-green);
-  border-radius: 12px;
-  background: var(--opem-white);
-  box-shadow: 0 18px 40px -20px rgb(17 54 91 / 0.45);
-  line-height: 1.3;
+  align-content: start;
 }
 
-@media (min-width: 60em) {
-  .proof {
-    inset-block-end: 2rem;
-    inset-inline-start: -2rem;
-    padding: 1.125rem 1.5rem 1.125rem 1.375rem;
-  }
-}
-
-.proof b {
-  color: var(--opem-blue);
-  font-family: var(--font-heading);
-  font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
-
-.proof span {
-  color: var(--opem-anthracite);
-  font-size: 0.9375rem;
-}
-
-/* ---------- Deux colonnes (une seule sous 60em) ---------- */
-
-/* Tablette et téléphone : une colonne ; l'encadré « session » vient en premier. */
-.layout {
-  display: flex;
-  flex-direction: column;
-  padding-block: 0 clamp(3.5rem, 2rem + 4vw, 6rem);
-}
-
-.col {
-  display: contents;
-}
-
-/* Positionné pour passer au-dessus du bas de l'ouverture ; collant sur ordinateur (plus bas). */
-.card {
-  position: relative;
-  order: 1;
-  margin-top: clamp(-2.5rem, -1rem - 2vw, -1.5rem);
-}
-
-.tabs {
-  order: 2;
-}
-
-.fiche {
-  order: 3;
-}
-
-@media (min-width: 60em) {
-  .layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 21.25rem;
-    gap: clamp(2.5rem, 1rem + 3vw, 4rem);
-    align-items: start;
-  }
-
-  .col {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  /* L'encadré remonte sur le bas de l'ouverture, puis suit le défilement. */
-  .card {
-    position: sticky;
-    top: calc(var(--stick) + 1.5rem);
-    margin-top: -3.5rem;
-  }
-}
-
-/* ---------- Barre d'ancres (collée sous le menu) ---------- */
-
-.tabs {
-  position: sticky;
-  top: var(--stick);
-  z-index: 5;
-  margin: 2.5rem calc(-1 * var(--gutter)) 0;
-  padding-inline: var(--gutter);
-  border-bottom: 1px solid var(--rule);
-  background: var(--opem-white);
-}
-
-.tabs ul {
-  display: flex;
-  gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-  overflow-x: auto;
-  list-style: none;
-  scrollbar-width: none;
-}
-
-.tabs ul::-webkit-scrollbar {
-  display: none;
-}
-
-.tabs a {
-  display: block;
-  padding: 1.125rem 0.875rem 1rem;
-  border-bottom: 3px solid transparent;
-  color: var(--opem-anthracite);
-  font-family: var(--font-heading);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.tabs a:hover {
-  border-bottom-color: var(--opem-green);
-  color: var(--opem-blue);
-}
-
-.tabs a:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
-@media (min-width: 40em) {
-  .tabs {
-    margin-inline: 0;
-    padding-inline: 0;
-  }
-}
-
-@media (min-width: 60em) {
-  .tabs {
-    margin-top: 1.5rem;
-  }
-}
-
-/* ---------- La fiche : un document blanc, une ligne par rubrique ---------- */
-
-.fiche {
-  margin-top: 2rem;
-  border: 1px solid var(--rule);
-  border-radius: 16px;
-  background: var(--opem-white);
-}
-
-/* Une rubrique : intitulé au-dessus (téléphone) ou à gauche (à partir de 48em). */
-.row {
-  display: grid;
-  gap: 1rem;
-  padding: 1.75rem 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-.row:first-child {
-  border-top: 0;
-}
-
-@media (min-width: 48em) {
-  .row {
-    grid-template-columns: 12.5rem minmax(0, 1fr);
-    gap: 2rem;
-    padding: 2.25rem 2.25rem;
-  }
-}
-
-.rowTitle {
-  align-self: start;
-  margin: 0;
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: 1.0625rem;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-.rowTitle::before {
-  content: '';
-  display: block;
-  width: 2rem;
-  height: 2px;
-  margin-block-end: 0.75rem;
-  background: var(--opem-green);
-}
-
-.rowTitle:lang(ar) {
-  font-family: var(--font-arabic);
-  letter-spacing: 0;
-}
-
-.rowBody {
-  display: grid;
-  gap: 1.125rem;
-  min-width: 0;
-}
-
-/* L'accroche de « Pourquoi » et la phrase de « Ce que vous emportez ». */
-.hook,
-.rowLead {
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.hook {
-  font-size: clamp(1.1875rem, 1.05rem + 0.5vw, 1.4375rem);
-  letter-spacing: -0.015em;
-}
-
-.rowLead {
-  font-size: 1.0625rem;
-}
-
-.hook:lang(ar),
-.rowLead:lang(ar) {
-  font-family: var(--font-arabic);
-  letter-spacing: 0;
-}
-
-/* Liste à pastilles (symptômes, acquis, prérequis, contenu de la session). */
-.list {
-  display: grid;
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.list li {
-  position: relative;
-  padding-inline-start: 1.25rem;
-  line-height: 1.5;
-}
-
-/* Une pastille verte devant chaque point, alignée sur la première ligne. */
-.list li::before {
-  content: '';
-  position: absolute;
-  inset-block-start: 0.6em;
-  inset-inline-start: 0.125rem;
-  width: 0.4375rem;
-  height: 0.4375rem;
-  border-radius: 50%;
-  background: var(--opem-green);
-}
-
-.list b {
-  display: block;
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.list b:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
-/* Dans « Sa singularité », l'intitulé en gras suffit : pas de pastille. */
-.edge .list li {
-  padding-inline-start: 0;
-}
-
-.edge .list li::before {
-  content: none;
-}
-
-@media (min-width: 40em) {
-  .listTwo {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.875rem 1.5rem;
-  }
-}
-
-.answer {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  color: var(--opem-night);
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.answer svg {
-  flex: none;
-  margin-top: 0.1rem;
-  color: var(--opem-green);
-}
-
-/* « Sa singularité » : un encart bleu très clair dans la ligne. */
-.edge {
-  display: grid;
-  gap: 0.875rem;
-  padding: 1.25rem 1.375rem;
-  border-radius: 12px;
-  background: var(--opem-blue-10);
-}
-
-.edgeLabel {
-  color: var(--opem-green-dark);
-  font-family: var(--font-heading);
+.facts dt {
+  color: var(--opem-blue-30);
   font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.edgeLabel:lang(ar) {
-  font-family: var(--font-arabic);
-  font-size: 0.9375rem;
-  letter-spacing: 0;
-}
-
-/* Quatre temps forts : liste numérotée. */
-.steps {
-  display: grid;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.steps li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.875rem;
-}
-
-.stepNum {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--opem-blue);
-  color: var(--opem-white);
-  font-family: var(--font-heading);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.stepTitle {
-  margin: 0.125rem 0 0.125rem;
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: 1.0625rem;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.stepTitle:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
-.steps p {
-  line-height: 1.5;
-}
-
-.note {
-  color: var(--opem-gray);
-  font-size: 0.9375rem;
-}
-
-/* Pour qui : étiquettes de texte simples. */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.chips li {
-  padding: 0.4rem 0.9rem;
-  border: 1px solid var(--opem-blue-30);
-  border-radius: 999px;
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.chips li:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
-/* ---------- Encadré « session » ---------- */
-
-.card {
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 1.75rem 1.5rem 1.5rem;
-  border: 1px solid var(--rule);
-  border-top: 5px solid var(--opem-blue);
-  border-radius: var(--radius-card);
-  background: var(--opem-white);
-  box-shadow: 0 18px 40px rgb(17 54 91 / 0.12);
-}
-
-.cardLabel {
-  color: var(--opem-green-dark);
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.cardLabel:lang(ar) {
+.facts dd {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.1875rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.facts dt:lang(ar),
+.facts dd:lang(ar) {
   font-family: var(--font-arabic);
-  font-size: 0.9375rem;
   letter-spacing: 0;
 }
 
-.cardDate {
+/* ---------- Corps : intitulé à gauche, contenu à droite ---------- */
+
+.split {
+  display: grid;
+  gap: 1.5rem 3rem;
+  padding-block: clamp(3.5rem, 2rem + 5vw, 6.5rem) 0;
+}
+
+/* La première section laisse la place au débord de la carte. */
+.first {
+  padding-block-start: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+}
+
+@media (min-width: 60em) {
+  .split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+
+  .first {
+    padding-block-start: calc(var(--overlap) + clamp(3.5rem, 2rem + 5vw, 6.5rem));
+  }
+}
+
+.splitHead {
+  min-width: 0;
+}
+
+.h2,
+.h3 {
+  margin: 0;
   color: var(--opem-night);
   font-family: var(--font-heading);
-  font-size: 1.75rem;
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.12;
+  text-wrap: balance;
 }
 
-.cardDate:lang(ar) {
+.h2 {
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+}
+
+.h3 {
+  margin-block-end: 1rem;
+  font-size: clamp(1.625rem, 1.3rem + 1vw, 2rem);
+}
+
+/* Le filet vert sous chaque intitulé. */
+.h2::after,
+.h3::after {
+  content: '';
+  display: block;
+  width: 4rem;
+  height: 4px;
+  margin-block-start: 0.875rem;
+  background: var(--opem-green);
+}
+
+.h2:lang(ar),
+.h3:lang(ar) {
   font-family: var(--font-arabic);
-  letter-spacing: 0;
+  line-height: 1.35;
 }
 
-.cardFacts {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
+.splitBody {
+  display: grid;
+  gap: 1.125rem;
+  min-width: 0;
 }
 
-.cardFacts > div {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding-block: 0.75rem;
-  border-top: 1px solid var(--opem-blue-10);
+.lead {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.5625rem);
+  line-height: 1.45;
 }
 
-.cardFacts dt {
-  flex: none;
+.lead:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.edge b {
+  color: var(--opem-night);
+}
+
+/* Lien de suite : bleu OPEM, souligné d'un filet vert. */
+.more {
+  justify-self: start;
+  align-self: flex-start;
+  padding-block-end: 2px;
+  border-block-end: 2px solid var(--opem-green);
   color: var(--opem-blue);
-}
-
-.cardFacts dd {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  font-size: 1.0625rem;
-  line-height: 1.4;
-}
-
-.cardFacts b {
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
-}
-
-.cardFacts b:lang(ar) {
-  font-family: var(--font-arabic);
-}
-
-.card .primary {
-  width: 100%;
-}
-
-.cardNote {
-  color: var(--opem-gray);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.cardContact {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  font-size: 1rem;
-}
-
-.cardContact a {
-  color: var(--opem-anthracite);
   text-decoration: none;
 }
 
-.cardContact a:hover {
-  color: var(--opem-blue);
-  text-decoration: underline;
+.more:hover {
+  color: var(--opem-night);
 }
 
-/* ---------- Témoignages : bandeau bleu nuit, citation et photos de sessions ---------- */
+.more:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* Vous repartez avec : trois lignes numérotées. */
+.gains {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+}
+
+.gains li {
+  display: flex;
+  align-items: baseline;
+  gap: 1.75rem;
+  padding-block: 1.375rem;
+  border-block-start: 1px solid var(--rule);
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  line-height: 1.45;
+}
+
+.gainNum {
+  flex: none;
+  width: 3.5rem;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.6rem + 1vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ---------- Pour qui · Pourquoi OPEM ---------- */
+
+.band {
+  margin-block-start: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  background: var(--opem-blue-10);
+}
+
+.bandGrid {
+  display: grid;
+  gap: 3rem;
+}
+
+@media (min-width: 48em) {
+  .bandGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4rem;
+  }
+}
+
+.bandGrid section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.reasons {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reasons li {
+  position: relative;
+  padding-inline-start: 1.75rem;
+  line-height: 1.5;
+}
+
+/* Une coche verte devant chaque raison. */
+.reasons li::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.35em;
+  inset-inline-start: 0.125rem;
+  width: 0.75rem;
+  height: 0.4375rem;
+  border-inline-start: 2.5px solid var(--opem-green);
+  border-block-end: 2.5px solid var(--opem-green);
+  transform: rotate(-45deg);
+}
+
+/* ---------- OPEM en chiffres ---------- */
+
+.figuresBlock {
+  display: grid;
+  gap: 2rem;
+  padding-block: clamp(3.5rem, 2rem + 5vw, 6rem);
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .figures {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.figures li {
+  display: grid;
+  gap: 0.375rem;
+  align-content: start;
+  padding-block-start: 1.125rem;
+  border-block-start: 4px solid var(--opem-green);
+}
+
+.figures b {
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.figures span {
+  color: var(--opem-gray);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+/* ---------- Témoignages, sur bleu nuit ---------- */
 
 .voicesBand {
-  padding-block: var(--section-space);
+  padding-block: clamp(3.5rem, 2rem + 5vw, 6rem);
   background: var(--opem-night);
   color: var(--opem-white);
 }
 
-.voicesGrid {
+.voicesInner {
   display: grid;
-  gap: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
-}
-
-@media (min-width: 60em) {
-  .voicesGrid {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-    align-items: center;
-  }
-}
-
-.voicesText {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  min-width: 0;
-}
-
-.voicesTitle {
-  margin: 0;
-  color: var(--opem-white);
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
+  gap: 2.5rem;
 }
 
 .voiceMain {
   display: grid;
-  gap: 1.125rem;
-  margin: 1rem 0 0;
+  gap: 1.25rem;
+  max-width: 52rem;
+  margin: 0;
 }
 
 .qmark {
-  padding-top: 1.75rem;
   color: var(--opem-amber);
   font-family: var(--font-heading);
-  font-size: clamp(5rem, 4rem + 3vw, 7rem);
+  font-size: 4rem;
   font-weight: 700;
   line-height: 0.6;
-  user-select: none;
 }
 
 .voiceMain blockquote,
@@ -914,304 +643,143 @@
   margin: 0;
 }
 
-.voiceMain blockquote p {
+.voiceMain p {
   font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 1rem + 0.9vw, 1.75rem);
-  font-weight: 500;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
   line-height: 1.45;
 }
 
-.voiceMain blockquote p:lang(ar) {
+.voiceMain p:lang(ar) {
   font-family: var(--font-arabic);
 }
 
-.voiceMain figcaption {
-  color: var(--opem-blue-30);
-  font-size: 1rem;
-}
-
-/* Trois photos : une grande, deux petites empilées (comme « Formation qualifiante »). */
-.voicePhotos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.voicePhoto {
-  overflow: hidden;
-  border-radius: 12px;
-  aspect-ratio: 4 / 3;
-  background: rgb(255 255 255 / 0.06);
-}
-
-.voicePhoto:first-child {
-  grid-column: span 2;
-}
-
-.voicePhoto img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@media (min-width: 40em) {
-  .voicePhotos {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .voicePhoto {
-    aspect-ratio: auto;
-    min-height: 10rem;
-  }
-
-  .voicePhoto:first-child {
-    grid-row: span 2;
-    grid-column: auto;
-  }
-}
-
-/* Les deux autres témoignages, en cartes translucides sous la citation. */
-.voices {
-  display: grid;
-  gap: 1.25rem;
-  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
-}
-
-.voice {
-  display: grid;
-  gap: 0.875rem;
-  margin: 0;
-  padding: 1.75rem 2rem;
-  border: 1px solid rgb(178 202 222 / 0.25);
-  border-radius: var(--radius-card);
-  background: rgb(255 255 255 / 0.05);
-}
-
-.voice blockquote p::before {
-  content: '« ';
-}
-
-.voice blockquote p::after {
-  content: ' »';
-}
-
+.voiceMain figcaption,
 .voice figcaption {
   color: var(--opem-blue-30);
   font-size: 0.9375rem;
 }
 
-@media (min-width: 40em) {
+.voices {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 48em) {
   .voices {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* ---------- OPEM en chiffres ---------- */
-
-.figures {
-  padding-block: clamp(3.5rem, 2rem + 4vw, 5.5rem);
-  background: var(--opem-white);
-}
-
-.figureList {
+.voice {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem 1.25rem;
-  margin: 2rem 0 0;
-}
-
-.figure {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  padding-top: 1.125rem;
-  border-top: 3px solid var(--opem-green);
-}
-
-.figure dd {
-  order: 1;
+  gap: 0.875rem;
+  align-content: space-between;
   margin: 0;
-  color: var(--opem-blue);
-  font-family: var(--font-heading);
-  font-size: clamp(2.375rem, 1.6rem + 2.4vw, 3.5rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  white-space: nowrap;
+  padding: 1.5rem;
+  border: 1px solid rgb(178 202 222 / 0.25);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.04);
+  line-height: 1.55;
 }
 
-.figure dt {
-  order: 2;
-  font-size: 1.0625rem;
-}
-
-@media (min-width: 40em) {
-  .figureList {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 64em) {
-  .figureList {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
-}
-
-/* ---------- Demande ---------- */
+/* ---------- Demande de la fiche technique et du devis ---------- */
 
 .request {
   display: grid;
-  gap: 1.75rem;
-  margin: 0 calc(-1 * var(--gutter));
-  padding: 2.5rem var(--gutter);
-  background: var(--opem-blue);
-  color: var(--opem-white);
+  gap: 2.5rem;
+  padding-block: clamp(3.5rem, 2rem + 5vw, 6rem);
+}
+
+@media (min-width: 60em) {
+  .request {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+    gap: 4rem;
+  }
 }
 
 .requestText {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.requestText p {
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
-}
-
-.requestTitle {
-  margin: 0;
-  color: var(--opem-white);
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.375rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-
-.requestTitle:lang(ar) {
-  font-family: var(--font-arabic);
-  letter-spacing: 0;
-  line-height: 1.4;
-}
-
-.amberRule {
-  width: 4.5rem;
-  height: 4px;
-  background: var(--opem-amber);
-}
-
-.requestActions {
   display: grid;
   gap: 1.25rem;
+  min-width: 0;
 }
 
-.requestActions .light {
-  min-height: 3.5rem;
-  font-weight: 700;
+.requestContact a,
+.legal a {
+  color: var(--opem-blue);
 }
 
-.contact {
-  display: grid;
-  gap: 0.25rem;
-  font-size: 1.125rem;
+.formCard {
+  min-width: 0;
+  padding: clamp(1.25rem, 0.75rem + 2vw, 2.25rem);
+  border-radius: 16px;
+  background: var(--opem-blue-10);
 }
 
-.contact a {
-  color: var(--opem-white);
-  text-underline-offset: 3px;
+.requiredNote {
+  color: var(--opem-gray);
+  font-size: 0.9375rem;
 }
 
-.reminder {
-  margin-top: 0.375rem;
-  color: var(--opem-blue-30);
-  font-size: 1rem;
-}
-
-@media (min-width: 40em) {
-  .request {
-    margin-inline: 0;
-    padding: clamp(2.5rem, 1.5rem + 2.5vw, 3.75rem) clamp(1.75rem, 1rem + 3vw, 4rem);
-    border-radius: 16px;
-  }
-
-  .requestActions {
-    justify-items: start;
+@media (min-width: 30em) {
+  .wants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 2rem;
   }
 }
 
-@media (min-width: 64em) {
-  .request {
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(2rem, 1rem + 3vw, 3.5rem);
-  }
-
-  .requestActions {
-    justify-items: stretch;
-  }
+.legal {
+  color: var(--opem-gray);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
-/* ---------- Mention de protection ---------- */
+.thanks {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.45;
+}
 
-.protection {
+.thanks:focus {
+  outline: none;
+}
+
+.thanks:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* ---------- Service formation, référence, protection ---------- */
+
+.colophon {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.5rem 1.5rem;
-  padding-block: 1.75rem 2.5rem;
+  gap: 0.5rem 2rem;
+  padding-block: 1.5rem 2.5rem;
+  border-block-start: 1px solid var(--rule);
   color: var(--opem-gray);
+  font-size: 0.9375rem;
+}
+
+.colophon a {
+  color: var(--opem-night);
+}
+
+.protection {
+  flex-basis: 100%;
   font-size: 0.875rem;
 }
 
-/* ---------- Barre fixe (téléphone) ---------- */
-
-.dock {
-  display: none;
-}
-
-@media (max-width: 39.99em) {
-  .dock {
-    position: fixed;
-    inset: auto 0 0;
-    z-index: 20;
-    display: block;
-    padding: 0.625rem 1rem calc(0.625rem + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--opem-gray-light);
-    background: var(--opem-white);
-    box-shadow: 0 -6px 18px rgb(17 54 91 / 0.1);
-    transform: translateY(110%);
-    transition: transform 0.25s ease;
-  }
-
-  .dockShown {
-    transform: none;
-  }
-
-  .dock .primary {
-    width: 100%;
-    min-height: 3.125rem;
-  }
-
-  /* La barre ne cache pas la fin de la page. */
-  .protection {
-    padding-bottom: 5.5rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .dock,
+  .signal::before {
+    animation: none;
+    opacity: 0;
+  }
+
   .primary,
-  .light,
-  .tabs a {
+  .secondary {
     transition: none;
   }
 }

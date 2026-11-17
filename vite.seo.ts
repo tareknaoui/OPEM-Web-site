@@ -135,10 +135,30 @@ const PAGE_META: Record<string, PageMeta> = {
   '/formation/fiches-formation/diagnostic-d-organisation': {
     title: 'Diagnostic d’organisation · OPEM',
     description:
-      'Formation inter-entreprises à Alger, du 6 au 9 décembre 2026 : quatre jours pour apprendre à conduire le diagnostic de votre propre organisation, du cadrage à la restitution. 12 participants au plus.',
+      'Formation inter-entreprises à Alger, du 6 au 9 décembre 2026 : quatre jours pour apprendre à repérer les blocages de votre organisation et conduire son diagnostic, du cadrage à la restitution. 12 participants.',
     socialTitle: 'Diagnostic d’organisation · Formation inter-entreprises OPEM',
     socialDescription:
-      'Repérer les blocages, optimiser les processus : quatre jours à Alger pour conduire le diagnostic de votre organisation. Demandez la fiche technique et un devis.',
+      'Repérer les blocages, optimiser les processus : quatre jours à Alger pour conduire le diagnostic de votre organisation. Demandez la fiche technique détaillée et un devis.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/formation/fiches-formation/plan-de-formation-2027': {
+    title: 'Plan de formation 2027 · OPEM',
+    description:
+      'Formation inter-entreprises à Alger, du 8 au 10 décembre 2026 : trois jours pour bâtir un plan de formation qui part des priorités de l’entreprise, se chiffre au plus juste et convainc la direction. 12 participants.',
+    socialTitle: 'Plan de formation 2027 · Formation inter-entreprises OPEM',
+    socialDescription:
+      'Un plan qui sert vraiment l’entreprise : trois jours à Alger pour bâtir votre plan 2027. Demandez la fiche technique détaillée et un devis.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
+  '/formation/fiches-formation/cybersecurite-operationnelle': {
+    title: 'Cybersécurité opérationnelle · OPEM',
+    description:
+      'Formation inter-entreprises à Alger, du 13 au 17 décembre 2026 : cinq jours pour apprendre à protéger votre réseau, détecter une attaque et y faire face, sur machine. 12 participants.',
+    socialTitle: 'Cybersécurité opérationnelle · Formation inter-entreprises OPEM',
+    socialDescription:
+      'Protéger, détecter, réagir : cinq jours de pratique à Alger, avec une gestion de crise simulée. Demandez la fiche technique détaillée et un devis.',
     image: SHARE.image,
     imageAlt: SHARE.alt,
   },
