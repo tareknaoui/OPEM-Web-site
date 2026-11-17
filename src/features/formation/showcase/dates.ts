@@ -26,3 +26,10 @@ export function sessionDates(start: string, end: string, locale: string, pattern
   const glue = (text: string) => text.replace(/ /g, N);
   return fill(pattern, { start: glue(head.format(from)), end: glue(full.format(to)) });
 }
+
+/**
+ * Un élément d'une phrase découpée (« des cas réels… ; »), affiché seul sur une carte :
+ * majuscule initiale, sans la ponctuation finale.
+ */
+export const asCard = (text: string) =>
+  text.charAt(0).toUpperCase() + text.slice(1).replace(/\s*[;.]\s*$/, '');

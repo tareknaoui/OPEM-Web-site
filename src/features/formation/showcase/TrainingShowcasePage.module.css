@@ -1,6 +1,5 @@
 /* Page d'une formation : modèle unique retenu par OPEM (maquettes du 17 novembre 2026,
-   variante 4 « fond clair, scène bleu nuit »). Haut de page sur bleu très clair quadrillé de
-   blanc, titre en bleu nuit, filets verts ; à côté, une carte bleu nuit (l'illustration de la
+   variante 4 « fond clair, scène bleu nuit »). Haut de page sur bleu très clair uni, titre en bleu nuit, filets verts ; à côté, une carte bleu nuit (l'illustration de la
    formation, son signal ambre animé, les informations de la session) qui déborde sur la
    section suivante. Corps en deux colonnes (intitulé à gauche, contenu à droite), un bandeau
    bleu très clair, les chiffres, les témoignages sur bleu nuit, puis le formulaire.
@@ -39,17 +38,13 @@
 /* ---------- Haut de page ---------- */
 
 .hero {
-  background-color: var(--opem-blue-10);
-  background-image:
-    linear-gradient(rgb(255 255 255 / 0.75) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.75) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background: var(--opem-blue-10);
 }
 
 .heroGrid {
   display: grid;
   gap: 2.5rem;
-  padding-block: clamp(1.75rem, 1rem + 2.5vw, 2.75rem) 0;
+  padding-block: clamp(2.25rem, 1.25rem + 3vw, 3.75rem) 0;
 }
 
 @media (min-width: 60em) {
@@ -65,13 +60,13 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 1.125rem;
+  gap: 1.5rem;
   min-width: 0;
 }
 
 @media (min-width: 60em) {
   .heroText {
-    padding-block-end: clamp(2.25rem, 1rem + 3vw, 3.75rem);
+    padding-block-end: clamp(3rem, 1.5rem + 3.5vw, 4.75rem);
   }
 }
 
@@ -123,13 +118,13 @@
 .hook {
   color: var(--opem-gray);
   font-family: var(--font-heading);
-  font-size: clamp(1.1875rem, 1rem + 0.7vw, 1.4375rem);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.5625rem);
   line-height: 1.5;
 }
 
 .hookAnswer {
   display: block;
-  margin-block-start: 0.25rem;
+  margin-block-start: 0.5rem;
 }
 
 .hookAnswer span {
@@ -144,7 +139,7 @@
 }
 
 .title {
-  margin: 0.25rem 0 0;
+  margin: 0.75rem 0 0;
   color: var(--opem-night);
   font-family: var(--font-heading);
   font-size: clamp(2.625rem, 1.5rem + 4vw, 4.375rem);
@@ -201,7 +196,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-block-start: 0.375rem;
+  margin-block-start: 1rem;
 }
 
 .primary,
@@ -294,10 +289,601 @@
   width: 100%;
 }
 
-.art img {
+.art {
+  animation: float 7s ease-in-out infinite;
+}
+
+.artSvg svg {
   display: block;
   width: 100%;
   height: auto;
+  overflow: visible;
+}
+
+/* Illustration en image : lent travelling, profondeur au pointeur, paquets sur les flux.
+   Les bords se fondent dans la carte (l'image a déjà le bleu nuit de la carte pour fond). */
+.photoArt {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 62%, transparent 100%);
+}
+
+.depth {
+  transform: translate(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -6px));
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.travel {
+  position: relative;
+  transform-origin: 50% 55%;
+  animation: travel 22s ease-in-out infinite alternate;
+}
+
+.travel img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.flows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* L'image ne se retourne pas en arabe : le signal garde sa position depuis la gauche. */
+.photoArt:dir(rtl) .signal {
+  inset-inline-start: auto;
+  left: var(--x);
+}
+
+@keyframes travel {
+  from {
+    transform: scale(1.04) translate(1%, 0.5%);
+  }
+  to {
+    transform: scale(1.12) translate(-1.5%, -1%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* ---------- Les pièces animées des illustrations (classes « a-… » des fichiers art/*.svg) ---------- */
+
+/* Montée à l'arrivée : postes, colonnes, serveurs, l'un après l'autre. */
+.art :global(.a-rise) {
+  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.art :global(.a-d1) {
+  animation-delay: 0.15s;
+}
+
+.art :global(.a-d2) {
+  animation-delay: 0.3s;
+}
+
+.art :global(.a-d3) {
+  animation-delay: 0.45s;
+}
+
+.art :global(.a-d4) {
+  animation-delay: 0.6s;
+}
+
+.art :global(.a-d5) {
+  animation-delay: 0.75s;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Les personnages : un léger mouvement, chacun à son rythme. */
+.art :global(.a-bob) {
+  animation: bob 2.6s ease-in-out infinite;
+}
+
+.art :global(.a-bob.a-b2) {
+  animation-duration: 3s;
+  animation-delay: -0.7s;
+}
+
+.art :global(.a-bob.a-b3) {
+  animation-duration: 2.3s;
+  animation-delay: -1.3s;
+}
+
+.art :global(.a-bob.a-b4) {
+  animation-duration: 3.4s;
+  animation-delay: -1.9s;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+/* Les tracés en pointillés qui avancent : flux, réseau, montée vers l'objectif. */
+.art :global(.a-flow5) {
+  animation: dash5 1s linear infinite;
+}
+
+.art :global(.a-flow7) {
+  animation: dash7 1.1s linear infinite;
+}
+
+.art :global(.a-flowr7) {
+  animation: dash7r 1.4s linear infinite;
+}
+
+.art :global(.a-flow9) {
+  animation: dash9 1s linear infinite;
+}
+
+.art :global(.a-flow-dome) {
+  stroke-dasharray: 6 5;
+  animation: dash11 1.8s linear infinite;
+}
+
+@keyframes dash5 {
+  to {
+    stroke-dashoffset: -5;
+  }
+}
+
+@keyframes dash7 {
+  to {
+    stroke-dashoffset: -7;
+  }
+}
+
+@keyframes dash7r {
+  to {
+    stroke-dashoffset: 7;
+  }
+}
+
+@keyframes dash9 {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+
+@keyframes dash11 {
+  to {
+    stroke-dashoffset: -11;
+  }
+}
+
+/* Diagnostic : l'anneau ambre tourne autour de l'engorgement. */
+.art :global(.a-ring) {
+  animation:
+    dash9 1.2s linear infinite,
+    ring 2.4s ease-in-out infinite;
+}
+
+@keyframes ring {
+  0%,
+  100% {
+    fill-opacity: 0.08;
+  }
+  50% {
+    fill-opacity: 0.28;
+  }
+}
+
+/* Diagnostic : les pièces avancent vers le poste 02… */
+.art :global(.a-conv) {
+  animation: conv 3s linear infinite;
+}
+
+.art :global(.a-conv2) {
+  animation-delay: -1.5s;
+}
+
+@keyframes conv {
+  0% {
+    opacity: 0;
+    transform: translate(-20.3px, -11.7px);
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+}
+
+/* … s'entassent à l'engorgement… */
+.art :global(.a-jam) {
+  animation: jam 1.8s ease-in-out infinite;
+}
+
+.art :global(.a-j2) {
+  animation-delay: -0.45s;
+}
+
+.art :global(.a-j3) {
+  animation-delay: -0.9s;
+}
+
+.art :global(.a-j4) {
+  animation-delay: -1.35s;
+}
+
+@keyframes jam {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0, -1.6px);
+  }
+}
+
+/* … et passent au compte-gouttes vers le poste 04. */
+.art :global(.a-trickle) {
+  animation: trickle 5s ease-in-out infinite;
+}
+
+@keyframes trickle {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  15%,
+  70% {
+    opacity: 1;
+  }
+  85%,
+  100% {
+    opacity: 0;
+    transform: translate(30.4px, 17.5px);
+  }
+}
+
+/* Diagnostic : les étapes 01 à 04 s'éclairent tour à tour ; la courbe se trace. */
+.art :global(.a-seq) {
+  animation: seq 6s ease-in-out infinite;
+}
+
+.art :global(.a-s2) {
+  animation-delay: 1.5s;
+}
+
+.art :global(.a-s3) {
+  animation-delay: 3s;
+}
+
+.art :global(.a-s4) {
+  animation-delay: 4.5s;
+}
+
+@keyframes seq {
+  0%,
+  30%,
+  100% {
+    fill: #b2cade;
+  }
+  8%,
+  22% {
+    fill: #ffffff;
+  }
+}
+
+.art :global(.a-draw) {
+  stroke-dasharray: 100;
+  animation: draw 6s ease-in-out infinite;
+}
+
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  40%,
+  85% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+
+.art :global(.a-dot) {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dot 6s ease-out infinite both;
+}
+
+.art :global(.a-p2) {
+  animation-delay: 0.5s;
+}
+
+.art :global(.a-p3) {
+  animation-delay: 1s;
+}
+
+.art :global(.a-p4) {
+  animation-delay: 1.5s;
+}
+
+.art :global(.a-p5) {
+  animation-delay: 2s;
+}
+
+@keyframes dot {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  8%,
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* La loupe du consultant ou de l'analyste, l'alerte : une pulsation. */
+.art :global(.a-lens),
+.art :global(.a-alert) {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.art :global(.a-alert) {
+  animation-duration: 1.6s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.22);
+  }
+}
+
+.art :global(.a-blink) {
+  animation: blink 1.3s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Plan : le fanion flotte, la table des besoins se remplit, la pile de pièces se monte. */
+.art :global(.a-wave) {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: wave 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes wave {
+  from {
+    transform: skewY(0) scaleX(1);
+  }
+  to {
+    transform: skewY(-10deg) scaleX(0.84);
+  }
+}
+
+.art :global(.a-lines) line {
+  stroke-dasharray: 45;
+  animation: write 4.5s ease-in-out infinite both;
+}
+
+.art :global(.a-lines) line:nth-child(2) {
+  animation-delay: 0.45s;
+}
+
+.art :global(.a-lines) line:nth-child(3) {
+  animation-delay: 0.9s;
+}
+
+@keyframes write {
+  0% {
+    stroke-dashoffset: 45;
+  }
+  30%,
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* La pile monte pièce par pièce, du bas vers le haut. */
+.art :global(.a-coins) ellipse {
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.art :global(.a-coins) ellipse:nth-child(1) {
+  animation-delay: 0.35s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(4) {
+  animation-delay: 0.5s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(5) {
+  animation-delay: 0.55s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(7) {
+  animation-delay: 0.65s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(8) {
+  animation-delay: 0.7s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(9) {
+  animation-delay: 0.75s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(10) {
+  animation-delay: 0.8s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(11) {
+  animation-delay: 0.85s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(12) {
+  animation-delay: 0.9s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(13) {
+  animation-delay: 0.95s;
+}
+
+.art :global(.a-coins) ellipse:nth-child(14) {
+  animation-delay: 1s;
+}
+
+/* Cybersécurité : les journaux défilent, le dôme respire, les serveurs clignotent. */
+.art :global(.a-log) {
+  stroke-dasharray: 90;
+  animation: log 5s ease-out infinite both;
+}
+
+.art :global(.a-g2) {
+  animation-delay: 0.25s;
+}
+
+.art :global(.a-g3) {
+  animation-delay: 0.5s;
+}
+
+.art :global(.a-g4) {
+  animation-delay: 0.75s;
+}
+
+.art :global(.a-g5) {
+  animation-delay: 1s;
+}
+
+.art :global(.a-g6) {
+  animation-delay: 1.25s;
+}
+
+.art :global(.a-g7) {
+  animation-delay: 1.5s;
+}
+
+@keyframes log {
+  0% {
+    stroke-dashoffset: 90;
+  }
+  15%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.25;
+  }
+}
+
+.art :global(.a-shield) {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+.art :global(.a-led) {
+  animation: led 1.4s steps(2, jump-none) infinite;
+}
+
+.art :global(.a-l2) {
+  animation-duration: 1.1s;
+  animation-delay: -0.4s;
+}
+
+.art :global(.a-l3) {
+  animation-duration: 1.8s;
+  animation-delay: -0.9s;
+}
+
+@keyframes led {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+.art :global(.a-screen) {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+.art :global(.a-screen2) {
+  animation-delay: -1.6s;
 }
 
 /* Le signal ambre sur le point clé de l'illustration : un point, et une onde qui s'élargit. */
@@ -447,14 +1033,7 @@
 }
 
 .lead {
-  color: var(--opem-night);
-  font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.5625rem);
-  line-height: 1.45;
-}
-
-.lead:lang(ar) {
-  font-family: var(--font-arabic);
+  color: var(--opem-anthracite);
 }
 
 .edge b {
@@ -482,94 +1061,143 @@
   font-family: var(--font-arabic);
 }
 
-/* Vous repartez avec : trois lignes numérotées. */
+/* Vous repartez avec : trois cartes numérotées, qui se soulèvent au survol. */
+.gainsBlock {
+  display: grid;
+  gap: 2.25rem;
+  padding-block-start: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+}
+
 .gains {
+  display: grid;
+  gap: 1.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
-  gap: 0;
+}
+
+@media (min-width: 48em) {
+  .gains {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .gains li {
-  display: flex;
-  align-items: baseline;
-  gap: 1.75rem;
-  padding-block: 1.375rem;
-  border-block-start: 1px solid var(--rule);
-  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  display: grid;
+  align-content: start;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 1rem + 1.5vw, 2rem);
+  border: 1px solid var(--rule);
+  border-block-start: 4px solid var(--opem-green);
+  border-radius: 16px;
+  background: var(--opem-white);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   line-height: 1.45;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.gains li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -28px rgb(17 54 91 / 0.45);
 }
 
 .gainNum {
-  flex: none;
-  width: 3.5rem;
   color: var(--opem-blue);
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 1.6rem + 1vw, 2.5rem);
+  font-size: clamp(2.25rem, 1.8rem + 1.2vw, 3rem);
   font-weight: 700;
   line-height: 1;
 }
 
-/* ---------- Pour qui · Pourquoi OPEM ---------- */
+/* Pour qui : une phrase, en grand. */
+.audience {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.5625rem);
+  line-height: 1.45;
+}
+
+.audience:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* ---------- Pourquoi OPEM : trois raisons en cartes, puis les chiffres ---------- */
 
 .band {
   margin-block-start: clamp(3.5rem, 2rem + 5vw, 6.5rem);
-  padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  padding-block: clamp(3.5rem, 2rem + 4.5vw, 6rem);
   background: var(--opem-blue-10);
 }
 
-.bandGrid {
+.bandInner {
   display: grid;
-  gap: 3rem;
+  gap: 2.5rem;
 }
 
-@media (min-width: 48em) {
-  .bandGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4rem;
-  }
-}
-
-.bandGrid section {
+.bandHead {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  min-width: 0;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
 }
 
 .reasons {
   display: grid;
-  gap: 0.75rem;
+  gap: 1.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.reasons li {
-  position: relative;
-  padding-inline-start: 1.75rem;
-  line-height: 1.5;
+@media (min-width: 48em) {
+  .reasons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-/* Une coche verte devant chaque raison. */
+.reasons li {
+  position: relative;
+  padding: 4.75rem clamp(1.5rem, 1rem + 1.5vw, 2rem) clamp(1.5rem, 1rem + 1.5vw, 2rem);
+  border-radius: 16px;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.45;
+  box-shadow: 0 1px 2px rgb(17 54 91 / 0.06);
+}
+
+/* Une pastille verte cochée en tête de chaque carte. */
 .reasons li::before {
   content: '';
   position: absolute;
-  inset-block-start: 0.35em;
-  inset-inline-start: 0.125rem;
-  width: 0.75rem;
-  height: 0.4375rem;
-  border-inline-start: 2.5px solid var(--opem-green);
-  border-block-end: 2.5px solid var(--opem-green);
+  inset-block-start: clamp(1.5rem, 1rem + 1.5vw, 2rem);
+  inset-inline-start: clamp(1.5rem, 1rem + 1.5vw, 2rem);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--opem-green);
+}
+
+.reasons li::after {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(clamp(1.5rem, 1rem + 1.5vw, 2rem) + 0.7rem);
+  inset-inline-start: calc(clamp(1.5rem, 1rem + 1.5vw, 2rem) + 0.6rem);
+  width: 1rem;
+  height: 0.5rem;
+  border-inline-start: 2.5px solid var(--opem-white);
+  border-block-end: 2.5px solid var(--opem-white);
   transform: rotate(-45deg);
 }
 
-/* ---------- OPEM en chiffres ---------- */
-
 .figuresBlock {
   display: grid;
-  gap: 2rem;
-  padding-block: clamp(3.5rem, 2rem + 5vw, 6rem);
+  gap: 1.75rem;
+  padding-block-start: 2.5rem;
+  border-block-start: 1px solid rgb(17 54 91 / 0.12);
 }
 
 .figures {
@@ -591,8 +1219,6 @@
   display: grid;
   gap: 0.375rem;
   align-content: start;
-  padding-block-start: 1.125rem;
-  border-block-start: 4px solid var(--opem-green);
 }
 
 .figures b {
@@ -682,29 +1308,116 @@
   line-height: 1.55;
 }
 
-/* ---------- Demande de la fiche technique et du devis ---------- */
+/* ---------- Demande : la marche à suivre sur bleu nuit, le formulaire à côté ---------- */
 
 .request {
   display: grid;
-  gap: 2.5rem;
+  gap: 1.5rem;
   padding-block: clamp(3.5rem, 2rem + 5vw, 6rem);
 }
 
 @media (min-width: 60em) {
   .request {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    align-items: start;
-    gap: 4rem;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: stretch;
+    gap: 1.5rem;
   }
 }
 
-.requestText {
-  display: grid;
+.requestPanel {
+  display: flex;
+  flex-direction: column;
   gap: 1.25rem;
   min-width: 0;
+  padding: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+  border-radius: 20px;
+  background: var(--opem-night);
+  color: var(--opem-blue-30);
 }
 
-.requestContact a,
+.requestTitle {
+  margin: 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.requestTitle::after {
+  content: '';
+  display: block;
+  width: 4rem;
+  height: 4px;
+  margin-block-start: 0.875rem;
+  background: var(--opem-green);
+}
+
+.requestTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  line-height: 1.35;
+}
+
+.stepsTitle {
+  margin: 0.75rem 0 0;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.stepsTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.9375rem;
+  letter-spacing: 0;
+}
+
+.steps {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  color: var(--opem-white);
+  line-height: 1.45;
+}
+
+/* Le numéro de l'étape : cerclé d'ambre (accent sur fond bleu nuit). */
+.stepNum {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--opem-amber);
+  border-radius: 50%;
+  color: var(--opem-white);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.requestContact {
+  margin-block-start: auto;
+  padding-block-start: 1.25rem;
+  border-block-start: 1px solid rgb(178 202 222 / 0.25);
+  font-size: 0.9375rem;
+}
+
+.requestContact a {
+  color: var(--opem-white);
+}
+
 .legal a {
   color: var(--opem-blue);
 }
@@ -712,7 +1425,7 @@
 .formCard {
   min-width: 0;
   padding: clamp(1.25rem, 0.75rem + 2vw, 2.25rem);
-  border-radius: 16px;
+  border-radius: 20px;
   background: var(--opem-blue-10);
 }
 
@@ -751,6 +1464,213 @@
   font-family: var(--font-arabic);
 }
 
+/* ---------- D'autres formations à venir ---------- */
+
+.related {
+  display: grid;
+  gap: 2rem;
+  padding-block: 0 clamp(3.5rem, 2rem + 5vw, 6rem);
+}
+
+.relatedHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.relatedList {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .relatedList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.relatedCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--opem-white);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.relatedCard:hover {
+  border-color: var(--opem-blue);
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -28px rgb(17 54 91 / 0.45);
+}
+
+.relatedCard:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.relatedDate {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.relatedTopic {
+  margin-block-start: 0.5rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.relatedTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.relatedPromise {
+  color: var(--opem-gray);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.relatedMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block-start: auto;
+  padding-block-start: 0.75rem;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.relatedDate:lang(ar),
+.relatedTopic:lang(ar),
+.relatedTitle:lang(ar),
+.relatedMore:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+/* ---------- La barre de la session (bas de l'écran) ---------- */
+
+.bar {
+  position: fixed;
+  z-index: 40;
+  inset-inline: 0;
+  inset-block-end: 1rem;
+  display: flex;
+  justify-content: center;
+  padding-inline: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(140%);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s ease;
+}
+
+.barShown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.barInner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100%, 72rem);
+  padding: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--opem-white);
+  box-shadow: 0 24px 48px -24px rgb(17 54 91 / 0.55);
+}
+
+.barText {
+  display: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-inline-start: 1rem;
+  line-height: 1.3;
+}
+
+.barText b,
+.barText span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barText b {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+}
+
+.barText span {
+  color: var(--opem-gray);
+  font-size: 0.875rem;
+}
+
+.barText b:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.bar .primary {
+  flex: 1 1 auto;
+  min-height: 2.75rem;
+  padding-inline: 1.25rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.barQuote {
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .barText {
+    display: block;
+  }
+
+  .bar .primary {
+    flex: none;
+  }
+
+  .barQuote {
+    display: inline-flex;
+    min-height: 2.75rem;
+  }
+}
+
 /* ---------- Service formation, référence, protection ---------- */
 
 .colophon {
@@ -773,13 +1693,39 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Illustrations immobiles : chaque pièce à sa place, sans paquets en mouvement. */
+  .art,
+  .art :global([class]) {
+    animation: none;
+  }
+
+  .art :global(.a-packet) {
+    display: none;
+  }
+
+  .travel {
+    animation: none;
+  }
+
+  .depth {
+    transform: none;
+    transition: none;
+  }
+
+  .flows {
+    display: none;
+  }
+
   .signal::before {
     animation: none;
     opacity: 0;
   }
 
   .primary,
-  .secondary {
+  .secondary,
+  .bar,
+  .gains li,
+  .relatedCard {
     transition: none;
   }
 }

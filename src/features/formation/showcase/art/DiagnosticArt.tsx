@@ -1,0 +1,1237 @@
+/* Illustration « diagnostic-d-organisation » (fichier d'OPEM, version pour fond bleu nuit), préparée pour
+   l'animation : classes « a-… » lues par TrainingShowcasePage.module.css, paquets en SMIL.
+   Fichier généré depuis le SVG : modifier le dessin à la source, puis le regénérer. */
+
+export function DiagnosticArt() {
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="44 42 572 388"
+    >
+      <polygon
+        points="83.9,193.8 442.4,400.8 442.4,384.6 83.9,177.6"
+        fill="#004D91"
+        fillOpacity="1"
+        stroke="#B2CADE"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      ></polygon>
+      <polygon
+        points="604.5,307.2 442.4,400.8 442.4,384.6 604.5,291.0"
+        fill="#0B3E6E"
+        fillOpacity="1"
+        stroke="#B2CADE"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      ></polygon>
+      <polygon
+        points="246.0,84.0 604.5,291.0 442.4,384.6 83.9,177.6"
+        fill="#3B6184"
+        fillOpacity="1"
+        stroke="#B2CADE"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      ></polygon>
+      <line
+        x1="277.2"
+        y1="102.0"
+        x2="115.1"
+        y2="195.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="308.4"
+        y1="120.0"
+        x2="146.2"
+        y2="213.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="339.5"
+        y1="138.0"
+        x2="177.4"
+        y2="231.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="370.7"
+        y1="156.0"
+        x2="208.6"
+        y2="249.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="401.9"
+        y1="174.0"
+        x2="239.8"
+        y2="267.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="433.1"
+        y1="192.0"
+        x2="270.9"
+        y2="285.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="464.2"
+        y1="210.0"
+        x2="302.1"
+        y2="303.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="495.4"
+        y1="228.0"
+        x2="333.3"
+        y2="321.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="526.6"
+        y1="246.0"
+        x2="364.5"
+        y2="339.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="557.8"
+        y1="264.0"
+        x2="395.6"
+        y2="357.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="588.9"
+        y1="282.0"
+        x2="426.8"
+        y2="375.6"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="214.8"
+        y1="102.0"
+        x2="573.4"
+        y2="309.0"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="183.6"
+        y1="120.0"
+        x2="542.2"
+        y2="327.0"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="152.5"
+        y1="138.0"
+        x2="511.0"
+        y2="345.0"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="121.3"
+        y1="156.0"
+        x2="479.8"
+        y2="363.0"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="90.1"
+        y1="174.0"
+        x2="448.6"
+        y2="381.0"
+        stroke="#B2CADE"
+        strokeWidth="0.6"
+        strokeOpacity="0.18"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="492.3"
+        y1="226.2"
+        x2="492.3"
+        y2="147.0"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.45"
+        strokeLinecap="round"
+        strokeDasharray="2 3"
+      ></line>
+      <line
+        x1="576.5"
+        y1="274.8"
+        x2="576.5"
+        y2="195.6"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.45"
+        strokeLinecap="round"
+        strokeDasharray="2 3"
+      ></line>
+      <g className="a-rise a-d5">
+        <polygon
+          points="482.9,141.6 585.8,201.0 585.8,139.8 482.9,80.4"
+          fill="#11365B"
+          fillOpacity="0.85"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+        ></polygon>
+        <line
+          x1="489.2"
+          y1="130.8"
+          x2="579.6"
+          y2="183.0"
+          stroke="#B2CADE"
+          strokeWidth="0.5"
+          strokeOpacity="0.25"
+          strokeLinecap="round"
+        ></line>
+        <line
+          x1="489.2"
+          y1="116.4"
+          x2="579.6"
+          y2="168.6"
+          stroke="#B2CADE"
+          strokeWidth="0.5"
+          strokeOpacity="0.25"
+          strokeLinecap="round"
+        ></line>
+        <line
+          x1="489.2"
+          y1="102.0"
+          x2="579.6"
+          y2="154.2"
+          stroke="#B2CADE"
+          strokeWidth="0.5"
+          strokeOpacity="0.25"
+          strokeLinecap="round"
+        ></line>
+        <polyline
+          className="a-draw"
+          pathLength="100"
+          points="493.9,110.1 514.1,114.6 534.4,120.9 550.0,167.7 573.4,183.0"
+          fill="none"
+          stroke="#FFFFFF"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        ></polyline>
+        <circle className="a-dot a-p1" cx="493.9" cy="110.1" r="2.2" fill="#B2CADE"></circle>
+        <circle className="a-dot a-p2" cx="514.1" cy="114.6" r="2.2" fill="#B2CADE"></circle>
+        <circle className="a-dot a-p3" cx="534.4" cy="120.9" r="2.2" fill="#B2CADE"></circle>
+        <circle className="a-dot a-p4" cx="550.0" cy="167.7" r="2.2" fill="#B2CADE"></circle>
+        <circle className="a-dot a-p5" cx="573.4" cy="183.0" r="2.2" fill="#B2CADE"></circle>
+      </g>
+      <polygon
+        points="250.7,152.6 300.6,181.4 275.6,195.8 225.7,167.0"
+        fill="#80A6C8"
+        fillOpacity="0.35"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeLinejoin="round"
+      ></polygon>
+      <polygon
+        points="341.1,204.8 391.0,233.6 366.0,248.0 316.1,219.2"
+        fill="#80A6C8"
+        fillOpacity="0.35"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeLinejoin="round"
+      ></polygon>
+      <polygon
+        points="431.5,257.0 481.4,285.8 456.4,300.2 406.6,271.4"
+        fill="#80A6C8"
+        fillOpacity="0.35"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeLinejoin="round"
+      ></polygon>
+      <line
+        x1="256.9"
+        y1="156.2"
+        x2="232.0"
+        y2="170.6"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="267.8"
+        y1="162.5"
+        x2="242.9"
+        y2="176.9"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="278.7"
+        y1="168.8"
+        x2="253.8"
+        y2="183.2"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="289.6"
+        y1="175.1"
+        x2="264.7"
+        y2="189.5"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="347.3"
+        y1="208.4"
+        x2="322.4"
+        y2="222.8"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="358.2"
+        y1="214.7"
+        x2="333.3"
+        y2="229.1"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="369.1"
+        y1="221.0"
+        x2="344.2"
+        y2="235.4"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="380.1"
+        y1="227.3"
+        x2="355.1"
+        y2="241.7"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="437.7"
+        y1="260.6"
+        x2="412.8"
+        y2="275.0"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="448.6"
+        y1="266.9"
+        x2="423.7"
+        y2="281.3"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="459.6"
+        y1="273.2"
+        x2="434.6"
+        y2="287.6"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="470.5"
+        y1="279.5"
+        x2="445.5"
+        y2="293.9"
+        stroke="#B2CADE"
+        strokeWidth="0.5"
+        strokeOpacity="0.35"
+        strokeLinecap="round"
+      ></line>
+      <polyline
+        points="272.5,168.4 272.5,179.2 253.8,179.2"
+        fill="none"
+        stroke="#FFFFFF"
+        strokeOpacity="0.7"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></polyline>
+      <polyline
+        points="453.3,272.8 453.3,283.6 434.6,283.6"
+        fill="none"
+        stroke="#FFFFFF"
+        strokeOpacity="0.7"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></polyline>
+      <g transform="translate(150,93)">
+        <g className="a-trickle">
+          <polygon
+            points="261.6,180.5 274.1,187.7 274.1,173.3 261.6,166.1"
+            fill="#80A6C8"
+            fillOpacity="1"
+            stroke="#B2CADE"
+            strokeWidth="0.8"
+            strokeLinejoin="round"
+          ></polygon>
+          <polygon
+            points="286.5,180.5 274.1,187.7 274.1,173.3 286.5,166.1"
+            fill="#004D91"
+            fillOpacity="1"
+            stroke="#B2CADE"
+            strokeWidth="0.8"
+            strokeLinejoin="round"
+          ></polygon>
+          <polygon
+            points="274.1,158.9 286.5,166.1 274.1,173.3 261.6,166.1"
+            fill="#6A87A3"
+            fillOpacity="1"
+            stroke="#B2CADE"
+            strokeWidth="0.8"
+            strokeLinejoin="round"
+          ></polygon>
+        </g>
+      </g>
+      <path
+        className="a-ring"
+        d="M387.9,247.6 L382.7,250.3 L376.9,252.5 L370.7,254.2 L364.1,255.5 L357.3,256.3 L350.4,256.6 L343.5,256.3 L336.7,255.5 L330.2,254.2 L324.0,252.5 L318.2,250.3 L313.0,247.6 L308.5,244.6 L304.6,241.3 L301.6,237.7 L299.3,233.9 L298.0,230.0 L297.5,226.0 L298.0,222.0 L299.3,218.1 L301.6,214.3 L304.6,210.7 L308.5,207.4 L313.0,204.4 L318.2,201.8 L324.0,199.6 L330.2,197.8 L336.7,196.5 L343.5,195.7 L350.4,195.5 L357.3,195.7 L364.1,196.5 L370.7,197.8 L376.9,199.6 L382.7,201.8 L387.9,204.4 L392.4,207.4 L396.3,210.7 L399.3,214.3 L401.5,218.1 L402.9,222.0 L403.4,226.0 L402.9,230.0 L401.5,233.9 L399.3,237.7 L396.3,241.3 L392.4,244.6 Z"
+        fill="#F2B230"
+        fillOpacity="0.12"
+        stroke="#F2B230"
+        strokeWidth="2"
+        strokeDasharray="5 4"
+      ></path>
+      <g className="a-rise a-d1">
+        <polygon
+          points="177.4,148.8 217.9,172.2 217.9,136.2 177.4,112.8"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="258.5,148.8 217.9,172.2 217.9,136.2 258.5,112.8"
+          fill="#0B3E6E"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="217.9,89.4 258.5,112.8 217.9,136.2 177.4,112.8"
+          fill="#3B6184"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g transform="translate(161.8,165.0) scale(1.00,1.00)">
+        <g className="a-bob a-b1">
+          <ellipse cx="0" cy="0" rx="5" ry="2.2" fill="#000" fillOpacity="0.18"></ellipse>
+          <path
+            d="M-1.4,-9 L-1.6,0 M1.4,-9 L1.6,0"
+            stroke="#B2CADE"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            fill="none"
+          ></path>
+          <rect x="-3.8" y="-19" width="7.6" height="11" rx="3" fill="#FFFFFF"></rect>
+          <circle cx="0" cy="-23" r="3.3" fill="#FFFFFF"></circle>
+          <rect
+            x="-6"
+            y="-22"
+            width="12"
+            height="8"
+            rx="1"
+            fill="#80A6C8"
+            stroke="#B2CADE"
+            strokeWidth="0.8"
+          ></rect>
+        </g>
+      </g>
+      <g className="a-conv">
+        <polygon
+          points="241.3,168.8 253.8,176.0 253.8,161.6 241.3,154.4"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="266.3,168.8 253.8,176.0 253.8,161.6 266.3,154.4"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="253.8,147.2 266.3,154.4 253.8,161.6 241.3,154.4"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-conv a-conv2">
+        <polygon
+          points="261.6,180.5 274.1,187.7 274.1,173.3 261.6,166.1"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="286.5,180.5 274.1,187.7 274.1,173.3 286.5,166.1"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="274.1,158.9 286.5,166.1 274.1,173.3 261.6,166.1"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g transform="translate(177.4,192.0) scale(1.00,1.00)">
+        <g className="a-bob a-b2">
+          <ellipse cx="0" cy="0" rx="5" ry="2.2" fill="#000" fillOpacity="0.18"></ellipse>
+          <path
+            d="M-1,-9 L-3.5,0 M1,-9 L3.5,-0.5"
+            stroke="#B2CADE"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            fill="none"
+          ></path>
+          <rect x="-3.8" y="-19" width="7.6" height="11" rx="3" fill="#FFFFFF"></rect>
+          <circle cx="0" cy="-23" r="3.3" fill="#FFFFFF"></circle>
+          <path
+            d="M-3,-16 L-4.5,-10 M3,-16 L4.5,-10"
+            stroke="#FFFFFF"
+            strokeWidth="2"
+            strokeLinecap="round"
+          ></path>
+        </g>
+      </g>
+      <g className="a-rise a-d2">
+        <polygon
+          points="267.8,201.0 308.4,224.4 308.4,179.4 267.8,156.0"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="348.9,201.0 308.4,224.4 308.4,179.4 348.9,156.0"
+          fill="#0B3E6E"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="308.4,132.6 348.9,156.0 308.4,179.4 267.8,156.0"
+          fill="#3B6184"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j1">
+        <polygon
+          points="334.9,217.4 347.3,224.6 347.3,210.2 334.9,203.0"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="359.8,217.4 347.3,224.6 347.3,210.2 359.8,203.0"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="347.3,195.8 359.8,203.0 347.3,210.2 334.9,203.0"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j2">
+        <polygon
+          points="322.4,224.6 334.9,231.8 334.9,217.4 322.4,210.2"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="347.3,224.6 334.9,231.8 334.9,217.4 347.3,210.2"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="334.9,203.0 347.3,210.2 334.9,217.4 322.4,210.2"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j3">
+        <polygon
+          points="348.9,225.5 361.4,232.7 361.4,218.3 348.9,211.1"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="373.8,225.5 361.4,232.7 361.4,218.3 373.8,211.1"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="361.4,203.9 373.8,211.1 361.4,218.3 348.9,211.1"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j4">
+        <polygon
+          points="336.4,210.4 348.9,217.6 348.9,203.2 336.4,196.0"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="361.4,210.4 348.9,217.6 348.9,203.2 361.4,196.0"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="348.9,188.8 361.4,196.0 348.9,203.2 336.4,196.0"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j1">
+        <polygon
+          points="344.2,197.9 356.7,205.1 356.7,190.7 344.2,183.5"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="369.1,197.9 356.7,205.1 356.7,190.7 369.1,183.5"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="356.7,176.3 369.1,183.5 356.7,190.7 344.2,183.5"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j2">
+        <polygon
+          points="300.6,231.8 313.0,239.0 313.0,224.6 300.6,217.4"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="325.5,231.8 313.0,239.0 313.0,224.6 325.5,217.4"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="313.0,210.2 325.5,217.4 313.0,224.6 300.6,217.4"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j3">
+        <polygon
+          points="336.4,232.7 348.9,239.9 348.9,225.5 336.4,218.3"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="361.4,232.7 348.9,239.9 348.9,225.5 361.4,218.3"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="348.9,211.1 361.4,218.3 348.9,225.5 336.4,218.3"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j4">
+        <polygon
+          points="362.9,233.6 375.4,240.8 375.4,226.4 362.9,219.2"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="387.9,233.6 375.4,240.8 375.4,226.4 387.9,219.2"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="375.4,212.0 387.9,219.2 375.4,226.4 362.9,219.2"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j1">
+        <polygon
+          points="350.4,218.5 362.9,225.7 362.9,211.3 350.4,204.1"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="375.4,218.5 362.9,225.7 362.9,211.3 375.4,204.1"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="362.9,196.9 375.4,204.1 362.9,211.3 350.4,204.1"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g transform="translate(246.0,238.8) scale(1.00,1.00)">
+        <g className="a-bob a-b3">
+          <ellipse cx="0" cy="0" rx="5" ry="2.2" fill="#000" fillOpacity="0.18"></ellipse>
+          <path
+            d="M-1.4,-9 L-1.6,0 M1.4,-9 L1.6,0"
+            stroke="#B2CADE"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            fill="none"
+          ></path>
+          <rect x="-3.8" y="-19" width="7.6" height="11" rx="3" fill="#FFFFFF"></rect>
+          <circle cx="0" cy="-23" r="3.3" fill="#FFFFFF"></circle>
+          <rect x="2.5" y="-18" width="6" height="8" rx="0.8" fill="#E6EDF4"></rect>
+          <path d="M3.8,-15.5 h3.4 M3.8,-13.3 h3.4" stroke="#004D91" strokeWidth="0.8"></path>
+        </g>
+      </g>
+      <g className="a-jam a-j2">
+        <polygon
+          points="350.4,240.8 362.9,248.0 362.9,233.6 350.4,226.4"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="375.4,240.8 362.9,248.0 362.9,233.6 375.4,226.4"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="362.9,219.2 375.4,226.4 362.9,233.6 350.4,226.4"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g className="a-jam a-j3">
+        <polygon
+          points="316.1,242.6 328.6,249.8 328.6,235.4 316.1,228.2"
+          fill="#80A6C8"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="341.1,242.6 328.6,249.8 328.6,235.4 341.1,228.2"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="328.6,221.0 341.1,228.2 328.6,235.4 316.1,228.2"
+          fill="#6A87A3"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="0.8"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g transform="translate(286.5,247.8) scale(-1.00,1.00)">
+        <g className="a-bob a-b4">
+          <ellipse cx="0" cy="0" rx="5" ry="2.2" fill="#000" fillOpacity="0.18"></ellipse>
+          <path
+            d="M-1.4,-9 L-1.6,0 M1.4,-9 L1.6,0"
+            stroke="#B2CADE"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            fill="none"
+          ></path>
+          <rect x="-3.8" y="-19" width="7.6" height="11" rx="3" fill="#FFFFFF"></rect>
+          <circle cx="0" cy="-23" r="3.3" fill="#FFFFFF"></circle>
+          <path d="M2.5,-16 L8,-19" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"></path>
+          <line
+            x1="8"
+            y1="-19"
+            x2="10.5"
+            y2="-21.5"
+            stroke="#B2CADE"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          ></line>
+          <circle
+            className="a-lens"
+            cx="13"
+            cy="-24"
+            r="3.6"
+            fill="#B2CADE"
+            fillOpacity="0.25"
+            stroke="#FFFFFF"
+            strokeWidth="1.4"
+          ></circle>
+        </g>
+      </g>
+      <g className="a-rise a-d3">
+        <polygon
+          points="358.2,253.2 398.8,276.6 398.8,237.0 358.2,213.6"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="439.3,253.2 398.8,276.6 398.8,237.0 439.3,213.6"
+          fill="#0B3E6E"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="398.8,190.2 439.3,213.6 398.8,237.0 358.2,213.6"
+          fill="#3B6184"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g transform="translate(345.8,300.0) scale(-1.00,1.00)">
+        <g className="a-bob a-b2">
+          <ellipse cx="0" cy="0" rx="5" ry="2.2" fill="#000" fillOpacity="0.18"></ellipse>
+          <path
+            d="M-1.4,-9 L-1.6,0 M1.4,-9 L1.6,0"
+            stroke="#B2CADE"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            fill="none"
+          ></path>
+          <rect x="-3.8" y="-19" width="7.6" height="11" rx="3" fill="#FFFFFF"></rect>
+          <circle cx="0" cy="-23" r="3.3" fill="#FFFFFF"></circle>
+          <path d="M2.5,-16 L9,-24" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"></path>
+        </g>
+      </g>
+      <g className="a-rise a-d4">
+        <polygon
+          points="448.6,305.4 489.2,328.8 489.2,278.4 448.6,255.0"
+          fill="#004D91"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="529.7,305.4 489.2,328.8 489.2,278.4 529.7,255.0"
+          fill="#0B3E6E"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+        <polygon
+          points="489.2,231.6 529.7,255.0 489.2,278.4 448.6,255.0"
+          fill="#3B6184"
+          fillOpacity="1"
+          stroke="#B2CADE"
+          strokeWidth="1.1"
+          strokeLinejoin="round"
+        ></polygon>
+      </g>
+      <g transform="translate(454.9,334.2) scale(-1.00,1.00)">
+        <g className="a-bob a-b3">
+          <ellipse cx="0" cy="0" rx="5" ry="2.2" fill="#000" fillOpacity="0.18"></ellipse>
+          <path
+            d="M-1.4,-9 L-1.6,0 M1.4,-9 L1.6,0"
+            stroke="#B2CADE"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            fill="none"
+          ></path>
+          <rect x="-3.8" y="-19" width="7.6" height="11" rx="3" fill="#FFFFFF"></rect>
+          <circle cx="0" cy="-23" r="3.3" fill="#FFFFFF"></circle>
+          <path
+            d="M-3,-16 L-4.5,-10 M3,-16 L4.5,-10"
+            stroke="#FFFFFF"
+            strokeWidth="2"
+            strokeLinecap="round"
+          ></path>
+        </g>
+      </g>
+      <line
+        x1="58.9"
+        y1="208.2"
+        x2="417.5"
+        y2="415.2"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.55"
+        strokeLinecap="round"
+        strokeDasharray="3 4"
+      ></line>
+      <line
+        x1="66.7"
+        y1="203.7"
+        x2="51.1"
+        y2="212.7"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.55"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="156.4"
+        y1="255.4"
+        x2="140.8"
+        y2="264.4"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.55"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="246.0"
+        y1="307.2"
+        x2="230.4"
+        y2="316.2"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.55"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="335.6"
+        y1="358.9"
+        x2="320.0"
+        y2="367.9"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.55"
+        strokeLinecap="round"
+      ></line>
+      <line
+        x1="425.3"
+        y1="410.7"
+        x2="409.7"
+        y2="419.7"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.55"
+        strokeLinecap="round"
+      ></line>
+      <line
+        className="a-flow5"
+        x1="217.9"
+        y1="102.0"
+        x2="217.9"
+        y2="69.6"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.5"
+        strokeLinecap="round"
+        strokeDasharray="2 3"
+      ></line>
+      <text
+        className="a-seq a-s1"
+        x="217.9"
+        y="60.6"
+        textAnchor="middle"
+        fontFamily="Poppins, Arial, sans-serif"
+        fontSize="11"
+        fontWeight="600"
+        fill="#B2CADE"
+      >
+        01
+      </text>
+      <line
+        className="a-flow5"
+        x1="308.4"
+        y1="145.2"
+        x2="308.4"
+        y2="112.8"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.5"
+        strokeLinecap="round"
+        strokeDasharray="2 3"
+      ></line>
+      <text
+        className="a-seq a-s2"
+        x="308.4"
+        y="103.8"
+        textAnchor="middle"
+        fontFamily="Poppins, Arial, sans-serif"
+        fontSize="11"
+        fontWeight="600"
+        fill="#B2CADE"
+      >
+        02
+      </text>
+      <line
+        className="a-flow5"
+        x1="398.8"
+        y1="202.8"
+        x2="398.8"
+        y2="170.4"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.5"
+        strokeLinecap="round"
+        strokeDasharray="2 3"
+      ></line>
+      <text
+        className="a-seq a-s3"
+        x="398.8"
+        y="161.4"
+        textAnchor="middle"
+        fontFamily="Poppins, Arial, sans-serif"
+        fontSize="11"
+        fontWeight="600"
+        fill="#B2CADE"
+      >
+        03
+      </text>
+      <line
+        className="a-flow5"
+        x1="489.2"
+        y1="244.2"
+        x2="489.2"
+        y2="211.8"
+        stroke="#B2CADE"
+        strokeWidth="0.8"
+        strokeOpacity="0.5"
+        strokeLinecap="round"
+        strokeDasharray="2 3"
+      ></line>
+      <text
+        className="a-seq a-s4"
+        x="489.2"
+        y="202.8"
+        textAnchor="middle"
+        fontFamily="Poppins, Arial, sans-serif"
+        fontSize="11"
+        fontWeight="600"
+        fill="#B2CADE"
+      >
+        04
+      </text>
+      <path
+        d="M297.5,226.0 L257.5,320.0 L222.0,320.0"
+        fill="none"
+        stroke="#FFFFFF"
+        strokeWidth="1.3"
+      ></path>
+      <circle
+        className="a-blink"
+        cx="297.5"
+        cy="226.0"
+        r="3.4"
+        fill="#F2B230"
+        stroke="#11365B"
+        strokeWidth="1.2"
+      ></circle>
+      <rect x="50" y="303" width="172" height="34" rx="7" fill="#FFFFFF"></rect>
+      <circle
+        className="a-blink"
+        cx="68"
+        cy="320"
+        r="5"
+        fill="#F2B230"
+        stroke="#11365B"
+        strokeWidth="1"
+      ></circle>
+      <text
+        x="82"
+        y="325"
+        fontFamily="Poppins, Arial, sans-serif"
+        fontSize="14"
+        fontWeight="600"
+        fill="#11365B"
+      >
+        Point de blocage
+      </text>
+    </svg>
+  );
+}

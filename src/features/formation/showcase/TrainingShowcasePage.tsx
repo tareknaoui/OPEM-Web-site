@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { useHideFooterCta } from '@/app/layouts/footer/useHideFooterCta';
 import { ArrowRightIcon } from '@/components/icons';
@@ -10,7 +10,8 @@ import { cx } from '@/lib/cx';
 import { env } from '@/lib/env';
 import FormationPage from '../FormationPage';
 import { findShowcase, SHOWCASE_CONTACT, showcaseLabels, type TrainingShowcase } from './content';
-import { fill, sessionDates } from './dates';
+import { asCard, fill, sessionDates } from './dates';
+import { Illustration } from './Illustration';
 import { RequestForm, type Wants } from './RequestForm';
 import styles from './TrainingShowcasePage.module.css';
 
@@ -18,7 +19,7 @@ const REQUEST_ID = 'demande';
 /**
  * Page d'une formation inter-entreprises (/formation/fiches-formation/<id>) : le modèle unique
  * retenu par OPEM (variante 4 « fond clair, scène bleu nuit »), le même pour chaque formation.
- * - Haut de page sur bleu très clair quadrillé : fil d'Ariane, surtitre (cycle, format, ville),
+ * - Haut de page sur bleu très clair : fil d'Ariane, surtitre (cycle, format, ville),
  *   accroche (question, puis réponse surlignée en vert), titre, filet vert, promesse ; sur
  *   téléphone, les dates et le lieu en une ligne ; les deux boutons, qui mènent au formulaire
  *   et y cochent la demande choisie. À côté, une carte bleu nuit qui déborde sur la section
@@ -46,6 +47,9 @@ function Showcase({ item }: { item: TrainingShowcase }) {
   const t = showcaseLabels[lang];
   const ids = useId();
   const pageRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const requestRef = useRef<HTMLElement>(null);
+  const [bar, setBar] = useState(false);
   const [wants, setWants] = useState<Wants>({ sheet: true, quote: false });
   useCabinetMotion(pageRef, lang);
   useHideFooterCta();
@@ -56,10 +60,27 @@ function Showcase({ item }: { item: TrainingShowcase }) {
   const seats = fill(t.facts.seatsValue, { n: item.seats });
   const where = `${item.place}, ${item.city}`;
   const [mainVoice, ...otherVoices] = item.voices;
-  const signal = {
-    '--x': `${item.illustration.signal.x}%`,
-    '--y': `${item.illustration.signal.y}%`,
-  } as CSSProperties;
+  // Les autres sessions à venir de l'agenda (ni passées, ni réservées à un client), trois au plus.
+  const today = new Date().toISOString().slice(0, 10);
+  const related = homeContent[lang].trainings.items
+    .filter((other) => other.id !== item.id && !other.intra && other.end >= today)
+    .slice(0, 3);
+
+  // La barre de la session : visible une fois le haut de page passé, jusqu'au formulaire.
+  useEffect(() => {
+    const hero = heroRef.current;
+    const request = requestRef.current;
+    if (!hero || !request || typeof IntersectionObserver === 'undefined') return;
+    const update = () => {
+      const pastHero = hero.getBoundingClientRect().bottom < 0;
+      const beforeRequest = request.getBoundingClientRect().top > window.innerHeight * 0.85;
+      setBar(pastHero && beforeRequest);
+    };
+    const observer = new IntersectionObserver(update, { threshold: [0, 0.15, 0.5, 1] });
+    observer.observe(hero);
+    observer.observe(request);
+    return () => observer.disconnect();
+  }, []);
 
   // Les deux boutons du haut : descendre au formulaire, la demande choisie déjà cochée.
   const ask = (want: keyof Wants) => (event: MouseEvent<HTMLAnchorElement>) => {
@@ -83,7 +104,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
       <title>{`${item.title} · ${env.appName}`}</title>
 
       {/* ---------- Haut de page : le texte, et la scène bleu nuit qui déborde ---------- */}
-      <section className={styles.hero} aria-labelledby={`${ids}-title`}>
+      <section ref={heroRef} className={styles.hero} aria-labelledby={`${ids}-title`}>
         <div className={cx('container', styles.heroGrid)}>
           <div className={styles.heroText}>
             <nav aria-label={t.breadcrumb.label} className={styles.crumbs}>
@@ -97,15 +118,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
                 <li aria-current="page">{item.title}</li>
               </ol>
             </nav>
-            <p className={styles.eyebrow}>
-              {fill(t.format, { cycle: item.cycle, city: item.city })}
-            </p>
-            <p className={styles.hook}>
-              {item.hook.question}{' '}
-              <span className={styles.hookAnswer}>
-                <span>{item.hook.answer}</span>
-              </span>
-            </p>
+            <p className={styles.eyebrow}>{fill(t.format, { city: item.city })}</p>
             <h1 id={`${ids}-title`} className={styles.title} data-motion="title">
               {item.title}
             </h1>
@@ -128,16 +141,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
 
           <div className={styles.scene}>
             <div className={styles.sceneArt}>
-              <div className={styles.art} style={signal}>
-                <img
-                  src={item.illustration.src}
-                  alt={item.illustration.alt}
-                  width={572}
-                  height={388}
-                  fetchPriority="high"
-                />
-                <span className={styles.signal} aria-hidden="true" />
-              </div>
+              <Illustration item={item} />
             </div>
             <dl className={styles.facts} aria-label={t.facts.label}>
               {facts.map((fact) => (
@@ -162,8 +166,14 @@ function Showcase({ item }: { item: TrainingShowcase }) {
           </h2>
         </div>
         <div className={styles.splitBody}>
+          <p className={styles.hook}>
+            {item.hook.question}{' '}
+            <span className={styles.hookAnswer}>
+              <span>{item.hook.answer}</span>
+            </span>
+          </p>
           <p className={styles.lead}>{item.why.text}</p>
-          <p className={styles.edge}>
+          <p className={styles.edge} data-reveal>
             <b>{t.edge}</b> {item.why.edge}
           </p>
           <Link to={item.why.link.href} className={styles.more}>
@@ -172,14 +182,12 @@ function Showcase({ item }: { item: TrainingShowcase }) {
         </div>
       </section>
 
-      {/* ---------- Vous repartez avec ---------- */}
-      <section className={cx('container', styles.split)} aria-labelledby={`${ids}-gains`}>
-        <div className={styles.splitHead}>
-          <h2 id={`${ids}-gains`} className={styles.h2} data-reveal="title">
-            {t.gains}
-          </h2>
-        </div>
-        <ol className={cx(styles.splitBody, styles.gains)} data-reveal-stagger>
+      {/* ---------- Vous repartez avec : trois cartes numérotées ---------- */}
+      <section className={cx('container', styles.gainsBlock)} aria-labelledby={`${ids}-gains`}>
+        <h2 id={`${ids}-gains`} className={styles.h2} data-reveal="title">
+          {t.gains}
+        </h2>
+        <ol className={styles.gains} data-reveal-stagger>
           {item.gains.map((gain, index) => (
             <li key={gain}>
               <span className={styles.gainNum} aria-hidden="true">
@@ -191,47 +199,47 @@ function Showcase({ item }: { item: TrainingShowcase }) {
         </ol>
       </section>
 
-      {/* ---------- Pour qui · Pourquoi OPEM ---------- */}
-      <div className={styles.band}>
-        <div className={cx('container', styles.bandGrid)}>
-          <section aria-labelledby={`${ids}-audience`}>
-            <h2 id={`${ids}-audience`} className={styles.h3} data-reveal="title">
-              {t.audience}
-            </h2>
-            <p>{item.audience}</p>
-          </section>
-          <section aria-labelledby={`${ids}-reasons`}>
-            <h2 id={`${ids}-reasons`} className={styles.h3} data-reveal="title">
+      {/* ---------- Pour qui ---------- */}
+      <section className={cx('container', styles.split)} aria-labelledby={`${ids}-audience`}>
+        <div className={styles.splitHead}>
+          <h2 id={`${ids}-audience`} className={styles.h2} data-reveal="title">
+            {t.audience}
+          </h2>
+        </div>
+        <p className={cx(styles.splitBody, styles.audience)}>{item.audience}</p>
+      </section>
+
+      {/* ---------- Pourquoi OPEM : trois raisons, puis les chiffres ---------- */}
+      <section className={styles.band} aria-labelledby={`${ids}-reasons`}>
+        <div className={cx('container', styles.bandInner)}>
+          <div className={styles.bandHead}>
+            <h2 id={`${ids}-reasons`} className={styles.h2} data-reveal="title">
               {t.reasons.title}
             </h2>
-            <ul className={styles.reasons}>
-              {item.reasons.map((reason) => (
-                <li key={reason}>{reason}</li>
-              ))}
-            </ul>
             <Link to={t.reasons.link.href} className={styles.more}>
               {t.reasons.link.label} ›
             </Link>
-          </section>
+          </div>
+          <ul className={styles.reasons} data-reveal-stagger>
+            {item.reasons.map((reason) => (
+              <li key={reason}>{asCard(reason)}</li>
+            ))}
+          </ul>
+          <div className={styles.figuresBlock}>
+            <h3 className="sr-only">{t.figures.label}</h3>
+            <ul className={styles.figures} data-reveal-stagger>
+              {t.figures.items.map((figure) => (
+                <li key={figure.label}>
+                  <b>{figure.value}</b>
+                  <span>{figure.label}</span>
+                </li>
+              ))}
+            </ul>
+            <Link to={t.figures.link.href} className={styles.more}>
+              {t.figures.link.label} ›
+            </Link>
+          </div>
         </div>
-      </div>
-
-      {/* ---------- OPEM en chiffres ---------- */}
-      <section className={cx('container', styles.figuresBlock)} aria-labelledby={`${ids}-figures`}>
-        <h2 id={`${ids}-figures`} className="sr-only">
-          {t.figures.label}
-        </h2>
-        <ul className={styles.figures} data-reveal-stagger>
-          {t.figures.items.map((figure) => (
-            <li key={figure.label}>
-              <b>{figure.value}</b>
-              <span>{figure.label}</span>
-            </li>
-          ))}
-        </ul>
-        <Link to={t.figures.link.href} className={styles.more}>
-          {t.figures.link.label} ›
-        </Link>
       </section>
 
       {/* ---------- Témoignages propres à la formation ---------- */}
@@ -266,18 +274,30 @@ function Showcase({ item }: { item: TrainingShowcase }) {
         </section>
       )}
 
-      {/* ---------- Demande de la fiche technique et du devis ---------- */}
+      {/* ---------- Demande : la marche à suivre sur bleu nuit, le formulaire à côté ---------- */}
       <section
         id={REQUEST_ID}
+        ref={requestRef}
         tabIndex={-1}
         className={cx('container', styles.request)}
         aria-labelledby={`${ids}-request`}
       >
-        <div className={styles.requestText}>
-          <h2 id={`${ids}-request`} className={styles.h2} data-reveal="title">
+        <div className={styles.requestPanel}>
+          <h2 id={`${ids}-request`} className={styles.requestTitle} data-reveal="title">
             {t.request.title}
           </h2>
           <p>{t.request.intro}</p>
+          <h3 className={styles.stepsTitle}>{t.steps.title}</h3>
+          <ol className={styles.steps}>
+            {t.steps.items.map((step, index) => (
+              <li key={step}>
+                <span className={styles.stepNum} aria-hidden="true">
+                  {index + 1}
+                </span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
           <p className={styles.requestContact}>
             {t.request.contact[0]}
             <a href={`mailto:${SHOWCASE_CONTACT.email}`} dir="ltr">
@@ -292,6 +312,38 @@ function Showcase({ item }: { item: TrainingShowcase }) {
         </div>
         <RequestForm item={item} dates={dates} wants={wants} onWants={setWants} />
       </section>
+
+      {/* ---------- D'autres formations à venir (agenda) ---------- */}
+      {related.length > 0 && (
+        <section className={cx('container', styles.related)} aria-labelledby={`${ids}-related`}>
+          <div className={styles.relatedHead}>
+            <h2 id={`${ids}-related`} className={styles.h2} data-reveal="title">
+              {t.related.title}
+            </h2>
+            <Link to={t.related.all.href} className={styles.more}>
+              {t.related.all.label} ›
+            </Link>
+          </div>
+          <ul className={styles.relatedList} data-reveal-stagger>
+            {related.map((other) => (
+              <li key={other.id}>
+                <Link to={other.href} className={styles.relatedCard}>
+                  <span className={styles.relatedDate}>
+                    {sessionDates(other.date, other.end, locale, t.range)}
+                  </span>
+                  <span className={styles.relatedTopic}>{other.topic}</span>
+                  <span className={styles.relatedTitle}>{other.title}</span>
+                  <span className={styles.relatedPromise}>{other.promise}</span>
+                  <span className={styles.relatedMore}>
+                    {t.related.more}
+                    <ArrowRightIcon size={16} className="arrow" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* ---------- Service formation, référence, protection du contenu ---------- */}
       <div className={cx('container', styles.colophon)}>
@@ -310,6 +362,35 @@ function Showcase({ item }: { item: TrainingShowcase }) {
           <span dir="ltr">{item.reference}</span>
         </p>
         <p className={styles.protection}>{t.protection}</p>
+      </div>
+
+      {/* ---------- La barre de la session : entre le haut de page et le formulaire ---------- */}
+      <div
+        className={cx(styles.bar, bar && styles.barShown)}
+        aria-label={t.bar}
+        role="region"
+        inert={!bar}
+        aria-hidden={!bar || undefined}
+      >
+        <div className={styles.barInner}>
+          <p className={styles.barText}>
+            <b>{item.title}</b>
+            <span>
+              {dates ?? t.facts.noDate} · {item.city} · {seats}
+            </span>
+          </p>
+          <a href={`#${REQUEST_ID}`} className={styles.primary} onClick={ask('sheet')}>
+            {t.actions.sheet}
+            <ArrowRightIcon size={18} className="arrow" />
+          </a>
+          <a
+            href={`#${REQUEST_ID}`}
+            className={cx(styles.secondary, styles.barQuote)}
+            onClick={ask('quote')}
+          >
+            {t.actions.quote}
+          </a>
+        </div>
       </div>
     </div>
   );

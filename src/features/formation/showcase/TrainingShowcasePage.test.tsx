@@ -3,6 +3,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageSwitcher } from '@/app/layouts/navbar/LanguageSwitcher';
 import { LanguageProvider } from '@/i18n/LanguageProvider';
+import { ARTWORK } from './art';
 import { showcaseLabels, SHOWCASE_IDS, findShowcase } from './content';
 import { sessionDates } from './dates';
 import TrainingShowcasePage from './TrainingShowcasePage';
@@ -50,14 +51,15 @@ describe('Page d’une formation (modèle unique)', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Diagnostic d’organisation',
     );
-    expect(
-      screen.getByText('Cycle Management · Formation inter-entreprises · Alger'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Formation inter-entreprises · Alger')).toBeInTheDocument();
     expect(screen.getByText('Le blocage est souvent dans l’organisation.')).toBeInTheDocument();
     expect(screen.getByText('Repérer les blocages, optimiser les processus.')).toBeInTheDocument();
-    expect(
-      screen.getByRole('img', { name: /un point de blocage repéré à la loupe/ }),
-    ).toHaveAttribute('src', '/images/formations/diagnostic-d-organisation.svg');
+    const art = screen.getByRole('img', { name: /un consultant examine à la loupe/ });
+    expect(art.querySelector('img')).toHaveAttribute(
+      'src',
+      '/images/formations/diagnostic-d-organisation.webp',
+    );
+    expect(art.querySelectorAll('circle animateMotion').length).toBe(8);
 
     const facts = screen.getByText('Durée').closest('dl');
     expect(facts).not.toBeNull();
@@ -79,9 +81,9 @@ describe('Page d’une formation (modèle unique)', () => {
       'Vous repartez avec',
       'Pour qui',
       'Pourquoi OPEM',
-      'OPEM en chiffres',
       'Témoignages',
       'Recevez la fiche technique détaillée',
+      'D’autres formations à venir',
     ]);
     const crumbs = within(screen.getByRole('navigation', { name: 'Fil d’Ariane' }));
     expect(crumbs.getByRole('link', { name: 'Formation qualifiante' })).toHaveAttribute(
@@ -122,7 +124,7 @@ describe('Page d’une formation (modèle unique)', () => {
     const counts: Record<string, number> = {};
     for (const id of SHOWCASE_IDS) {
       const item = findShowcase('fr', id);
-      expect(item?.illustration.src).toBe(`/images/formations/${id}.svg`);
+      expect(ARTWORK[id]).toBeDefined();
       counts[id] = item?.voices.length ?? 0;
       for (const voice of item?.voices ?? []) {
         expect(quotes.has(voice.quote)).toBe(false);

@@ -20,8 +20,9 @@ import type { Lang } from '@/i18n/language';
  *
  * Ajouter une formation : copier une entrée dans FR et AR, avec l'`id` de sa session dans
  * l'agenda ; déposer son illustration (style isométrique, version pour fond bleu nuit) dans
- * public/images/formations/<id>.svg ; indiquer la position du signal ambre sur le point clé
- * de l'illustration (en % de sa largeur et de sa hauteur) ; ajouter l'adresse de la page dans
+ * art/<id>.svg, avec les classes « a-… » des pièces à animer (voir art.ts) ; indiquer la
+ * position du signal ambre sur le point clé de l'illustration (en % de sa largeur et de sa
+ * hauteur) ; ajouter l'adresse de la page dans
  * src/config/pages.ts et vite.seo.ts. Les témoignages ne se répètent pas d'une page à l'autre.
  */
 
@@ -41,10 +42,10 @@ export type TrainingShowcase = {
   /** Identifiant de la session dans l'agenda, et fin de l'adresse de la page. */
   id: string;
   reference: string;
-  /** Cycle du catalogue, en tête du surtitre (« Cycle Management »). */
+  /** Cycle du catalogue (« Cycle Management »). */
   cycle: string;
   title: string;
-  /** L'accroche au-dessus du titre : la question, puis la réponse (surlignée en vert). */
+  /** L'accroche, en ouverture de « Pourquoi cette formation » : la question, puis la réponse (surlignée en vert). */
   hook: { question: string; answer: string };
   /** La promesse, sous le titre. */
   promise: string;
@@ -53,10 +54,18 @@ export type TrainingShowcase = {
   place: string;
   city: string;
   /**
-   * L'illustration du haut de page (version pour fond bleu nuit) et le point clé où se pose le
-   * signal ambre animé, en % de la largeur et de la hauteur de l'image.
+   * L'illustration du haut de page, sur fond bleu nuit : son nom accessible, et le point clé où
+   * se pose le signal ambre (en % de sa largeur et de sa hauteur). Avec `image` : une image
+   * (public/images/formations/<id>.webp, format 3:2) animée d'un lent travelling, et des
+   * paquets qui parcourent ses flux (`flows` : tracés SVG en pixels de l'image). Sans `image` :
+   * le dessin vectoriel animé art/*.tsx.
    */
-  illustration: { src: string; alt: string; signal: { x: number; y: number } };
+  illustration: {
+    alt: string;
+    signal: { x: number; y: number };
+    image?: { src: string; width: number; height: number };
+    flows?: string[];
+  };
   /** Pourquoi cette formation : le constat et la réponse, sa singularité, le lien « Confier… ». */
   why: { text: string; edge: string; link: Link };
   /** Vous repartez avec : trois acquis, numérotés. */
@@ -71,7 +80,7 @@ export type TrainingShowcase = {
 
 export type ShowcaseLabels = {
   breadcrumb: { label: string; root: Link; catalogue: Link };
-  /** Surtitre : « {cycle} · Formation inter-entreprises · {city} ». */
+  /** Surtitre : « Formation inter-entreprises · {city} ». */
   format: string;
   actions: { sheet: string; quote: string };
   facts: {
@@ -93,6 +102,12 @@ export type ShowcaseLabels = {
   reasons: { title: string; link: Link };
   figures: { label: string; items: { value: string; label: string }[]; link: Link };
   voices: string;
+  /** La barre de la session, qui reste à l'écran entre le haut de page et le formulaire. */
+  bar: string;
+  /** Comment ça se passe : les trois étapes d'une demande, à côté du formulaire. */
+  steps: { title: string; items: string[] };
+  /** D'autres formations à venir (agenda), au pied de la page. */
+  related: { title: string; more: string; all: Link };
   request: {
     title: string;
     intro: string;
@@ -131,7 +146,7 @@ const LABELS_FR: ShowcaseLabels = {
     root: { label: 'Formation qualifiante', href: '/formation' },
     catalogue: { label: 'Catalogue et sessions', href: '/formation/catalogue-et-sessions' },
   },
-  format: '{cycle} · Formation inter-entreprises · {city}',
+  format: 'Formation inter-entreprises · {city}',
   actions: { sheet: 'Recevoir la fiche technique détaillée', quote: 'Demander un devis' },
   facts: {
     label: 'La session',
@@ -162,6 +177,20 @@ const LABELS_FR: ShowcaseLabels = {
     link: { label: 'Voir nos missions et réalisations', href: '/missions' },
   },
   voices: 'Témoignages',
+  bar: 'La session',
+  steps: {
+    title: 'Comment ça se passe',
+    items: [
+      'Vous envoyez votre demande en deux minutes.',
+      'Notre service formation l’examine et vous contacte.',
+      'Vous recevez la fiche technique détaillée et, si vous le souhaitez, votre devis.',
+    ],
+  },
+  related: {
+    title: 'D’autres formations à venir',
+    more: 'Voir la formation',
+    all: { label: 'Tout le calendrier', href: '/formation/catalogue-et-sessions' },
+  },
   request: {
     title: 'Recevez la fiche technique détaillée',
     intro: fr(
@@ -214,7 +243,7 @@ const LABELS_AR: ShowcaseLabels = {
     root: { label: 'التكوين التأهيلي', href: '/formation' },
     catalogue: { label: 'الفهرس والدورات', href: '/formation/catalogue-et-sessions' },
   },
-  format: '{cycle} · تكوين بين المؤسسات · {city}',
+  format: 'تكوين بين المؤسسات · {city}',
   actions: { sheet: 'احصلوا على البطاقة التقنية المفصّلة', quote: 'اطلبوا عرض سعر' },
   facts: {
     label: 'الدورة',
@@ -245,6 +274,20 @@ const LABELS_AR: ShowcaseLabels = {
     link: { label: 'اطّلعوا على مهامنا وإنجازاتنا', href: '/missions' },
   },
   voices: 'شهادات',
+  bar: 'الدورة',
+  steps: {
+    title: 'كيف تجري العملية',
+    items: [
+      'ترسلون طلبكم في دقيقتين.',
+      'تدرسه مصلحة التكوين وتتصل بكم.',
+      'تتلقون البطاقة التقنية المفصّلة، وعرض السعر إن رغبتم في ذلك.',
+    ],
+  },
+  related: {
+    title: 'تكوينات أخرى قادمة',
+    more: 'اكتشفوا التكوين',
+    all: { label: 'الرزنامة كاملة', href: '/formation/catalogue-et-sessions' },
+  },
   request: {
     title: 'احصلوا على البطاقة التقنية المفصّلة',
     intro:
@@ -286,6 +329,30 @@ const LABELS_AR: ShowcaseLabels = {
   protection: '© OPEM. محتوى محمي: يُمنع أي نسخ دون إذن كتابي.',
 };
 
+/** Les images des formations qui en ont une (le Plan garde provisoirement son dessin animé). */
+const IMAGES = {
+  'diagnostic-d-organisation': {
+    image: { src: '/images/formations/diagnostic-d-organisation.webp', width: 727, height: 484 },
+    signal: { x: 78.1, y: 61.6 },
+    flows: [
+      'M322,238 Q350,214 392,200 Q404,197 416,205 L463,232',
+      'M408,342 Q420,320 440,314 L470,304',
+      'M146,330 L246,390',
+      'M312,412 L345,426 Q366,436 386,430 L432,440',
+    ],
+  },
+  'cybersecurite-operationnelle': {
+    image: { src: '/images/formations/cybersecurite-operationnelle.webp', width: 700, height: 467 },
+    signal: { x: 66.7, y: 63.8 },
+    flows: [
+      'M300,232 L362,255 Q372,258 386,252',
+      'M305,252 L420,302',
+      'M232,342 L205,358 L290,385',
+      'M262,398 L345,440 L380,428',
+    ],
+  },
+} satisfies Record<string, Omit<TrainingShowcase['illustration'], 'alt'>>;
+
 /** Témoignage commun aux formations « Diagnostic » et « Cybersécurité » : l'auteur. */
 const PARTICIPANT = { fr: 'Participant à une formation OPEM', ar: 'مشارك في تكوين لـ OPEM' };
 
@@ -307,9 +374,8 @@ const FR: TrainingShowcase[] = [
     place: 'École OPEM',
     city: 'Alger',
     illustration: {
-      src: '/images/formations/diagnostic-d-organisation.svg',
-      alt: 'Illustration : un processus en quatre postes, dont un point de blocage repéré à la loupe par un consultant',
-      signal: { x: 53.57, y: 47.43 },
+      alt: 'Illustration : un organigramme et quatre postes de travail reliés par un flux ; les dossiers s’accumulent à un point de blocage, qu’un consultant examine à la loupe',
+      ...IMAGES['diagnostic-d-organisation'],
     },
     why: {
       text: fr(
@@ -367,7 +433,6 @@ const FR: TrainingShowcase[] = [
     place: 'École OPEM',
     city: 'Alger',
     illustration: {
-      src: '/images/formations/plan-de-formation-2027.svg',
       alt: 'Illustration : une équipe gravit les quatre actions du plan 2027 jusqu’au fanion de l’objectif, avec la table des besoins et le budget au pied',
       signal: { x: 81.51, y: 6.14 },
     },
@@ -421,9 +486,8 @@ const FR: TrainingShowcase[] = [
     place: 'École OPEM',
     city: 'Alger',
     illustration: {
-      src: '/images/formations/cybersecurite-operationnelle.svg',
-      alt: 'Illustration : des serveurs protégés par un dôme, une analyste repère une alerte dans les journaux d’événements, des postes de travail reliés au réseau',
-      signal: { x: 57.81, y: 29.21 },
+      alt: 'Illustration : des serveurs protégés par un dôme et un bouclier, des postes de travail en réseau et une salle de supervision où une alerte s’affiche sur un écran',
+      ...IMAGES['cybersecurite-operationnelle'],
     },
     why: {
       text: fr(
@@ -484,9 +548,8 @@ const AR: TrainingShowcase[] = [
     place: 'مدرسة OPEM',
     city: 'الجزائر العاصمة',
     illustration: {
-      src: '/images/formations/diagnostic-d-organisation.svg',
-      alt: 'رسم توضيحي: مسار من أربعة مراكز عمل، يرصد فيه مستشار نقطة انسداد بالعدسة المكبّرة',
-      signal: { x: 53.57, y: 47.43 },
+      alt: 'رسم توضيحي: هيكل تنظيمي وأربعة مراكز عمل يربطها مسار؛ تتراكم الملفات عند نقطة انسداد يفحصها مستشار بالعدسة المكبّرة',
+      ...IMAGES['diagnostic-d-organisation'],
     },
     why: {
       text: 'مسؤوليات متداخلة، وقرارات تصعد دائمًا إلى الإدارة، ومسارات يُتحايل عليها في الميدان: تلاحظونها، لكن كيف تُثبتونها ثم تعالجونها؟ يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على مؤسستكم.',
@@ -540,7 +603,6 @@ const AR: TrainingShowcase[] = [
     place: 'مدرسة OPEM',
     city: 'الجزائر العاصمة',
     illustration: {
-      src: '/images/formations/plan-de-formation-2027.svg',
       alt: 'رسم توضيحي: فريق يصعد الإجراءات الأربعة لمخطط 2027 حتى راية الهدف، وعند القاعدة جدول الاحتياجات والميزانية',
       signal: { x: 81.51, y: 6.14 },
     },
@@ -587,9 +649,8 @@ const AR: TrainingShowcase[] = [
     place: 'مدرسة OPEM',
     city: 'الجزائر العاصمة',
     illustration: {
-      src: '/images/formations/cybersecurite-operationnelle.svg',
-      alt: 'رسم توضيحي: خوادم تحميها قبة، ومحلّلة ترصد إنذارًا في سجلات الأحداث، ومحطات عمل موصولة بالشبكة',
-      signal: { x: 57.81, y: 29.21 },
+      alt: 'رسم توضيحي: خوادم تحميها قبة ودرع، ومحطات عمل موصولة بالشبكة، وقاعة مراقبة يظهر فيها إنذار على شاشة',
+      ...IMAGES['cybersecurite-operationnelle'],
     },
     why: {
       text: 'الهجوم لا يترك وقتًا لإعادة قراءة الوثائق: كل إجراء دفاعي يُمارَس هنا على الحاسوب، دون أي خطر على نظامكم.',
