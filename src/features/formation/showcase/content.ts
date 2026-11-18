@@ -18,7 +18,9 @@ import type { Lang } from '@/i18n/language';
  * (provisoirement la page « Formation qualifiante ») et de « Cybersécurité opérationnelle »
  * (provisoirement « Conformité et protection des données »).
  *
- * Ajouter une formation : copier une entrée dans FR et AR, avec l'`id` de sa session dans
+ * Ajouter une formation : de préférence dans WordPress (menu « Formations », plugin
+ * wordpress/opem-formations-api.php, lu par useFormations.ts), sans toucher au code. Ici :
+ * copier une entrée dans FR et AR, avec l'`id` de sa session dans
  * l'agenda ; déposer son illustration (style isométrique, version pour fond bleu nuit) dans
  * art/<id>.svg, avec les classes « a-… » des pièces à animer (voir art.ts) ; indiquer la
  * position du signal ambre sur le point clé de l'illustration (en % de sa largeur et de sa
@@ -65,9 +67,11 @@ export type TrainingShowcase = {
     signal: { x: number; y: number };
     image?: { src: string; width: number; height: number };
     flows?: string[];
+    /** Le dessin animé à reprendre (clé de ARTWORK) ; par défaut, celui de même `id`. */
+    art?: string;
   };
-  /** Pourquoi cette formation : le constat et la réponse, sa singularité, le lien « Confier… ». */
-  why: { text: string; edge: string; link: Link };
+  /** Pourquoi cette formation : le constat et la réponse, sa singularité, le lien « Confier… » (absent : masqué). */
+  why: { text: string; edge: string; link?: Link };
   /** Vous repartez avec : trois acquis, numérotés. */
   gains: string[];
   /** Pour qui : une phrase. */
@@ -329,7 +333,7 @@ const LABELS_AR: ShowcaseLabels = {
   protection: '© OPEM. محتوى محمي: يُمنع أي نسخ دون إذن كتابي.',
 };
 
-/** Les images des formations qui en ont une (le Plan garde provisoirement son dessin animé). */
+/** Les images des formations qui en ont une (le Plan garde son dessin animé). */
 const IMAGES = {
   'diagnostic-d-organisation': {
     image: { src: '/images/formations/diagnostic-d-organisation.webp', width: 727, height: 484 },
@@ -351,9 +355,18 @@ const IMAGES = {
       'M262,398 L345,440 L380,428',
     ],
   },
+  'iso-9001-2026': {
+    image: { src: '/images/formations/iso-9001-2026.webp', width: 1024, height: 683 },
+    signal: { x: 85.6, y: 68.4 },
+    flows: [
+      'M170,227 L290,257 Q320,222 360,227 L470,277',
+      'M470,277 L620,342',
+      'M620,342 L790,432 L850,467',
+    ],
+  },
 } satisfies Record<string, Omit<TrainingShowcase['illustration'], 'alt'>>;
 
-/** Témoignage commun aux formations « Diagnostic » et « Cybersécurité » : l'auteur. */
+/** Témoignages des formations « Diagnostic », « Cybersécurité » et « ISO 9001:2026 » : l'auteur. */
 const PARTICIPANT = { fr: 'Participant à une formation OPEM', ar: 'مشارك في تكوين لـ OPEM' };
 
 const FR: TrainingShowcase[] = [
@@ -530,6 +543,59 @@ const FR: TrainingShowcase[] = [
       },
     ],
   },
+  {
+    id: 'iso-9001-2026',
+    reference: 'D07-26.INTER.01. V1',
+    cycle: 'Cycle Qualité',
+    title: 'ISO 9001:2026',
+    hook: {
+      question: fr('Que change vraiment l’édition 2026 pour votre système qualité ?'),
+      answer: 'Trois jours pour la comprendre et l’appliquer.',
+    },
+    promise: 'Toute la norme, exigence par exigence',
+    duration: `3${N}jours`,
+    seats: 12,
+    place: 'École OPEM',
+    city: 'Alger',
+    illustration: {
+      alt: 'Illustration : une ligne de production où chaque poste passe un portique de contrôle ; une responsable qualité vérifie sur sa liste, et le produit fini, validé, attend en bout de ligne',
+      ...IMAGES['iso-9001-2026'],
+    },
+    why: {
+      text: fr(
+        'Bien des systèmes qualité se résument à une documentation abondante : un certificat au mur, un effet marginal sur le fonctionnement réel. L’édition 2026 attend désormais une culture de la qualité que l’organisme doit démontrer. Cette formation vous donne une lecture complète de la norme et la méthode pour en faire un véritable outil de pilotage.',
+      ),
+      edge: 'un même parcours pour deux publics. Le débutant découvre la norme dans son intégralité, le praticien de la version 2015 y repère chaque évolution et ce qu’elle change pour son système.',
+      // Lien « Confier votre démarche de certification à nos consultants » : destination à
+      // préciser par OPEM, masqué en attendant.
+    },
+    gains: [
+      'Une lecture complète de la norme et le sens exact de chacune de ses exigences.',
+      'Les évolutions de l’édition 2026 et ce que chacune change pour votre système.',
+      fr(
+        'Des modèles réutilisables : cartographie des processus, registres des risques et des opportunités, compte rendu de revue de direction.',
+      ),
+    ],
+    audience:
+      'Responsables qualité, pilotes de processus, directions et auditeurs internes, que vous découvriez la norme ou la pratiquiez déjà.',
+    reasons: [
+      'Une expertise de la certification forgée auprès d’entreprises et d’institutions algériennes.',
+      fr(
+        'Bien plus qu’une lecture conventionnelle de la norme : des exercices pratiques et des cas concrets jalonnent tout le parcours.',
+      ),
+      fr(
+        'Une formation qui dépasse les procédures : culture qualité, éthique et pilotage par les risques et les opportunités, au cœur de l’édition 2026.',
+      ),
+    ],
+    voices: [
+      {
+        quote: fr(
+          'Une très bonne expérience chez OPEM : accueil chaleureux, matériel impeccable, formateur très compétent qui rend la norme ISO simple et pratique. J’ai beaucoup apprécié. Oui, je recommande sans hésitation.',
+        ),
+        author: PARTICIPANT.fr,
+      },
+    ],
+  },
 ];
 
 const AR: TrainingShowcase[] = [
@@ -681,6 +747,48 @@ const AR: TrainingShowcase[] = [
       {
         quote:
           'بيداغوجيا في القمة، واستقبال لا تشوبه شائبة، ومكوّنون شغوفون. أفضل تكوين تلقيته على الإطلاق. شكرًا OPEM!',
+        author: PARTICIPANT.ar,
+      },
+    ],
+  },
+  {
+    id: 'iso-9001-2026',
+    reference: 'D07-26.INTER.01. V1',
+    cycle: 'دورة الجودة',
+    title: 'ISO 9001:2026',
+    hook: {
+      question: 'ما الذي تغيّره نسخة 2026 فعلًا في نظام الجودة لديكم؟',
+      answer: 'ثلاثة أيام لفهمها وتطبيقها.',
+    },
+    promise: 'المعيار كاملًا، متطلّبًا بمتطلّب',
+    duration: '3 أيام',
+    seats: 12,
+    place: 'مدرسة OPEM',
+    city: 'الجزائر العاصمة',
+    illustration: {
+      alt: 'رسم توضيحي: خط إنتاج يمرّ فيه كل مركز عمل عبر بوابة مراقبة؛ مسؤول الجودة يتحقق من قائمته، والمنتج النهائي المصادق عليه ينتظر في آخر الخط',
+      ...IMAGES['iso-9001-2026'],
+    },
+    why: {
+      text: 'كثير من أنظمة الجودة تختزل في وثائق وفيرة: شهادة معلّقة على الجدار، وأثر هامشي على السير الفعلي. أما نسخة 2026 فتنتظر ثقافة جودة على المؤسسة أن تبرهن عليها. يمنحكم هذا التكوين قراءة كاملة للمعيار والمنهجية لجعله أداة قيادة حقيقية.',
+      edge: 'مسار واحد لجمهورين. يكتشف المبتدئ المعيار كاملًا، ويرصد الممارس لنسخة 2015 كل تطوّر وما يغيّره في نظامه.',
+    },
+    gains: [
+      'قراءة كاملة للمعيار والمعنى الدقيق لكل متطلّب من متطلّباته.',
+      'مستجدات نسخة 2026 وما يغيّره كل منها في نظامكم.',
+      'نماذج قابلة لإعادة الاستعمال: خريطة العمليات، وسجلّات المخاطر والفرص، ومحضر مراجعة الإدارة.',
+    ],
+    audience:
+      'مسؤولو الجودة، وقادة العمليات، والمديريات، والمدقّقون الداخليون، سواء كنتم تكتشفون المعيار أو تمارسونه.',
+    reasons: [
+      'خبرة في الإشهاد صُقلت لدى مؤسسات وهيئات جزائرية.',
+      'أبعد من قراءة تقليدية للمعيار: تمارين تطبيقية وحالات ملموسة على امتداد المسار.',
+      'تكوين يتجاوز الإجراءات: ثقافة الجودة، والأخلاقيات، والقيادة بالمخاطر والفرص، في صميم نسخة 2026.',
+    ],
+    voices: [
+      {
+        quote:
+          'تجربة جيدة جدًا لدى OPEM: استقبال حار، وتجهيزات لا تشوبها شائبة، ومكوّن كفء جدًا يجعل معيار ISO بسيطًا وعمليًا. أعجبني كثيرًا. نعم، أوصي به دون تردد.',
         author: PARTICIPANT.ar,
       },
     ],

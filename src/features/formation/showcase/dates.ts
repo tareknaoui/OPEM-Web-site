@@ -33,3 +33,13 @@ export function sessionDates(start: string, end: string, locale: string, pattern
  */
 export const asCard = (text: string) =>
   text.charAt(0).toUpperCase() + text.slice(1).replace(/\s*[;.]\s*$/, '');
+
+/**
+ * Typographie française d'un texte saisi dans WordPress : espace insécable avant « : ; ? ! »,
+ * à l'intérieur des guillemets, et entre un nombre et son unité (« 4 jours »).
+ */
+export const frenchSpaces = (text: string) =>
+  text
+    .replace(/ ([:;?!»])/g, `${N}$1`)
+    .replace(/« /g, `«${N}`)
+    .replace(/(\d) (?=\p{L})/gu, `$1${N}`);

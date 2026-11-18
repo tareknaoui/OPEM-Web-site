@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router';
 import { ArrowRightIcon } from '@/components/icons';
+import { useAgenda } from '@/features/formation/showcase/useFormations';
 import { useLanguage } from '@/i18n/useLanguage';
 import type { HomeContent } from '../content';
 import { ProvisionalNote } from './SectionHeader';
@@ -24,7 +25,8 @@ const MAX_SESSIONS = 5;
  */
 export function UpcomingSessions({ trainings }: { trainings: HomeContent['trainings'] }) {
   const { lang } = useLanguage();
-  const sessions = upcomingSessions(trainings.items).slice(0, MAX_SESSIONS);
+  const agenda = useAgenda(lang, trainings.items);
+  const sessions = upcomingSessions(agenda).slice(0, MAX_SESSIONS);
 
   const format = useMemo(() => {
     const locale = lang === 'ar' ? 'ar-DZ' : 'fr-FR';

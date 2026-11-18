@@ -19,6 +19,7 @@ export const PUBLISHED_PAGES = [
   '/formation/fiches-formation/diagnostic-d-organisation',
   '/formation/fiches-formation/plan-de-formation-2027',
   '/formation/fiches-formation/cybersecurite-operationnelle',
+  '/formation/fiches-formation/iso-9001-2026',
   '/missions',
   '/ia-appliquee',
   '/eclairages',

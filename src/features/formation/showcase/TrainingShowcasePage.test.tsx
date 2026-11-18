@@ -12,6 +12,12 @@ vi.mock('@/lib/env', () => ({
   env: { appName: 'OPEM', apiUrl: '/api', wpApiUrl: 'https://wp.example/wp-json', isDev: false },
 }));
 
+// Les formations saisies dans WordPress : aucune ici (voir useFormations.test.tsx).
+vi.mock('./wordpress', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./wordpress')>()),
+  fetchWordPressFormations: vi.fn(async () => []),
+}));
+
 function renderPage(id = 'diagnostic-d-organisation') {
   const Page = () => (
     <>
@@ -52,7 +58,11 @@ describe('Page d’une formation (modèle unique)', () => {
       'Diagnostic d’organisation',
     );
     expect(screen.getByText('Formation inter-entreprises · Alger')).toBeInTheDocument();
-    expect(screen.getByText('Le blocage est souvent dans l’organisation.')).toBeInTheDocument();
+    // L'accroche ouvre le haut de page, juste au-dessus du titre.
+    const answer = screen.getByText('Le blocage est souvent dans l’organisation.');
+    const title = screen.getByRole('heading', { level: 1 });
+    expect(answer.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(answer.closest('section')).toBe(title.closest('section'));
     expect(screen.getByText('Repérer les blocages, optimiser les processus.')).toBeInTheDocument();
     const art = screen.getByRole('img', { name: /un consultant examine à la loupe/ });
     expect(art.querySelector('img')).toHaveAttribute(
@@ -124,7 +134,7 @@ describe('Page d’une formation (modèle unique)', () => {
     const counts: Record<string, number> = {};
     for (const id of SHOWCASE_IDS) {
       const item = findShowcase('fr', id);
-      expect(ARTWORK[id]).toBeDefined();
+      expect(item?.illustration.image ?? ARTWORK[item?.illustration.art ?? id]).toBeDefined();
       counts[id] = item?.voices.length ?? 0;
       for (const voice of item?.voices ?? []) {
         expect(quotes.has(voice.quote)).toBe(false);
@@ -135,6 +145,7 @@ describe('Page d’une formation (modèle unique)', () => {
       'diagnostic-d-organisation': 3,
       'plan-de-formation-2027': 1,
       'cybersecurite-operationnelle': 2,
+      'iso-9001-2026': 1,
     });
 
     const { unmount } = renderPage('plan-de-formation-2027');
@@ -149,6 +160,18 @@ describe('Page d’une formation (modèle unique)', () => {
     );
     expect(screen.getByText('13 au 17 déc. 2026')).toBeInTheDocument();
     expect(screen.getByText(/Pédagogie au top/)).toBeInTheDocument();
+  });
+
+  it('ISO 9001:2026 : accroche en haut, sous-titre à jour, lien « Confier… » masqué', () => {
+    renderPage('iso-9001-2026');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('ISO 9001:2026');
+    expect(screen.getByText('Trois jours pour la comprendre et l’appliquer.')).toBeInTheDocument();
+    expect(screen.getAllByText('Toute la norme, exigence par exigence').length).toBeGreaterThan(0);
+    expect(screen.getByText('15 au 17 déc. 2026')).toBeInTheDocument();
+    expect(screen.queryByText(/Ce qui change vraiment/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Confier/ })).not.toBeInTheDocument();
+    expect(screen.getByText(/rend la norme ISO simple et pratique/)).toBeInTheDocument();
+    expect(screen.getByText('D07-26.INTER.01. V1')).toBeInTheDocument();
   });
 
   it('les dates : mois abrégé, sur une ligne', () => {
@@ -229,7 +252,7 @@ describe('Page d’une formation (modèle unique)', () => {
   });
 
   it('une formation sans page : la page « Formation qualifiante »', () => {
-    renderPage('iso-9001-2026');
+    renderPage('chatgpt-et-claude-en-pratique');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Une compétence se construit, puis s’éprouve au travail.',
     );

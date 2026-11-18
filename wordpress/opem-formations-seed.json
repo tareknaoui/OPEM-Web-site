@@ -1,0 +1,326 @@
+[
+  {
+    "slug": "diagnostic-d-organisation",
+    "reference": "D02-26.INTER.01. V1",
+    "start": "2026-12-06",
+    "end": "2026-12-09",
+    "seats": 12,
+    "theme": "diagnostic-d-organisation",
+    "link_href": "/expertises/accompagnement-des-organisations/diagnostic-d-entreprise",
+    "fr": {
+      "title": "Diagnostic d’organisation",
+      "promise": "Repérer les blocages, optimiser les processus.",
+      "cycle": "Cycle Management",
+      "topic": "Organisation",
+      "duration": "4 jours",
+      "place": "École OPEM",
+      "city": "Alger",
+      "format": "Présentiel · Alger · 4 jours",
+      "hook_question": "Vos équipes s’épuisent, les décisions traînent, les mêmes problèmes reviennent ?",
+      "hook_answer": "Le blocage est souvent dans l’organisation.",
+      "why_text": "Des responsabilités qui se chevauchent, des décisions qui remontent toujours à la direction, des processus contournés sur le terrain : vous les constatez, mais comment les prouver, puis les corriger ? Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.",
+      "why_edge": "vous apprenez à conduire vous-même un diagnostic interne léger et régulier, et à reconnaître le moment où un regard extérieur apporte le plus, pour commander et exploiter un diagnostic externe.",
+      "link_label": "Confier le diagnostic à nos consultants : accompagnement des organisations",
+      "gains": [
+        "Une méthode complète pour conduire un diagnostic, du cadrage au plan d’action.",
+        "Vos processus clés cartographiés et leurs points de blocage localisés.",
+        "Une première ébauche de diagnostic de votre structure, prête à présenter à votre direction."
+      ],
+      "audience": "Directeurs, responsables organisation, qualité, ressources humaines et performance, dirigeants de PME.",
+      "reasons": [
+        "Une méthode éprouvée en mission de conseil, au cœur des entreprises ;",
+        "des cas réels d’entreprises algériennes, publiques et privées ;",
+        "un formateur praticien du diagnostic."
+      ],
+      "voices": [
+        {
+          "quote": "En dix-sept ans de carrière, j’ai assisté à beaucoup de formations génériques qui sont vite oubliées. Avec OPEM, c’est différent : on travaille sur les vrais blocages du terrain et on sort avec des solutions prêtes à l’emploi.",
+          "author": "Participant à une formation OPEM"
+        },
+        {
+          "quote": "Je repars avec des outils concrets prêts à être appliqués. Merci à l’équipe OPEM pour son sérieux, ses qualités et ses exigences.",
+          "author": "Participant à une formation OPEM"
+        },
+        {
+          "quote": "Contenu dense, supports pédagogiques consistants et clairs. OPEM maîtrise son sujet et respecte parfaitement les objectifs annoncés.",
+          "author": "Participant à une formation OPEM"
+        }
+      ],
+      "alt": "Illustration : un organigramme et quatre postes de travail reliés par un flux ; les dossiers s’accumulent à un point de blocage, qu’un consultant examine à la loupe"
+    },
+    "ar": {
+      "title": "تشخيص التنظيم",
+      "promise": "تحديد مواطن الانسداد وتحسين المسارات.",
+      "cycle": "دورة التسيير",
+      "topic": "التنظيم",
+      "duration": "4 أيام",
+      "place": "مدرسة OPEM",
+      "city": "الجزائر العاصمة",
+      "format": "حضوري · الجزائر العاصمة · 4 أيام",
+      "hook_question": "فرقكم مُنهَكة، والقرارات تتأخر، والمشاكل نفسها تتكرر؟",
+      "hook_answer": "غالبًا ما يكون الانسداد في التنظيم.",
+      "why_text": "مسؤوليات متداخلة، وقرارات تصعد دائمًا إلى الإدارة، ومسارات يُتحايل عليها في الميدان: تلاحظونها، لكن كيف تُثبتونها ثم تعالجونها؟ يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على مؤسستكم.",
+      "why_edge": "تتعلّمون إجراء تشخيص داخلي خفيف ومنتظم بأنفسكم، وتمييز اللحظة التي تكون فيها النظرة الخارجية أجدى، لطلب تشخيص خارجي والاستفادة منه.",
+      "link_label": "أوكلوا التشخيص إلى مستشارينا: مرافقة المؤسسات",
+      "gains": [
+        "منهجية متكاملة لإجراء التشخيص، من التأطير إلى خطة العمل.",
+        "مساراتكم الرئيسية مرسومة ونقاط انسدادها محدّدة.",
+        "مسودة أولى لتشخيص مؤسستكم، جاهزة لعرضها على إدارتكم."
+      ],
+      "audience": "المديرون، ومسؤولو التنظيم والجودة والموارد البشرية والأداء، ومسيّرو المؤسسات الصغيرة والمتوسطة.",
+      "reasons": [
+        "منهجية مجرّبة في مهام الاستشارة، في قلب المؤسسات؛",
+        "حالات حقيقية لمؤسسات جزائرية عمومية وخاصة؛",
+        "مكوّن ممارس للتشخيص."
+      ],
+      "voices": [
+        {
+          "quote": "خلال سبعة عشر عامًا من مساري المهني، حضرت تكوينات عامة كثيرة سرعان ما تُنسى. مع OPEM الأمر مختلف: نعمل على الانسدادات الحقيقية في الميدان ونخرج بحلول جاهزة للتطبيق.",
+          "author": "مشارك في تكوين لـ OPEM"
+        },
+        {
+          "quote": "أغادر بأدوات ملموسة جاهزة للتطبيق. شكرًا لفريق OPEM على جدّيته وكفاءته وصرامته.",
+          "author": "مشارك في تكوين لـ OPEM"
+        },
+        {
+          "quote": "محتوى غني، ودعائم بيداغوجية متينة وواضحة. OPEM تتقن موضوعها وتحترم الأهداف المعلنة تمامًا.",
+          "author": "مشارك في تكوين لـ OPEM"
+        }
+      ],
+      "alt": "رسم توضيحي: هيكل تنظيمي وأربعة مراكز عمل يربطها مسار؛ تتراكم الملفات عند نقطة انسداد يفحصها مستشار بالعدسة المكبّرة"
+    }
+  },
+  {
+    "slug": "plan-de-formation-2027",
+    "reference": "D04-26.INTER.01. V1",
+    "start": "2026-12-08",
+    "end": "2026-12-10",
+    "seats": 12,
+    "theme": "plan-de-formation-2027",
+    "link_href": "/formation",
+    "fr": {
+      "title": "Plan de formation 2027",
+      "promise": "Un plan qui sert vraiment l’entreprise.",
+      "cycle": "Cycle Ingénierie de la formation",
+      "topic": "Ingénierie de la formation",
+      "duration": "3 jours",
+      "place": "École OPEM",
+      "city": "Alger",
+      "format": "Présentiel · Alger · 3 jours",
+      "hook_question": "Votre budget formation travaille-t-il pour l’entreprise ?",
+      "hook_answer": "Un plan bien bâti fait toute la différence.",
+      "why_text": "Chaque année, le budget formation est engagé, les stages s’enchaînent, sans que l’on voie ce qui a concrètement changé. Cette formation vous donne la méthode pour bâtir un plan qui part des priorités de l’entreprise, se chiffre au plus juste et convainc la direction. Chaque dinar engagé devient un choix assumé.",
+      "why_edge": "un fil rouge, le plan 2027 d’une entreprise fictive, construit module après module jusqu’à sa présentation devant une direction simulée. Programmée début décembre, la session vous laisse le temps d’appliquer la démarche avant le lancement de l’exercice.",
+      "link_label": "Confier votre plan de formation à nos consultants : ingénierie de la formation",
+      "gains": [
+        "Une méthode pour relier chaque formation aux priorités de l’entreprise.",
+        "Des outils réutilisables chaque année : guide d’entretien, matrice de priorisation, trame de plan chiffré.",
+        "Les clés pour bâtir votre propre plan 2027 et fédérer toutes les parties prenantes."
+      ],
+      "audience": "Responsables formation, directeurs et responsables des ressources humaines, chargés du développement des compétences, dirigeants de PME.",
+      "reasons": [
+        "Une pratique du conseil en ingénierie de la formation, en entreprise comme en institution ;",
+        "trois jours de pratique : exercices, simulations d’entretien et présentation devant une direction simulée ;",
+        "un formateur chevronné, rompu à l’élaboration de plans de formation en entreprise."
+      ],
+      "voices": [
+        {
+          "quote": "La meilleure preuve de la qualité d’OPEM, ce sont nos salariés qui la donnent : 98 % de satisfaction à chaud cette année, et des managers qui nous redemandent déjà de nouvelles sessions.",
+          "author": "Entreprise cliente d’OPEM"
+        }
+      ],
+      "alt": "Illustration : une équipe gravit les quatre actions du plan 2027 jusqu’au fanion de l’objectif, avec la table des besoins et le budget au pied"
+    },
+    "ar": {
+      "title": "مخطط التكوين 2027",
+      "promise": "مخطط يخدم المؤسسة حقًّا.",
+      "cycle": "دورة هندسة التكوين",
+      "topic": "هندسة التكوين",
+      "duration": "3 أيام",
+      "place": "مدرسة OPEM",
+      "city": "الجزائر العاصمة",
+      "format": "حضوري · الجزائر العاصمة · 3 أيام",
+      "hook_question": "هل تعمل ميزانية التكوين لصالح مؤسستكم؟",
+      "hook_answer": "المخطط المُحكم يصنع الفارق.",
+      "why_text": "كل سنة تُصرف ميزانية التكوين وتتوالى الدورات، دون أن نرى ما الذي تغيّر فعلًا. يمنحكم هذا التكوين المنهجية لبناء مخطط ينطلق من أولويات المؤسسة، ويُقدَّر بدقة، ويُقنع الإدارة. فيصبح كل دينار يُصرف خيارًا مدروسًا.",
+      "why_edge": "خيط ناظم: مخطط 2027 لمؤسسة افتراضية، يُبنى وحدة بعد وحدة حتى عرضه أمام إدارة افتراضية. ولأن الدورة مبرمجة مطلع ديسمبر، فهي تترك لكم الوقت لتطبيق المنهجية قبل انطلاق السنة المالية.",
+      "link_label": "أوكلوا مخطط التكوين إلى مستشارينا: هندسة التكوين",
+      "gains": [
+        "منهجية لربط كل تكوين بأولويات المؤسسة.",
+        "أدوات قابلة لإعادة الاستعمال كل سنة: دليل المقابلة، ومصفوفة ترتيب الأولويات، ونموذج المخطط المقدَّر.",
+        "مفاتيح بناء مخططكم لسنة 2027 وحشد جميع الأطراف المعنية."
+      ],
+      "audience": "مسؤولو التكوين، ومديرو ومسؤولو الموارد البشرية، والمكلّفون بتطوير الكفاءات، ومسيّرو المؤسسات الصغيرة والمتوسطة.",
+      "reasons": [
+        "ممارسة للاستشارة في هندسة التكوين، في المؤسسات كما في الهيئات؛",
+        "ثلاثة أيام من التطبيق: تمارين، ومحاكاة مقابلات، وعرض أمام إدارة افتراضية؛",
+        "مكوّن متمرّس، خبير في إعداد مخططات التكوين في المؤسسات."
+      ],
+      "voices": [
+        {
+          "quote": "أفضل دليل على جودة OPEM يقدّمه موظفونا: 98% من الرضا مباشرة بعد التكوين هذه السنة، ومديرون يطلبون منا دورات جديدة.",
+          "author": "مؤسسة من زبائن OPEM"
+        }
+      ],
+      "alt": "رسم توضيحي: فريق يصعد الإجراءات الأربعة لمخطط 2027 حتى راية الهدف، وعند القاعدة جدول الاحتياجات والميزانية"
+    }
+  },
+  {
+    "slug": "cybersecurite-operationnelle",
+    "reference": "D14-26.INTER.01. V1",
+    "start": "2026-12-13",
+    "end": "2026-12-17",
+    "seats": 12,
+    "theme": "cybersecurite-operationnelle",
+    "link_href": "/expertises/accompagnement-des-organisations/conformite-et-protection-des-donnees",
+    "fr": {
+      "title": "Cybersécurité opérationnelle",
+      "promise": "Protéger, détecter, réagir.",
+      "cycle": "Cycle Cybersécurité",
+      "topic": "Cybersécurité",
+      "duration": "5 jours",
+      "place": "École OPEM",
+      "city": "Alger",
+      "format": "Présentiel · Alger · 5 jours",
+      "hook_question": "Votre réseau tiendrait-il face à un rançongiciel dimanche matin ?",
+      "hook_answer": "Cinq jours pour apprendre à le protéger, à détecter l’attaque et à y faire face.",
+      "why_text": "Une attaque ne laisse pas le temps de relire la documentation : chaque geste de défense se pratique ici sur machine, sans risque pour votre système.",
+      "why_edge": "une gestion de crise simulée en équipe, au plus près d’une attaque réelle.",
+      "link_label": "Confier la sécurité de votre système d’information à nos consultants : cybersécurité",
+      "gains": [
+        "Des réglages de sécurité éprouvés sur machine.",
+        "Une méthode pour détecter une compromission et y répondre.",
+        "Des modèles prêts à l’emploi : matrice des risques, fiche d’incident, fiches réflexes."
+      ],
+      "audience": "Administrateurs systèmes et réseaux, responsables informatiques, techniciens d’exploitation et de support, responsables de la sécurité des systèmes d’information, ingénieurs d’infrastructure.",
+      "reasons": [
+        "Des programmes soigneusement construits autour des problèmes concrets vécus par les entreprises ;",
+        "un expert de la sécurité des systèmes d’information, certifié ISO/IEC 27001 et rompu au terrain ;",
+        "des postes de travail performants mis à disposition par OPEM, pour pratiquer sans contrainte."
+      ],
+      "voices": [
+        {
+          "quote": "Formation pratique, très bon formateur, accueil chaleureux, matériel informatique performant. J’ai beaucoup aimé et je recommande à 100 %.",
+          "author": "Participant à une formation OPEM"
+        },
+        {
+          "quote": "Pédagogie au top, accueil irréprochable et formateurs passionnés. De loin la meilleure formation que j’ai reçue. Merci OPEM !",
+          "author": "Participant à une formation OPEM"
+        }
+      ],
+      "alt": "Illustration : des serveurs protégés par un dôme et un bouclier, des postes de travail en réseau et une salle de supervision où une alerte s’affiche sur un écran"
+    },
+    "ar": {
+      "title": "الأمن السيبراني العملي",
+      "promise": "الحماية، والرصد، والتصدّي.",
+      "cycle": "دورة الأمن السيبراني",
+      "topic": "الأمن السيبراني",
+      "duration": "5 أيام",
+      "place": "مدرسة OPEM",
+      "city": "الجزائر العاصمة",
+      "format": "حضوري · الجزائر العاصمة · 5 أيام",
+      "hook_question": "هل تصمد شبكتكم أمام برنامج فدية صباح يوم أحد؟",
+      "hook_answer": "خمسة أيام لتتعلّموا حمايتها، ورصد الهجوم، ومواجهته.",
+      "why_text": "الهجوم لا يترك وقتًا لإعادة قراءة الوثائق: كل إجراء دفاعي يُمارَس هنا على الحاسوب، دون أي خطر على نظامكم.",
+      "why_edge": "تسيير أزمة افتراضية ضمن فريق، في ظروف قريبة من هجوم حقيقي.",
+      "link_label": "أوكلوا أمن نظام معلوماتكم إلى مستشارينا: الأمن السيبراني",
+      "gains": [
+        "إعدادات أمنية مجرّبة على الحاسوب.",
+        "منهجية لرصد الاختراق والتصدّي له.",
+        "نماذج جاهزة للاستعمال: مصفوفة المخاطر، وبطاقة الحادث، وبطاقات ردود الفعل."
+      ],
+      "audience": "مديرو الأنظمة والشبكات، ومسؤولو الإعلام الآلي، وتقنيو الاستغلال والدعم، ومسؤولو أمن أنظمة المعلومات، ومهندسو البنية التحتية.",
+      "reasons": [
+        "برامج مبنية بعناية حول المشاكل الملموسة التي تعيشها المؤسسات؛",
+        "خبير في أمن أنظمة المعلومات، حاصل على شهادة ISO/IEC 27001 ومتمرّس في الميدان؛",
+        "محطات عمل عالية الأداء توفّرها OPEM، للتطبيق دون قيود."
+      ],
+      "voices": [
+        {
+          "quote": "تكوين تطبيقي، ومكوّن ممتاز، واستقبال حار، وتجهيزات إعلام آلي عالية الأداء. أعجبني كثيرًا وأوصي به بنسبة 100%.",
+          "author": "مشارك في تكوين لـ OPEM"
+        },
+        {
+          "quote": "بيداغوجيا في القمة، واستقبال لا تشوبه شائبة، ومكوّنون شغوفون. أفضل تكوين تلقيته على الإطلاق. شكرًا OPEM!",
+          "author": "مشارك في تكوين لـ OPEM"
+        }
+      ],
+      "alt": "رسم توضيحي: خوادم تحميها قبة ودرع، ومحطات عمل موصولة بالشبكة، وقاعة مراقبة يظهر فيها إنذار على شاشة"
+    }
+  },
+  {
+    "slug": "iso-9001-2026",
+    "reference": "D07-26.INTER.01. V1",
+    "start": "2026-12-15",
+    "end": "2026-12-17",
+    "seats": 12,
+    "theme": "iso-9001-2026",
+    "link_href": "",
+    "fr": {
+      "title": "ISO 9001:2026",
+      "promise": "Toute la norme, exigence par exigence",
+      "cycle": "Cycle Qualité",
+      "topic": "Qualité et systèmes de management",
+      "duration": "3 jours",
+      "place": "École OPEM",
+      "city": "Alger",
+      "format": "Présentiel · Alger · 3 jours",
+      "hook_question": "Que change vraiment l’édition 2026 pour votre système qualité ?",
+      "hook_answer": "Trois jours pour la comprendre et l’appliquer.",
+      "why_text": "Bien des systèmes qualité se résument à une documentation abondante : un certificat au mur, un effet marginal sur le fonctionnement réel. L’édition 2026 attend désormais une culture de la qualité que l’organisme doit démontrer. Cette formation vous donne une lecture complète de la norme et la méthode pour en faire un véritable outil de pilotage.",
+      "why_edge": "un même parcours pour deux publics. Le débutant découvre la norme dans son intégralité, le praticien de la version 2015 y repère chaque évolution et ce qu’elle change pour son système.",
+      "link_label": "",
+      "gains": [
+        "Une lecture complète de la norme et le sens exact de chacune de ses exigences.",
+        "Les évolutions de l’édition 2026 et ce que chacune change pour votre système.",
+        "Des modèles réutilisables : cartographie des processus, registres des risques et des opportunités, compte rendu de revue de direction."
+      ],
+      "audience": "Responsables qualité, pilotes de processus, directions et auditeurs internes, que vous découvriez la norme ou la pratiquiez déjà.",
+      "reasons": [
+        "Une expertise de la certification forgée auprès d’entreprises et d’institutions algériennes.",
+        "Bien plus qu’une lecture conventionnelle de la norme : des exercices pratiques et des cas concrets jalonnent tout le parcours.",
+        "Une formation qui dépasse les procédures : culture qualité, éthique et pilotage par les risques et les opportunités, au cœur de l’édition 2026."
+      ],
+      "voices": [
+        {
+          "quote": "Une très bonne expérience chez OPEM : accueil chaleureux, matériel impeccable, formateur très compétent qui rend la norme ISO simple et pratique. J’ai beaucoup apprécié. Oui, je recommande sans hésitation.",
+          "author": "Participant à une formation OPEM"
+        }
+      ],
+      "alt": "Illustration : une ligne de production où chaque poste passe un portique de contrôle ; une responsable qualité vérifie sur sa liste, et le produit fini, validé, attend en bout de ligne"
+    },
+    "ar": {
+      "title": "ISO 9001:2026",
+      "promise": "المعيار كاملًا، متطلّبًا بمتطلّب",
+      "cycle": "دورة الجودة",
+      "topic": "الجودة وأنظمة الإدارة",
+      "duration": "3 أيام",
+      "place": "مدرسة OPEM",
+      "city": "الجزائر العاصمة",
+      "format": "حضوري · الجزائر العاصمة · 3 أيام",
+      "hook_question": "ما الذي تغيّره نسخة 2026 فعلًا في نظام الجودة لديكم؟",
+      "hook_answer": "ثلاثة أيام لفهمها وتطبيقها.",
+      "why_text": "كثير من أنظمة الجودة تختزل في وثائق وفيرة: شهادة معلّقة على الجدار، وأثر هامشي على السير الفعلي. أما نسخة 2026 فتنتظر ثقافة جودة على المؤسسة أن تبرهن عليها. يمنحكم هذا التكوين قراءة كاملة للمعيار والمنهجية لجعله أداة قيادة حقيقية.",
+      "why_edge": "مسار واحد لجمهورين. يكتشف المبتدئ المعيار كاملًا، ويرصد الممارس لنسخة 2015 كل تطوّر وما يغيّره في نظامه.",
+      "link_label": "",
+      "gains": [
+        "قراءة كاملة للمعيار والمعنى الدقيق لكل متطلّب من متطلّباته.",
+        "مستجدات نسخة 2026 وما يغيّره كل منها في نظامكم.",
+        "نماذج قابلة لإعادة الاستعمال: خريطة العمليات، وسجلّات المخاطر والفرص، ومحضر مراجعة الإدارة."
+      ],
+      "audience": "مسؤولو الجودة، وقادة العمليات، والمديريات، والمدقّقون الداخليون، سواء كنتم تكتشفون المعيار أو تمارسونه.",
+      "reasons": [
+        "خبرة في الإشهاد صُقلت لدى مؤسسات وهيئات جزائرية.",
+        "أبعد من قراءة تقليدية للمعيار: تمارين تطبيقية وحالات ملموسة على امتداد المسار.",
+        "تكوين يتجاوز الإجراءات: ثقافة الجودة، والأخلاقيات، والقيادة بالمخاطر والفرص، في صميم نسخة 2026."
+      ],
+      "voices": [
+        {
+          "quote": "تجربة جيدة جدًا لدى OPEM: استقبال حار، وتجهيزات لا تشوبها شائبة، ومكوّن كفء جدًا يجعل معيار ISO بسيطًا وعمليًا. أعجبني كثيرًا. نعم، أوصي به دون تردد.",
+          "author": "مشارك في تكوين لـ OPEM"
+        }
+      ],
+      "alt": "رسم توضيحي: خط إنتاج يمرّ فيه كل مركز عمل عبر بوابة مراقبة؛ مسؤول الجودة يتحقق من قائمته، والمنتج النهائي المصادق عليه ينتظر في آخر الخط"
+    }
+  }
+]

@@ -162,6 +162,16 @@ const PAGE_META: Record<string, PageMeta> = {
     image: SHARE.image,
     imageAlt: SHARE.alt,
   },
+  '/formation/fiches-formation/iso-9001-2026': {
+    title: 'ISO 9001:2026 · OPEM',
+    description:
+      'Formation inter-entreprises à Alger, du 15 au 17 décembre 2026 : toute la norme ISO 9001:2026, exigence par exigence, et les évolutions de l’édition 2026. 12 participants.',
+    socialTitle: 'ISO 9001:2026 · Formation inter-entreprises OPEM',
+    socialDescription:
+      'Que change vraiment l’édition 2026 pour votre système qualité ? Trois jours à Alger pour la comprendre et l’appliquer. Demandez la fiche technique détaillée et un devis.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
   '/missions': {
     title: 'Missions et réalisations · OPEM',
     description:

@@ -15,8 +15,8 @@ import styles from './TrainingShowcasePage.module.css';
  */
 export function Illustration({ item }: { item: TrainingShowcase }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { alt, signal, image, flows = [] } = item.illustration;
-  const Art = ARTWORK[item.id];
+  const { alt, signal, image, flows = [], art = item.id } = item.illustration;
+  const Art = ARTWORK[art];
   const position = { '--x': `${signal.x}%`, '--y': `${signal.y}%` } as CSSProperties;
 
   useEffect(() => {

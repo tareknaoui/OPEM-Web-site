@@ -9,7 +9,7 @@ import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { env } from '@/lib/env';
 import { formationContent } from './content';
-import { findShowcase } from './showcase/content';
+import { useAgenda, useHasShowcase } from './showcase/useFormations';
 import styles from './FormationPage.module.css';
 
 /** Ancre de l'agenda (cible de « Catalogue et sessions » et des fiches formation du menu). */
@@ -53,7 +53,9 @@ export default function FormationPage() {
   const full = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long' });
 
   const now = today();
-  const sessions = [...home.trainings.items]
+  const agenda = useAgenda(lang, home.trainings.items);
+  const hasShowcase = useHasShowcase(lang);
+  const sessions = [...agenda]
     .filter((item) => (item.end ?? item.date) >= now)
     .sort((a, b) => a.date.localeCompare(b.date));
   const trained = home.figures.items.find((figure) => figure.value === 1500);
@@ -166,7 +168,7 @@ export default function FormationPage() {
                         )}
                       </p>
                       <h3 className={styles.sessionTitle}>
-                        {findShowcase(lang, item.id) ? (
+                        {hasShowcase(item.id) ? (
                           <Link to={item.href} className={styles.sessionLink}>
                             {item.title}
                           </Link>

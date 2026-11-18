@@ -9,11 +9,12 @@ import { useLanguage } from '@/i18n/useLanguage';
 import { cx } from '@/lib/cx';
 import { env } from '@/lib/env';
 import FormationPage from '../FormationPage';
-import { findShowcase, SHOWCASE_CONTACT, showcaseLabels, type TrainingShowcase } from './content';
+import { SHOWCASE_CONTACT, showcaseLabels, type TrainingShowcase } from './content';
 import { asCard, fill, sessionDates } from './dates';
 import { Illustration } from './Illustration';
 import { RequestForm, type Wants } from './RequestForm';
 import styles from './TrainingShowcasePage.module.css';
+import { useAgenda, useShowcase } from './useFormations';
 
 const REQUEST_ID = 'demande';
 /**
@@ -32,13 +33,14 @@ const REQUEST_ID = 'demande';
  * - Le service formation, la référence et la mention de protection du contenu.
  * Le bandeau d'appel du pied de page est masqué : une seule action sur la page.
  * Une formation sans page garde l'ancien comportement (page « Formation qualifiante »,
- * descendue jusqu'à sa session).
+ * descendue jusqu'à sa session). Les formations saisies dans WordPress (useFormations) ont la
+ * même page ; en attendant la réponse de WordPress, la page reste vide un instant.
  */
 export default function TrainingShowcasePage() {
   const { lang } = useLanguage();
   const { id } = useParams();
-  const item = findShowcase(lang, id);
-  if (!item) return <FormationPage />;
+  const { item, ready } = useShowcase(lang, id);
+  if (!item) return ready ? <FormationPage /> : <div className={styles.page} aria-busy="true" />;
   return <Showcase key={`${lang}-${item.id}`} item={item} />;
 }
 
@@ -55,14 +57,15 @@ function Showcase({ item }: { item: TrainingShowcase }) {
   useHideFooterCta();
 
   const locale = lang === 'ar' ? 'ar-DZ' : 'fr-FR';
-  const session = homeContent[lang].trainings.items.find((s) => s.id === item.id);
+  const agenda = useAgenda(lang, homeContent[lang].trainings.items);
+  const session = agenda.find((s) => s.id === item.id);
   const dates = session ? sessionDates(session.date, session.end, locale, t.range) : null;
   const seats = fill(t.facts.seatsValue, { n: item.seats });
   const where = `${item.place}, ${item.city}`;
   const [mainVoice, ...otherVoices] = item.voices;
   // Les autres sessions à venir de l'agenda (ni passées, ni réservées à un client), trois au plus.
   const today = new Date().toISOString().slice(0, 10);
-  const related = homeContent[lang].trainings.items
+  const related = agenda
     .filter((other) => other.id !== item.id && !other.intra && other.end >= today)
     .slice(0, 3);
 
@@ -92,12 +95,13 @@ function Showcase({ item }: { item: TrainingShowcase }) {
     target.focus({ preventScroll: true });
   };
 
+  // Une formation saisie dans WordPress peut laisser des champs vides : rien n'est alors affiché.
   const facts = [
     { label: t.facts.duration, value: item.duration },
     { label: t.facts.dates, value: dates ?? t.facts.noDate },
     { label: t.facts.seats, value: seats },
     { label: t.facts.place, value: where },
-  ];
+  ].filter((fact) => fact.value);
 
   return (
     <div ref={pageRef} className={styles.page}>
@@ -119,6 +123,17 @@ function Showcase({ item }: { item: TrainingShowcase }) {
               </ol>
             </nav>
             <p className={styles.eyebrow}>{fill(t.format, { city: item.city })}</p>
+            {/* L'accroche, juste au-dessus du titre : la première phrase lue. */}
+            {(item.hook.question || item.hook.answer) && (
+              <p className={styles.hook}>
+                {item.hook.question}{' '}
+                {item.hook.answer && (
+                  <span className={styles.hookAnswer}>
+                    <span>{item.hook.answer}</span>
+                  </span>
+                )}
+              </p>
+            )}
             <h1 id={`${ids}-title`} className={styles.title} data-motion="title">
               {item.title}
             </h1>
@@ -166,48 +181,50 @@ function Showcase({ item }: { item: TrainingShowcase }) {
           </h2>
         </div>
         <div className={styles.splitBody}>
-          <p className={styles.hook}>
-            {item.hook.question}{' '}
-            <span className={styles.hookAnswer}>
-              <span>{item.hook.answer}</span>
-            </span>
-          </p>
           <p className={styles.lead}>{item.why.text}</p>
-          <p className={styles.edge} data-reveal>
-            <b>{t.edge}</b> {item.why.edge}
-          </p>
-          <Link to={item.why.link.href} className={styles.more}>
-            {item.why.link.label} ›
-          </Link>
+          {item.why.edge && (
+            <p className={styles.edge} data-reveal>
+              <b>{t.edge}</b> {item.why.edge}
+            </p>
+          )}
+          {item.why.link && (
+            <Link to={item.why.link.href} className={styles.more}>
+              {item.why.link.label} ›
+            </Link>
+          )}
         </div>
       </section>
 
       {/* ---------- Vous repartez avec : trois cartes numérotées ---------- */}
-      <section className={cx('container', styles.gainsBlock)} aria-labelledby={`${ids}-gains`}>
-        <h2 id={`${ids}-gains`} className={styles.h2} data-reveal="title">
-          {t.gains}
-        </h2>
-        <ol className={styles.gains} data-reveal-stagger>
-          {item.gains.map((gain, index) => (
-            <li key={gain}>
-              <span className={styles.gainNum} aria-hidden="true">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span>{gain}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {item.gains.length > 0 && (
+        <section className={cx('container', styles.gainsBlock)} aria-labelledby={`${ids}-gains`}>
+          <h2 id={`${ids}-gains`} className={styles.h2} data-reveal="title">
+            {t.gains}
+          </h2>
+          <ol className={styles.gains} data-reveal-stagger>
+            {item.gains.map((gain, index) => (
+              <li key={gain}>
+                <span className={styles.gainNum} aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span>{gain}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       {/* ---------- Pour qui ---------- */}
-      <section className={cx('container', styles.split)} aria-labelledby={`${ids}-audience`}>
-        <div className={styles.splitHead}>
-          <h2 id={`${ids}-audience`} className={styles.h2} data-reveal="title">
-            {t.audience}
-          </h2>
-        </div>
-        <p className={cx(styles.splitBody, styles.audience)}>{item.audience}</p>
-      </section>
+      {item.audience && (
+        <section className={cx('container', styles.split)} aria-labelledby={`${ids}-audience`}>
+          <div className={styles.splitHead}>
+            <h2 id={`${ids}-audience`} className={styles.h2} data-reveal="title">
+              {t.audience}
+            </h2>
+          </div>
+          <p className={cx(styles.splitBody, styles.audience)}>{item.audience}</p>
+        </section>
+      )}
 
       {/* ---------- Pourquoi OPEM : trois raisons, puis les chiffres ---------- */}
       <section className={styles.band} aria-labelledby={`${ids}-reasons`}>
@@ -220,11 +237,13 @@ function Showcase({ item }: { item: TrainingShowcase }) {
               {t.reasons.link.label} ›
             </Link>
           </div>
-          <ul className={styles.reasons} data-reveal-stagger>
-            {item.reasons.map((reason) => (
-              <li key={reason}>{asCard(reason)}</li>
-            ))}
-          </ul>
+          {item.reasons.length > 0 && (
+            <ul className={styles.reasons} data-reveal-stagger>
+              {item.reasons.map((reason) => (
+                <li key={reason}>{asCard(reason)}</li>
+              ))}
+            </ul>
+          )}
           <div className={styles.figuresBlock}>
             <h3 className="sr-only">{t.figures.label}</h3>
             <ul className={styles.figures} data-reveal-stagger>
@@ -357,10 +376,12 @@ function Showcase({ item }: { item: TrainingShowcase }) {
             {SHOWCASE_CONTACT.email}
           </a>
         </p>
-        <p>
-          {t.reference}
-          <span dir="ltr">{item.reference}</span>
-        </p>
+        {item.reference && (
+          <p>
+            {t.reference}
+            <span dir="ltr">{item.reference}</span>
+          </p>
+        )}
         <p className={styles.protection}>{t.protection}</p>
       </div>
 
