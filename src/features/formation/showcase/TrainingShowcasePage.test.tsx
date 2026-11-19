@@ -146,6 +146,7 @@ describe('Page d’une formation (modèle unique)', () => {
       'plan-de-formation-2027': 1,
       'cybersecurite-operationnelle': 2,
       'iso-9001-2026': 1,
+      'chatgpt-et-claude-en-pratique': 1,
     });
 
     const { unmount } = renderPage('plan-de-formation-2027');
@@ -172,6 +173,23 @@ describe('Page d’une formation (modèle unique)', () => {
     expect(screen.queryByRole('link', { name: /Confier/ })).not.toBeInTheDocument();
     expect(screen.getByText(/rend la norme ISO simple et pratique/)).toBeInTheDocument();
     expect(screen.getByText('D07-26.INTER.01. V1')).toBeInTheDocument();
+  });
+
+  it('ChatGPT et Claude en pratique : trois paragraphes, 5 ou 8 jours, lien vers l’IA appliquée', () => {
+    renderPage('chatgpt-et-claude-en-pratique');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'ChatGPT et Claude en pratique',
+    );
+    expect(screen.getByText('La différence tient à la méthode.')).toBeInTheDocument();
+    expect(screen.getByText('20 au 29 déc. 2026')).toBeInTheDocument();
+    expect(screen.getByText(/^5 ou 8.jours$/)).toBeInTheDocument();
+    expect(screen.getByText(/^Projets, assistants dédiés/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /IA appliquée à nos consultants/ })).toHaveAttribute(
+      'href',
+      '/ia-appliquee',
+    );
+    expect(screen.getByText(/nous ressemblent énormément/)).toBeInTheDocument();
+    expect(screen.getByText('D13-26.INTER.01. V1')).toBeInTheDocument();
   });
 
   it('les dates : mois abrégé, sur une ligne', () => {
@@ -252,7 +270,7 @@ describe('Page d’une formation (modèle unique)', () => {
   });
 
   it('une formation sans page : la page « Formation qualifiante »', () => {
-    renderPage('chatgpt-et-claude-en-pratique');
+    renderPage('formation-sans-page');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Une compétence se construit, puis s’éprouve au travail.',
     );

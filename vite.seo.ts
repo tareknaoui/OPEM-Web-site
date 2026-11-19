@@ -172,6 +172,16 @@ const PAGE_META: Record<string, PageMeta> = {
     image: SHARE.image,
     imageAlt: SHARE.alt,
   },
+  '/formation/fiches-formation/chatgpt-et-claude-en-pratique': {
+    title: 'ChatGPT et Claude en pratique · OPEM',
+    description:
+      'Formation inter-entreprises à Alger, du 20 au 29 décembre 2026 : un tronc commun, puis le bloc ChatGPT, le bloc Claude ou les deux, sur des cas tirés de votre quotidien. 12 participants.',
+    socialTitle: 'ChatGPT et Claude en pratique · Formation inter-entreprises OPEM',
+    socialDescription:
+      'Vous utilisez ChatGPT ou Claude, mais en tirez-vous vraiment le meilleur ? La différence tient à la méthode. Demandez la fiche technique détaillée et un devis.',
+    image: SHARE.image,
+    imageAlt: SHARE.alt,
+  },
   '/missions': {
     title: 'Missions et réalisations · OPEM',
     description:

@@ -31,6 +31,7 @@ const OPEM_FORMATIONS_THEMES = [
     'plan-de-formation-2027'       => 'Formation et compétences : plan, calendrier, parcours',
     'cybersecurite-operationnelle' => 'Cybersécurité et numérique : serveurs, bouclier, alertes',
     'iso-9001-2026'                => 'Qualité : ligne de production, portiques de contrôle, produit validé',
+    'chatgpt-et-claude-en-pratique' => 'Intelligence artificielle : deux postes, ChatGPT et Claude, un même résultat',
 ];
 
 /** Champs communs aux deux langues : [libellé, type, longueur maximale, aide]. */
@@ -57,6 +58,7 @@ const OPEM_FORMATIONS_TEXTS = [
     'hook_question' => ['Accroche : la question', 'textarea', 300, ''],
     'hook_answer'   => ['Accroche : la réponse', 'text', 200, ''],
     'why_text'      => ['Pourquoi cette formation', 'textarea', 1500, ''],
+    'why_details'   => ['Pourquoi cette formation : second paragraphe', 'textarea', 1500, 'Facultatif.'],
     'why_edge'      => ['Ce qui la distingue', 'textarea', 1000, 'Sans « Ce qui la distingue : », le site l’ajoute.'],
     'link_label'    => ['Lien « Confier… » : texte', 'text', 200, ''],
     'gains'         => ['Vous repartez avec', 'lines', 400, 'Un acquis par ligne (trois de préférence).'],
@@ -460,6 +462,7 @@ function opem_formations_export(int $post_id, string $lang): ?array
         'hookQuestion' => $text('hook_question'),
         'hookAnswer'   => $text('hook_answer'),
         'whyText'      => $text('why_text'),
+        'whyDetails'   => $text('why_details'),
         'whyEdge'      => $text('why_edge'),
         'linkLabel'    => $text('link_label'),
         'gains'        => $text('gains'),

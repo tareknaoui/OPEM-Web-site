@@ -113,6 +113,7 @@ function parseFormation(entry: unknown, lang: Lang): WordPressFormation | null {
     illustration: { ...preset.illustration, art, alt: text('alt', 400) || preset.illustration.alt },
     why: {
       text: whyText,
+      details: text('whyDetails', 1500) || undefined,
       edge: text('whyEdge', 1000),
       link: text('linkLabel', 200) ? { label: text('linkLabel', 200), href: linkHref } : undefined,
     },

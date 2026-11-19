@@ -70,8 +70,11 @@ export type TrainingShowcase = {
     /** Le dessin animé à reprendre (clé de ARTWORK) ; par défaut, celui de même `id`. */
     art?: string;
   };
-  /** Pourquoi cette formation : le constat et la réponse, sa singularité, le lien « Confier… » (absent : masqué). */
-  why: { text: string; edge: string; link?: Link };
+  /**
+   * Pourquoi cette formation : le constat et la réponse, un second paragraphe facultatif
+   * (`details`), sa singularité, le lien « Confier… » (absent : masqué).
+   */
+  why: { text: string; details?: string; edge: string; link?: Link };
   /** Vous repartez avec : trois acquis, numérotés. */
   gains: string[];
   /** Pour qui : une phrase. */
@@ -364,9 +367,23 @@ const IMAGES = {
       'M620,342 L790,432 L850,467',
     ],
   },
+  // Illustration de la maquette d'OPEM (deux postes, ChatGPT et Claude, reliés à un même
+  // résultat), complétée en bleu nuit sur les côtés pour le format 3:2.
+  'chatgpt-et-claude-en-pratique': {
+    image: {
+      src: '/images/formations/chatgpt-et-claude-en-pratique.webp',
+      width: 1024,
+      height: 683,
+    },
+    signal: { x: 49.9, y: 7.8 },
+    flows: [
+      'M385,192 L385,140 Q385,128 397,128 L495,128 Q511,128 511,112 L511,96',
+      'M648,192 L648,140 Q648,128 636,128 L527,128 Q511,128 511,112 L511,96',
+    ],
+  },
 } satisfies Record<string, Omit<TrainingShowcase['illustration'], 'alt'>>;
 
-/** Témoignages des formations « Diagnostic », « Cybersécurité » et « ISO 9001:2026 » : l'auteur. */
+/** Témoignages des formations « Diagnostic », « Cybersécurité », « ISO 9001:2026 » et « ChatGPT et Claude » : l'auteur. */
 const PARTICIPANT = { fr: 'Participant à une formation OPEM', ar: 'مشارك في تكوين لـ OPEM' };
 
 const FR: TrainingShowcase[] = [
@@ -596,6 +613,64 @@ const FR: TrainingShowcase[] = [
       },
     ],
   },
+  {
+    id: 'chatgpt-et-claude-en-pratique',
+    reference: 'D13-26.INTER.01. V1',
+    cycle: 'Cycle Intelligence artificielle',
+    title: 'ChatGPT et Claude en pratique',
+    hook: {
+      question: fr('Vous utilisez ChatGPT ou Claude, mais en tirez-vous vraiment le meilleur ?'),
+      answer: 'La différence tient à la méthode.',
+    },
+    promise: 'Travailler mieux, plus vite, dès demain.',
+    duration: `5 ou 8${N}jours`,
+    seats: 12,
+    place: 'École OPEM',
+    city: 'Alger',
+    illustration: {
+      alt: 'Illustration : deux postes de travail, l’un sur ChatGPT, l’autre sur Claude, reliés à un même résultat',
+      ...IMAGES['chatgpt-et-claude-en-pratique'],
+    },
+    why: {
+      text: fr(
+        'ChatGPT et Claude sont déjà sur les postes de travail, mais on s’en sert le plus souvent de façon intuitive et non sécurisée : réglages par défaut, demandes approximatives, données confiées sans précaution.',
+      ),
+      details: fr(
+        'Projets, assistants dédiés, connecteurs et tâches planifiées restent ignorés ; les résultats demeurent en deçà de ce que ces outils permettent. Cette formation ouvre l’ensemble de ces fonctions, pas à pas, sur des cas tirés de votre quotidien.',
+      ),
+      edge: 'un tronc commun, puis le bloc ChatGPT, le bloc Claude ou les deux, avec un compte payant fourni à chaque participant et un projet personnel construit sur une tâche réelle du poste.',
+      link: {
+        label: 'Confier vos projets d’IA appliquée à nos consultants',
+        href: '/ia-appliquee',
+      },
+    },
+    gains: [
+      'Une méthode de prompting et une bibliothèque de prompts testés, pour obtenir un résultat abouti dès le retour au poste.',
+      'Des outils réglés pour votre poste et pour la protection des informations de l’entreprise.',
+      fr(
+        'La maîtrise des fonctions qui font la différence, appliquées à des travaux complexes : analyses, synthèses, livrables longs.',
+      ),
+    ],
+    audience:
+      'Cadres et dirigeants de PME, chefs de projet, ressources humaines, juristes, acheteurs, chargés d’études et de communication, assistants de direction, débutants comme utilisateurs occasionnels de l’IA.',
+    reasons: [
+      fr(
+        'des mises en situation tirées du quotidien des participants, du premier au dernier module ;',
+      ),
+      fr(
+        'une même méthode pour chaque fonctionnalité : réglage, démonstration, puis exercice guidé ;',
+      ),
+      'un bêtisier commenté, qui ancre les bons réflexes par l’exemple de l’erreur.',
+    ],
+    voices: [
+      {
+        quote: fr(
+          'J’ai beaucoup aimé la pédagogie : fluide, bien structurée et surtout très interactive. Le formateur maîtrise son sujet, il nous guide étape par étape dans la pratique. Les exemples et les études de cas nous ressemblent énormément.',
+        ),
+        author: PARTICIPANT.fr,
+      },
+    ],
+  },
 ];
 
 const AR: TrainingShowcase[] = [
@@ -789,6 +864,54 @@ const AR: TrainingShowcase[] = [
       {
         quote:
           'تجربة جيدة جدًا لدى OPEM: استقبال حار، وتجهيزات لا تشوبها شائبة، ومكوّن كفء جدًا يجعل معيار ISO بسيطًا وعمليًا. أعجبني كثيرًا. نعم، أوصي به دون تردد.',
+        author: PARTICIPANT.ar,
+      },
+    ],
+  },
+  {
+    id: 'chatgpt-et-claude-en-pratique',
+    reference: 'D13-26.INTER.01. V1',
+    cycle: 'دورة الذكاء الاصطناعي',
+    title: 'ChatGPT و Claude في الممارسة',
+    hook: {
+      question: 'تستعملون ChatGPT أو Claude، لكن هل تستفيدون منهما حقًا على أفضل وجه؟',
+      answer: 'الفرق تصنعه المنهجية.',
+    },
+    promise: 'اعملوا أفضل وأسرع، ابتداءً من الغد.',
+    duration: '5 أو 8 أيام',
+    seats: 12,
+    place: 'مدرسة OPEM',
+    city: 'الجزائر العاصمة',
+    illustration: {
+      alt: 'رسم توضيحي: مركزا عمل، أحدهما على ChatGPT والآخر على Claude، يرتبطان بنتيجة واحدة',
+      ...IMAGES['chatgpt-et-claude-en-pratique'],
+    },
+    why: {
+      text: 'ChatGPT و Claude موجودان أصلًا على مراكز العمل، لكن استعمالهما يتم في الغالب بشكل عفوي وغير آمن: إعدادات افتراضية، وطلبات تقريبية، ومعطيات تُسلَّم دون احتياط.',
+      details:
+        'المشاريع، والمساعدون المخصّصون، والموصّلات، والمهام المبرمجة تبقى مجهولة؛ وتظل النتائج دون ما تتيحه هذه الأدوات. يفتح هذا التكوين كل هذه الوظائف، خطوة بخطوة، على حالات مستمدّة من عملكم اليومي.',
+      edge: 'جذع مشترك، ثم وحدة ChatGPT أو وحدة Claude أو كلتاهما، مع حساب مدفوع يُوفَّر لكل مشارك ومشروع شخصي يُبنى على مهمة حقيقية من مهام المنصب.',
+      link: {
+        label: 'أوكلوا مشاريعكم في الذكاء الاصطناعي التطبيقي إلى مستشارينا',
+        href: '/ia-appliquee',
+      },
+    },
+    gains: [
+      'منهجية لصياغة الأوامر ومكتبة أوامر مجرّبة، للحصول على نتيجة متكاملة فور العودة إلى العمل.',
+      'أدوات مضبوطة وفق منصبكم ووفق حماية معلومات المؤسسة.',
+      'التحكم في الوظائف التي تصنع الفرق، مطبَّقة على أعمال معقّدة: تحليلات، وملخّصات، ووثائق مطوّلة.',
+    ],
+    audience:
+      'إطارات ومسيّرو المؤسسات الصغيرة والمتوسطة، ورؤساء المشاريع، والموارد البشرية، والقانونيون، والمشترون، والمكلّفون بالدراسات والاتصال، ومساعدو الإدارة، مبتدئين كانوا أو مستعملين عرضيين للذكاء الاصطناعي.',
+    reasons: [
+      'وضعيات تطبيقية مستمدّة من العمل اليومي للمشاركين، من الوحدة الأولى إلى الأخيرة؛',
+      'منهجية واحدة لكل وظيفة: ضبط، فعرض، ثم تمرين موجَّه؛',
+      'مجموعة أخطاء مُعلَّق عليها، ترسّخ الأساليب الصحيحة من خلال أمثلة الخطأ.',
+    ],
+    voices: [
+      {
+        quote:
+          'أعجبتني البيداغوجيا كثيرًا: سلسة، ومنظَّمة جيدًا، وتفاعلية جدًا قبل كل شيء. المكوّن متمكّن من موضوعه، ويرشدنا خطوة بخطوة في التطبيق. الأمثلة ودراسات الحالة تشبهنا كثيرًا.',
         author: PARTICIPANT.ar,
       },
     ],

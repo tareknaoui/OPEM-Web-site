@@ -182,6 +182,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
         </div>
         <div className={styles.splitBody}>
           <p className={styles.lead}>{item.why.text}</p>
+          {item.why.details && <p className={styles.lead}>{item.why.details}</p>}
           {item.why.edge && (
             <p className={styles.edge} data-reveal>
               <b>{t.edge}</b> {item.why.edge}

@@ -34,6 +34,7 @@ const texts = (item, lang) => {
     hook_question: plain(item.hook.question),
     hook_answer: plain(item.hook.answer),
     why_text: plain(item.why.text),
+    why_details: plain(item.why.details ?? ''),
     why_edge: plain(item.why.edge),
     link_label: plain(item.why.link?.label ?? ''),
     gains: item.gains.map(plain),

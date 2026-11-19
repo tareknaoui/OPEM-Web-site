@@ -19,6 +19,7 @@
       "hook_question": "Vos équipes s’épuisent, les décisions traînent, les mêmes problèmes reviennent ?",
       "hook_answer": "Le blocage est souvent dans l’organisation.",
       "why_text": "Des responsabilités qui se chevauchent, des décisions qui remontent toujours à la direction, des processus contournés sur le terrain : vous les constatez, mais comment les prouver, puis les corriger ? Cette formation vous donne la méthode, du cadrage à la restitution, appliquée à votre propre organisation.",
+      "why_details": "",
       "why_edge": "vous apprenez à conduire vous-même un diagnostic interne léger et régulier, et à reconnaître le moment où un regard extérieur apporte le plus, pour commander et exploiter un diagnostic externe.",
       "link_label": "Confier le diagnostic à nos consultants : accompagnement des organisations",
       "gains": [
@@ -60,6 +61,7 @@
       "hook_question": "فرقكم مُنهَكة، والقرارات تتأخر، والمشاكل نفسها تتكرر؟",
       "hook_answer": "غالبًا ما يكون الانسداد في التنظيم.",
       "why_text": "مسؤوليات متداخلة، وقرارات تصعد دائمًا إلى الإدارة، ومسارات يُتحايل عليها في الميدان: تلاحظونها، لكن كيف تُثبتونها ثم تعالجونها؟ يمنحكم هذا التكوين المنهجية، من التأطير إلى عرض النتائج، مطبّقة على مؤسستكم.",
+      "why_details": "",
       "why_edge": "تتعلّمون إجراء تشخيص داخلي خفيف ومنتظم بأنفسكم، وتمييز اللحظة التي تكون فيها النظرة الخارجية أجدى، لطلب تشخيص خارجي والاستفادة منه.",
       "link_label": "أوكلوا التشخيص إلى مستشارينا: مرافقة المؤسسات",
       "gains": [
@@ -110,6 +112,7 @@
       "hook_question": "Votre budget formation travaille-t-il pour l’entreprise ?",
       "hook_answer": "Un plan bien bâti fait toute la différence.",
       "why_text": "Chaque année, le budget formation est engagé, les stages s’enchaînent, sans que l’on voie ce qui a concrètement changé. Cette formation vous donne la méthode pour bâtir un plan qui part des priorités de l’entreprise, se chiffre au plus juste et convainc la direction. Chaque dinar engagé devient un choix assumé.",
+      "why_details": "",
       "why_edge": "un fil rouge, le plan 2027 d’une entreprise fictive, construit module après module jusqu’à sa présentation devant une direction simulée. Programmée début décembre, la session vous laisse le temps d’appliquer la démarche avant le lancement de l’exercice.",
       "link_label": "Confier votre plan de formation à nos consultants : ingénierie de la formation",
       "gains": [
@@ -143,6 +146,7 @@
       "hook_question": "هل تعمل ميزانية التكوين لصالح مؤسستكم؟",
       "hook_answer": "المخطط المُحكم يصنع الفارق.",
       "why_text": "كل سنة تُصرف ميزانية التكوين وتتوالى الدورات، دون أن نرى ما الذي تغيّر فعلًا. يمنحكم هذا التكوين المنهجية لبناء مخطط ينطلق من أولويات المؤسسة، ويُقدَّر بدقة، ويُقنع الإدارة. فيصبح كل دينار يُصرف خيارًا مدروسًا.",
+      "why_details": "",
       "why_edge": "خيط ناظم: مخطط 2027 لمؤسسة افتراضية، يُبنى وحدة بعد وحدة حتى عرضه أمام إدارة افتراضية. ولأن الدورة مبرمجة مطلع ديسمبر، فهي تترك لكم الوقت لتطبيق المنهجية قبل انطلاق السنة المالية.",
       "link_label": "أوكلوا مخطط التكوين إلى مستشارينا: هندسة التكوين",
       "gains": [
@@ -185,6 +189,7 @@
       "hook_question": "Votre réseau tiendrait-il face à un rançongiciel dimanche matin ?",
       "hook_answer": "Cinq jours pour apprendre à le protéger, à détecter l’attaque et à y faire face.",
       "why_text": "Une attaque ne laisse pas le temps de relire la documentation : chaque geste de défense se pratique ici sur machine, sans risque pour votre système.",
+      "why_details": "",
       "why_edge": "une gestion de crise simulée en équipe, au plus près d’une attaque réelle.",
       "link_label": "Confier la sécurité de votre système d’information à nos consultants : cybersécurité",
       "gains": [
@@ -222,6 +227,7 @@
       "hook_question": "هل تصمد شبكتكم أمام برنامج فدية صباح يوم أحد؟",
       "hook_answer": "خمسة أيام لتتعلّموا حمايتها، ورصد الهجوم، ومواجهته.",
       "why_text": "الهجوم لا يترك وقتًا لإعادة قراءة الوثائق: كل إجراء دفاعي يُمارَس هنا على الحاسوب، دون أي خطر على نظامكم.",
+      "why_details": "",
       "why_edge": "تسيير أزمة افتراضية ضمن فريق، في ظروف قريبة من هجوم حقيقي.",
       "link_label": "أوكلوا أمن نظام معلوماتكم إلى مستشارينا: الأمن السيبراني",
       "gains": [
@@ -268,6 +274,7 @@
       "hook_question": "Que change vraiment l’édition 2026 pour votre système qualité ?",
       "hook_answer": "Trois jours pour la comprendre et l’appliquer.",
       "why_text": "Bien des systèmes qualité se résument à une documentation abondante : un certificat au mur, un effet marginal sur le fonctionnement réel. L’édition 2026 attend désormais une culture de la qualité que l’organisme doit démontrer. Cette formation vous donne une lecture complète de la norme et la méthode pour en faire un véritable outil de pilotage.",
+      "why_details": "",
       "why_edge": "un même parcours pour deux publics. Le débutant découvre la norme dans son intégralité, le praticien de la version 2015 y repère chaque évolution et ce qu’elle change pour son système.",
       "link_label": "",
       "gains": [
@@ -301,6 +308,7 @@
       "hook_question": "ما الذي تغيّره نسخة 2026 فعلًا في نظام الجودة لديكم؟",
       "hook_answer": "ثلاثة أيام لفهمها وتطبيقها.",
       "why_text": "كثير من أنظمة الجودة تختزل في وثائق وفيرة: شهادة معلّقة على الجدار، وأثر هامشي على السير الفعلي. أما نسخة 2026 فتنتظر ثقافة جودة على المؤسسة أن تبرهن عليها. يمنحكم هذا التكوين قراءة كاملة للمعيار والمنهجية لجعله أداة قيادة حقيقية.",
+      "why_details": "",
       "why_edge": "مسار واحد لجمهورين. يكتشف المبتدئ المعيار كاملًا، ويرصد الممارس لنسخة 2015 كل تطوّر وما يغيّره في نظامه.",
       "link_label": "",
       "gains": [
@@ -321,6 +329,83 @@
         }
       ],
       "alt": "رسم توضيحي: خط إنتاج يمرّ فيه كل مركز عمل عبر بوابة مراقبة؛ مسؤول الجودة يتحقق من قائمته، والمنتج النهائي المصادق عليه ينتظر في آخر الخط"
+    }
+  },
+  {
+    "slug": "chatgpt-et-claude-en-pratique",
+    "reference": "D13-26.INTER.01. V1",
+    "start": "2026-12-20",
+    "end": "2026-12-29",
+    "seats": 12,
+    "theme": "chatgpt-et-claude-en-pratique",
+    "link_href": "/ia-appliquee",
+    "fr": {
+      "title": "ChatGPT et Claude en pratique",
+      "promise": "Travailler mieux, plus vite, dès demain.",
+      "cycle": "Cycle Intelligence artificielle",
+      "topic": "Intelligence artificielle",
+      "duration": "5 ou 8 jours",
+      "place": "École OPEM",
+      "city": "Alger",
+      "format": "Présentiel · Alger · 5 ou 8 jours",
+      "hook_question": "Vous utilisez ChatGPT ou Claude, mais en tirez-vous vraiment le meilleur ?",
+      "hook_answer": "La différence tient à la méthode.",
+      "why_text": "ChatGPT et Claude sont déjà sur les postes de travail, mais on s’en sert le plus souvent de façon intuitive et non sécurisée : réglages par défaut, demandes approximatives, données confiées sans précaution.",
+      "why_details": "Projets, assistants dédiés, connecteurs et tâches planifiées restent ignorés ; les résultats demeurent en deçà de ce que ces outils permettent. Cette formation ouvre l’ensemble de ces fonctions, pas à pas, sur des cas tirés de votre quotidien.",
+      "why_edge": "un tronc commun, puis le bloc ChatGPT, le bloc Claude ou les deux, avec un compte payant fourni à chaque participant et un projet personnel construit sur une tâche réelle du poste.",
+      "link_label": "Confier vos projets d’IA appliquée à nos consultants",
+      "gains": [
+        "Une méthode de prompting et une bibliothèque de prompts testés, pour obtenir un résultat abouti dès le retour au poste.",
+        "Des outils réglés pour votre poste et pour la protection des informations de l’entreprise.",
+        "La maîtrise des fonctions qui font la différence, appliquées à des travaux complexes : analyses, synthèses, livrables longs."
+      ],
+      "audience": "Cadres et dirigeants de PME, chefs de projet, ressources humaines, juristes, acheteurs, chargés d’études et de communication, assistants de direction, débutants comme utilisateurs occasionnels de l’IA.",
+      "reasons": [
+        "des mises en situation tirées du quotidien des participants, du premier au dernier module ;",
+        "une même méthode pour chaque fonctionnalité : réglage, démonstration, puis exercice guidé ;",
+        "un bêtisier commenté, qui ancre les bons réflexes par l’exemple de l’erreur."
+      ],
+      "voices": [
+        {
+          "quote": "J’ai beaucoup aimé la pédagogie : fluide, bien structurée et surtout très interactive. Le formateur maîtrise son sujet, il nous guide étape par étape dans la pratique. Les exemples et les études de cas nous ressemblent énormément.",
+          "author": "Participant à une formation OPEM"
+        }
+      ],
+      "alt": "Illustration : deux postes de travail, l’un sur ChatGPT, l’autre sur Claude, reliés à un même résultat"
+    },
+    "ar": {
+      "title": "ChatGPT و Claude في الممارسة",
+      "promise": "اعملوا أفضل وأسرع، ابتداءً من الغد.",
+      "cycle": "دورة الذكاء الاصطناعي",
+      "topic": "الذكاء الاصطناعي",
+      "duration": "5 أو 8 أيام",
+      "place": "مدرسة OPEM",
+      "city": "الجزائر العاصمة",
+      "format": "حضوري · الجزائر العاصمة · 5 أو 8 أيام",
+      "hook_question": "تستعملون ChatGPT أو Claude، لكن هل تستفيدون منهما حقًا على أفضل وجه؟",
+      "hook_answer": "الفرق تصنعه المنهجية.",
+      "why_text": "ChatGPT و Claude موجودان أصلًا على مراكز العمل، لكن استعمالهما يتم في الغالب بشكل عفوي وغير آمن: إعدادات افتراضية، وطلبات تقريبية، ومعطيات تُسلَّم دون احتياط.",
+      "why_details": "المشاريع، والمساعدون المخصّصون، والموصّلات، والمهام المبرمجة تبقى مجهولة؛ وتظل النتائج دون ما تتيحه هذه الأدوات. يفتح هذا التكوين كل هذه الوظائف، خطوة بخطوة، على حالات مستمدّة من عملكم اليومي.",
+      "why_edge": "جذع مشترك، ثم وحدة ChatGPT أو وحدة Claude أو كلتاهما، مع حساب مدفوع يُوفَّر لكل مشارك ومشروع شخصي يُبنى على مهمة حقيقية من مهام المنصب.",
+      "link_label": "أوكلوا مشاريعكم في الذكاء الاصطناعي التطبيقي إلى مستشارينا",
+      "gains": [
+        "منهجية لصياغة الأوامر ومكتبة أوامر مجرّبة، للحصول على نتيجة متكاملة فور العودة إلى العمل.",
+        "أدوات مضبوطة وفق منصبكم ووفق حماية معلومات المؤسسة.",
+        "التحكم في الوظائف التي تصنع الفرق، مطبَّقة على أعمال معقّدة: تحليلات، وملخّصات، ووثائق مطوّلة."
+      ],
+      "audience": "إطارات ومسيّرو المؤسسات الصغيرة والمتوسطة، ورؤساء المشاريع، والموارد البشرية، والقانونيون، والمشترون، والمكلّفون بالدراسات والاتصال، ومساعدو الإدارة، مبتدئين كانوا أو مستعملين عرضيين للذكاء الاصطناعي.",
+      "reasons": [
+        "وضعيات تطبيقية مستمدّة من العمل اليومي للمشاركين، من الوحدة الأولى إلى الأخيرة؛",
+        "منهجية واحدة لكل وظيفة: ضبط، فعرض، ثم تمرين موجَّه؛",
+        "مجموعة أخطاء مُعلَّق عليها، ترسّخ الأساليب الصحيحة من خلال أمثلة الخطأ."
+      ],
+      "voices": [
+        {
+          "quote": "أعجبتني البيداغوجيا كثيرًا: سلسة، ومنظَّمة جيدًا، وتفاعلية جدًا قبل كل شيء. المكوّن متمكّن من موضوعه، ويرشدنا خطوة بخطوة في التطبيق. الأمثلة ودراسات الحالة تشبهنا كثيرًا.",
+          "author": "مشارك في تكوين لـ OPEM"
+        }
+      ],
+      "alt": "رسم توضيحي: مركزا عمل، أحدهما على ChatGPT والآخر على Claude، يرتبطان بنتيجة واحدة"
     }
   }
 ]

@@ -29,10 +29,10 @@ export function sessionDates(start: string, end: string, locale: string, pattern
 
 /**
  * Un élément d'une phrase découpée (« des cas réels… ; »), affiché seul sur une carte :
- * majuscule initiale, sans la ponctuation finale.
+ * majuscule initiale, sans la ponctuation finale (point-virgule arabe « ؛ » compris).
  */
 export const asCard = (text: string) =>
-  text.charAt(0).toUpperCase() + text.slice(1).replace(/\s*[;.]\s*$/, '');
+  text.charAt(0).toUpperCase() + text.slice(1).replace(/\s*[;.؛]\s*$/, '');
 
 /**
  * Typographie française d'un texte saisi dans WordPress : espace insécable avant « : ; ? ! »,

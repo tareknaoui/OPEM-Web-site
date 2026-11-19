@@ -20,6 +20,7 @@ export const PUBLISHED_PAGES = [
   '/formation/fiches-formation/plan-de-formation-2027',
   '/formation/fiches-formation/cybersecurite-operationnelle',
   '/formation/fiches-formation/iso-9001-2026',
+  '/formation/fiches-formation/chatgpt-et-claude-en-pratique',
   '/missions',
   '/ia-appliquee',
   '/eclairages',
