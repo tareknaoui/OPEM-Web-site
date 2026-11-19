@@ -375,10 +375,10 @@ const IMAGES = {
       width: 1024,
       height: 683,
     },
-    signal: { x: 49.9, y: 7.8 },
+    signal: { x: 59.3, y: 62.5 },
     flows: [
-      'M385,192 L385,140 Q385,128 397,128 L495,128 Q511,128 511,112 L511,96',
-      'M648,192 L648,140 Q648,128 636,128 L527,128 Q511,128 511,112 L511,96',
+      'M485,268 L488,282 Q492,296 520,304 L590,346 Q624,368 627,394',
+      'M556,262 L557,285 Q560,302 580,310 L628,338 Q644,350 644,402',
     ],
   },
 } satisfies Record<string, Omit<TrainingShowcase['illustration'], 'alt'>>;
@@ -628,7 +628,7 @@ const FR: TrainingShowcase[] = [
     place: 'École OPEM',
     city: 'Alger',
     illustration: {
-      alt: 'Illustration : deux postes de travail, l’un sur ChatGPT, l’autre sur Claude, reliés à un même résultat',
+      alt: 'Illustration : à son bureau, un professionnel interroge ChatGPT et Claude ; les réponses des deux fenêtres convergent vers un même document finalisé',
       ...IMAGES['chatgpt-et-claude-en-pratique'],
     },
     why: {
@@ -883,7 +883,7 @@ const AR: TrainingShowcase[] = [
     place: 'مدرسة OPEM',
     city: 'الجزائر العاصمة',
     illustration: {
-      alt: 'رسم توضيحي: مركزا عمل، أحدهما على ChatGPT والآخر على Claude، يرتبطان بنتيجة واحدة',
+      alt: 'رسم توضيحي: مهني في مكتبه يستعين بـ ChatGPT وClaude؛ تلتقي إجابات النافذتين في وثيقة واحدة مكتملة',
       ...IMAGES['chatgpt-et-claude-en-pratique'],
     },
     why: {

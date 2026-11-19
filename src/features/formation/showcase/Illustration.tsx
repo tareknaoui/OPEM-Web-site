@@ -4,10 +4,10 @@ import type { TrainingShowcase } from './content';
 import styles from './TrainingShowcasePage.module.css';
 
 /**
- * L'illustration animée d'une formation, dans la carte bleu nuit du haut de page.
+ * L'illustration animée d'une formation, dans le panneau bleu nuit du haut de page.
  * - Avec une image (illustration.image) : un lent travelling (zoom et glissement), un léger
  *   effet de profondeur qui suit la souris, des paquets lumineux qui parcourent les flux de
- *   l'image, et le signal ambre posé sur son point clé ; les bords se fondent dans la carte.
+ *   l'image, et le signal ambre posé sur son point clé ; les bords se fondent dans le panneau.
  * - Sinon : le dessin vectoriel animé pièce par pièce (art/*.tsx) et le signal ambre.
  * Le nom accessible est porté par le conteneur ; le reste est masqué aux lecteurs d'écran.
  * Mouvement réduit demandé : les animations CSS s'arrêtent (feuille de style), les paquets

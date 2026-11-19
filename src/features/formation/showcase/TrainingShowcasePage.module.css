@@ -1,7 +1,8 @@
 /* Page d'une formation : modèle unique retenu par OPEM (maquettes du 17 novembre 2026,
-   variante 4 « fond clair, scène bleu nuit »). Haut de page sur bleu très clair uni, titre en bleu nuit, filets verts ; à côté, une carte bleu nuit (l'illustration de la
-   formation, son signal ambre animé, les informations de la session) qui déborde sur la
-   section suivante. Corps en deux colonnes (intitulé à gauche, contenu à droite), un bandeau
+   variante 4 « fond clair, scène bleu nuit »). Haut de page sur bleu très clair uni, titre en
+   bleu nuit, filets verts ; à côté, comme la vidéo de l'accueil, un panneau bleu nuit jusqu'au
+   bord de l'écran (l'illustration de la formation, son signal ambre animé, les informations de
+   la session). Corps en deux colonnes (intitulé à gauche, contenu à droite), un bandeau
    bleu très clair, les chiffres, les témoignages sur bleu nuit, puis le formulaire.
    Vert sur fond clair, ambre seulement sur fond bleu nuit (signal, guillemet) ; boutons bleu
    OPEM, jamais ambre. Mobile d'abord ; propriétés logiques pour l'arabe (miroir). */
@@ -9,8 +10,6 @@
 .page {
   --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --rule: #c0cacf;
-  /* Débord de la carte bleu nuit sur la section qui suit (ordinateur). */
-  --overlap: 4.5rem;
 
   color: var(--opem-anthracite);
   font-family: var(--font-text);
@@ -47,11 +46,24 @@
   padding-block: clamp(2.25rem, 1.25rem + 3vw, 3.75rem) 0;
 }
 
+/* Ordinateur, comme l'accueil : marge | texte | panneau bleu nuit jusqu'au bord de l'écran.
+   Le texte reste aligné sur la grille du site ; le contenu du panneau (--panel) s'arrête au
+   bord droit de cette grille, seul le fond bleu nuit va jusqu'au bord. */
 @media (min-width: 60em) {
-  .heroGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  .hero .heroGrid {
+    --content: calc(var(--max-width) - 2 * var(--gutter));
+    /* Le texte prend un peu plus de la moitié, le panneau un peu moins (46 %). */
+    --gap: clamp(3rem, 1rem + 3vw, 4.5rem);
+    --panel: calc((var(--content) - var(--gap)) * 0.46);
+    grid-template-columns:
+      minmax(var(--gutter), 1fr)
+      minmax(0, calc(var(--content) - var(--panel)))
+      minmax(0, var(--panel))
+      minmax(var(--gutter), 1fr);
     align-items: stretch;
-    gap: 2.75rem;
+    gap: 0;
+    max-width: none;
+    padding: 0;
   }
 }
 
@@ -66,7 +78,12 @@
 
 @media (min-width: 60em) {
   .heroText {
-    padding-block-end: clamp(3rem, 1.5rem + 3.5vw, 4.75rem);
+    grid-column: 2;
+    /* Le titre se règle sur la largeur de la colonne (cqi) : il n'empiète jamais sur le panneau. */
+    container-type: inline-size;
+    gap: 1.75rem;
+    padding-block: clamp(2.25rem, 1.25rem + 3vw, 3.75rem) clamp(3rem, 1.5rem + 3.5vw, 4.75rem);
+    padding-inline-end: var(--gap);
   }
 }
 
@@ -157,6 +174,12 @@
   line-height: 1.04;
   letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+@media (min-width: 60em) {
+  .title {
+    font-size: min(clamp(2.625rem, 1.5rem + 4vw, 4.375rem), 12.5cqi);
+  }
 }
 
 .title:lang(ar) {
@@ -260,27 +283,42 @@
   font-family: var(--font-arabic);
 }
 
-/* La scène bleu nuit : l'illustration, puis les informations de la session. */
+/* Le panneau bleu nuit : l'illustration, puis les informations de la session. Bord à bord
+   sur téléphone (comme la vidéo de l'accueil), jusqu'au bord droit de l'écran sur ordinateur. */
 .scene {
   position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  margin-inline: calc(-1 * var(--gutter));
   overflow: hidden;
-  border-radius: 20px;
   background: var(--opem-night);
   color: var(--opem-white);
-  box-shadow: 0 30px 60px -36px rgb(17 54 91 / 0.6);
 }
 
 @media (min-width: 60em) {
   .scene {
-    margin-block-end: calc(-1 * var(--overlap));
+    grid-column: 3 / 5;
+    margin-inline: 0;
+  }
+
+  /* L'illustration, centrée dans tout le panneau (sans grandir à l'infini sur grand écran). */
+  .sceneArt {
+    justify-content: center;
+  }
+
+  .sceneArt > * {
+    max-width: 44rem;
+  }
+
+  /* Le filet des informations va jusqu'au bord de l'écran ; les informations restent dans
+     la largeur du site (--panel). */
+  .scene .facts {
+    padding-inline-end: max(1.75rem, calc(100% - var(--panel) + 1.75rem));
   }
 }
 
-/* Le filet vert au pied de la carte. */
+/* Le filet vert au pied du panneau. */
 .scene::after {
   content: '';
   height: 0.5rem;
@@ -294,7 +332,13 @@
   padding: 1rem 0.5rem;
 }
 
-/* Une image : bord à bord dans la carte, le dessin agrandi pour en occuper la largeur. */
+@media (min-width: 60em) {
+  .sceneArt {
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+/* Une image : bord à bord dans le panneau, le dessin agrandi pour en occuper la largeur. */
 .sceneArt:has(.photoArt) {
   padding: 0;
 }
@@ -316,7 +360,7 @@
 }
 
 /* Illustration en image : lent travelling, profondeur au pointeur, paquets sur les flux.
-   Les bords se fondent dans la carte (l'image a déjà le bleu nuit de la carte pour fond). */
+   Les bords se fondent dans le panneau (l'image a déjà son bleu nuit pour fond). */
 .photoArt {
   position: relative;
   width: 100%;
@@ -325,7 +369,7 @@
   mask-image: radial-gradient(ellipse 80% 76% at 50% 50%, #000 70%, transparent 100%);
 }
 
-/* Plus large que la carte : seules les marges vides des côtés de l'image sont rognées ;
+/* Plus large que le panneau : seules les marges vides des côtés de l'image sont rognées ;
    la hauteur suit, le dessin n'est jamais coupé en haut ni en bas. */
 .depth {
   width: 114%;
@@ -990,18 +1034,9 @@
   padding-block: clamp(3.5rem, 2rem + 5vw, 6.5rem) 0;
 }
 
-/* La première section laisse la place au débord de la carte. */
-.first {
-  padding-block-start: clamp(3.5rem, 2rem + 5vw, 6.5rem);
-}
-
 @media (min-width: 60em) {
   .split {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  }
-
-  .first {
-    padding-block-start: calc(var(--overlap) + clamp(3.5rem, 2rem + 5vw, 6.5rem));
   }
 }
 

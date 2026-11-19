@@ -23,9 +23,9 @@ const REQUEST_ID = 'demande';
  * - Haut de page sur bleu très clair : fil d'Ariane, surtitre (cycle, format, ville),
  *   accroche (question, puis réponse surlignée en vert), titre, filet vert, promesse ; sur
  *   téléphone, les dates et le lieu en une ligne ; les deux boutons, qui mènent au formulaire
- *   et y cochent la demande choisie. À côté, une carte bleu nuit qui déborde sur la section
- *   suivante : l'illustration de la formation, son signal ambre animé sur le point clé, puis
- *   durée, dates, places et lieu.
+ *   et y cochent la demande choisie. À côté, comme la vidéo de l'accueil, un panneau bleu nuit
+ *   jusqu'au bord de l'écran : l'illustration de la formation, son signal ambre animé sur le
+ *   point clé, puis durée, dates, places et lieu.
  * - Pourquoi cette formation (et sa singularité, puis le lien « Confier… à nos consultants ») ;
  *   Vous repartez avec (trois acquis numérotés) ; sur un bandeau bleu très clair, Pour qui et
  *   Pourquoi OPEM ; OPEM en chiffres ; les témoignages propres à la formation, sur bleu nuit.
@@ -139,7 +139,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
             </h1>
             <span className={styles.titleBar} aria-hidden="true" />
             <p className={styles.promise}>{item.promise}</p>
-            {/* Téléphone : la carte de la session vient plus bas ; les dates restent en vue. */}
+            {/* Téléphone : le panneau de la session vient plus bas ; les dates restent en vue. */}
             <p className={styles.heroWhen}>
               {dates ?? t.facts.noDate} · {where}
             </p>
@@ -172,7 +172,7 @@ function Showcase({ item }: { item: TrainingShowcase }) {
 
       {/* ---------- Pourquoi cette formation ---------- */}
       <section
-        className={cx('container', styles.split, styles.first)}
+        className={cx('container', styles.split)}
         aria-labelledby={`${ids}-why`}
       >
         <div className={styles.splitHead}>
