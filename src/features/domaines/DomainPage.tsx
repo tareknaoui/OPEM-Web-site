@@ -41,8 +41,8 @@ const splitText = (text: string): [string, string] => {
 };
 
 /**
- * Page d'un domaine d'expertise (/expertises/<domaine>) : accompagnement des organisations,
- * coaching professionnel, communication institutionnelle, certification et accréditation.
+ * Page d'un domaine d'expertise (/expertises/<domaine>) : aujourd'hui l'accompagnement des
+ * organisations (coaching, certification et communication ont leur propre page).
  * Simple et engageante, sur le modèle de la page Formation :
  * 01 En-tête, bleu 10 % : le domaine, son accroche en titre, sa présentation, deux actions ;
  *    à côté, une grande photo.
@@ -50,7 +50,7 @@ const splitText = (text: string): [string, string] => {
  *    vedette), puis une grande photo.
  * 03 Notre démarche, bleu 10 % : les quatre temps de « Le cabinet ».
  * 04 Références, blanc : la référence du domaine en grand, puis ses missions (celles de
- *    « Missions et réalisations ») ; sans mission (coaching), l'engagement seul.
+ *    « Missions et réalisations ») ; sans mission, l'engagement seul.
  * 05 Premier échange, bleu 10 % : le bouton de rendez-vous, le téléphone et le courriel.
  * Une sous-rubrique du menu (/…/diagnostic-d-entreprise) mène à sa prestation.
  */

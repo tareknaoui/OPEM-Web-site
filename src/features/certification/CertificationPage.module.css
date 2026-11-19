@@ -1,0 +1,985 @@
+/* Page « Certification et accréditation » : de grandes photos réelles, des badges dessinés
+   pour chaque référentiel (pas les logos officiels, voir content.ts), des fonds qui alternent
+   (bleu 10 %, blanc, un bandeau bleu nuit). Vert sur fond clair, ambre seulement sur bleu
+   nuit ou en filet dans les badges ; boutons bleu nuit ; pas de dégradé visible, pas de texte
+   sur les photos. Mobile d'abord ; propriétés logiques pour l'arabe (miroir). */
+
+.page {
+  --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --muted: #5b6770;
+  --rule: #dfe5ea;
+
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+}
+
+.page :lang(ar),
+.page:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+:where(.page) p,
+:where(.page) h1,
+:where(.page) h2,
+:where(.page) h3 {
+  margin: 0;
+}
+
+:where(.page) [id] {
+  scroll-margin-top: calc(var(--header-height-compact) + 1.5rem);
+}
+
+/* ---------- Typographie commune ---------- */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  flex: none;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.head {
+  display: grid;
+  gap: 0.875rem;
+  max-width: 50rem;
+  margin-bottom: clamp(2.25rem, 1.5rem + 2.5vw, 4rem);
+}
+
+.sectionTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.125rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.eyebrow:lang(ar),
+.sectionTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.sectionTitle:lang(ar) {
+  line-height: 1.4;
+}
+
+/* ---------- 01 Haut de page ---------- */
+
+.hero {
+  background: var(--opem-blue-10);
+}
+
+.heroGrid {
+  display: grid;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  min-width: 0;
+  padding: clamp(2.25rem, 1.25rem + 3vw, 3.75rem) var(--gutter);
+}
+
+.trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.625rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.trail a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.trail a:hover {
+  color: var(--opem-night);
+}
+
+.trail span[aria-hidden] {
+  color: var(--opem-gray-light);
+}
+
+.title {
+  max-width: 15ch;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 1.3rem + 3.4vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.titleBar {
+  width: 7.5rem;
+  height: 0.5rem;
+  background: var(--opem-green);
+}
+
+.lead {
+  max-width: 34rem;
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.trail:lang(ar),
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title:lang(ar) {
+  line-height: 1.35;
+}
+
+.lead:lang(ar) {
+  line-height: 1.85;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  border: 1.5px solid var(--opem-night);
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.primary:hover {
+  border-color: var(--opem-blue);
+  background: var(--opem-blue);
+}
+
+.secondary {
+  color: var(--opem-night);
+}
+
+.secondary:hover {
+  background: var(--opem-white);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.primary:lang(ar),
+.secondary:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* La photo : bord à bord sur téléphone ; jusqu'au bord de l'écran sur ordinateur. */
+.heroPhoto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--opem-night);
+}
+
+.heroPhoto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+/* Ordinateur, comme les pages formation : marge | texte | photo jusqu'au bord de l'écran. */
+@media (min-width: 60em) {
+  .heroGrid {
+    --content: calc(var(--max-width) - 2 * var(--gutter));
+    grid-template-columns:
+      minmax(var(--gutter), 1fr)
+      minmax(0, calc(var(--content) * 0.54))
+      minmax(0, calc(var(--content) * 0.46))
+      minmax(var(--gutter), 1fr);
+    min-height: min(calc(100svh - var(--header-height)), 46rem);
+  }
+
+  .heroText {
+    grid-column: 2;
+    justify-content: center;
+    padding-inline: 0 clamp(2.5rem, 1rem + 3vw, 4.5rem);
+  }
+
+  .heroPhoto {
+    grid-column: 3 / 5;
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+}
+
+/* ---------- Bandeau des badges ---------- */
+
+.ribbon {
+  overflow: hidden;
+  padding-block: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  border-bottom: 1px solid var(--rule);
+  background: var(--opem-white);
+}
+
+.ribbonTrack {
+  display: flex;
+  width: max-content;
+}
+
+.ribbonRow {
+  display: flex;
+  flex: none;
+  gap: clamp(2rem, 1rem + 3vw, 3.5rem);
+  margin: 0;
+  padding: 0 clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  list-style: none;
+}
+
+.ribbonItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ribbonItem:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.ribbonBadge {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ribbonTrack {
+    animation: ribbon 45s linear infinite;
+  }
+
+  .ribbonTrack:dir(rtl) {
+    animation-name: ribbon-rtl;
+  }
+
+  .ribbon:hover .ribbonTrack {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes ribbon {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ribbon-rtl {
+  to {
+    transform: translateX(50%);
+  }
+}
+
+/* Mouvement réduit : la rangée se range sur plusieurs lignes, sans copie. */
+@media (prefers-reduced-motion: reduce) {
+  .ribbonTrack {
+    width: auto;
+    justify-content: center;
+  }
+
+  .ribbonRow {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 1.25rem;
+  }
+
+  .ribbonRow[aria-hidden] {
+    display: none;
+  }
+}
+
+/* ---------- Badges ---------- */
+
+.badge {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.badge text {
+  fill: #ffffff;
+  text-anchor: middle;
+}
+
+.badgeSmall {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.badgeCode {
+  font-family: var(--font-heading);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.badgeWord {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.badgeArabic {
+  font-family: var(--font-arabic);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.badgeArabicLarge {
+  font-family: var(--font-arabic);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.badgeArabicMid {
+  font-family: var(--font-arabic);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.badgeTiny {
+  font-family: var(--font-heading);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 02 Les certifications ---------- */
+
+.catalogue {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.headLead {
+  max-width: 44rem;
+  margin-top: 0.5rem;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.headLead:lang(ar) {
+  line-height: 1.9;
+}
+
+.families {
+  display: grid;
+  gap: clamp(3rem, 2rem + 3vw, 5rem);
+}
+
+.family {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+@media (min-width: 64em) {
+  .family {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+  }
+
+  .familyIntro {
+    position: sticky;
+    top: calc(var(--header-height-compact) + 2rem);
+  }
+}
+
+.familyIntro {
+  display: grid;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.familyPhoto {
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  border-radius: 18px;
+  aspect-ratio: 3 / 2;
+  background: var(--opem-white);
+}
+
+.familyPhotoInner {
+  height: 100%;
+}
+
+.familyNumber {
+  color: var(--opem-green);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.familyTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.625rem, 1.2rem + 1.3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.familyLead {
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.familyTitle:lang(ar),
+.familyNumber:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.familyLead:lang(ar) {
+  line-height: 1.9;
+}
+
+.certs {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Une carte par référentiel : le badge, puis le nom, ce qu'il atteste et pour qui. */
+.cert {
+  display: flex;
+  gap: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  align-items: flex-start;
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: 18px;
+  background: var(--opem-white);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease;
+}
+
+.cert:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 48px -30px rgb(17 54 91 / 0.45);
+}
+
+.certBadge {
+  width: clamp(4.5rem, 3.5rem + 2.5vw, 6rem);
+  height: clamp(4.5rem, 3.5rem + 2.5vw, 6rem);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cert:hover .certBadge {
+  transform: rotate(-8deg) scale(1.04);
+}
+
+.certText {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.certName {
+  margin: 0;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.certName:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.certScope {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.certAudience {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.certAudience strong {
+  margin-inline-end: 0.375rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.certAudience strong:lang(ar) {
+  font-family: var(--font-arabic);
+  font-size: 0.875rem;
+  letter-spacing: 0;
+}
+
+.certScope:lang(ar),
+.certAudience:lang(ar) {
+  line-height: 1.85;
+}
+
+.note {
+  max-width: 48rem;
+  margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.familyPhoto img,
+.beliefPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- 03 Impartialité ---------- */
+
+.belief {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.beliefGrid {
+  display: grid;
+}
+
+.beliefPhoto {
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+}
+
+.beliefPhotoInner {
+  height: 100%;
+}
+
+.beliefQuote {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+  margin: 0;
+  padding: clamp(3rem, 2rem + 4vw, 6rem) var(--gutter);
+}
+
+.beliefMark {
+  color: var(--opem-amber);
+}
+
+.beliefMark:dir(rtl) {
+  transform: scaleX(-1);
+}
+
+.beliefQuote blockquote {
+  margin: 0;
+}
+
+.beliefQuote p {
+  max-width: 30rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.1rem + 2.4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.beliefQuote p:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+/* Ordinateur : la photo à gauche jusqu'au bord de l'écran, la phrase à droite. */
+@media (min-width: 60em) {
+  .beliefGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 32rem;
+  }
+
+  .beliefPhoto {
+    aspect-ratio: auto;
+  }
+
+  .beliefQuote {
+    padding-inline: clamp(3rem, 1rem + 5vw, 7rem) var(--gutter);
+  }
+}
+
+.beliefText {
+  max-width: 30rem;
+  color: var(--opem-blue-30);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.7;
+}
+
+.beliefText:lang(ar) {
+  line-height: 1.9;
+}
+
+/* ---------- 04 Notre démarche ---------- */
+
+.path {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.steps {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40em) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Six cartes : un grand numéro vert, un filet, le titre, le texte. */
+.step {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: clamp(1.5rem, 1rem + 1.2vw, 2rem);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  transition: border-color 0.3s ease;
+}
+
+.step:hover {
+  border-color: var(--opem-green);
+}
+
+.stepNumber {
+  color: var(--opem-green);
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 1.8rem + 1.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stepTitle {
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--opem-blue-10);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.3125rem;
+  font-weight: 600;
+}
+
+.stepText {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.stepTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.stepText:lang(ar) {
+  line-height: 1.9;
+}
+
+/* La formation ISO 9001:2026 : un lien en bandeau sous les étapes. */
+.training {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin-top: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem) clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  border-radius: 18px;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+  text-decoration: none;
+  transition: background-color 0.25s ease;
+}
+
+.training:hover {
+  background: #d9e4ee;
+}
+
+.training:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.trainingLabel {
+  font-size: 1.0625rem;
+}
+
+.trainingTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--opem-blue);
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.trainingTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* ---------- 05 Références ---------- */
+
+.references {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.referenceList {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .referenceList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.reference {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  padding: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem);
+  border-top: 3px solid var(--opem-green);
+  border-radius: 4px 4px 18px 18px;
+  background: var(--opem-white);
+}
+
+.referenceClient {
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.referenceTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.referenceText {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.referenceClient:lang(ar),
+.referenceTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.norms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.norms li {
+  padding: 0.375rem 0.875rem;
+  border-radius: 999px;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.norms li:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* ---------- 06 Questions fréquentes ---------- */
+
+.faq {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.faqGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.faqHead {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+}
+
+@media (min-width: 64em) {
+  .faqGrid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 4rem;
+  }
+
+  .faqHead {
+    position: sticky;
+    top: calc(var(--header-height-compact) + 2rem);
+    align-self: start;
+  }
+}
+
+.faqList {
+  border-top: 1px solid var(--rule);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faqQuestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.375rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.4;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqQuestion:hover {
+  color: var(--opem-blue);
+}
+
+.faqQuestion:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 4px;
+}
+
+.faqQuestion:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.faqIcon {
+  flex: none;
+  color: var(--opem-green);
+  transition: transform 0.3s ease;
+}
+
+.faqItem[open] .faqIcon {
+  transform: rotate(45deg);
+}
+
+.faqAnswer {
+  max-width: 44rem;
+  padding-bottom: 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.faqAnswer:lang(ar) {
+  line-height: 1.9;
+}
+
+/* ---------- Mouvement réduit ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cert,
+  .certBadge,
+  .step,
+  .faqIcon {
+    transition: none;
+  }
+
+  .cert:hover,
+  .cert:hover .certBadge {
+    transform: none;
+  }
+}

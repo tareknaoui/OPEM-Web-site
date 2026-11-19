@@ -35,7 +35,31 @@ export const router = createBrowserRouter([
         }),
       },
       {
-        // Les autres domaines (accompagnement, coaching, communication, certification) et leurs
+        // « Coaching professionnel » : page à part ; ses sous-rubriques (/…/coaching-de-dirigeants)
+        // descendent jusqu'à l'accompagnement demandé.
+        path: 'expertises/coaching-professionnel/*',
+        lazy: async () => ({
+          Component: (await import('@/features/coaching/CoachingPage')).default,
+        }),
+      },
+      {
+        // « Certification et accréditation » : page à part ; ses sous-adresses
+        // (/…/accreditation) descendent jusqu'à la famille de référentiels demandée.
+        path: 'expertises/certification-et-accreditation/*',
+        lazy: async () => ({
+          Component: (await import('@/features/certification/CertificationPage')).default,
+        }),
+      },
+      {
+        // « Communication institutionnelle » : page à part ; ses sous-rubriques (/…/sites-web)
+        // descendent jusqu'au savoir-faire demandé.
+        path: 'expertises/communication-institutionnelle/*',
+        lazy: async () => ({
+          Component: (await import('@/features/communication/CommunicationPage')).default,
+        }),
+      },
+      {
+        // Le dernier domaine sans page à part (accompagnement des organisations) et ses
         // sous-rubriques : une page commune ; un domaine inconnu affiche « page introuvable ».
         path: 'expertises/:domain/*',
         lazy: async () => ({

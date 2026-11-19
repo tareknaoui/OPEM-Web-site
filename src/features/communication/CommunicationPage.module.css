@@ -1,0 +1,1058 @@
+/* Page « Communication institutionnelle » : la page la plus visuelle des expertises, comme le
+   métier qu'elle présente. Grandes photos réelles, mosaïque des savoir-faire, bandeau de
+   grands mots, capture du site d'OPEM dans une fenêtre de navigateur, logos des clients.
+   Fonds qui alternent (bleu 10 %, blanc, un bandeau bleu nuit) ; vert sur fond clair, ambre
+   seulement sur bleu nuit ; boutons bleu nuit ; pas de dégradé visible, pas de texte sur les
+   photos. Mobile d'abord ; propriétés logiques pour l'arabe (miroir). */
+
+.page {
+  --font-text: Calibri, Carlito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --muted: #5b6770;
+  --rule: #dfe5ea;
+
+  color: var(--opem-anthracite);
+  font-family: var(--font-text);
+}
+
+.page :lang(ar),
+.page:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+:where(.page) p,
+:where(.page) h1,
+:where(.page) h2,
+:where(.page) h3 {
+  margin: 0;
+}
+
+:where(.page) [id] {
+  scroll-margin-top: calc(var(--header-height-compact) + 1.5rem);
+}
+
+/* ---------- Typographie commune ---------- */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  flex: none;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--opem-green);
+}
+
+.head {
+  display: grid;
+  gap: 0.875rem;
+  max-width: 50rem;
+  margin-bottom: clamp(2.25rem, 1.5rem + 2.5vw, 4rem);
+}
+
+.sectionTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.125rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.eyebrow:lang(ar),
+.sectionTitle:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.sectionTitle:lang(ar) {
+  line-height: 1.4;
+}
+
+/* ---------- 01 Haut de page ---------- */
+
+.hero {
+  background: var(--opem-blue-10);
+}
+
+.heroGrid {
+  display: grid;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  min-width: 0;
+  padding: clamp(2.25rem, 1.25rem + 3vw, 3.75rem) var(--gutter);
+}
+
+.trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.625rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: var(--eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.trail a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.trail a:hover {
+  color: var(--opem-night);
+}
+
+.trail span[aria-hidden] {
+  color: var(--opem-gray-light);
+}
+
+.title {
+  max-width: 15ch;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 1.3rem + 3.4vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.titleBar {
+  width: 7.5rem;
+  height: 0.5rem;
+  background: var(--opem-green);
+}
+
+.lead {
+  max-width: 34rem;
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.trail:lang(ar),
+.title:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.title:lang(ar) {
+  line-height: 1.35;
+}
+
+.lead:lang(ar) {
+  line-height: 1.85;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  border: 1.5px solid var(--opem-night);
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.primary:hover {
+  border-color: var(--opem-blue);
+  background: var(--opem-blue);
+}
+
+.secondary {
+  color: var(--opem-night);
+}
+
+.secondary:hover {
+  background: var(--opem-white);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 3px;
+}
+
+.primary:lang(ar),
+.secondary:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* La photo : bord à bord sur téléphone ; jusqu'au bord de l'écran sur ordinateur. */
+.heroPhoto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--opem-night);
+}
+
+.heroPhoto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+/* Ordinateur, comme les pages formation : marge | texte | photo jusqu'au bord de l'écran. */
+@media (min-width: 60em) {
+  .heroGrid {
+    --content: calc(var(--max-width) - 2 * var(--gutter));
+    grid-template-columns:
+      minmax(var(--gutter), 1fr)
+      minmax(0, calc(var(--content) * 0.54))
+      minmax(0, calc(var(--content) * 0.46))
+      minmax(var(--gutter), 1fr);
+    min-height: min(calc(100svh - var(--header-height)), 46rem);
+  }
+
+  .heroText {
+    grid-column: 2;
+    justify-content: center;
+    padding-inline: 0 clamp(2.5rem, 1rem + 3vw, 4.5rem);
+  }
+
+  .heroPhoto {
+    grid-column: 3 / 5;
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+}
+
+/* La signature, sous les boutons. */
+.signature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.signature::before {
+  content: '';
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--opem-green);
+}
+
+.signature:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+/* ---------- Bandeau de grands mots ---------- */
+
+.ticker {
+  overflow: hidden;
+  padding-block: clamp(1.25rem, 0.75rem + 1.5vw, 2rem);
+  border-bottom: 1px solid var(--rule);
+  background: var(--opem-white);
+}
+
+.tickerTrack {
+  display: flex;
+  width: max-content;
+}
+
+.tickerRow {
+  display: flex;
+  flex: none;
+  margin: 0;
+}
+
+.tickerWord {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  padding-inline-end: clamp(1.5rem, 1rem + 2vw, 3rem);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.2rem + 3vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+/* Un mot sur deux en contour, pour le rythme. */
+.tickerWord:nth-child(even) {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--opem-night);
+}
+
+.tickerWord::after {
+  content: '';
+  width: 0.5em;
+  height: 0.5em;
+  max-width: 1.25rem;
+  max-height: 1.25rem;
+  border-radius: 50%;
+  background: var(--opem-green);
+}
+
+.tickerWord:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tickerTrack {
+    animation: ticker 40s linear infinite;
+  }
+
+  .tickerTrack:dir(rtl) {
+    animation-name: ticker-rtl;
+  }
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ticker-rtl {
+  to {
+    transform: translateX(50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker {
+    display: none;
+  }
+}
+
+/* ---------- 02 Notre conviction ---------- */
+
+.manifesto {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.manifestoInner {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+}
+
+.statement {
+  max-width: 62rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+.statement:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  line-height: 1.7;
+}
+
+/* ---------- 03 Ce que nous créons : la mosaïque ---------- */
+
+.crafts {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.bento {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tile:nth-child(1),
+  .tile:nth-child(2) {
+    grid-column: span 2;
+  }
+}
+
+/* Ordinateur : deux en vedette, puis trois, puis deux. */
+@media (min-width: 64em) {
+  .bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .tile:nth-child(1),
+  .tile:nth-child(2),
+  .tile:nth-child(6),
+  .tile:nth-child(7) {
+    grid-column: span 3;
+  }
+
+  .tile:nth-child(3),
+  .tile:nth-child(4),
+  .tile:nth-child(5) {
+    grid-column: span 2;
+  }
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--opem-white);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s ease;
+}
+
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 56px -32px rgb(17 54 91 / 0.5);
+}
+
+.tileMedia {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background: var(--opem-night);
+}
+
+.tileMedia > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tile:hover .tileMedia > img {
+  transform: scale(1.05);
+}
+
+/* Les sites web : la capture du site d'OPEM dans sa fenêtre, posée sur le bleu nuit. */
+.tileScreen {
+  position: absolute;
+  inset: 12% 8% -6%;
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tile:hover .tileScreen {
+  transform: translateY(-3%);
+}
+
+.tileText {
+  display: grid;
+  gap: 0.5rem;
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem) clamp(1.25rem, 1rem + 1.2vw, 2rem)
+    clamp(1.5rem, 1.25rem + 1vw, 2rem);
+}
+
+.tileNumber {
+  color: var(--opem-green);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.tileTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tile:nth-child(-n + 2) .tileTitle {
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+}
+
+.tileBody {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.tileTitle:lang(ar),
+.tileNumber:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.tileBody:lang(ar) {
+  line-height: 1.85;
+}
+
+/* ---------- La fenêtre de navigateur ---------- */
+
+.browser {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--opem-white);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.55);
+}
+
+.browserBar {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 1.75rem;
+  padding-inline: 0.75rem;
+  background: #eef2f6;
+}
+
+.browserBar > span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--opem-gray-light);
+}
+
+.browserAddress {
+  flex: 1;
+  max-width: 50%;
+  height: 0.75rem;
+  margin-inline-start: 0.75rem;
+  border-radius: 999px;
+  background: var(--opem-white);
+}
+
+.browser img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- 04 Nos réalisations ---------- */
+
+.works {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.workList {
+  display: grid;
+  gap: clamp(3rem, 2rem + 4vw, 6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work {
+  display: grid;
+  gap: clamp(1.75rem, 1rem + 2vw, 3rem);
+  align-items: center;
+}
+
+@media (min-width: 60em) {
+  .work {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(3rem, 1rem + 4vw, 6rem);
+  }
+
+  .work:nth-child(even) .workVisual {
+    order: 2;
+  }
+}
+
+.workVisual {
+  display: grid;
+  place-items: center;
+  padding: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+  border-radius: 20px;
+  background: var(--opem-blue-10);
+}
+
+/* Les logos des clients, sur des cartes blanches côte à côte. */
+.logos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.logos li {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 18%;
+  border-radius: 16px;
+  background: var(--opem-white);
+}
+
+.logos img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.workText {
+  display: grid;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.workNumber {
+  color: var(--opem-green);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.workTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.375rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.workBody {
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.7;
+}
+
+.workLabel {
+  margin-top: 0.5rem;
+  color: var(--opem-green-dark);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 0.375rem 0.875rem;
+  border-radius: 999px;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.workTitle:lang(ar),
+.workNumber:lang(ar),
+.workLabel:lang(ar),
+.chips li:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+}
+
+.workBody:lang(ar) {
+  line-height: 1.9;
+}
+
+.beliefPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- 05 Conviction ---------- */
+
+.belief {
+  background: var(--opem-night);
+  color: var(--opem-white);
+}
+
+.beliefGrid {
+  display: grid;
+}
+
+.beliefPhoto {
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+}
+
+.beliefPhotoInner {
+  height: 100%;
+}
+
+.beliefQuote {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+  margin: 0;
+  padding: clamp(3rem, 2rem + 4vw, 6rem) var(--gutter);
+}
+
+.beliefMark {
+  color: var(--opem-amber);
+}
+
+.beliefMark:dir(rtl) {
+  transform: scaleX(-1);
+}
+
+.beliefQuote blockquote {
+  margin: 0;
+}
+
+.beliefQuote p {
+  max-width: 30rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 1.1rem + 2.4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.beliefQuote p:lang(ar) {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+/* Ordinateur : la photo à gauche jusqu'au bord de l'écran, la phrase à droite. */
+@media (min-width: 60em) {
+  .beliefGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 32rem;
+  }
+
+  .beliefPhoto {
+    aspect-ratio: auto;
+  }
+
+  .beliefQuote {
+    padding-inline: clamp(3rem, 1rem + 5vw, 7rem) var(--gutter);
+  }
+}
+
+.beliefText {
+  max-width: 30rem;
+  color: var(--opem-blue-30);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.7;
+}
+
+.beliefText:lang(ar) {
+  line-height: 1.9;
+}
+
+/* ---------- 06 Notre méthode ---------- */
+
+.method {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.steps {
+  display: grid;
+  gap: 2.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 3rem;
+  }
+}
+
+@media (min-width: 64em) {
+  .steps {
+    position: relative;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  /* Le fil qui relie les cinq étapes, du premier numéro au dernier. */
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 1.75rem;
+    inset-inline: 1.75rem calc(20% - 3.35rem);
+    height: 2px;
+    background: var(--opem-gray-light);
+  }
+}
+
+.step {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+}
+
+.stepNumber {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 2px solid var(--opem-green);
+  border-radius: 50%;
+  background: var(--opem-white);
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.step:hover .stepNumber {
+  background: var(--opem-green);
+  color: var(--opem-white);
+}
+
+.stepTitle {
+  margin-top: 0.5rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+
+.stepText {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.stepTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.stepText:lang(ar) {
+  line-height: 1.9;
+}
+
+/* ---------- 07 Pourquoi nous ---------- */
+
+.reasons {
+  padding-block: var(--section-space);
+  background: var(--opem-blue-10);
+}
+
+.reasonList {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48em) {
+  .reasonList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.reason {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  border-top: 3px solid var(--opem-green);
+  border-radius: 4px 4px 18px 18px;
+  background: var(--opem-white);
+}
+
+.reasonIcon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 14px;
+  background: var(--opem-blue-10);
+  color: var(--opem-night);
+}
+
+.reasonTitle {
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: 1.3125rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.reasonText {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.reasonTitle:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.reasonText:lang(ar) {
+  line-height: 1.85;
+}
+
+/* ---------- 08 Questions fréquentes ---------- */
+
+.faq {
+  padding-block: var(--section-space);
+  background: var(--opem-white);
+}
+
+.faqGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.faqHead {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+}
+
+@media (min-width: 64em) {
+  .faqGrid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 4rem;
+  }
+
+  .faqHead {
+    position: sticky;
+    top: calc(var(--header-height-compact) + 2rem);
+    align-self: start;
+  }
+}
+
+.faqList {
+  border-top: 1px solid var(--rule);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faqQuestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.375rem;
+  color: var(--opem-night);
+  font-family: var(--font-heading);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.4;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqQuestion:hover {
+  color: var(--opem-blue);
+}
+
+.faqQuestion:focus-visible {
+  outline: 2px solid var(--opem-blue);
+  outline-offset: 4px;
+}
+
+.faqQuestion:lang(ar) {
+  font-family: var(--font-arabic);
+}
+
+.faqIcon {
+  flex: none;
+  color: var(--opem-green);
+  transition: transform 0.3s ease;
+}
+
+.faqItem[open] .faqIcon {
+  transform: rotate(45deg);
+}
+
+.faqAnswer {
+  max-width: 44rem;
+  padding-bottom: 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.faqAnswer:lang(ar) {
+  line-height: 1.9;
+}
+
+/* ---------- Mouvement réduit ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .tileMedia > img,
+  .tileScreen,
+  .stepNumber,
+  .faqIcon {
+    transition: none;
+  }
+
+  .tile:hover,
+  .tile:hover .tileMedia > img,
+  .tile:hover .tileScreen {
+    transform: none;
+  }
+}

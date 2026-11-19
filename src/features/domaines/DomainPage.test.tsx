@@ -28,9 +28,6 @@ describe('Pages des domaines d’expertise', () => {
       'accompagnement-des-organisations',
       'Une organisation se transforme par chantiers successifs.',
     ],
-    ['coaching-professionnel', 'Plus on dirige, moins on est contredit.'],
-    ['communication-institutionnelle', 'Soigner son image, c’est respecter ses clients.'],
-    ['certification-et-accreditation', 'Un certificat rassure ; une pratique convainc.'],
   ])('%s : l’accroche en titre, les prestations, la démarche, une photo décrite', (id, title) => {
     renderPage(`/expertises/${id}`);
     expect(screen.getByRole('heading', { level: 1 }).textContent?.replace(/\s/g, ' ')).toBe(title);
@@ -61,22 +58,16 @@ describe('Pages des domaines d’expertise', () => {
     ).toHaveAttribute('href', '/missions');
   });
 
-  it('coaching : sans mission publiée, l’engagement seul', () => {
-    renderPage('/expertises/coaching-professionnel');
-    expect(screen.queryByRole('link', { name: 'Voir nos études de cas' })).not.toBeInTheDocument();
-    expect(screen.getByText(/Un interlocuteur de confiance/)).toBeInTheDocument();
-  });
-
   it('un domaine inconnu affiche « page introuvable »', () => {
     renderPage('/expertises/inconnu');
     expect(screen.queryByRole('region', { name: 'Nos prestations' })).not.toBeInTheDocument();
   });
 
   it('passe en arabe', () => {
-    renderPage('/expertises/certification-et-accreditation');
+    renderPage('/expertises/accompagnement-des-organisations');
     fireEvent.click(screen.getByRole('button', { name: 'عربي' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'الشهادة تطمئن؛ والممارسة تقنع.',
+      'تتحول المؤسسة عبر ورشات متتالية.',
     );
   });
 });
